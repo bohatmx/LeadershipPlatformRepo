@@ -4,12 +4,18 @@
     package="com.oneconnect.leadership.subscriber">
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:name=".SubscriberApp"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_beacon"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".services.SubscriberMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".SubscriberSignInActivity"
             android:label="@string/app_name"
@@ -20,6 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".NotifHandlerActivity"
+            android:label="@string/title_activity_notif_handler"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
