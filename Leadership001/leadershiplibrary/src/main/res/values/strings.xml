@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">LeadershipLibrary</string>
+    <string name="facebook_application_id" translatable="false">1837583773163041
+</string>
+    <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">1837583773163041
+</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="unknown_sign_in_response">Unknown sign in response</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="sign_in_cancelled">Sign in cancelled</string>
+</resources>

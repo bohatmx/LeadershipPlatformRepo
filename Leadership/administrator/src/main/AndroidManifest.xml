@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.oneconnect.leadership.administrator">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        tools:replace="android:supportsRtl"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".AdminMainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+
+<!-- Error:Execution failed for task ':leadershiplibrary:processDebugAndroidTestManifest'.
+> Manifest merger failed : Attribute application@supportsRtl value=(true) from [debug] AndroidManifest.xml:16:9-35
+  	is also present at [com.firebaseui:firebase-ui-auth:1.1.0] AndroidManifest.xml:14:18-45 value=(false).
+  	Suggestion: add 'tools:replace="android:supportsRtl"' to <application> element at manifestMerger4257567029523353710.xml:7:5-9:19 to override.-->

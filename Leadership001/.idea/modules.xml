@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Leadership001.iml" filepath="$PROJECT_DIR$/Leadership001.iml" />
+      <module fileurl="file://$PROJECT_DIR$/admin/admin.iml" filepath="$PROJECT_DIR$/admin/admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/leadershiplibrary/leadershiplibrary.iml" filepath="$PROJECT_DIR$/leadershiplibrary/leadershiplibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/subscriber/subscriber.iml" filepath="$PROJECT_DIR$/subscriber/subscriber.iml" />
+    </modules>
+  </component>
+</project>
