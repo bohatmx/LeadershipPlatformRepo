@@ -17,7 +17,7 @@
             </intent-filter>
         </service>
         <activity
-            android:name=".SubscriberSignInActivity"
+            android:name=".SubscriberSignInActivityBase"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

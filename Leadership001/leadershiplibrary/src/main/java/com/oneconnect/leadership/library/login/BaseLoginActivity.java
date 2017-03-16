@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.firebase.ui.auth.AuthUI;
@@ -17,18 +18,30 @@ import com.firebase.ui.auth.ResultCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
+import com.ocg.backend.endpointAPI.model.Data;
+import com.ocg.backend.endpointAPI.model.EmailResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMUserDTO;
+import com.ocg.backend.endpointAPI.model.FCMessageDTO;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.fcm.EndpointContract;
+import com.oneconnect.leadership.library.fcm.EndpointPresenter;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
-public abstract class LoginActivity extends AppCompatActivity
-        implements LoginContract.View {
+public abstract class BaseLoginActivity extends AppCompatActivity
+        implements LoginContract.View, EndpointContract.View {
 
     FirebaseAuth firebaseAuth;
     public Toolbar toolbar;
     LoginPresenter presenter;
+    EndpointPresenter fcmPresenter;
     public int type;
     ProgressDialog progressDialog;
 
@@ -40,13 +53,15 @@ public abstract class LoginActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        presenter = new LoginPresenter(this);
+
         firebaseAuth = FirebaseAuth.getInstance();
 
         if (firebaseAuth.getCurrentUser() != null) {
             onLoginSucceeded();
             return;
         }
+        presenter = new LoginPresenter(this);
+        fcmPresenter = new EndpointPresenter(this);
         startLogin();
 
     }
@@ -145,6 +160,7 @@ public abstract class LoginActivity extends AppCompatActivity
     public void onUserFound(UserDTO user) {
         progressDialog.dismiss();
         SharedPrefUtil.saveUser(user, this);
+        addFCMUser(user);
         onLoginSucceeded();
     }
 
@@ -152,7 +168,46 @@ public abstract class LoginActivity extends AppCompatActivity
     public void onUserAdded(UserDTO user) {
         progressDialog.dismiss();
         SharedPrefUtil.saveUser(user, this);
+        addFCMUser(user);
         onLoginSucceeded();
+    }
+    private void addFCMUser(UserDTO u) {
+        FCMUserDTO m = Util.createFCMUser(u,
+                SharedPrefUtil.getCloudMsgToken(this));
+        fcmPresenter.saveUser(m);
+    }
+    @Override
+    public void onFCMUserSaved(FCMResponseDTO response) {
+        if (response.getStatusCode() == 0) {
+            UserDTO u = SharedPrefUtil.getUser(this);
+            Data d = new Data();
+            d.setDate(new Date().getTime());
+            d.setMessage("Welcome to the best Leadership Platform in the world!");
+            d.setFromUser("Leadership Platform");
+            d.setTitle("Leadership Platform Welcome");
+            FCMessageDTO m = new FCMessageDTO();
+            m.setCompanyID(u.getCompanyID());
+            m.setDate(new Date().getTime());
+            m.setData(d);
+            m.setUserIDs(new ArrayList<String>());
+            m.getUserIDs().add(u.getUserID());
+            fcmPresenter.sendMessage(m);
+        }
+    }
+
+    @Override
+    public void onMessageSent(FCMResponseDTO response) {
+        if (response.getStatusCode() == 0) {
+            Log.i(TAG, "onMessageSent: welcome message sent");
+        } else {
+            Log.e(TAG, "onMessageSent: welcome message failed" );
+            FirebaseCrash.report(new Exception("Welcome message failed"));
+        }
+    }
+    public static final String TAG = BaseLoginActivity.class.getSimpleName();
+    @Override
+    public void onEmailSent(EmailResponseDTO response) {
+
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.ocg.leadership.subscriber.R;
 
 public class NotifHandlerActivity extends AppCompatActivity {
 

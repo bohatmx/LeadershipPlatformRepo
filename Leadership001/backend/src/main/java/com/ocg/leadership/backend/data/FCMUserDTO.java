@@ -17,11 +17,19 @@ public class FCMUserDTO implements Serializable{
     @Id String fcmID;
     @Index String userID;
     @Index String serialNumber;
-    @Index String associationID;
+    @Index String companyID;
 
     String name, token;
     Long date;
-    String deviceModel, androidVersion, manufacturer;
+    String deviceModel, androidVersion, manufacturer,companyName;
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public String getFcmID() {
         return fcmID;
@@ -42,12 +50,12 @@ public class FCMUserDTO implements Serializable{
         this.fcmID = sb.toString();
     }
 
-    public String getAssociationID() {
-        return associationID;
+    public String getCompanyID() {
+        return companyID;
     }
 
-    public void setAssociationID(String associationID) {
-        this.associationID = associationID;
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
     }
 
     public String getUserID() {

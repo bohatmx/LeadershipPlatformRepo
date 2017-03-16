@@ -23,7 +23,7 @@ public class EndpointContract {
         void sendCompanyMessage(String companyID, PayLoad payLoad);
     }
     public interface View {
-        void onUserSaved(FCMResponseDTO response);
+        void onFCMUserSaved(FCMResponseDTO response);
         void onMessageSent(FCMResponseDTO response);
         void onEmailSent(EmailResponseDTO response);
         void onError(String message);

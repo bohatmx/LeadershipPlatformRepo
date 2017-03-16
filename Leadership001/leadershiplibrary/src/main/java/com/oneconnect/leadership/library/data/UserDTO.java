@@ -12,8 +12,8 @@ public class UserDTO {
     public static final int
             SUBSCRIBER = 1,
             COMPANY_STAFF = 2;
-    private String userID, firstName, lastName,
-            email, cellphone, password, uid,
+    private String userID, firstName, lastName, companyName,
+            email, cellphone, password, uid, companyID,
             stringDateRegistered, userDescription;
     private Long dateRegistered;
     private int userType;
@@ -25,6 +25,23 @@ public class UserDTO {
         dateRegistered = new Date().getTime();
         stringDateRegistered = sdf.format(new Date());
     }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     public String getFullName() {
         return firstName.concat(" ").concat(lastName);
     }

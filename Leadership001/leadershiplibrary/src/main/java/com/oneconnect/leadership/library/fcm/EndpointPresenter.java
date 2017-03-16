@@ -23,7 +23,7 @@ public class EndpointPresenter implements EndpointContract.Presenter {
         EndpointUtil.saveUser(user, new EndpointUtil.FCMListener() {
             @Override
             public void onResponse(FCMResponseDTO response) {
-                view.onUserSaved(response);
+                view.onFCMUserSaved(response);
             }
 
             @Override
