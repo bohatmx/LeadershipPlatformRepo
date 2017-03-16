@@ -1,31 +1,36 @@
 package com.oneconnect.leadership.admin;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class AdminSignInActivity extends AppCompatActivity {
+import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.login.LoginActivity;
+
+public class AdminSignInActivity extends LoginActivity {
+    public static final String TAG = AdminSignInActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_sign_in);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        type = UserDTO.COMPANY_STAFF;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+    }
+
+    @Override
+    public void onLoginSucceeded() {
+        Log.i(TAG, "onLoginSucceeded: ");
+    }
+
+    @Override
+    public void onLoginFailed() {
+        Log.e(TAG, "onLoginFailed: ");
+
     }
 
     @Override
@@ -43,7 +48,8 @@ public class AdminSignInActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            logoff();
             return true;
         }
 

@@ -73,3 +73,6 @@ dependencies {
     compile 'com.cloudinary:cloudinary-android:1.8.0'
     testCompile 'junit:junit:4.12'
 }
+
+
+apply plugin: 'com.google.gms.google-services'
