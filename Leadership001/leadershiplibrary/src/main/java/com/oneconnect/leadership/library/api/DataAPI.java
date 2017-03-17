@@ -26,6 +26,7 @@ import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -65,6 +66,7 @@ public class DataAPI {
             PRICES = "prices",
             USERS = "users",
             NEWS = "news",
+            SUBSCRIPTIONS = "subscriptions",
             VIDEOS = "videos",
             COMPANIES = "companies",
             WEEKLY_MASTER_CLASSES = "weeklyMasterClasses",
@@ -345,6 +347,27 @@ public class DataAPI {
                             + news.getCompanyName());
                     news.setNewsID(responseRef.getKey());
                     responseRef.child("newsID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+    public void addSubscription(final SubscriptionDTO subscription, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(SUBSCRIPTIONS);
+        log(ref);
+        ref.push().setValue(subscription, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: subscription added: "
+                            + subscription.getCompanyName());
+                    subscription.setSubscriptionID(responseRef.getKey());
+                    responseRef.child("subscriptionID").setValue(responseRef.getKey());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());
 

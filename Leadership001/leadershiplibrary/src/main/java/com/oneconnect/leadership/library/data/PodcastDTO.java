@@ -11,12 +11,19 @@ public class PodcastDTO {
     private String podcastID, title, subTitle, transcript, stringDate, url;
     private Long date;
     private Double length;
-    private String companyID, companyName, stringDateUpdated;
+    private String companyID, companyName, stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, eBookID, subjectTitle;
     private HashMap<String,String> urls;
 
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
     public HashMap<String, String> getUrls() {
         return urls;
     }

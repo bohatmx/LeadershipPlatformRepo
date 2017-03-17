@@ -6,12 +6,45 @@ package com.oneconnect.leadership.library.data;
 
 public class PriceDTO {
 
-    private String priceID, productName, stringDate;
+    private String priceID, productName, stringDate, dailyThoughtID,
+            weeklyMessageID, weeklyMasterclassID, ebookID;
     private Long date;
     private Double amount;
     private String companyID, companyName, stringDateUpdated;
     private boolean active;
     private Long dateUpdated;
+
+    public String getDailyThoughtID() {
+        return dailyThoughtID;
+    }
+
+    public void setDailyThoughtID(String dailyThoughtID) {
+        this.dailyThoughtID = dailyThoughtID;
+    }
+
+    public String getWeeklyMessageID() {
+        return weeklyMessageID;
+    }
+
+    public String getEbookID() {
+        return ebookID;
+    }
+
+    public void setEbookID(String ebookID) {
+        this.ebookID = ebookID;
+    }
+
+    public void setWeeklyMessageID(String weeklyMessageID) {
+        this.weeklyMessageID = weeklyMessageID;
+    }
+
+    public String getWeeklyMasterclassID() {
+        return weeklyMasterclassID;
+    }
+
+    public void setWeeklyMasterclassID(String weeklyMasterclassID) {
+        this.weeklyMasterclassID = weeklyMasterclassID;
+    }
 
     public String getCompanyID() {
         return companyID;

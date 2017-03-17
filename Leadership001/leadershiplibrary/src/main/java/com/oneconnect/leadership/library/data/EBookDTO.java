@@ -8,10 +8,18 @@ public class EBookDTO {
     private String eBookID, title, description, url, stringDate;
     private Long date;
     private Integer numberOfPages;
-    private String companyID, companyName, stringDateUpdated;
+    private String companyID, companyName, stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID,  subjectTitle;
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
 
     public String getWeeklyMasterClassID() {
         return weeklyMasterClassID;

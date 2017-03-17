@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class NewsDTO {
     private String companyID,companyName,title,body, newsID,
-            stringArticleDate, stringDateRegistered;
+            stringArticleDate, stringDateRegistered, html;
     private long dateRegistered, articleDate;
     private HashMap<String,String> urls;
     private HashMap<String,PhotoDTO> photos;
@@ -21,6 +21,14 @@ public class NewsDTO {
     public NewsDTO() {
         dateRegistered = new Date().getTime();
         stringDateRegistered = sdf.format(new Date());
+    }
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
     }
 
     public HashMap<String, VideoDTO> getVideos() {

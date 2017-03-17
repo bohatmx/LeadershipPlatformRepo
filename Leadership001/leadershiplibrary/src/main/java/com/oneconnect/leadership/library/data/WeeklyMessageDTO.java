@@ -15,11 +15,19 @@ public class WeeklyMessageDTO {
     private Long date;
     private Integer year, weekNumber;
     private CategoryDTO category;
-    private String companyID, companyName, stringDateUpdated;
+    private String companyID, companyName, stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
     private HashMap<String,String> urls;
 
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
     public HashMap<String, String> getUrls() {
         return urls;
     }

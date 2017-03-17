@@ -11,7 +11,7 @@ public class DailyThoughtDTO {
     private String dailyThoughtID, title, subTitle,
             text, stringDateRegistered, categoryID, categoryName;
     private Long dateRegistered;
-    private String companyID, companyName, stringDateUpdated;
+    private String companyID, companyName, stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
 
@@ -24,6 +24,13 @@ public class DailyThoughtDTO {
         return podcasts;
     }
 
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
     public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
         this.podcasts = podcasts;
     }
