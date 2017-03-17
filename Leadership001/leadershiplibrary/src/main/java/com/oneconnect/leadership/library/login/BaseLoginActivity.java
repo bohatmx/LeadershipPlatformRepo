@@ -15,10 +15,14 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ocg.backend.endpointAPI.model.Data;
 import com.ocg.backend.endpointAPI.model.EmailResponseDTO;
 import com.ocg.backend.endpointAPI.model.FCMResponseDTO;
@@ -28,6 +32,7 @@ import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.fcm.EndpointContract;
 import com.oneconnect.leadership.library.fcm.EndpointPresenter;
+import com.oneconnect.leadership.library.fcm.EndpointUtil;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
@@ -38,7 +43,7 @@ import java.util.Date;
 public abstract class BaseLoginActivity extends AppCompatActivity
         implements LoginContract.View, EndpointContract.View {
 
-    FirebaseAuth firebaseAuth;
+    public FirebaseAuth firebaseAuth;
     public Toolbar toolbar;
     LoginPresenter presenter;
     EndpointPresenter fcmPresenter;
@@ -52,16 +57,14 @@ public abstract class BaseLoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: +++++++++++++++++++++++++++");
         firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() != null) {
-            onLoginSucceeded();
-            return;
-        }
         presenter = new LoginPresenter(this);
         fcmPresenter = new EndpointPresenter(this);
     }
-
     public void startLogin() {
         Log.d(TAG, "startLogin: +++++++++++++++++++++++++++");
+        AuthUI.IdpConfig googleIdp = new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
+                .setPermissions(Arrays.asList(Scopes.EMAIL, Scopes.PROFILE))
+                .build();
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -69,7 +72,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                         .setTheme(R.style.GreenTheme)
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                googleIdp,
                                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                         .build(),
                 REQUEST_SIGN_IN);
@@ -80,13 +83,13 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
-                         onLoggedOut();
+                        onLoggedOut();
                     }
                 });
     }
 
     private void onLoggedOut() {
-           finish();
+        finish();
     }
 
     public abstract void onLoginSucceeded();
@@ -102,32 +105,37 @@ public abstract class BaseLoginActivity extends AppCompatActivity
     }
 
     String email;
+    IdpResponse idpResponse;
+
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, "onActivityResult: ......... resultCode " + resultCode);
         if (requestCode == REQUEST_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
+            idpResponse = IdpResponse.fromResultIntent(data);
+
+            Log.d(TAG, "onActivityResult: IdpResponse: ".concat(GSON.toJson(idpResponse)));
             if (resultCode == ResultCodes.OK) {
                 Log.i(TAG, "onActivityResult: resultCode OK");
-                email = response.getEmail();
-                getAppUser(response.getEmail());
+                email = idpResponse.getEmail();
+                getAppUser(idpResponse.getEmail());
                 return;
             } else {
-                Log.e(TAG, "onActivityResult: login not ok" );
-                if (response == null) {
+                Log.e(TAG, "onActivityResult: login not ok");
+                if (idpResponse == null) {
                     showSnackbar(getString(R.string.sign_in_cancelled), "Bad", "red");
                     onLoginFailed();
                     return;
                 }
 
-                if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                if (idpResponse.getErrorCode() == ErrorCodes.NO_NETWORK) {
                     showSnackbar(getString(R.string.no_internet_connection), "Bad", "red");
                     onLoginFailed();
                     return;
                 }
 
-                if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                if (idpResponse.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                     showSnackbar(getString(R.string.unknown_error), "Bad", "red");
                     onLoginFailed();
                     return;
@@ -150,49 +158,106 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                 snackbar.dismiss();
             }
         });
-        snackbar.dismiss();
+        snackbar.show();
 
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
-        Log.i(TAG, "onUserFound: ");
+    public void onUserFoundByEmail(UserDTO user) {
+        Log.i(TAG, "++++++++++++++++++ onUserFound by email: ".concat(user.getEmail()));
         progressDialog.dismiss();
         SharedPrefUtil.saveUser(user, this);
         addFCMUser(user);
-        onLoginSucceeded();
+
     }
 
     @Override
-    public void onUserAdded(UserDTO user) {
-        Log.i(TAG, "onUserAdded: ");
+    public void onUserNotFoundByEmail() {
+        progressDialog.dismiss();
+        UserDTO u = new UserDTO();
+        switch (type) {
+            case UserDTO.SUBSCRIBER:
+                u.setEmail(email);
+                u.setUserType(type);
+                Log.d(TAG, "onUserNotFoundByEmail: this is a subscriber, adding to app database ...");
+                presenter.addUser(u);
+                break;
+            case UserDTO.LEADER:
+                u.setEmail(email);
+                u.setUserType(type);
+                Log.d(TAG, "onUserNotFoundByEmail: this is a leader, adding to app database ...");
+                presenter.addUser(u);
+                break;
+            case UserDTO.COMPANY_STAFF:
+                Log.d(TAG, "onUserNotFoundByEmail: staff member not found, failing");
+                onLoginFailed();
+                break;
+        }
+
+    }
+
+    @Override
+    public void onUserAddedToAppDatabase(UserDTO user) {
+        Log.i(TAG, "############### onUserAdded to app's database, now adding to fcm: ".concat(user.getEmail()));
         progressDialog.dismiss();
         SharedPrefUtil.saveUser(user, this);
         addFCMUser(user);
+
         onLoginSucceeded();
+    }
+    @Override
+    public void onUserAlreadyExists(UserDTO user) {
+        SharedPrefUtil.saveUser(user,this);
+        addFCMUser(user);
     }
     private void addFCMUser(UserDTO u) {
         FCMUserDTO m = Util.createFCMUser(u,
                 SharedPrefUtil.getCloudMsgToken(this));
+        Log.d(TAG, "addFCMUser: adding fcmuser to gae ".concat(GSON.toJson(m)));
         fcmPresenter.saveUser(m);
     }
+
     @Override
     public void onFCMUserSaved(FCMResponseDTO response) {
-        Log.i(TAG, "onFCMUserSaved: ");
+        Log.i(TAG, "onFCMUserSaved: ".concat(response.getMessage()));
         if (response.getStatusCode() == 0) {
             UserDTO u = SharedPrefUtil.getUser(this);
             Data d = new Data();
             d.setDate(new Date().getTime());
-            d.setMessage("Welcome to the best Leadership Platform in the world!");
             d.setFromUser("Leadership Platform");
-            d.setTitle("Leadership Platform Welcome");
             FCMessageDTO m = new FCMessageDTO();
             m.setCompanyID(u.getCompanyID());
             m.setDate(new Date().getTime());
             m.setData(d);
             m.setUserIDs(new ArrayList<String>());
             m.getUserIDs().add(u.getUserID());
+            switch (u.getUserType()) {
+                case UserDTO.SUBSCRIBER:
+                    d.setMessage(getString(R.string.welcome_platform));
+                    d.setTitle(getString(R.string.platform_welcome));
+                    break;
+                case UserDTO.COMPANY_STAFF:
+                    d.setMessage(getString(R.string.staff_welcome));
+                    d.setTitle(u.getCompanyName());
+                    break;
+                case UserDTO.LEADER:
+                    d.setMessage(getString(R.string.leader_welcome));
+                    if (u.getCompanyName() != null) {
+                        d.setTitle(u.getCompanyName());
+                    } else {
+                        d.setTitle(getString(R.string.platform_welcome));
+                    }
+                    break;
+
+            }
+            Log.d(TAG, "onFCMUserSaved: about to send welcome message");
             fcmPresenter.sendMessage(m);
+            subscribe(u);
+            onLoginSucceeded();
+        } else {
+            FirebaseCrash.report(new Exception("Unable to save FCM user "));
+            Log.e(TAG, "onFCMUserSaved: unable to save FCM user");
+            onLoginFailed();
         }
     }
 
@@ -201,30 +266,54 @@ public abstract class BaseLoginActivity extends AppCompatActivity
         if (response.getStatusCode() == 0) {
             Log.i(TAG, "onMessageSent: welcome message sent");
         } else {
-            Log.e(TAG, "onMessageSent: welcome message failed" );
+            Log.e(TAG, "onMessageSent: welcome message failed");
             FirebaseCrash.report(new Exception("Welcome message failed"));
         }
     }
+
+    private void subscribe(UserDTO user) {
+
+        FirebaseMessaging.getInstance().subscribeToTopic(EndpointUtil.TOPIC_GENERAL);
+        Log.w(TAG, "################# ==> Subscribed to topic general");
+
+        switch (user.getUserType()) {
+            case UserDTO.SUBSCRIBER:
+                FirebaseMessaging.getInstance().subscribeToTopic(
+                        EndpointUtil.TOPIC_SUBSCRIBER);
+                Log.w(TAG, "################## ==> Subscribed to topic: subscriber");
+                break;
+            case UserDTO.COMPANY_STAFF:
+                if (user.getCompanyID() != null) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            EndpointUtil.TOPIC_COMPANY_STAFF + user.getCompanyID());
+                    Log.w(TAG, "################## ==> Subscribed to topic: company_staff"
+                            .concat(user.getCompanyID()));
+                }
+                break;
+            case UserDTO.LEADER:
+                if (user.getCompanyID() != null) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            EndpointUtil.TOPIC_LEADER + user.getCompanyID());
+                    Log.w(TAG, "################## ==> Subscribed to topic: leader"
+                            .concat(user.getCompanyID()));
+                }
+                break;
+        }
+
+    }
+
     public static final String TAG = BaseLoginActivity.class.getSimpleName();
+
     @Override
     public void onEmailSent(EmailResponseDTO response) {
-
+        Log.i(TAG, "onEmailSent: ".concat(response.getMessage()));
     }
 
     @Override
     public void onError(String message) {
-        Log.e(TAG, "............onError: ".concat(message) );
+        Log.e(TAG, "............onError: ".concat(message));
         progressDialog.dismiss();
-        if (type == UserDTO.SUBSCRIBER) {
-            UserDTO u = new UserDTO();
-            u.setEmail(email);
-            u.setUserType(type);
-            u.setUserDescription(UserDTO.DESC_SUBSCRIBER);
-            presenter.addUser(u);
-        } else {
-            Log.d(TAG, "onError: about to call onLoginFailed");
-            onLoginFailed();
-        }
+        onLoginFailed();
 
     }
 }

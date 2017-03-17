@@ -1,7 +1,6 @@
 package com.oneconnect.leadership.library.login;
 
 import com.oneconnect.leadership.library.api.DataAPI;
-import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UserDTO;
 
 /**
@@ -19,25 +18,36 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void getUserByEmail(String email) {
-        api.getUserByEmail(email, new DataAPI.OnDataRead() {
+        api.getUserByEmail(email, new DataAPI.EmailQueryListener() {
             @Override
-            public void onResponse(ResponseBag responseBag) {
-                view.onUserFound(responseBag.getUsers().get(0));
+            public void onUserFoundByEmail(UserDTO user) {
+                view.onUserFoundByEmail(user);
             }
 
             @Override
-            public void onError() {
-                 view.onError("User not found in database");
+            public void onUserNotFoundByEmail() {
+                view.onUserNotFoundByEmail();
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
             }
         });
     }
 
     @Override
     public void addUser(final UserDTO user) {
-        api.addUser(user, new DataAPI.DataListener() {
+
+        api.addUser(user, new DataAPI.AddUserListener() {
             @Override
-            public void onResponse(String key) {
-                view.onUserAdded(user);
+            public void onUserAdded(UserDTO user) {
+                view.onUserAddedToAppDatabase(user);
+            }
+
+            @Override
+            public void onUserAlreadyExists(UserDTO user) {
+                view.onUserAlreadyExists(user);
             }
 
             @Override
@@ -45,5 +55,6 @@ public class LoginPresenter implements LoginContract.Presenter {
                  view.onError(message);
             }
         });
+
     }
 }

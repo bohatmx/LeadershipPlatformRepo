@@ -12,9 +12,11 @@ import com.oneconnect.leadership.library.data.UserDTO;
 public class Util {
 
 
-    public static FCMUserDTO createFCMUser(UserDTO user, String token) {
+    public static FCMUserDTO createFCMUser(UserDTO user,
+                                           String token) {
         FCMUserDTO u = new FCMUserDTO();
-        u.setFcmID(user.getUserID()+"@"+ Build.SERIAL);
+        u.setFcmID(user.getUserID().concat("@").concat(Build.SERIAL)
+        .concat("*") + user.getUserType());
         u.setDate(user.getDateRegistered());
         u.setUserID(user.getUserID());
         u.setName(user.getFullName());

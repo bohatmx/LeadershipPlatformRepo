@@ -6,9 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -26,7 +28,7 @@ public class SubscriberMessagingService extends FirebaseMessagingService {
 
     public static final String TAG = SubscriberMessagingService.class.getSimpleName(),
             BROADCAST_LOCATION_RESPONSE_ARRIVED = "com.oneconnect.BROADCAST_LOCATION_RESPONSE_ARRIVED",
-            BROADCAST_VEHICLE_DISPATCHED = "com.oneconnect.BROADCAST_VEHICLE_DISPATCHED";
+            BROADCAST_MESSAGE_RECEIVED = "com.oneconnect.BROADCAST_MESSAGE_RECEIVED";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -34,13 +36,24 @@ public class SubscriberMessagingService extends FirebaseMessagingService {
                 "onMessageReceived: from: " + remoteMessage.getFrom()
                 + " to:" + remoteMessage.getTo() + " collapseKey: "
                 + remoteMessage.getCollapseKey());
-        boolean isRunning = isMainActivityRunning("com.oneconnect.leadership.subscriber");
-        Log.w(TAG, "onMessageReceived: com.oneconnect.leadership.subscriber isRunning: " + isRunning );
+        boolean isRunning = isMainActivityRunning("com.ocg.leadership.subscriber");
+        Log.w(TAG, "onMessageReceived: com.ocg.leadership.subscriber isRunning: " + isRunning);
         //check for notifcations without app data structures
         if (remoteMessage.getNotification() != null) {
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
-            sendNotification(title,body);
+            if (isRunning) {
+                Intent m = new Intent(BROADCAST_MESSAGE_RECEIVED);
+                FCMData f = new FCMData();
+                f.setTitle(title);
+                f.setMessage(body);
+                m.putExtra("data", f);
+                LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
+                bm.sendBroadcast(m);
+                Log.w(TAG, "onMessageReceived: BROADCAST_MESSAGE_RECEIVED has been broadcast to app" );
+            } else {
+                sendNotification(title, body);
+            }
             return;
         }
         try {
@@ -62,30 +75,27 @@ public class SubscriberMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "onMessageReceived: " + gson.toJson(data));
 
             if (data.getMessageType() == EndpointUtil.ADMINS) {
-                Log.w(TAG, "onMessageReceived: responding to ADMINS ...." );
+                Log.w(TAG, "onMessageReceived: responding to ADMINS ....");
 
                 return;
             }
             if (data.getMessageType() == EndpointUtil.COMPANY) {
-                Log.w(TAG, "onMessageReceived: responding to company ...." );
-//
-//                TripDTO v = gson.fromJson(data.getJson(),
-//                        TripDTO.class);
-//                if (isRunning) {
-//                    Intent m = new Intent(BROADCAST_VEHICLE_DISPATCHED);
-//                    m.putExtra("trip", v);
-//                    LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
-//                    bm.sendBroadcast(m);
-//                }
-//                Log.d(TAG, "onMessageReceived: broadcast sent to notify vehicle dispatched");
-//                //start trip tracking schedule
-//                startTripLogTask(v);
+                Log.w(TAG, "onMessageReceived: responding to company ....");
             }
-            sendNotification(data);
+            if (isRunning) {
+                Intent m = new Intent(BROADCAST_MESSAGE_RECEIVED);
+                m.putExtra("data", data);
+                LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
+                bm.sendBroadcast(m);
+                Log.w(TAG, "onMessageReceived: BROADCAST_MESSAGE_RECEIVED has been broadcast to app" );
+            } else {
+                sendNotification(data);
+            }
 
 
         } catch (Exception e) {
-            Log.e(TAG, "onMessageReceived: ", e);
+            Log.e(TAG, "ERROR onMessageReceived: ", e);
+            FirebaseCrash.report(new Exception("Error receiving FCM message: ".concat(e.getMessage())));
         }
     }
 
@@ -120,6 +130,7 @@ public class SubscriberMessagingService extends FirebaseMessagingService {
 
 
     }
+
     private void sendNotification(String title, String body) {
 
         StringBuilder sb = new StringBuilder();
@@ -154,11 +165,11 @@ public class SubscriberMessagingService extends FirebaseMessagingService {
     }
 
     public boolean isMainActivityRunning(String packageName) {
-        ActivityManager activityManager = (ActivityManager) getSystemService (Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasksInfo = activityManager.getRunningTasks(Integer.MAX_VALUE);
 
         for (int i = 0; i < tasksInfo.size(); i++) {
-            Log.d(TAG, "isMainActivityRunning: " +
+            Log.d(TAG, "This app is RUNNING: " +
                     tasksInfo.get(i).baseActivity.getPackageName().toString());
             if (tasksInfo.get(i).baseActivity.getPackageName().toString().equals(packageName))
                 return true;

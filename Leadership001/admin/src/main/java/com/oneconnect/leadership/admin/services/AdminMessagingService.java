@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -26,7 +27,7 @@ public class AdminMessagingService extends FirebaseMessagingService {
 
     public static final String TAG = AdminMessagingService.class.getSimpleName(),
             BROADCAST_LOCATION_RESPONSE_ARRIVED = "com.oneconnect.BROADCAST_LOCATION_RESPONSE_ARRIVED",
-            BROADCAST_VEHICLE_DISPATCHED = "com.oneconnect.BROADCAST_VEHICLE_DISPATCHED";
+            BROADCAST_ADMIN_MESSAGE_RECEIVED = "com.oneconnect.BROADCAST_ADMIN_MESSAGE_RECEIVED";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -34,13 +35,24 @@ public class AdminMessagingService extends FirebaseMessagingService {
                 "onMessageReceived: from: " + remoteMessage.getFrom()
                 + " to:" + remoteMessage.getTo() + " collapseKey: "
                 + remoteMessage.getCollapseKey());
-        boolean isRunning = isMainActivityRunning("com.oneconnect.leadership.admin");
-        Log.w(TAG, "onMessageReceived: com.oneconnect.leadership.admin isRunning: " + isRunning );
+        boolean isRunning = isMainActivityRunning("com.ocg.leadership.admin");
+        Log.w(TAG, "onMessageReceived: com.ocg.leadership.admin isRunning: " + isRunning );
         //check for notifcations without app data structures
         if (remoteMessage.getNotification() != null) {
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
-            sendNotification(title,body);
+            if (isRunning) {
+                Intent m = new Intent(BROADCAST_ADMIN_MESSAGE_RECEIVED);
+                FCMData f = new FCMData();
+                f.setTitle(title);
+                f.setMessage(body);
+                m.putExtra("data", f);
+                LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
+                bm.sendBroadcast(m);
+                Log.w(TAG, "onMessageReceived: BROADCAST_ADMIN_MESSAGE_RECEIVED broadcast to app" );
+            } else {
+                sendNotification(title, body);
+            }
             return;
         }
         try {
@@ -68,20 +80,17 @@ public class AdminMessagingService extends FirebaseMessagingService {
             }
             if (data.getMessageType() == EndpointUtil.COMPANY) {
                 Log.w(TAG, "onMessageReceived: responding to company ...." );
-//
-//                TripDTO v = gson.fromJson(data.getJson(),
-//                        TripDTO.class);
-//                if (isRunning) {
-//                    Intent m = new Intent(BROADCAST_VEHICLE_DISPATCHED);
-//                    m.putExtra("trip", v);
-//                    LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
-//                    bm.sendBroadcast(m);
-//                }
-//                Log.d(TAG, "onMessageReceived: broadcast sent to notify vehicle dispatched");
-//                //start trip tracking schedule
-//                startTripLogTask(v);
+
             }
-            sendNotification(data);
+            if (isRunning) {
+                Intent m = new Intent(BROADCAST_ADMIN_MESSAGE_RECEIVED);
+                m.putExtra("data", data);
+                LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
+                bm.sendBroadcast(m);
+                Log.w(TAG, "onMessageReceived: BROADCAST_ADMIN_MESSAGE_RECEIVED broadcast to app" );
+            }  else {
+                sendNotification(data);
+            }
 
 
         } catch (Exception e) {
@@ -158,7 +167,7 @@ public class AdminMessagingService extends FirebaseMessagingService {
         List<ActivityManager.RunningTaskInfo> tasksInfo = activityManager.getRunningTasks(Integer.MAX_VALUE);
 
         for (int i = 0; i < tasksInfo.size(); i++) {
-            Log.d(TAG, "isMainActivityRunning: " +
+            Log.d(TAG, "this app is currently RUNNING: " +
                     tasksInfo.get(i).baseActivity.getPackageName().toString());
             if (tasksInfo.get(i).baseActivity.getPackageName().toString().equals(packageName))
                 return true;

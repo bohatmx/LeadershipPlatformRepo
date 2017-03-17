@@ -1,34 +1,56 @@
 package com.oneconnect.leadership.subscriber;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.login.BaseLoginActivity;
+
+import es.dmoral.toasty.Toasty;
 
 public class SubscriberSignInActivityBase extends BaseLoginActivity {
     public static final String TAG = SubscriberSignInActivityBase.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ssssssss ######################");
         setContentView(R.layout.activity_subscriber_sign_in);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         type = UserDTO.SUBSCRIBER;
-
+        if (firebaseAuth.getCurrentUser() == null) {
+            startLogin();
+        } else {
+            Log.i(TAG, "onCreate: user already signed in. no need for toast");
+            startMain(true);
+        }
     }
+
 
     @Override
     public void onLoginSucceeded() {
-        Log.i(TAG, "onLoginSucceeded: ");
+        Log.i(TAG, "+++++++++++++ onLoginSucceeded: ");
+        startMain(false);
+    }
+
+    private void startMain(boolean isAlreadySignedIn) {
+        if (isAlreadySignedIn) return;
+        Toasty.success(this,getString(R.string.success),
+                Toast.LENGTH_LONG,true).show();
+        Intent m = new Intent(this,SubscriberMainActivity.class);
+        startActivity(m);
     }
 
     @Override
     public void onLoginFailed() {
         Log.e(TAG, "onLoginFailed: ");
+        Toasty.error(this,getString(R.string.signin_failed), Toast.LENGTH_LONG,true).show();
+        showSnackbar(getString(R.string.signin_failed),"OK","red");
 
     }
 

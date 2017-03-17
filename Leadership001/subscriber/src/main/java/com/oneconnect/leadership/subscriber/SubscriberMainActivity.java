@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin;
+package com.oneconnect.leadership.subscriber;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,26 +24,26 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oneconnect.leadership.admin.services.AdminMessagingService;
 import com.oneconnect.leadership.library.data.FCMData;
+import com.oneconnect.leadership.subscriber.services.SubscriberMessagingService;
 
-public class AdminMainActivity extends AppCompatActivity
+public class SubscriberMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    DrawerLayout drawer;
-    Toolbar toolbar;
-    Snackbar snackbar;
-    FloatingActionButton fab;
-
+    private Snackbar snackbar;
+    private Toolbar toolbar;
+    private DrawerLayout drawer;
+    private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Log.d(TAG, "onCreate: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        setContentView(R.layout.activity_subscriber_main);
+         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         setup();
-        IntentFilter filter = new IntentFilter(AdminMessagingService.BROADCAST_ADMIN_MESSAGE_RECEIVED);
+        IntentFilter filter = new IntentFilter(SubscriberMessagingService.BROADCAST_MESSAGE_RECEIVED);
         LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
     }
 
@@ -80,7 +80,7 @@ public class AdminMainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.admin_main, menu);
+        getMenuInflater().inflate(R.menu.subscriber_main, menu);
         return true;
     }
 
@@ -119,6 +119,7 @@ public class AdminMainActivity extends AppCompatActivity
 
         }
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -143,21 +144,26 @@ public class AdminMainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 snackbar.dismiss();
-                AlertDialog.Builder b = new AlertDialog.Builder(getApplicationContext());
-                b.setTitle(fcmData.getTitle())
-                        .setMessage(fcmData.getMessage())
-                        .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        }).show();
+                showMessage();
             }
         });
         snackbar.show();
 
     }
 
+    private void showMessage() {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(fcmData.getTitle())
+                .setMessage(fcmData.getMessage())
+                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).show();
+    }
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public static final String TAG = AdminMainActivity.class.getSimpleName();
+    public static final String TAG = SubscriberMainActivity.class.getSimpleName();
+
 }

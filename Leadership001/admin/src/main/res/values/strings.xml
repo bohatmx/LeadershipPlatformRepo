@@ -7,4 +7,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="login_failed">Login failed</string>
+    <string name="not_ok">Not OK</string>
+    <string name="platform_signin">Leadership Platform Sign In</string>
+    <string name="success">Sign in succeeded. Welcome!</string>
 </resources>

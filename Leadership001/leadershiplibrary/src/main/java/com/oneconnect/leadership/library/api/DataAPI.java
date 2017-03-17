@@ -1,6 +1,5 @@
 package com.oneconnect.leadership.library.api;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -23,6 +22,7 @@ import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
@@ -64,7 +64,9 @@ public class DataAPI {
             PHOTOS = "photos",
             PRICES = "prices",
             USERS = "users",
-            VIDEOS = "videos", COMPANIES = "companies",
+            NEWS = "news",
+            VIDEOS = "videos",
+            COMPANIES = "companies",
             WEEKLY_MASTER_CLASSES = "weeklyMasterClasses",
             WEEKLY_MESSAGES = "weeklyMessages";
 
@@ -88,27 +90,56 @@ public class DataAPI {
         return letters[random.nextInt(letters.length - 1)];
     }
 
-    public interface OnUserCreated {
-        void onResponse(UserDTO user);
-
+    public interface CreateUserListener {
+        void onUserCreated(UserDTO user);
+        void onUserAlreadyExists(UserDTO user);
         void onError(String message);
     }
 
     public interface OnSignedIn {
         void onSuccess(FirebaseUser user);
-
         void onError();
     }
 
     public interface OnDataRead {
         void onResponse(ResponseBag responseBag);
-
         void onError();
     }
-
-    public void createUser(final UserDTO user, final Context ctx,
-                           final OnUserCreated listener) {
+    public interface EmailQueryListener {
+        void onUserFoundByEmail(UserDTO user);
+        void onUserNotFoundByEmail();
+        void onError(String message);
+    }
+    public interface AddUserListener {
+        void onUserAdded(UserDTO user);
+        void onUserAlreadyExists(UserDTO user);
+        void onError(String message);
+    }
+    public void createUser(final UserDTO user,
+                           final CreateUserListener listener) {
         Log.d(TAG, "createUser: starting to create user: " + user.getEmail());
+        getUserByEmail(user.getEmail(), new EmailQueryListener() {
+            @Override
+            public void onUserFoundByEmail(UserDTO user) {
+                listener.onError("User already exists");
+                return;
+            }
+
+            @Override
+            public void onUserNotFoundByEmail() {
+                performWrite(user, listener);
+            }
+
+            @Override
+            public void onError(String message) {
+               listener.onError(message);
+            }
+        });
+
+
+    }
+
+    private void performWrite(final UserDTO user, final CreateUserListener listener) {
         try {
             if (user.getPassword() == null) {
                 user.setPassword(getRandomPassword());
@@ -129,12 +160,16 @@ public class DataAPI {
                             + fbUser.getUid());
                     user.setUid(fbUser.getUid());
                     Log.w(TAG, "onSuccess: add user to actual database ***************");
-                    addUser(user, new DataListener() {
+
+                    addUser(user, new AddUserListener() {
                         @Override
-                        public void onResponse(String key) {
-                            Log.i(TAG, "+++++++++ onResponse: user added: " + key);
-                            user.setUserID(key);
-                            listener.onResponse(user);
+                        public void onUserAdded(UserDTO user) {
+                              listener.onUserCreated(user);
+                        }
+
+                        @Override
+                        public void onUserAlreadyExists(UserDTO user) {
+                             listener.onUserAlreadyExists(user);
                         }
 
                         @Override
@@ -157,7 +192,6 @@ public class DataAPI {
         } catch (Exception e) {
             Log.e(TAG, "createUser failed!: ", e);
         }
-
     }
 
     static FirebaseAuth mAuth;
@@ -187,7 +221,7 @@ public class DataAPI {
     }
 
 
-    public void getUserByEmail(final String email, final OnDataRead listener) {
+    public void getUserByEmail(final String email, final EmailQueryListener listener) {
         Log.d(TAG, "################## getUserByEmail: find user by mail: " + email);
         final long start = System.currentTimeMillis();
         DatabaseReference usersRef = db.getReference(USERS);
@@ -197,50 +231,46 @@ public class DataAPI {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, "onDataChange: getUser: dataSnapshot:" + dataSnapshot);
-                ResponseBag b = new ResponseBag();
-                b.setSubscribers(new ArrayList<UserDTO>());
+
                 if (dataSnapshot.getChildren() == null || dataSnapshot.getChildrenCount() == 0) {
                     Log.e(TAG, "onDataChange: getUser: no users found for email: " + email);
-                    listener.onError();
+                    listener.onUserNotFoundByEmail();
                     return;
                 }
                 Log.w(TAG, "onDataChange: getUser: users found by email: "
                         + dataSnapshot.getChildrenCount());
+
                 for (DataSnapshot shot : dataSnapshot.getChildren()) {
                     UserDTO u = shot.getValue(UserDTO.class);
-                    b.getSubscribers().add(u);
-                    Log.d(TAG, "onDataChange: getUser: about to send user via listener");
-                    long end = System.currentTimeMillis();
-                    Log.e(TAG, "********* onDataChange: getUser, elapsed seconds: " + (end - start) / 1000);
-                    listener.onResponse(b);
+                    listener.onUserFoundByEmail(u);
                     return;
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                listener.onError();
+                listener.onError(databaseError.getMessage());
             }
         });
 
     }
 
 
-    public void getUser(final String key, final OnDataRead listener) {
-        Log.d(TAG, "########### getUser: get user by uid: " + key);
+    public void getUserByUid(final String uid, final OnDataRead listener) {
+        Log.d(TAG, "########### getUser: get user by uid: " + uid);
         final long start = System.currentTimeMillis();
         DatabaseReference usersRef = db.getReference(USERS);
 
-        Query q = usersRef.orderByChild("uid").equalTo(key);
+        Query q = usersRef.orderByChild("uid").equalTo(uid);
         log(usersRef);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, "onDataChange: getUser: dataSnapshot:" + dataSnapshot);
                 ResponseBag b = new ResponseBag();
-                b.setSubscribers(new ArrayList<UserDTO>());
+                b.setUsers(new ArrayList<UserDTO>());
                 if (dataSnapshot.getChildren() == null) {
-                    Log.e(TAG, "onDataChange: getUser: no users found for uid: " + key);
+                    Log.e(TAG, "onDataChange: getUser: no users found for uid: " + uid);
                     listener.onError();
                     return;
                 }
@@ -248,7 +278,7 @@ public class DataAPI {
                         + dataSnapshot.getChildrenCount());
                 for (DataSnapshot shot : dataSnapshot.getChildren()) {
                     UserDTO u = shot.getValue(UserDTO.class);
-                    b.getSubscribers().add(u);
+                    b.getUsers().add(u);
                     Log.d(TAG, "onDataChange: getUser: about to send user via listener");
                     long end = System.currentTimeMillis();
                     Log.e(TAG, "********* onDataChange: getUser, elapsed seconds: " + (end - start) / 1000);
@@ -266,27 +296,65 @@ public class DataAPI {
 
     }
 
-    public void addUser(final UserDTO c, final DataListener listener) {
-
-        DatabaseReference userRef = db.getReference(USERS);
-        log(userRef);
-        userRef.push().setValue(c, new DatabaseReference.CompletionListener() {
+    public void addUser(final UserDTO c, final AddUserListener listener) {
+        getUserByEmail(c.getEmail(), new EmailQueryListener() {
             @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+            public void onUserFoundByEmail(UserDTO user) {
+                  listener.onUserAlreadyExists(user);
+            }
+
+            @Override
+            public void onUserNotFoundByEmail() {
+                Log.w(TAG, "addUser: onUserNotFoundByEmail: now add the new user to database" );
+                DatabaseReference userRef = db.getReference(USERS);
+                log(userRef);
+                userRef.push().setValue(c, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            databaseReference.child("userID").setValue(databaseReference.getKey());
+                            Log.i(TAG, "***************** onComplete: user added to firebase: " + c.getEmail());
+                            c.setUserID(databaseReference.getKey());
+                            listener.onUserAdded(c);
+
+                        } else {
+                            listener.onError(databaseError.getMessage());
+                        }
+
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                 listener.onError(message);
+            }
+        });
+
+
+    }
+
+    public void addNews(final NewsDTO news, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(NEWS);
+        log(ref);
+        ref.push().setValue(news, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
                 if (databaseError == null) {
-                    databaseReference.child("userID").setValue(databaseReference.getKey());
-                    Log.i(TAG, "***************** onComplete: user added to firebase: " + c.getEmail());
-                    c.setUserID(databaseReference.getKey());
-                    listener.onResponse(databaseReference.getKey());
+                    Log.i(TAG, "------------- onComplete: news added: "
+                            + news.getCompanyName());
+                    news.setNewsID(responseRef.getKey());
+                    responseRef.child("newsID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
 
                 } else {
-                    listener.onError(databaseError.getMessage());
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
                 }
-
             }
         });
     }
-
 
     public void addDailyThoughts(final DailyThoughtDTO dailyThought, final DataListener listener) {
         final DatabaseReference ref = db.getReference(DAILY_THOUGHTS);

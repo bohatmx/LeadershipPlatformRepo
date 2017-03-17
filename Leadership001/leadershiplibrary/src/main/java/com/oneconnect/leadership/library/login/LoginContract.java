@@ -12,8 +12,10 @@ public class LoginContract {
         void addUser(UserDTO user);
     }
     public interface View {
-        void onUserFound(UserDTO user);
-        void onUserAdded(UserDTO user);
+        void onUserFoundByEmail(UserDTO user);
+        void onUserNotFoundByEmail();
+        void onUserAddedToAppDatabase(UserDTO user);
+        void onUserAlreadyExists(UserDTO user);
         void onError(String message);
     }
 }

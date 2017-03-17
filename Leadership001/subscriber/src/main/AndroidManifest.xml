@@ -10,12 +10,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
-        <service
-            android:name=".services.SubscriberMessagingService">
+        <service android:name=".services.SubscriberMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".SubscriberSignInActivityBase"
             android:label="@string/app_name"
@@ -29,6 +29,10 @@
         <activity
             android:name=".NotifHandlerActivity"
             android:label="@string/title_activity_notif_handler"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SubscriberMainActivity"
+            android:label="@string/title_activity_subscriber_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

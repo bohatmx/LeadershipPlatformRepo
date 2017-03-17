@@ -43,7 +43,10 @@ public class UserDTO {
         this.companyName = companyName;
     }
 
+    public void setFullName(String fullName) {
+    }
     public String getFullName() {
+        if (firstName == null) return null;
         return firstName.concat(" ").concat(lastName);
     }
     public String getUserDescription() {

@@ -152,16 +152,23 @@ public class InternalMainActivity extends AppCompatActivity implements Navigatio
         u.setLastName(companyName);
         u.setUserType(UserDTO.COMPANY_STAFF);
         u.setPassword(txtPassword.getText().toString());
-        api.createUser(u, this, new DataAPI.OnUserCreated() {
+
+        api.createUser(u, new DataAPI.CreateUserListener() {
             @Override
-            public void onResponse(UserDTO user) {
-                Log.i(TAG, "createUser onResponse: ".concat(GSON.toJson(user)));
+            public void onUserCreated(UserDTO user) {
+                Log.i(TAG, "addAdministrator: createUser onResponse: ".concat(GSON.toJson(user)));
                 progressDialog.dismiss();
                 btn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
                         R.drawable.ic_done_all_white));
                 showSnackbar("Admin added in: " + user.getEmail(),"OK","green");
+            }
 
-
+            @Override
+            public void onUserAlreadyExists(UserDTO user) {
+                progressDialog.dismiss();
+                btn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
+                        R.drawable.ic_cancel_white));
+                showSnackbar("User already exists","Not OK", "yellow");
             }
 
             @Override

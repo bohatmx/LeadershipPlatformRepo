@@ -34,12 +34,19 @@ public class ResponseBag {
     private List<PhotoDTO> photos;
     private List<PodcastDTO> podcasts;
     private List<PriceDTO> prices;
-    private List<UserDTO> subscribers;
     private List<VideoDTO> videos;
     private List<WeeklyMasterClassDTO> weeklyMasterClasses;
     private List<WeeklyMessageDTO> weeklyMessages;
     private List<UserDTO> users;
+    private List<NewsDTO> news;
 
+    public List<NewsDTO> getNews() {
+        return news;
+    }
+
+    public void setNews(List<NewsDTO> news) {
+        this.news = news;
+    }
 
     public List<UserDTO> getUsers() {
         return users;
@@ -103,14 +110,6 @@ public class ResponseBag {
 
     public void setPrices(List<PriceDTO> prices) {
         this.prices = prices;
-    }
-
-    public List<UserDTO> getSubscribers() {
-        return subscribers;
-    }
-
-    public void setSubscribers(List<UserDTO> subscribers) {
-        this.subscribers = subscribers;
     }
 
     public List<VideoDTO> getVideos() {

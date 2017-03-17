@@ -98,7 +98,7 @@ public class EndpointUtil {
 
         @Override
         protected FCMResponseDTO doInBackground(Void... params) {
-            Log.d(TAG, "doInBackground: ###################################################");
+            Log.d(TAG, "doInBackground: ########### : ".concat(APP_ENGINE_ROOT_URL));
             if (endpointAPI == null) {  // Only do this once
                 EndpointAPI.Builder builder = new EndpointAPI.Builder(AndroidHttp.newCompatibleTransport(),
                         new AndroidJsonFactory(), null)
@@ -246,33 +246,33 @@ public class EndpointUtil {
                 String topicKey = null;
                 switch (type) {
                     case COMPANY:
-                        topicKey = "company".concat(id);
+                        topicKey = TOPIC_COMPANY.concat(id);
                         fcm = endpointAPI.sendTopicMessage(
                                 topicKey, payLoad).execute();
                         break;
                     case WEEKLY_MASTERCLASS:
-                        topicKey = "weekly_masterclass".concat(id);
+                        topicKey = TOPIC_MASTERCLASS.concat(id);
                         fcm = endpointAPI.sendTopicMessage(
                                 topicKey, payLoad).execute();
                         break;
                     case ADMINS:
-                        topicKey = "admin".concat(id);
+                        topicKey = TOPIC_COMPANY_STAFF.concat(id);
                         fcm = endpointAPI.sendTopicMessage(
                                 topicKey, payLoad).execute();
                         break;
                     case DAILY_THOUGHT:
-                        topicKey = "daily_thought".concat(id);
+                        topicKey = TOPIC_DAILY_THOUGHT.concat(id);
                         fcm = endpointAPI.sendTopicMessage(
                                 topicKey, payLoad).execute();
                         break;
 
                     case SUBSCRIBERS:
-                        topicKey = "subscriber".concat(id);
+                        topicKey = TOPIC_SUBSCRIBER.concat(id);
                         fcm = endpointAPI.sendTopicMessage(
                                 topicKey, payLoad).execute();
                         break;
                     case LEADERS:
-                        topicKey = "leader".concat(id);
+                        topicKey = TOPIC_LEADER.concat(id);
                         fcm = endpointAPI.sendTopicMessage(
                                 topicKey, payLoad).execute();
                         break;
@@ -304,6 +304,14 @@ public class EndpointUtil {
             listener.onResponse(result);
         }
     }
+    public static final String
+            TOPIC_COMPANY_STAFF = "company_staff",
+            TOPIC_DAILY_THOUGHT = "daily_thought",
+            TOPIC_SUBSCRIBER = "subscriber",
+            TOPIC_MASTERCLASS = "master_class",
+            TOPIC_COMPANY = "company",
+            TOPIC_LEADER = "leader",
+            TOPIC_GENERAL = "general";
 
     static class SendEmailTask extends AsyncTask<Void, Void, EmailResponseDTO> {
 

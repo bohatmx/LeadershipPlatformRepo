@@ -13,4 +13,8 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>
+    <string name="welcome_platform">Welcome to the best Leadership Platform in the world!</string>
+    <string name="staff_welcome">Welcome! The tools for Leadership have arrived</string>
+    <string name="leader_welcome">Welcome! We need Leaders everywhere ...</string>
+    <string name="platform_welcome">Leadership Platform Welcome</string>
 </resources>
