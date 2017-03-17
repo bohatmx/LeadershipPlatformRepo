@@ -1,14 +1,15 @@
 package com.oneconnect.leadership.library.data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by aubreymalabie on 2/12/17.
  */
 
-public class ResponseBag {
+public class ResponseBag implements Serializable{
 
-    private int statusCode;
+    private int statusCode, type;
     private String message;
 
     public int getStatusCode() {
@@ -27,6 +28,14 @@ public class ResponseBag {
         this.message = message;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     private List<CategoryDTO> categories;
     private List<DailyThoughtDTO> dailyThoughts;
     private List<EBookDTO> eBooks;
@@ -40,6 +49,42 @@ public class ResponseBag {
     private List<UserDTO> users;
     private List<NewsDTO> news;
     private List<SubscriptionDTO> subscriptions;
+    private List<CompanyDTO> companies;
+    private List<CountryDTO> countries;
+
+    public static final int CATEGORIES = 1,
+    DAILY_THOUGHTS = 2,
+    EBOOKS = 3,
+    PAYMENTS = 4,
+    PHOTOS = 5,
+    PODCASTS = 6,
+    VIDEOS = 7,
+    WEEKLY_MASTERCLASS = 8,
+    WEEKLY_MESSAGE = 9,
+    USERS = 10,
+    NEWS = 11,
+    SUBSCRIPTIONS = 12,
+    COMPANY = 13,
+    DEVICE = 14,
+    COUNTRY = 15,
+    PRICE = 16;
+
+
+    public List<CompanyDTO> getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(List<CompanyDTO> companies) {
+        this.companies = companies;
+    }
+
+    public List<CountryDTO> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(List<CountryDTO> countries) {
+        this.countries = countries;
+    }
 
     public List<SubscriptionDTO> getSubscriptions() {
         return subscriptions;

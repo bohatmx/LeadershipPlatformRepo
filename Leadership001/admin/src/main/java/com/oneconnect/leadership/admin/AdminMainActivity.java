@@ -143,19 +143,23 @@ public class AdminMainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 snackbar.dismiss();
-                AlertDialog.Builder b = new AlertDialog.Builder(getApplicationContext());
-                b.setTitle(fcmData.getTitle())
-                        .setMessage(fcmData.getMessage())
-                        .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        }).show();
+                showDialog();
             }
         });
         snackbar.show();
 
+    }
+
+    private void showDialog() {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(fcmData.getTitle())
+                .setMessage(fcmData.getMessage())
+                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                }).show();
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

@@ -1,10 +1,14 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
+
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PriceDTO {
+public class PriceDTO implements DTOEntity, Serializable, Comparable<PriceDTO>{
 
     private String priceID, productName, stringDate, dailyThoughtID,
             weeklyMessageID, weeklyMasterclassID, ebookID;
@@ -125,5 +129,36 @@ public class PriceDTO {
 
     public void setDate(Long date) {
         this.date = date;
+    }
+    @Override
+    public int compareTo(@NonNull PriceDTO d) {
+        if (date > d.date) {
+            return -1;
+        }
+        if (date < d.date) {
+            return 1;
+        }
+        return 0;
+
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return null;
+    }
+
+    @Override
+    public String getTopText() {
+        return null;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return null;
+    }
+
+    @Override
+    public String getBottomText() {
+        return null;
     }
 }

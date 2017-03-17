@@ -1,5 +1,8 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,13 +11,13 @@ import java.util.HashMap;
  * Created by aubreymalabie on 3/17/17.
  */
 
-public class NewsDTO {
-    private String companyID,companyName,title,body, newsID,
+public class NewsDTO implements DTOEntity, Serializable, Comparable<NewsDTO> {
+    private String companyID, companyName, title, body, newsID,
             stringArticleDate, stringDateRegistered, html;
     private long dateRegistered, articleDate;
-    private HashMap<String,String> urls;
-    private HashMap<String,PhotoDTO> photos;
-    private HashMap<String,VideoDTO> videos;
+    private HashMap<String, String> urls;
+    private HashMap<String, PhotoDTO> photos;
+    private HashMap<String, VideoDTO> videos;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyy HH:mm:ss");
 
@@ -125,5 +128,36 @@ public class NewsDTO {
 
     public void setUrls(HashMap<String, String> urls) {
         this.urls = urls;
+    }
+
+    @Override
+    public int compareTo(@NonNull NewsDTO d) {
+        if (dateRegistered > d.dateRegistered) {
+            return -1;
+        }
+        if (dateRegistered < d.dateRegistered) {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return title;
+    }
+
+    @Override
+    public String getTopText() {
+        return body;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return stringArticleDate;
+    }
+
+    @Override
+    public String getBottomText() {
+        return companyName;
     }
 }

@@ -1,12 +1,15 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PodcastDTO {
+public class PodcastDTO implements DTOEntity, Serializable, Comparable<PodcastDTO>{
 
     private String podcastID, title, subTitle, transcript, stringDate, url;
     private Long date;
@@ -175,5 +178,37 @@ public class PodcastDTO {
 
     public void setLength(Double length) {
         this.length = length;
+    }
+
+    @Override
+    public int compareTo(@NonNull PodcastDTO d) {
+        if (date > d.date) {
+            return -1;
+        }
+        if (date < d.date) {
+            return 1;
+        }
+        return 0;
+
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return title;
+    }
+
+    @Override
+    public String getTopText() {
+        return subTitle;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return subjectTitle;
+    }
+
+    @Override
+    public String getBottomText() {
+        return stringDate;
     }
 }

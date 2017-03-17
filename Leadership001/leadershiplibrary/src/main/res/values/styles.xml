@@ -111,4 +111,61 @@
         <item name="colorControlHighlight">@color/red_900</item>
         <item name="android:windowBackground">@color/material_green_50</item>
     </style>
+
+    <style name="GreenCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/xgreen_oval_small</item>
+    </style>
+
+    <style name="GreyCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/xgrey_oval_small</item>
+    </style>
+
+    <style name="PinkCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/xpink_oval_small</item>
+    </style>
+
+    <style name="IndigoCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/xindigo_oval_small</item>
+    </style>
+
+    <style name="BlueCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:background">@drawable/xblue_oval_small</item>
+    </style>
+
+    <style name="OrangeCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:background">@drawable/xorange_oval_small</item>
+    </style>
+
+    <style name="RedCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/xred_oval_small</item>
+    </style>
+
+    <style name="BlackCircleSmall" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/xblack_oval_small</item>
+    </style>
+
 </resources>

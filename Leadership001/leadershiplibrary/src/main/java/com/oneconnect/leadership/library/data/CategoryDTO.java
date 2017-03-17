@@ -1,10 +1,14 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
+
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class CategoryDTO {
+public class CategoryDTO implements DTOEntity, Serializable, Comparable<CategoryDTO>{
    private String categoryID, categoryName;
     private String companyID, companyName, stringDateUpdated;
     private boolean active;
@@ -64,5 +68,30 @@ public class CategoryDTO {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    @Override
+    public int compareTo(@NonNull CategoryDTO c) {
+        return this.categoryName.compareTo(c.categoryName);
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return categoryName;
+    }
+
+    @Override
+    public String getTopText() {
+        return null;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return null;
+    }
+
+    @Override
+    public String getBottomText() {
+        return null;
     }
 }

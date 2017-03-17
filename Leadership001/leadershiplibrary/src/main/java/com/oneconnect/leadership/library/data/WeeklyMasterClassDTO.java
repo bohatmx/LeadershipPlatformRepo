@@ -1,12 +1,15 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class WeeklyMasterClassDTO {
+public class WeeklyMasterClassDTO implements DTOEntity, Serializable, Comparable<WeeklyMasterClassDTO>{
     private String weeklyMasterClassID, title, subTitle, text, stringDate;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
@@ -172,5 +175,37 @@ public class WeeklyMasterClassDTO {
 
     public void setCategory(CategoryDTO category) {
         this.category = category;
+    }
+
+    @Override
+    public int compareTo(@NonNull WeeklyMasterClassDTO d) {
+        if (date > d.date) {
+            return -1;
+        }
+        if (date < d.date) {
+            return 1;
+        }
+        return 0;
+
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return title;
+    }
+
+    @Override
+    public String getTopText() {
+        return text;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return companyName;
+    }
+
+    @Override
+    public String getBottomText() {
+        return stringDate;
     }
 }

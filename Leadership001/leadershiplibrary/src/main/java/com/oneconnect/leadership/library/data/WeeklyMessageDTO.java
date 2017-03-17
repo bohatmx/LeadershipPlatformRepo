@@ -1,12 +1,15 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class WeeklyMessageDTO {
+public class WeeklyMessageDTO implements DTOEntity, Serializable, Comparable<WeeklyMessageDTO> {
 
     private String weeklyMessageID, title, subTitle, text, stringDate;
     private HashMap<String, PhotoDTO> photos;
@@ -18,7 +21,7 @@ public class WeeklyMessageDTO {
     private String companyID, companyName, stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
-    private HashMap<String,String> urls;
+    private HashMap<String, String> urls;
 
 
     public String getHtml() {
@@ -28,6 +31,7 @@ public class WeeklyMessageDTO {
     public void setHtml(String html) {
         this.html = html;
     }
+
     public HashMap<String, String> getUrls() {
         return urls;
     }
@@ -171,5 +175,37 @@ public class WeeklyMessageDTO {
 
     public void setCategory(CategoryDTO category) {
         this.category = category;
+    }
+
+    @Override
+    public int compareTo(@NonNull WeeklyMessageDTO d) {
+        if (date > d.date) {
+            return -1;
+        }
+        if (date < d.date) {
+            return 1;
+        }
+        return 0;
+
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return title;
+    }
+
+    @Override
+    public String getTopText() {
+        return text;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return category.getCategoryName();
+    }
+
+    @Override
+    public String getBottomText() {
+        return stringDate;
     }
 }

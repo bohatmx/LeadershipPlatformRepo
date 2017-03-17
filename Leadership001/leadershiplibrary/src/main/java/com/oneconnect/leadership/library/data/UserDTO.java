@@ -1,5 +1,8 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -7,7 +10,7 @@ import java.util.Date;
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class UserDTO {
+public class UserDTO implements DTOEntity, Serializable, Comparable<UserDTO>{
 
     public static final int
             SUBSCRIBER = 1,
@@ -146,5 +149,32 @@ public class UserDTO {
 
     public void setDateRegistered(Long dateRegistered) {
         this.dateRegistered = dateRegistered;
+    }
+
+    @Override
+    public int compareTo(@NonNull UserDTO u) {
+        String n1 = this.lastName.concat(" ").concat(this.firstName);
+        String n2 = u.lastName.concat(" ").concat(u.firstName);
+        return n1.compareTo(n2);
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return getFullName();
+    }
+
+    @Override
+    public String getTopText() {
+        return email;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return stringDateRegistered;
+    }
+
+    @Override
+    public String getBottomText() {
+        return companyName;
     }
 }

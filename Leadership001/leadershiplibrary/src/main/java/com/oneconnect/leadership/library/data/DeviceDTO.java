@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by aubreymalabie on 11/11/16.
  */
 
-public class DeviceDTO implements Serializable{
+public class DeviceDTO implements Serializable, DTOEntity{
 
     private String model, manufacturer, androidVersion, serialNumber, iosVersion, deviceID;
     private String companyID, userID, email, firstName,lastName;
@@ -115,5 +115,25 @@ public class DeviceDTO implements Serializable{
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return null;
+    }
+
+    @Override
+    public String getTopText() {
+        return null;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return null;
+    }
+
+    @Override
+    public String getBottomText() {
+        return null;
     }
 }

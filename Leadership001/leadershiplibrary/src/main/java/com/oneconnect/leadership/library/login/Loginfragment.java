@@ -48,7 +48,7 @@ public class Loginfragment extends Fragment {
             mListener = (LoginListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement LoginListener");
+                    + " must implement ListListener");
         }
     }
 

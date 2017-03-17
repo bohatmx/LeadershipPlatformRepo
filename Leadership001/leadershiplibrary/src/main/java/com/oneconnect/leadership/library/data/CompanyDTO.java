@@ -1,10 +1,14 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
+
 /**
  * Created by aubreymalabie on 3/16/17.
  */
 
-public class CompanyDTO {
+public class CompanyDTO implements DTOEntity, Serializable, Comparable<CompanyDTO> {
     private String companyID, companyName, email,
     stringDateRegistered,
     countryID, address;
@@ -67,5 +71,30 @@ public class CompanyDTO {
 
     public void setDateRegistered(Long dateRegistered) {
         this.dateRegistered = dateRegistered;
+    }
+
+    @Override
+    public int compareTo(@NonNull CompanyDTO c) {
+        return this.companyName.compareTo(c.companyName);
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return companyName;
+    }
+
+    @Override
+    public String getTopText() {
+        return email;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return address;
+    }
+
+    @Override
+    public String getBottomText() {
+        return stringDateRegistered;
     }
 }

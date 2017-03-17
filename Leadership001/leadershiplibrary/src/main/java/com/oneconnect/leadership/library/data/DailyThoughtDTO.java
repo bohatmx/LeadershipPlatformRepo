@@ -1,12 +1,15 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class DailyThoughtDTO {
+public class DailyThoughtDTO implements DTOEntity, Serializable, Comparable<DailyThoughtDTO> {
 
     private String dailyThoughtID, title, subTitle,
             text, stringDateRegistered, categoryID, categoryName;
@@ -18,7 +21,7 @@ public class DailyThoughtDTO {
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
     private HashMap<String, PodcastDTO> podcasts;
-    private HashMap<String,String> urls;
+    private HashMap<String, String> urls;
 
     public HashMap<String, PodcastDTO> getPodcasts() {
         return podcasts;
@@ -31,6 +34,7 @@ public class DailyThoughtDTO {
     public void setHtml(String html) {
         this.html = html;
     }
+
     public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
         this.podcasts = podcasts;
     }
@@ -163,5 +167,36 @@ public class DailyThoughtDTO {
 
     public void setDateRegistered(Long dateRegistered) {
         this.dateRegistered = dateRegistered;
+    }
+
+    @Override
+    public int compareTo(@NonNull DailyThoughtDTO d) {
+        if (dateRegistered > d.dateRegistered) {
+            return -1;
+        }
+        if (dateRegistered < d.dateRegistered) {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return title;
+    }
+
+    @Override
+    public String getTopText() {
+        return text;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return categoryName;
+    }
+
+    @Override
+    public String getBottomText() {
+        return stringDateRegistered;
     }
 }

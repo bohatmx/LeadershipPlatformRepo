@@ -1,12 +1,17 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
+import java.text.DecimalFormat;
+
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PaymentDTO {
+public class PaymentDTO implements DTOEntity, Serializable, Comparable<PaymentDTO> {
     private String companyID,
-            subscriberID, subscriberName, companyName, stringPaymentDate;
+            userID, subscriberName, companyName, stringPaymentDate;
     private boolean active;
     private long paymentDate;
     private double amount;
@@ -35,12 +40,12 @@ public class PaymentDTO {
         this.active = active;
     }
 
-    public String getSubscriberID() {
-        return subscriberID;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setSubscriberID(String subscriberID) {
-        this.subscriberID = subscriberID;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getSubscriberName() {
@@ -74,4 +79,37 @@ public class PaymentDTO {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
+    @Override
+    public int compareTo(@NonNull PaymentDTO d) {
+        if (paymentDate > d.paymentDate) {
+            return -1;
+        }
+        if (paymentDate < d.paymentDate) {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return subscriberName;
+    }
+
+    @Override
+    public String getTopText() {
+        return stringPaymentDate;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return df.format(amount);
+    }
+
+    @Override
+    public String getBottomText() {
+        return companyName;
+    }
+
+    static final DecimalFormat df = new DecimalFormat("###,###,###,###,##0.00");
 }

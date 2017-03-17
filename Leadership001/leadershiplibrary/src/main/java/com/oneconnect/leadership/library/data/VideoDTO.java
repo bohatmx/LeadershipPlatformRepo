@@ -1,12 +1,15 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class VideoDTO {
+public class VideoDTO implements DTOEntity, Serializable, Comparable<VideoDTO> {
 
     String videoID, caption, description, url, filePath;
     Long date;
@@ -15,7 +18,7 @@ public class VideoDTO {
     private boolean active;
     private Long dateUpdated;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, eBookID, title;
-    private HashMap<String,String> urls;
+    private HashMap<String, String> urls;
 
     public HashMap<String, String> getUrls() {
         return urls;
@@ -170,5 +173,37 @@ public class VideoDTO {
 
     public void setLengthInSeconds(Integer lengthInSeconds) {
         this.lengthInSeconds = lengthInSeconds;
+    }
+
+    @Override
+    public int compareTo(@NonNull VideoDTO d) {
+        if (date > d.date) {
+            return -1;
+        }
+        if (date < d.date) {
+            return 1;
+        }
+        return 0;
+
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return title;
+    }
+
+    @Override
+    public String getTopText() {
+        return description;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return stringDateUpdated;
+    }
+
+    @Override
+    public String getBottomText() {
+        return null;
     }
 }

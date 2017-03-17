@@ -1,10 +1,14 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
+
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class EBookDTO {
+public class EBookDTO implements DTOEntity, Serializable, Comparable<EBookDTO>{
     private String eBookID, title, description, url, stringDate;
     private Long date;
     private Integer numberOfPages;
@@ -148,5 +152,30 @@ public class EBookDTO {
 
     public void setNumberOfPages(Integer numberOfPages) {
         this.numberOfPages = numberOfPages;
+    }
+
+    @Override
+    public int compareTo(@NonNull EBookDTO e) {
+        return this.title.compareTo(e.title);
+    }
+
+    @Override
+    public String getTitleForAdapter() {
+        return title;
+    }
+
+    @Override
+    public String getTopText() {
+        return description;
+    }
+
+    @Override
+    public String getBottomTitle() {
+        return companyName;
+    }
+
+    @Override
+    public String getBottomText() {
+        return stringDate;
     }
 }
