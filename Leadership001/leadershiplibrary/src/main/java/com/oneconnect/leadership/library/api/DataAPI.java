@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.oneconnect.leadership.library.data.CategoryDTO;
+import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -62,8 +63,8 @@ public class DataAPI {
             PODCASTS = "podcasts",
             PHOTOS = "photos",
             PRICES = "prices",
-            SUBSCRIBERS = "subscribers",
-            VIDEOS = "videos",
+            USERS = "users",
+            VIDEOS = "videos", COMPANIES = "companies",
             WEEKLY_MASTER_CLASSES = "weeklyMasterClasses",
             WEEKLY_MESSAGES = "weeklyMessages";
 
@@ -94,7 +95,7 @@ public class DataAPI {
     }
 
     public interface OnSignedIn {
-        void onResponse(UserDTO user);
+        void onSuccess(FirebaseUser user);
 
         void onError();
     }
@@ -104,8 +105,9 @@ public class DataAPI {
 
         void onError();
     }
-    public void createSubscriber(final UserDTO user, final Context ctx,
-                                 final OnUserCreated listener) {
+
+    public void createUser(final UserDTO user, final Context ctx,
+                           final OnUserCreated listener) {
         Log.d(TAG, "createUser: starting to create user: " + user.getEmail());
         try {
             if (user.getPassword() == null) {
@@ -160,30 +162,6 @@ public class DataAPI {
 
     static FirebaseAuth mAuth;
 
-    public void signInStaff(final String email, final String password, final OnSignedIn onSignedIn) {
-        Log.d(TAG, "......................signIn: email: " + email);
-
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()) {
-                            FirebaseUser fbUser = task.getResult().getUser();
-                            Log.i(TAG, "####### onComplete: we cool, displayName: "
-                                    + fbUser.getDisplayName() + " email: " + fbUser.getEmail()
-                                    + " uid: " + fbUser.getUid() + " \ntoken: " + fbUser.getToken(true));
-
-                            onSignedIn.onResponse(null);
-
-                        } else {
-                            Log.e(TAG, "------------ sign in FAILED");
-                            onSignedIn.onError();
-                        }
-                    }
-                });
-    }
 
     public void signIn(final String email, final String password, final OnSignedIn onSignedIn) {
         Log.d(TAG, ".....................signIn: email: " + email);
@@ -199,20 +177,7 @@ public class DataAPI {
                             Log.i(TAG, "####### onComplete: we cool, displayName: "
                                     + fbUser.getDisplayName() + " email: " + fbUser.getEmail()
                                     + " uid: " + fbUser.getUid() + " \ntoken: " + fbUser.getToken(true));
-
-                            getUser(fbUser.getUid(), new OnDataRead() {
-                                @Override
-                                public void onResponse(ResponseBag responseBag) {
-                                    Log.i(TAG, "onResponse: signIn: users: " + responseBag.getSubscribers().size());
-                                    onSignedIn.onResponse(responseBag.getSubscribers().get(0));
-                                }
-
-                                @Override
-                                public void onError() {
-                                    onSignedIn.onError();
-                                }
-                            });
-
+                             onSignedIn.onSuccess(fbUser);
                         } else {
                             Log.e(TAG, "------------ sign in FAILED: task not successful");
                             onSignedIn.onError();
@@ -225,7 +190,7 @@ public class DataAPI {
     public void getUserByEmail(final String email, final OnDataRead listener) {
         Log.d(TAG, "################## getUserByEmail: find user by mail: " + email);
         final long start = System.currentTimeMillis();
-        DatabaseReference usersRef = db.getReference(SUBSCRIBERS);
+        DatabaseReference usersRef = db.getReference(USERS);
         Query q = usersRef.orderByChild("email").equalTo(email);
         log(usersRef);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -234,12 +199,12 @@ public class DataAPI {
                 Log.i(TAG, "onDataChange: getUser: dataSnapshot:" + dataSnapshot);
                 ResponseBag b = new ResponseBag();
                 b.setSubscribers(new ArrayList<UserDTO>());
-                if (dataSnapshot.getChildren() == null) {
-                    Log.e(TAG, "onDataChange: getUser: no users found for uid: " + email);
+                if (dataSnapshot.getChildren() == null || dataSnapshot.getChildrenCount() == 0) {
+                    Log.e(TAG, "onDataChange: getUser: no users found for email: " + email);
                     listener.onError();
                     return;
                 }
-                Log.w(TAG, "onDataChange: getUser: users found for uid: "
+                Log.w(TAG, "onDataChange: getUser: users found by email: "
                         + dataSnapshot.getChildrenCount());
                 for (DataSnapshot shot : dataSnapshot.getChildren()) {
                     UserDTO u = shot.getValue(UserDTO.class);
@@ -264,7 +229,7 @@ public class DataAPI {
     public void getUser(final String key, final OnDataRead listener) {
         Log.d(TAG, "########### getUser: get user by uid: " + key);
         final long start = System.currentTimeMillis();
-        DatabaseReference usersRef = db.getReference(SUBSCRIBERS);
+        DatabaseReference usersRef = db.getReference(USERS);
 
         Query q = usersRef.orderByChild("uid").equalTo(key);
         log(usersRef);
@@ -303,7 +268,7 @@ public class DataAPI {
 
     public void addUser(final UserDTO c, final DataListener listener) {
 
-        DatabaseReference userRef = db.getReference(SUBSCRIBERS);
+        DatabaseReference userRef = db.getReference(USERS);
         log(userRef);
         userRef.push().setValue(c, new DatabaseReference.CompletionListener() {
             @Override
@@ -323,7 +288,6 @@ public class DataAPI {
     }
 
 
-
     public void addDailyThoughts(final DailyThoughtDTO dailyThought, final DataListener listener) {
         final DatabaseReference ref = db.getReference(DAILY_THOUGHTS);
         log(ref);
@@ -335,6 +299,28 @@ public class DataAPI {
                             + dailyThought.getTitle());
                     dailyThought.setDailyThoughtID(responseRef.getKey());
                     responseRef.child("countryID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void addCompany(final CompanyDTO company, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(COMPANIES);
+        log(ref);
+        ref.push().setValue(company, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: company added: "
+                            + company.getCompanyName());
+                    company.setCompanyID(responseRef.getKey());
+                    responseRef.child("companyID").setValue(responseRef.getKey());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());
 
@@ -389,6 +375,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addEBooks(final EBookDTO eBook, final DataListener listener) {
         final DatabaseReference ref = db.getReference(EBOOKS);
         log(ref);
@@ -410,6 +397,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addPhoto(final PhotoDTO photo, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PHOTOS);
         log(ref);
@@ -432,6 +420,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addVideo(final VideoDTO video, final DataListener listener) {
         final DatabaseReference ref = db.getReference(VIDEOS);
         log(ref);
@@ -454,6 +443,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addWeeklyMessage(final WeeklyMessageDTO weeklyMessage, final DataListener listener) {
         final DatabaseReference ref = db.getReference(WEEKLY_MESSAGES);
         log(ref);
@@ -475,6 +465,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addWeeklyMasterClass(final WeeklyMasterClassDTO weeklyMasterClass, final DataListener listener) {
         final DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES);
         log(ref);
@@ -497,6 +488,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addPodcast(final PodcastDTO podcast, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PODCASTS);
         log(ref);
@@ -518,6 +510,7 @@ public class DataAPI {
             }
         });
     }
+
     public static void log(DatabaseReference ref) {
         Log.w("Firebase APIs", "Firebase Request Log: databaseReference: " + ref.getRef().toString());
     }

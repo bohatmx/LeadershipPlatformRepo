@@ -1,6 +1,10 @@
 <resources>
-    <string name="app_name">Admin</string>
+    <string name="app_name">Leadership Admin</string>
     <string name="action_settings">Settings</string>
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_notif_handler">NotifHandlerActivity</string>
+    <string name="title_activity_admin_main">AdminMainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

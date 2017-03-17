@@ -10,6 +10,8 @@ import com.oneconnect.leadership.library.data.UserDTO;
  */
 
 public class Util {
+
+
     public static FCMUserDTO createFCMUser(UserDTO user, String token) {
         FCMUserDTO u = new FCMUserDTO();
         u.setFcmID(user.getUserID()+"@"+ Build.SERIAL);

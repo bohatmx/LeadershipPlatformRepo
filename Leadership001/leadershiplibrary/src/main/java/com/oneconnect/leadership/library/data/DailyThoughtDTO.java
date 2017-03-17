@@ -17,6 +17,25 @@ public class DailyThoughtDTO {
 
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
+    private HashMap<String, PodcastDTO> podcasts;
+    private HashMap<String,String> urls;
+
+    public HashMap<String, PodcastDTO> getPodcasts() {
+        return podcasts;
+    }
+
+    public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
+        this.podcasts = podcasts;
+    }
+
+    public HashMap<String, String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, String> urls) {
+        this.urls = urls;
+    }
+
 
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;

@@ -1,5 +1,7 @@
 package com.oneconnect.leadership.library.data;
 
+import java.util.HashMap;
+
 /**
  * Created by aubreymalabie on 2/11/17.
  */
@@ -13,6 +15,15 @@ public class PodcastDTO {
     private boolean active;
     private Long dateUpdated;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, eBookID, subjectTitle;
+    private HashMap<String,String> urls;
+
+    public HashMap<String, String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, String> urls) {
+        this.urls = urls;
+    }
 
     public String getWeeklyMasterClassID() {
         return weeklyMasterClassID;

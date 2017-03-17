@@ -45,39 +45,34 @@ public abstract class BaseLoginActivity extends AppCompatActivity
     public int type;
     ProgressDialog progressDialog;
 
-    private static final int RC_SIGN_IN = 1123;
+    private static final int REQUEST_SIGN_IN = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
+        Log.d(TAG, "onCreate: +++++++++++++++++++++++++++");
         firebaseAuth = FirebaseAuth.getInstance();
-
         if (firebaseAuth.getCurrentUser() != null) {
             onLoginSucceeded();
             return;
         }
         presenter = new LoginPresenter(this);
         fcmPresenter = new EndpointPresenter(this);
-        startLogin();
-
     }
 
-    private void startLogin() {
+    public void startLogin() {
+        Log.d(TAG, "startLogin: +++++++++++++++++++++++++++");
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setIsSmartLockEnabled(false)   //todo remove on release
-                        .setTheme(R.style.RedTheme)
+                        .setTheme(R.style.GreenTheme)
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                         .build(),
-                RC_SIGN_IN);
+                REQUEST_SIGN_IN);
     }
 
     public void logoff() {
@@ -110,13 +105,16 @@ public abstract class BaseLoginActivity extends AppCompatActivity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
+        Log.i(TAG, "onActivityResult: ......... resultCode " + resultCode);
+        if (requestCode == REQUEST_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == ResultCodes.OK) {
+                Log.i(TAG, "onActivityResult: resultCode OK");
                 email = response.getEmail();
                 getAppUser(response.getEmail());
                 return;
             } else {
+                Log.e(TAG, "onActivityResult: login not ok" );
                 if (response == null) {
                     showSnackbar(getString(R.string.sign_in_cancelled), "Bad", "red");
                     onLoginFailed();
@@ -141,9 +139,9 @@ public abstract class BaseLoginActivity extends AppCompatActivity
         }
     }
 
-    Snackbar snackbar;
+    public Snackbar snackbar;
 
-    private void showSnackbar(String title, String action, String color) {
+    public void showSnackbar(String title, String action, String color) {
         snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(Color.parseColor(color));
         snackbar.setAction(action, new View.OnClickListener() {
@@ -158,6 +156,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
 
     @Override
     public void onUserFound(UserDTO user) {
+        Log.i(TAG, "onUserFound: ");
         progressDialog.dismiss();
         SharedPrefUtil.saveUser(user, this);
         addFCMUser(user);
@@ -166,6 +165,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
 
     @Override
     public void onUserAdded(UserDTO user) {
+        Log.i(TAG, "onUserAdded: ");
         progressDialog.dismiss();
         SharedPrefUtil.saveUser(user, this);
         addFCMUser(user);
@@ -178,6 +178,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
     }
     @Override
     public void onFCMUserSaved(FCMResponseDTO response) {
+        Log.i(TAG, "onFCMUserSaved: ");
         if (response.getStatusCode() == 0) {
             UserDTO u = SharedPrefUtil.getUser(this);
             Data d = new Data();
@@ -212,6 +213,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
 
     @Override
     public void onError(String message) {
+        Log.e(TAG, "............onError: ".concat(message) );
         progressDialog.dismiss();
         if (type == UserDTO.SUBSCRIBER) {
             UserDTO u = new UserDTO();
@@ -220,6 +222,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
             u.setUserDescription(UserDTO.DESC_SUBSCRIBER);
             presenter.addUser(u);
         } else {
+            Log.d(TAG, "onError: about to call onLoginFailed");
             onLoginFailed();
         }
 

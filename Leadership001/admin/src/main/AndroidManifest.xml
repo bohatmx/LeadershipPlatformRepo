@@ -17,7 +17,7 @@
         </service>
 
         <activity
-            android:name=".AdminSignInActivityBase"
+            android:name=".AdminSignInActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -29,6 +29,10 @@
         <activity
             android:name=".NotifHandlerActivity"
             android:label="@string/title_activity_notif_handler"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AdminMainActivity"
+            android:label="@string/title_activity_admin_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -18,6 +18,16 @@ public class WeeklyMasterClassDTO {
     private String companyID, companyName, stringDateUpdated;
     private boolean active;
     private Long dateUpdated;
+    private HashMap<String,String> urls;
+
+    public HashMap<String, String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, String> urls) {
+        this.urls = urls;
+    }
+
 
     public HashMap<String, PodcastDTO> getPodcasts() {
         return podcasts;

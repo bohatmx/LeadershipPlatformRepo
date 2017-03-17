@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Leadership001</string>
+    <string name="app_name">Leadership</string>
     <string name="action_settings">Settings</string>
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_notif_handler">NotifHandlerActivity</string>

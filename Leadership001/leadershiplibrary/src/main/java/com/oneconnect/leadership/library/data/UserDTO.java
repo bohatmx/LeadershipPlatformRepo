@@ -11,14 +11,15 @@ public class UserDTO {
 
     public static final int
             SUBSCRIBER = 1,
-            COMPANY_STAFF = 2;
+            COMPANY_STAFF = 2,
+            LEADER = 3;
     private String userID, firstName, lastName, companyName,
             email, cellphone, password, uid, companyID,
             stringDateRegistered, userDescription;
     private Long dateRegistered;
     private int userType;
     public static final String DESC_SUBSCRIBER = "Subscriber",
-    DESC_STAFF = "Company Staff";
+    DESC_STAFF = "Company Staff", DESC_LEADER = "Leader";
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm:ss");
 
     public UserDTO() {
@@ -59,6 +60,17 @@ public class UserDTO {
 
     public void setUserType(int userType) {
         this.userType = userType;
+        switch (userType) {
+            case SUBSCRIBER:
+                userDescription = DESC_SUBSCRIBER;
+                break;
+            case LEADER:
+                userDescription = DESC_LEADER;
+                break;
+            case COMPANY_STAFF:
+                userDescription = DESC_STAFF;
+                break;
+        }
     }
 
     public String getUid() {

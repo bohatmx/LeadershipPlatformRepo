@@ -17,7 +17,7 @@ public class AdminApp extends Application {
 
         StringBuilder sb = new StringBuilder();
         sb.append("#############################################\n");
-        sb.append("######## ADMIN APP started");
+        sb.append("######## ADMIN APP started\n");
         sb.append("#############################################\n");
         Log.d(TAG, sb.toString());
 

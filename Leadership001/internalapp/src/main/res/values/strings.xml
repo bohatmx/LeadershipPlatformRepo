@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">internalapp</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">close</string>
+    <string name="action_settings">settings</string>
+    <string name="sign_out">Sign Out</string>
+</resources>
