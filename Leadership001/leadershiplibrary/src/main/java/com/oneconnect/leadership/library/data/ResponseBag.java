@@ -39,6 +39,15 @@ public class ResponseBag {
     private List<WeeklyMessageDTO> weeklyMessages;
     private List<UserDTO> users;
     private List<NewsDTO> news;
+    private List<SubscriptionDTO> subscriptions;
+
+    public List<SubscriptionDTO> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<SubscriptionDTO> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
 
     public List<NewsDTO> getNews() {
         return news;

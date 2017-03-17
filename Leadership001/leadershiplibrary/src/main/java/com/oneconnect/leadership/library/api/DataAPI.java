@@ -21,6 +21,7 @@ import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
@@ -198,7 +199,6 @@ public class DataAPI {
 
     static FirebaseAuth mAuth;
 
-
     public void signIn(final String email, final String password, final OnSignedIn onSignedIn) {
         Log.d(TAG, ".....................signIn: email: " + email);
 
@@ -221,7 +221,6 @@ public class DataAPI {
                     }
                 });
     }
-
 
     public void getUserByEmail(final String email, final EmailQueryListener listener) {
         Log.d(TAG, "################## getUserByEmail: find user by mail: " + email);
@@ -256,7 +255,6 @@ public class DataAPI {
         });
 
     }
-
 
     public void getUserByUid(final String uid, final OnDataRead listener) {
         Log.d(TAG, "########### getUser: get user by uid: " + uid);
@@ -357,6 +355,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addSubscription(final SubscriptionDTO subscription, final DataListener listener) {
         final DatabaseReference ref = db.getReference(SUBSCRIPTIONS);
         log(ref);
@@ -368,6 +367,28 @@ public class DataAPI {
                             + subscription.getCompanyName());
                     subscription.setSubscriptionID(responseRef.getKey());
                     responseRef.child("subscriptionID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void addDevice(final DeviceDTO device, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(SUBSCRIPTIONS);
+        log(ref);
+        ref.push().setValue(device, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: device added: "
+                            + device.getModel());
+                    device.setDeviceID(responseRef.getKey());
+                    responseRef.child("deviceID").setValue(responseRef.getKey());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());
 

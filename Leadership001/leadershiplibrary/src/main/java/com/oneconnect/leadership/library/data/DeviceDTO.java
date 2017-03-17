@@ -8,10 +8,42 @@ import java.io.Serializable;
 
 public class DeviceDTO implements Serializable{
 
-    private String model, manufacturer, androidVersion, serialNumber;
-    private String companyID, userID, email;
+    private String model, manufacturer, androidVersion, serialNumber, iosVersion, deviceID;
+    private String companyID, userID, email, firstName,lastName;
     private int userType;
     private String token;
+
+    public String getIosVersion() {
+        return iosVersion;
+    }
+
+    public void setIosVersion(String iosVersion) {
+        this.iosVersion = iosVersion;
+    }
+
+    public String getDeviceID() {
+        return deviceID;
+    }
+
+    public void setDeviceID(String deviceID) {
+        this.deviceID = deviceID;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public String getCompanyID() {
         return companyID;
