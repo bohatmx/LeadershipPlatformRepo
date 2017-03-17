@@ -10,7 +10,8 @@ import java.util.HashMap;
  */
 
 public class WeeklyMasterClassDTO implements DTOEntity, Serializable, Comparable<WeeklyMasterClassDTO>{
-    private String weeklyMasterClassID, title, subTitle, text, stringDate;
+    private String weeklyMasterClassID, title, subTitle, text, stringDate, address;
+    private Double latitude, longitude;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
     private HashMap<String, PodcastDTO> podcasts;
@@ -22,6 +23,30 @@ public class WeeklyMasterClassDTO implements DTOEntity, Serializable, Comparable
     private boolean active;
     private Long dateUpdated;
     private HashMap<String,String> urls;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 
     public String getHtml() {
         return html;

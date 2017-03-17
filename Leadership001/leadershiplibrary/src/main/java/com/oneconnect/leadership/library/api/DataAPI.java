@@ -24,8 +24,10 @@ import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
@@ -67,6 +69,7 @@ public class DataAPI {
             PRICES = "prices",
             USERS = "users",
             NEWS = "news",
+            DEVICES = "devices",
             SUBSCRIPTIONS = "subscriptions",
             VIDEOS = "videos",
             COMPANIES = "companies",
@@ -356,6 +359,49 @@ public class DataAPI {
         });
     }
 
+    public void addPayment(final PaymentDTO payment, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(PAYMENTS);
+        log(ref);
+        ref.push().setValue(payment, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: payment added: "
+                            + payment.getCompanyName());
+                    payment.setPaymentID(responseRef.getKey());
+                    responseRef.child("paymentID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+    public void addPrice(final PriceDTO price, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(PRICES);
+        log(ref);
+        ref.push().setValue(price, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: price added: "
+                            + price.getCompanyName());
+                    price.setPriceID(responseRef.getKey());
+                    responseRef.child("priceID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+
     public void addSubscription(final SubscriptionDTO subscription, final DataListener listener) {
         final DatabaseReference ref = db.getReference(SUBSCRIPTIONS);
         log(ref);
@@ -379,7 +425,7 @@ public class DataAPI {
     }
 
     public void addDevice(final DeviceDTO device, final DataListener listener) {
-        final DatabaseReference ref = db.getReference(SUBSCRIPTIONS);
+        final DatabaseReference ref = db.getReference(DEVICES);
         log(ref);
         ref.push().setValue(device, new DatabaseReference.CompletionListener() {
             @Override

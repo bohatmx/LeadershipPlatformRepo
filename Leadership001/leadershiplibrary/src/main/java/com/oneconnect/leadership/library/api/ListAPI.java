@@ -7,10 +7,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.oneconnect.leadership.library.data.CategoryDTO;
+import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
@@ -73,6 +76,74 @@ public class ListAPI {
                     for (DataSnapshot shot: dataSnapshot.getChildren()) {
                         NewsDTO u = shot.getValue(NewsDTO.class);
                         bag.getNews().add(u);
+                    }
+                    listener.onResponse(bag);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+    public void getCompanies( final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.COMPANIES);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setCompanies(new ArrayList<CompanyDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                        CompanyDTO u = shot.getValue(CompanyDTO.class);
+                        bag.getCompanies().add(u);
+                    }
+                    listener.onResponse(bag);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+    public void getDevices(String companyID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.DEVICES);
+        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setDevices(new ArrayList<DeviceDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                        DeviceDTO u = shot.getValue(DeviceDTO.class);
+                        bag.getDevices().add(u);
+                    }
+                    listener.onResponse(bag);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+    public void getPhotos(String companyID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.PHOTOS);
+        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setPhotos(new ArrayList<PhotoDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                        PhotoDTO u = shot.getValue(PhotoDTO.class);
+                        bag.getPhotos().add(u);
                     }
                     listener.onResponse(bag);
                 }

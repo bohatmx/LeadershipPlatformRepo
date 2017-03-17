@@ -33,6 +33,10 @@
         <activity
             android:name=".AdminMainActivity"
             android:label="@string/title_activity_admin_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".crud.CrudActivity"
+            android:label="@string/title_activity_crud"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

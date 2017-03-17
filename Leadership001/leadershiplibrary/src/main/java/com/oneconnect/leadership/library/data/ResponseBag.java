@@ -7,7 +7,7 @@ import java.util.List;
  * Created by aubreymalabie on 2/12/17.
  */
 
-public class ResponseBag implements Serializable{
+public class ResponseBag implements Serializable {
 
     private int statusCode, type;
     private String message;
@@ -51,24 +51,51 @@ public class ResponseBag implements Serializable{
     private List<SubscriptionDTO> subscriptions;
     private List<CompanyDTO> companies;
     private List<CountryDTO> countries;
+    private List<DeviceDTO> devices;
 
-    public static final int CATEGORIES = 1,
-    DAILY_THOUGHTS = 2,
-    EBOOKS = 3,
-    PAYMENTS = 4,
-    PHOTOS = 5,
-    PODCASTS = 6,
-    VIDEOS = 7,
-    WEEKLY_MASTERCLASS = 8,
-    WEEKLY_MESSAGE = 9,
-    USERS = 10,
-    NEWS = 11,
-    SUBSCRIPTIONS = 12,
-    COMPANY = 13,
-    DEVICE = 14,
-    COUNTRY = 15,
-    PRICE = 16;
+    public static final int
+            CATEGORIES = 1,
+            DAILY_THOUGHTS = 2,
+            EBOOKS = 3,
+            PAYMENTS = 4,
+            PHOTOS = 5,
+            PODCASTS = 6,
+            VIDEOS = 7,
+            WEEKLY_MASTERCLASS = 8,
+            WEEKLY_MESSAGE = 9,
+            USERS = 10,
+            NEWS = 11,
+            SUBSCRIPTIONS = 12,
+            COMPANY = 13,
+            DEVICE = 14,
+            COUNTRY = 15,
+            PRICE = 16;
 
+    public static final String
+            DESC_CATEGORIES = "Categories",
+            DESC_DAILY_THOUGHTS = "Daily Thoughts",
+            DESC_EBOOKS = "EBooks",
+            DESC_PAYMENTS = "Payments",
+            DESC_PHOTOS = "Photos",
+            DESC_PODCASTS = "Podcasts",
+            DESC_VIDEOS = "Videos",
+            DESC_WEEKLY_MASTERCLASS = "Weekly MasterClass",
+            DESC_WEEKLY_MESSAGE = "Weekly Message",
+            DESC_USERS = "Users & Subscribers",
+            DESC_NEWS = "News Articles",
+            DESC_SUBSCRIPTIONS = "Subscriptions",
+            DESC_COMPANY = "Companies",
+            DESC_DEVICE = "Devices",
+            DESC_COUNTRY = "Countries",
+            DESC_PRICE = "Prices";
+
+    public List<DeviceDTO> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<DeviceDTO> devices) {
+        this.devices = devices;
+    }
 
     public List<CompanyDTO> getCompanies() {
         return companies;

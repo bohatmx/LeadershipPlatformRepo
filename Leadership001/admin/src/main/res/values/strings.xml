@@ -11,4 +11,5 @@
     <string name="not_ok">Not OK</string>
     <string name="platform_signin">Leadership Platform Sign In</string>
     <string name="success">Sign in succeeded. Welcome!</string>
+    <string name="title_activity_crud">CrudActivity</string>
 </resources>

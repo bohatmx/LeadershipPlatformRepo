@@ -1,12 +1,13 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -14,7 +15,6 @@ import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
 import com.oneconnect.leadership.library.data.DTOEntity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
-import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
@@ -32,14 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CategoryListener} interface
- * to handle interaction events.
- * Use the {@link EntityListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class EntityListFragment extends BaseListingFragment {
 
     public EntityListFragment() {
@@ -48,6 +41,9 @@ public class EntityListFragment extends BaseListingFragment {
     private List<DTOEntity> entities = new ArrayList<>();
     private BasicEntityAdapter adapter;
     private int type;
+    private String stringTitle;
+    private TextView txtTitle;
+    private ImageView iconAdd;
     private RecyclerView recyclerView;
     private BasicEntityAdapter.EntityListener mListener;
 
@@ -73,9 +69,18 @@ public class EntityListFragment extends BaseListingFragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_category_list, container, false);
+        txtTitle = (TextView) view.findViewById(R.id.txtTitle);
+        iconAdd = (ImageView) view.findViewById(R.id.iconAdd);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(lm);
+        txtTitle.setText(stringTitle);
+        iconAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onAddEntity();
+            }
+        });
         setList();
         return view;
     }
@@ -84,19 +89,13 @@ public class EntityListFragment extends BaseListingFragment {
         this.mListener = mListener;
     }
 
-    @Override
-    public void getData() {
-
-    }
-
-    @Override
-    public void filterData() {
-
-    }
-
-    @Override
     public void setList() {
-        adapter = new BasicEntityAdapter(entities, getActivity(), new BasicEntityAdapter.EntityListener() {
+        adapter = new BasicEntityAdapter(entities, type, getActivity(), new BasicEntityAdapter.EntityListener() {
+            @Override
+            public void onAddEntity() {
+                mListener.onAddEntity();
+            }
+
             @Override
             public void onDeleteClicked(DTOEntity entity) {
                 mListener.onDeleteClicked(entity);
@@ -131,15 +130,6 @@ public class EntityListFragment extends BaseListingFragment {
         recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void removeEntity(DTOEntity entity) {
-
-    }
-
-    @Override
-    public void addEntity(DTOEntity entity) {
-
-    }
 
     private void setupEntities() {
         ResponseBag bag = (ResponseBag) getArguments().getSerializable("bag");
@@ -147,76 +137,91 @@ public class EntityListFragment extends BaseListingFragment {
             type = bag.getType();
             switch (type) {
                 case ResponseBag.CATEGORIES:
+                    stringTitle = ResponseBag.DESC_CATEGORIES;
                     for (CategoryDTO c : bag.getCategories()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.COMPANY:
+                    stringTitle = ResponseBag.DESC_COMPANY;
                     for (CompanyDTO c : bag.getCompanies()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.COUNTRY:
+                    stringTitle = ResponseBag.DESC_COUNTRY;
                     for (CountryDTO c : bag.getCountries()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.DAILY_THOUGHTS:
+                    stringTitle = ResponseBag.DESC_DAILY_THOUGHTS;
                     for (DailyThoughtDTO c : bag.getDailyThoughts()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.EBOOKS:
+                    stringTitle = ResponseBag.DESC_EBOOKS;
                     for (EBookDTO c : bag.geteBooks()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.NEWS:
+                    stringTitle = ResponseBag.DESC_NEWS;
                     for (NewsDTO c : bag.getNews()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.PAYMENTS:
+                    stringTitle = ResponseBag.DESC_PAYMENTS;
                     for (PaymentDTO c : bag.getPayments()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.PHOTOS:
+                    stringTitle = ResponseBag.DESC_PHOTOS;
                     for (PhotoDTO c : bag.getPhotos()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.PODCASTS:
+                    stringTitle = ResponseBag.DESC_PODCASTS;
                     for (PodcastDTO c : bag.getPodcasts()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.PRICE:
+                    stringTitle = ResponseBag.DESC_PRICE;
                     for (PriceDTO c : bag.getPrices()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.SUBSCRIPTIONS:
+                    stringTitle = ResponseBag.DESC_SUBSCRIPTIONS;
                     for (SubscriptionDTO c : bag.getSubscriptions()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.USERS:
+                    stringTitle = ResponseBag.DESC_USERS;
                     for (UserDTO c : bag.getUsers()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.VIDEOS:
+                    stringTitle = ResponseBag.DESC_VIDEOS;
                     for (VideoDTO c : bag.getVideos()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.WEEKLY_MASTERCLASS:
+                    stringTitle = ResponseBag.DESC_WEEKLY_MASTERCLASS;
                     for (WeeklyMasterClassDTO c : bag.getWeeklyMasterClasses()) {
                         entities.add(c);
                     }
                     break;
                 case ResponseBag.WEEKLY_MESSAGE:
+                    stringTitle = ResponseBag.DESC_WEEKLY_MESSAGE;
                     for (WeeklyMessageDTO c : bag.getWeeklyMessages()) {
                         entities.add(c);
                     }

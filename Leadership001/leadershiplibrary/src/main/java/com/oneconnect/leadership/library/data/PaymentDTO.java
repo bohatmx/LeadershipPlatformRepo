@@ -10,11 +10,19 @@ import java.text.DecimalFormat;
  */
 
 public class PaymentDTO implements DTOEntity, Serializable, Comparable<PaymentDTO> {
-    private String companyID,
+    private String companyID, paymentID,
             userID, subscriberName, companyName, stringPaymentDate;
     private boolean active;
     private long paymentDate;
     private double amount;
+
+    public String getPaymentID() {
+        return paymentID;
+    }
+
+    public void setPaymentID(String paymentID) {
+        this.paymentID = paymentID;
+    }
 
     public String getCompanyID() {
         return companyID;
