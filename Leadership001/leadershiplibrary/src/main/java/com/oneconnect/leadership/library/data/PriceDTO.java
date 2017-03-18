@@ -18,6 +18,7 @@ public class PriceDTO implements DTOEntity, Serializable, Comparable<PriceDTO>{
     private boolean active;
     private Long dateUpdated;
 
+
     public String getDailyThoughtID() {
         return dailyThoughtID;
     }

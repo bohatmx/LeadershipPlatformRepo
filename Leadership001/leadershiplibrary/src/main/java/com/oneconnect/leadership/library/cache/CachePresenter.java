@@ -254,11 +254,11 @@ public class CachePresenter implements CacheContract.Presenter {
     }
 
     @Override
-    public void getCachePricess() {
+    public void getCachePrices() {
         PriceCache.getPrices(context, new PriceCache.ReadListener() {
             @Override
             public void onDataRead(List<PriceDTO> prices) {
-                view.onCachePricess(prices);
+                view.onCachePrices(prices);
             }
 
             @Override

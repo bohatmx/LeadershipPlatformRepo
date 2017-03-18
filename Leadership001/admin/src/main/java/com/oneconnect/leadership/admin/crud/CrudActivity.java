@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.admin.crud;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -15,12 +16,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
+import com.oneconnect.leadership.library.data.DTOEntity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -35,13 +38,17 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class CrudActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CrudContract.View, CacheContract.View {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        CrudContract.View, CacheContract.View, BasicEntityAdapter.EntityListener {
 
     private EntityListFragment entityListFragment;
     private ResponseBag bag;
@@ -51,21 +58,68 @@ public class CrudActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private DrawerLayout drawer;
     private UserDTO user;
+    private int type;
+    private Snackbar snackbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crud);
+        Log.d(TAG, "onCreate: ************************");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Leadership Platform");
         getSupportActionBar().setSubtitle("Data Management");
+        setup();
 
         presenter = new CrudPresenter(this);
-        cachePresenter = new CachePresenter(this,this);
+        cachePresenter = new CachePresenter(this, this);
         user = SharedPrefUtil.getUser(this);
-        setup();
+        type = SharedPrefUtil.getFragmentType(this);
+        if (type == 0) {
+            cachePresenter.getCacheUsers();
+        } else {
+            switch (type) {
+                case ResponseBag.CATEGORIES:
+                    cachePresenter.getCacheCategories();
+                    break;
+                case ResponseBag.DAILY_THOUGHTS:
+                    cachePresenter.getCacheDailyThoughts();
+                    break;
+                case ResponseBag.EBOOKS:
+                    cachePresenter.getCacheEbooks();
+                    break;
+                case ResponseBag.PODCASTS:
+                    cachePresenter.getCachePodcasts();
+                    break;
+                case ResponseBag.NEWS:
+                    cachePresenter.getCacheNews();
+                    break;
+                case ResponseBag.PRICE:
+                    cachePresenter.getCachePrices();
+                    break;
+                case ResponseBag.SUBSCRIPTIONS:
+                    cachePresenter.getCacheSubscriptions();
+                    break;
+                case ResponseBag.USERS:
+                    cachePresenter.getCacheUsers();
+                    break;
+                case ResponseBag.WEEKLY_MASTERCLASS:
+                    cachePresenter.getCacheWeeklyMasterclasses();
+                    break;
+                case ResponseBag.WEEKLY_MESSAGE:
+                    cachePresenter.getCacheWeeklyMessages();
+                    break;
+                case ResponseBag.PHOTOS:
+                    break;
+                case ResponseBag.VIDEOS:
+                    break;
+                case ResponseBag.PAYMENTS:
+                    break;
+            }
+        }
+
     }
 
     private void setup() {
@@ -83,15 +137,22 @@ public class CrudActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        drawer.openDrawer(GravityCompat.START,true);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setFragment() {
+        Log.w(TAG, "setFragment: starting new fragment" );
+        SharedPrefUtil.saveFragmentType(bag.getType(), this);
+        type = bag.getType();
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
         entityListFragment = EntityListFragment.newInstance(bag);
+        entityListFragment.setListener(this);
 
         ft.replace(R.id.frame, entityListFragment);
         ft.commit();
@@ -99,7 +160,6 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -109,30 +169,37 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.crud, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_daily:
+                cachePresenter.getCacheDailyThoughts();
+                break;
+            case R.id.action_news:
+                cachePresenter.getCacheNews();
+                break;
+            case R.id.action_subs:
+                cachePresenter.getCacheSubscriptions();
+                break;
+            case R.id.action_weekly_message:
+                cachePresenter.getCacheWeeklyMessages();
+                break;
+            case R.id.action_help:
+                Toasty.warning(this,"Under construction", Toast.LENGTH_SHORT,true).show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_categories:
@@ -162,6 +229,9 @@ public class CrudActivity extends AppCompatActivity
             case R.id.nav_prices:
                 cachePresenter.getCachePrices();
                 break;
+            case R.id.nav_users:
+                cachePresenter.getCacheUsers();
+                break;
         }
 
 
@@ -171,7 +241,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onEntityAdded(String key) {
-        Log.i(TAG, "onEntityAdded: data has been added, key: ".concat(key));
+        Log.w(TAG, "onEntityAdded: ++++++++++ data has been added, key: ".concat(key));
     }
 
     @Override
@@ -181,6 +251,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        Log.i(TAG, "onCategories: "+ list.size());
         bag = new ResponseBag();
         bag.setCategories(list);
         bag.setType(ResponseBag.CATEGORIES);
@@ -195,6 +266,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+        Log.i(TAG, "onDailyThoughts: " + list.size());
         bag = new ResponseBag();
         bag.setDailyThoughts(list);
         bag.setType(ResponseBag.DAILY_THOUGHTS);
@@ -203,6 +275,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onEbooks(List<EBookDTO> list) {
+        Log.i(TAG, "onEbooks " + list.size());
         bag = new ResponseBag();
         bag.seteBooks(list);
         bag.setType(ResponseBag.EBOOKS);
@@ -211,11 +284,12 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onPayments(List<PaymentDTO> list) {
-
+        Log.i(TAG, "onPayments " + list.size());
     }
 
     @Override
     public void onPodcasts(List<PodcastDTO> list) {
+        Log.i(TAG, "onPodcasts " + list.size());
         bag = new ResponseBag();
         bag.setPodcasts(list);
         bag.setType(ResponseBag.PODCASTS);
@@ -229,6 +303,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onPrices(List<PriceDTO> list) {
+        Log.i(TAG, "onPrices " + list.size());
         bag = new ResponseBag();
         bag.setPrices(list);
         bag.setType(ResponseBag.PRICE);
@@ -237,11 +312,16 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onUsers(List<UserDTO> list) {
-
+        Log.i(TAG, "onUsers " + list.size());
+        bag = new ResponseBag();
+        bag.setUsers(list);
+        bag.setType(ResponseBag.USERS);
+        setFragment();
     }
 
     @Override
     public void onNews(List<NewsDTO> list) {
+        Log.i(TAG, "onNews " + list.size());
         bag = new ResponseBag();
         bag.setNews(list);
         bag.setType(ResponseBag.NEWS);
@@ -250,6 +330,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onSubscriptions(List<SubscriptionDTO> list) {
+        Log.i(TAG, "onSubscriptions " + list.size());
         bag = new ResponseBag();
         bag.setSubscriptions(list);
         bag.setType(ResponseBag.SUBSCRIPTIONS);
@@ -263,6 +344,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+        Log.i(TAG, "onWeeklyMasterclasses " + list.size());
         bag = new ResponseBag();
         bag.setWeeklyMasterClasses(list);
         bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
@@ -271,6 +353,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
+        Log.i(TAG, "onWeeklyMessages " + list.size());
         bag = new ResponseBag();
         bag.setWeeklyMessages(list);
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
@@ -284,11 +367,12 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onDataCached() {
-
+        Log.d(TAG, "onDataCached: $$$$$$$$$$$$$ data's on disk now, bro!");
     }
 
     @Override
     public void onCacheCategories(List<CategoryDTO> list) {
+        Log.i(TAG, "onCacheCategories " + list.size());
         bag = new ResponseBag();
         bag.setCategories(list);
         bag.setType(ResponseBag.CATEGORIES);
@@ -300,6 +384,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCacheDailyThoughts(List<DailyThoughtDTO> list) {
+        Log.i(TAG, "onCacheDailyThoughts " + list.size());
         bag = new ResponseBag();
         bag.setDailyThoughts(list);
         bag.setType(ResponseBag.DAILY_THOUGHTS);
@@ -309,6 +394,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCacheEbooks(List<EBookDTO> list) {
+        Log.i(TAG, "onCacheEbooks " + list.size());
         bag = new ResponseBag();
         bag.seteBooks(list);
         bag.setType(ResponseBag.EBOOKS);
@@ -318,6 +404,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCacheNews(List<NewsDTO> list) {
+        Log.i(TAG, "onCacheNews " + list.size());
         bag = new ResponseBag();
         bag.setNews(list);
         bag.setType(ResponseBag.NEWS);
@@ -327,6 +414,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCachePodcasts(List<PodcastDTO> list) {
+        Log.i(TAG, "onCachePodcasts " + list.size());
         bag = new ResponseBag();
         bag.setPodcasts(list);
         bag.setType(ResponseBag.PODCASTS);
@@ -336,6 +424,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCachePrices(List<PriceDTO> list) {
+        Log.i(TAG, "onCachePrices " + list.size());
         bag = new ResponseBag();
         bag.setPrices(list);
         bag.setType(ResponseBag.PRICE);
@@ -345,6 +434,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCacheSubscriptions(List<SubscriptionDTO> list) {
+        Log.i(TAG, "onCacheSubscriptions " + list.size());
         bag = new ResponseBag();
         bag.setSubscriptions(list);
         bag.setType(ResponseBag.SUBSCRIPTIONS);
@@ -354,11 +444,17 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCacheUsers(List<UserDTO> list) {
-
+        Log.i(TAG, "onCacheUsers " + list.size());
+        bag = new ResponseBag();
+        bag.setUsers(list);
+        bag.setType(ResponseBag.USERS);
+        setFragment();
+        presenter.getUsers(user.getCompanyID());
     }
 
     @Override
     public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+        Log.i(TAG, "onCacheWeeklyMasterclasses " + list.size());
         bag = new ResponseBag();
         bag.setWeeklyMasterClasses(list);
         bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
@@ -368,6 +464,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCacheWeeklyMessages(List<WeeklyMessageDTO> list) {
+        Log.i(TAG, "onCacheWeeklyMessages " + list.size());
         bag = new ResponseBag();
         bag.setWeeklyMessages(list);
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
@@ -377,8 +474,57 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onError(String message) {
+          showSnackbar(message,"Not OK","red");
+    }
+    public void showSnackbar(String title, String action, String color) {
+        snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
 
     }
 
     public static final String TAG = CrudActivity.class.getSimpleName();
+
+    @Override
+    public void onAddEntity() {
+        //todo start editor of type n
+        Log.w(TAG, "onAddEntity: ................." );
+    }
+
+    @Override
+    public void onDeleteClicked(DTOEntity entity) {
+        Log.w(TAG, "onDeleteClicked: .............." );
+
+    }
+
+    @Override
+    public void onUpdateClicked(DTOEntity entity) {
+        Log.w(TAG, "onUpdateClicked: .............." );
+    }
+
+    @Override
+    public void onPhotoCaptureRequested(DTOEntity entity) {
+        Log.w(TAG, "onPhotoCaptureRequested: ................." );
+    }
+
+    @Override
+    public void onVideoCaptureRequested(DTOEntity entity) {
+        Log.w(TAG, "onVideoCaptureRequested: ................." );
+    }
+
+    @Override
+    public void onLocationRequested(DTOEntity entity) {
+        Log.w(TAG, "onLocationRequested: ......................" );
+    }
+
+    @Override
+    public void onEntityClicked(DTOEntity entity) {
+        Log.w(TAG, "onEntityClicked: .........................." );
+    }
 }

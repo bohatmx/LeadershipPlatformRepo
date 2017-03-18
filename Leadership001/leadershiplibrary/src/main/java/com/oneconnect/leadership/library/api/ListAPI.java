@@ -225,7 +225,7 @@ public class ListAPI {
         });
     }
     public void getPrices(String companyID, final DataListener listener) {
-        DatabaseReference ref = db.getReference(DataAPI.USERS);
+        DatabaseReference ref = db.getReference(DataAPI.PRICES);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -248,7 +248,7 @@ public class ListAPI {
         });
     }
     public void getSubscriptions(String companyID, final DataListener listener) {
-        DatabaseReference ref = db.getReference(DataAPI.USERS);
+        DatabaseReference ref = db.getReference(DataAPI.SUBSCRIPTIONS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

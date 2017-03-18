@@ -32,6 +32,21 @@ public class SharedPrefUtil {
         return token;
     }
 
+    public static void saveFragmentType(int type, Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putInt("type", type);
+        ed.commit();
+        Log.d(TAG, "saveFragmentType " + type);
+    }
+
+    public static int getFragmentType(Context ctx) {
+        if (ctx == null) return 0;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        int token = sp.getInt("type", 0);
+        return token;
+    }
+
 
     public static void saveUser(UserDTO user, Context ctx) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);

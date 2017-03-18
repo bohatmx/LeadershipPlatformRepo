@@ -32,12 +32,16 @@
             android:title="News" />
         <item
             android:id="@+id/nav_categories"
-            android:icon="@drawable/ic_clipboard"
-            android:title="News" />
+            android:icon="@drawable/ic_list_bulleted"
+            android:title="Categories" />
         <item
             android:id="@+id/nav_prices"
             android:icon="@drawable/ic_attach_money"
             android:title="Prices" />
+        <item
+            android:id="@+id/nav_users"
+            android:icon="@drawable/ic_people"
+            android:title="Users" />
     </group>
 
     <item android:title="Communicate">
