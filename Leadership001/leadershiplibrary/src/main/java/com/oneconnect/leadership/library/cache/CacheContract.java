@@ -35,7 +35,7 @@ public class CacheContract {
         void getCacheEbooks();
         void getCacheNews();
         void getCachePodcasts();
-        void getCachePricess();
+        void getCachePrices();
         void getCacheSubscriptions();
         void getCacheUsers();
         void getCacheWeeklyMasterclasses();
@@ -48,7 +48,7 @@ public class CacheContract {
         void onCacheEbooks(List<EBookDTO> list);
         void onCacheNews(List<NewsDTO> list);
         void onCachePodcasts(List<PodcastDTO> list);
-        void onCachePricess(List<PriceDTO> list);
+        void onCachePrices(List<PriceDTO> list);
         void onCacheSubscriptions(List<SubscriptionDTO> list);
         void onCacheUsers(List<UserDTO> list);
         void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list);

@@ -45,92 +45,92 @@ public class CachePresenter implements CacheContract.Presenter {
 
     @Override
     public void cacheDailyThoughts(List<DailyThoughtDTO> list) {
-         DailyThoughtCache.addDailyThoughts(list, context, new DailyThoughtCache.WriteListener() {
-             @Override
-             public void onDataWritten() {
-                 view.onDataCached();
-             }
+        DailyThoughtCache.addDailyThoughts(list, context, new DailyThoughtCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-             @Override
-             public void onError(String message) {
-                 view.onError(message);
-             }
-         });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void cacheEbooks(List<EBookDTO> list) {
-         EbookCache.addEbooks(list, context, new EbookCache.WriteListener() {
-             @Override
-             public void onDataWritten() {
-                 view.onDataCached();
-             }
+        EbookCache.addEbooks(list, context, new EbookCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-             @Override
-             public void onError(String message) {
-                 view.onError(message);
-             }
-         });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void cacheNews(List<NewsDTO> list) {
-           NewsCache.addNews(list, context, new NewsCache.WriteListener() {
-               @Override
-               public void onDataWritten() {
-                   view.onDataCached();
-               }
+        NewsCache.addNews(list, context, new NewsCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-               @Override
-               public void onError(String message) {
-                   view.onError(message);
-               }
-           });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void cachePodcasts(List<PodcastDTO> list) {
-          PodcastCache.addPodcasts(list, context, new PodcastCache.WriteListener() {
-              @Override
-              public void onDataWritten() {
-                  view.onDataCached();
-              }
+        PodcastCache.addPodcasts(list, context, new PodcastCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-              @Override
-              public void onError(String message) {
-                  view.onError(message);
-              }
-          });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void cachePrices(List<PriceDTO> list) {
-           PriceCache.addPrices(list, context, new PriceCache.WriteListener() {
-               @Override
-               public void onDataWritten() {
-                   view.onDataCached();
-               }
+        PriceCache.addPrices(list, context, new PriceCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-               @Override
-               public void onError(String message) {
-                   view.onError(message);
-               }
-           });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void cacheSubscriptions(List<SubscriptionDTO> list) {
-            SubscriptionCache.addSubscriptions(list, context, new SubscriptionCache.WriteListener() {
-                @Override
-                public void onDataWritten() {
-                    view.onDataCached();
-                }
+        SubscriptionCache.addSubscriptions(list, context, new SubscriptionCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-                @Override
-                public void onError(String message) {
-                    view.onError(message);
-                }
-            });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
@@ -150,62 +150,62 @@ public class CachePresenter implements CacheContract.Presenter {
 
     @Override
     public void cacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-          WeeklyMasterclassCache.addWeeklyMasterclasses(list, context, new WeeklyMasterclassCache.WriteListener() {
-              @Override
-              public void onDataWritten() {
-                  view.onDataCached();
-              }
+        WeeklyMasterclassCache.addWeeklyMasterclasses(list, context, new WeeklyMasterclassCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-              @Override
-              public void onError(String message) {
-                  view.onError(message);
-              }
-          });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void cacheWeeklyMessages(List<WeeklyMessageDTO> list) {
-          WeeklyMessageCache.addWeeklyMessages(list, context, new WeeklyMessageCache.WriteListener() {
-              @Override
-              public void onDataWritten() {
-                  view.onDataCached();
-              }
+        WeeklyMessageCache.addWeeklyMessages(list, context, new WeeklyMessageCache.WriteListener() {
+            @Override
+            public void onDataWritten() {
+                view.onDataCached();
+            }
 
-              @Override
-              public void onError(String message) {
-                  view.onError(message);
-              }
-          });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void getCacheCategories() {
-          CategoryCache.getCategories(context, new CategoryCache.ReadListener() {
-              @Override
-              public void onDataRead(List<CategoryDTO> categories) {
-                  view.onCacheCategories(categories);
-              }
+        CategoryCache.getCategories(context, new CategoryCache.ReadListener() {
+            @Override
+            public void onDataRead(List<CategoryDTO> categories) {
+                view.onCacheCategories(categories);
+            }
 
-              @Override
-              public void onError(String message) {
-                  view.onError(message);
-              }
-          });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void getCacheDailyThoughts() {
-         DailyThoughtCache.getDailyThoughts(context, new DailyThoughtCache.ReadListener() {
-             @Override
-             public void onDataRead(List<DailyThoughtDTO> dailyThoughts) {
-                 view.onCacheDailyThoughts(dailyThoughts);
-             }
+        DailyThoughtCache.getDailyThoughts(context, new DailyThoughtCache.ReadListener() {
+            @Override
+            public void onDataRead(List<DailyThoughtDTO> dailyThoughts) {
+                view.onCacheDailyThoughts(dailyThoughts);
+            }
 
-             @Override
-             public void onError(String message) {
-                 view.onError(message);
-             }
-         });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
@@ -225,92 +225,92 @@ public class CachePresenter implements CacheContract.Presenter {
 
     @Override
     public void getCacheNews() {
-          NewsCache.getNews(context, new NewsCache.ReadListener() {
-              @Override
-              public void onDataRead(List<NewsDTO> news) {
-                  view.onCacheNews(news);
-              }
+        NewsCache.getNews(context, new NewsCache.ReadListener() {
+            @Override
+            public void onDataRead(List<NewsDTO> news) {
+                view.onCacheNews(news);
+            }
 
-              @Override
-              public void onError(String message) {
-                  view.onError(message);
-              }
-          });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void getCachePodcasts() {
-         PodcastCache.getPodcasts(context, new PodcastCache.ReadListener() {
-             @Override
-             public void onDataRead(List<PodcastDTO> podcasts) {
-                 view.onCachePodcasts(podcasts);
-             }
+        PodcastCache.getPodcasts(context, new PodcastCache.ReadListener() {
+            @Override
+            public void onDataRead(List<PodcastDTO> podcasts) {
+                view.onCachePodcasts(podcasts);
+            }
 
-             @Override
-             public void onError(String message) {
-                 view.onError(message);
-             }
-         });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void getCachePricess() {
-         PriceCache.getPrices(context, new PriceCache.ReadListener() {
-             @Override
-             public void onDataRead(List<PriceDTO> prices) {
-                 view.onCachePricess(prices);
-             }
+        PriceCache.getPrices(context, new PriceCache.ReadListener() {
+            @Override
+            public void onDataRead(List<PriceDTO> prices) {
+                view.onCachePricess(prices);
+            }
 
-             @Override
-             public void onError(String message) {
-                 view.onError(message);
-             }
-         });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void getCacheSubscriptions() {
-          SubscriptionCache.getSubscriptions(context, new SubscriptionCache.ReadListener() {
-              @Override
-              public void onDataRead(List<SubscriptionDTO> subscriptions) {
-                  view.onCacheSubscriptions(subscriptions);
-              }
+        SubscriptionCache.getSubscriptions(context, new SubscriptionCache.ReadListener() {
+            @Override
+            public void onDataRead(List<SubscriptionDTO> subscriptions) {
+                view.onCacheSubscriptions(subscriptions);
+            }
 
-              @Override
-              public void onError(String message) {
-                  view.onError(message);
-              }
-          });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void getCacheUsers() {
-           UserCache.getUsers(context, new UserCache.ReadListener() {
-               @Override
-               public void onDataRead(List<UserDTO> users) {
-                   view.onCacheUsers(users);
-               }
+        UserCache.getUsers(context, new UserCache.ReadListener() {
+            @Override
+            public void onDataRead(List<UserDTO> users) {
+                view.onCacheUsers(users);
+            }
 
-               @Override
-               public void onError(String message) {
-                   view.onError(message);
-               }
-           });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
     public void getCacheWeeklyMasterclasses() {
-         WeeklyMasterclassCache.getWeeklyMasterclasses(context, new WeeklyMasterclassCache.ReadListener() {
-             @Override
-             public void onDataRead(List<WeeklyMasterClassDTO> weeklyMasterclasses) {
-                 view.onCacheWeeklyMasterclasses(weeklyMasterclasses);
-             }
+        WeeklyMasterclassCache.getWeeklyMasterclasses(context, new WeeklyMasterclassCache.ReadListener() {
+            @Override
+            public void onDataRead(List<WeeklyMasterClassDTO> weeklyMasterclasses) {
+                view.onCacheWeeklyMasterclasses(weeklyMasterclasses);
+            }
 
-             @Override
-             public void onError(String message) {
-                 view.onError(message);
-             }
-         });
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override

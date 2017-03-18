@@ -11,11 +11,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.cache.CacheContract;
+import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -38,11 +41,12 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import java.util.List;
 
 public class CrudActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CrudContract.View {
+        implements NavigationView.OnNavigationItemSelectedListener, CrudContract.View, CacheContract.View {
 
     private EntityListFragment entityListFragment;
     private ResponseBag bag;
     private CrudPresenter presenter;
+    private CachePresenter cachePresenter;
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private DrawerLayout drawer;
@@ -55,8 +59,11 @@ public class CrudActivity extends AppCompatActivity
         setContentView(R.layout.activity_crud);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Leadership Platform");
+        getSupportActionBar().setSubtitle("Data Management");
 
         presenter = new CrudPresenter(this);
+        cachePresenter = new CachePresenter(this,this);
         user = SharedPrefUtil.getUser(this);
         setup();
     }
@@ -128,33 +135,43 @@ public class CrudActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id) {
+            case R.id.nav_categories:
+                cachePresenter.getCacheCategories();
+                break;
             case R.id.nav_daily:
-                presenter.getDailyThoughts(user.getCompanyID());
+                cachePresenter.getCacheDailyThoughts();
+                break;
+            case R.id.nav_ebooks:
+                cachePresenter.getCacheEbooks();
+                break;
+            case R.id.nav_podcasts:
+                cachePresenter.getCachePodcasts();
+                break;
+            case R.id.nav_subscrip:
+                cachePresenter.getCacheSubscriptions();
+                break;
+            case R.id.nav_news:
+                cachePresenter.getCacheNews();
+                break;
+            case R.id.nav_weekly_master:
+                cachePresenter.getCacheWeeklyMasterclasses();
+                break;
+            case R.id.nav_weekly_message:
+                cachePresenter.getCacheWeeklyMessages();
+                break;
+            case R.id.nav_prices:
+                cachePresenter.getCachePrices();
                 break;
         }
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public void onEntityAdded(String key) {
-
+        Log.i(TAG, "onEntityAdded: data has been added, key: ".concat(key));
     }
 
     @Override
@@ -164,7 +181,11 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setCategories(list);
+        bag.setType(ResponseBag.CATEGORIES);
+        cachePresenter.cacheCategories(list);
+        setFragment();
     }
 
     @Override
@@ -174,12 +195,18 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setDailyThoughts(list);
+        bag.setType(ResponseBag.DAILY_THOUGHTS);
+        setFragment();
     }
 
     @Override
     public void onEbooks(List<EBookDTO> list) {
-
+        bag = new ResponseBag();
+        bag.seteBooks(list);
+        bag.setType(ResponseBag.EBOOKS);
+        setFragment();
     }
 
     @Override
@@ -189,7 +216,10 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onPodcasts(List<PodcastDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setPodcasts(list);
+        bag.setType(ResponseBag.PODCASTS);
+        setFragment();
     }
 
     @Override
@@ -199,7 +229,10 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onPrices(List<PriceDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setPrices(list);
+        bag.setType(ResponseBag.PRICE);
+        setFragment();
     }
 
     @Override
@@ -209,12 +242,18 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onNews(List<NewsDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setNews(list);
+        bag.setType(ResponseBag.NEWS);
+        setFragment();
     }
 
     @Override
     public void onSubscriptions(List<SubscriptionDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setSubscriptions(list);
+        bag.setType(ResponseBag.SUBSCRIPTIONS);
+        setFragment();
     }
 
     @Override
@@ -224,12 +263,18 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setWeeklyMasterClasses(list);
+        bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
+        setFragment();
     }
 
     @Override
     public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
-
+        bag = new ResponseBag();
+        bag.setWeeklyMessages(list);
+        bag.setType(ResponseBag.WEEKLY_MESSAGE);
+        setFragment();
     }
 
     @Override
@@ -238,7 +283,102 @@ public class CrudActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDataCached() {
+
+    }
+
+    @Override
+    public void onCacheCategories(List<CategoryDTO> list) {
+        bag = new ResponseBag();
+        bag.setCategories(list);
+        bag.setType(ResponseBag.CATEGORIES);
+        setFragment();
+        //refresh anyway
+        presenter.getCategories(user.getCompanyID());
+
+    }
+
+    @Override
+    public void onCacheDailyThoughts(List<DailyThoughtDTO> list) {
+        bag = new ResponseBag();
+        bag.setDailyThoughts(list);
+        bag.setType(ResponseBag.DAILY_THOUGHTS);
+        setFragment();
+        presenter.getDailyThoughts(user.getCompanyID());
+    }
+
+    @Override
+    public void onCacheEbooks(List<EBookDTO> list) {
+        bag = new ResponseBag();
+        bag.seteBooks(list);
+        bag.setType(ResponseBag.EBOOKS);
+        setFragment();
+        presenter.getEbooks(user.getCompanyID());
+    }
+
+    @Override
+    public void onCacheNews(List<NewsDTO> list) {
+        bag = new ResponseBag();
+        bag.setNews(list);
+        bag.setType(ResponseBag.NEWS);
+        setFragment();
+        presenter.getNews(user.getCompanyID());
+    }
+
+    @Override
+    public void onCachePodcasts(List<PodcastDTO> list) {
+        bag = new ResponseBag();
+        bag.setPodcasts(list);
+        bag.setType(ResponseBag.PODCASTS);
+        setFragment();
+        presenter.getPodcasts(user.getCompanyID());
+    }
+
+    @Override
+    public void onCachePrices(List<PriceDTO> list) {
+        bag = new ResponseBag();
+        bag.setPrices(list);
+        bag.setType(ResponseBag.PRICE);
+        setFragment();
+        presenter.getPrices(user.getCompanyID());
+    }
+
+    @Override
+    public void onCacheSubscriptions(List<SubscriptionDTO> list) {
+        bag = new ResponseBag();
+        bag.setSubscriptions(list);
+        bag.setType(ResponseBag.SUBSCRIPTIONS);
+        setFragment();
+        presenter.getSubscriptions(user.getCompanyID());
+    }
+
+    @Override
+    public void onCacheUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+        bag = new ResponseBag();
+        bag.setWeeklyMasterClasses(list);
+        bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
+        setFragment();
+        presenter.getWeeklyMasterclasses(user.getCompanyID());
+    }
+
+    @Override
+    public void onCacheWeeklyMessages(List<WeeklyMessageDTO> list) {
+        bag = new ResponseBag();
+        bag.setWeeklyMessages(list);
+        bag.setType(ResponseBag.WEEKLY_MESSAGE);
+        setFragment();
+        presenter.getWeeklyMessages(user.getCompanyID());
+    }
+
+    @Override
     public void onError(String message) {
 
     }
+
+    public static final String TAG = CrudActivity.class.getSimpleName();
 }

@@ -30,6 +30,14 @@
             android:id="@+id/nav_news"
             android:icon="@drawable/ic_favorite_red"
             android:title="News" />
+        <item
+            android:id="@+id/nav_categories"
+            android:icon="@drawable/ic_clipboard"
+            android:title="News" />
+        <item
+            android:id="@+id/nav_prices"
+            android:icon="@drawable/ic_attach_money"
+            android:title="Prices" />
     </group>
 
     <item android:title="Communicate">
