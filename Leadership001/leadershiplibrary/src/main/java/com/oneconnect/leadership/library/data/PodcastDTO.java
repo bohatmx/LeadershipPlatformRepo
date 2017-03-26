@@ -2,23 +2,54 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PodcastDTO implements DTOEntity, Serializable, Comparable<PodcastDTO>{
+public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<PodcastDTO>{
 
-    private String podcastID, title, subTitle, transcript, stringDate, url;
+    private String podcastID, transcript, stringDate, url;
     private Long date;
     private Double length;
-    private String companyID, companyName, stringDateUpdated, html;
+    private String  stringDateUpdated, html, thumbnailUrl;
     private boolean active;
     private Long dateUpdated;
-    private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, eBookID, subjectTitle;
-    private HashMap<String,String> urls;
+    private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID,
+            eBookID, subjectTitle;
+    private HashMap<String,String> urlLinks;
+    private HashMap<String, PhotoDTO> photos;
+    private HashMap<String, VideoDTO> videos;
+
+    public HashMap<String, PhotoDTO> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(HashMap<String, PhotoDTO> photos) {
+        this.photos = photos;
+    }
+
+    public HashMap<String, VideoDTO> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(HashMap<String, VideoDTO> videos) {
+        this.videos = videos;
+    }
+
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 
     public String getHtml() {
         return html;
@@ -27,12 +58,12 @@ public class PodcastDTO implements DTOEntity, Serializable, Comparable<PodcastDT
     public void setHtml(String html) {
         this.html = html;
     }
-    public HashMap<String, String> getUrls() {
-        return urls;
+    public HashMap<String, String> getUrlLinks() {
+        return urlLinks;
     }
 
-    public void setUrls(HashMap<String, String> urls) {
-        this.urls = urls;
+    public void setUrlLinks(HashMap<String, String> urlLinks) {
+        this.urlLinks = urlLinks;
     }
 
     public String getWeeklyMasterClassID() {
@@ -65,23 +96,6 @@ public class PodcastDTO implements DTOEntity, Serializable, Comparable<PodcastDT
 
     public void seteBookID(String eBookID) {
         this.eBookID = eBookID;
-    }
-
-
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getStringDateUpdated() {
@@ -132,14 +146,6 @@ public class PodcastDTO implements DTOEntity, Serializable, Comparable<PodcastDT
         this.title = title;
     }
 
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
     public String getTranscript() {
         return transcript;
     }
@@ -180,7 +186,7 @@ public class PodcastDTO implements DTOEntity, Serializable, Comparable<PodcastDT
         this.length = length;
     }
 
-    @Override
+    @Exclude
     public int compareTo(@NonNull PodcastDTO d) {
         if (date > d.date) {
             return -1;
@@ -192,23 +198,83 @@ public class PodcastDTO implements DTOEntity, Serializable, Comparable<PodcastDT
 
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return title;
     }
 
-    @Override
-    public String getTopText() {
-        return subTitle;
+    @Exclude
+    public String getLine2() {
+        return subtitle;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return subjectTitle;
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return stringDate;
     }
+
+    @Override
+    public void setJournalUserID(String userID) {
+
+    }
+
+    @Override
+    public void setJournalUserName(String userName) {
+
+    }
+
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
+        return stringDateRegistered;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

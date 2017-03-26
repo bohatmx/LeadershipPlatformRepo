@@ -36,6 +36,7 @@
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
+
     <style name="AftaRobotTheme" parent="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/teal_500</item>
@@ -102,6 +103,7 @@
         <item name="colorControlHighlight">@color/material_green_a200</item>
         <item name="android:windowBackground">@color/material_green_50</item>
     </style>
+
     <style name="RedTheme" parent="FirebaseUI">
         <item name="colorPrimary">@color/red_500</item>
         <item name="colorPrimaryDark">@color/red_800</item>

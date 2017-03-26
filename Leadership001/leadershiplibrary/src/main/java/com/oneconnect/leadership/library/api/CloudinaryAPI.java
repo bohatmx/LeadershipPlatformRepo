@@ -25,7 +25,9 @@ public class CloudinaryAPI {
 
     public interface CloudinaryListener {
         void onFileUploaded(PhotoDTO photo);
+
         void onVideoUploaded(VideoDTO video);
+
         void onError(String message);
     }
 
@@ -42,52 +44,61 @@ public class CloudinaryAPI {
     public static void uploadPhoto(final PhotoDTO photo,
                                    CloudinaryListener listener) {
         Log.d(TAG, "##### starting CDNUploader uploadPhoto: " + photo.getFilePath());
-        new PhotoTask(photo,listener);
+        new PhotoTask(photo, listener).execute();
     }
 
     /**
      * Upload video clip to Cloudinary CDN
+     *
      * @param video
      * @param listener
      */
     public static void uploadVideo(final VideoDTO video,
                                    CloudinaryListener listener) {
-        Log.d(TAG, "##### starting CDNUploader uploadVideo: " + video.getFilePath());
-        new PhotoTask(video,listener);
+        Log.d(TAG, "##### starting CloudinaryAPI uploadVideo: ".concat(video.getFilePath()));
+        new PhotoTask(video, listener).execute();
     }
+
 
     static class PhotoTask extends AsyncTask<Void, Void, Integer> {
 
         PhotoDTO photo;
         VideoDTO video;
         CloudinaryListener listener;
+        long start, end;
 
         public PhotoTask(PhotoDTO photo, CloudinaryListener listener) {
             this.photo = photo;
+            this.video = null;
             this.listener = listener;
         }
 
         public PhotoTask(VideoDTO video, CloudinaryListener listener) {
             this.video = video;
+            this.photo = null;
             this.listener = listener;
         }
 
         @Override
         protected Integer doInBackground(Void... params) {
-            final long start = System.currentTimeMillis();
+            Log.d(TAG, "doInBackground: #######################################");
+            start = System.currentTimeMillis();
             Map config = new HashMap();
             config.put("cloud_name", CLOUD_NAME);
             config.put("api_key", API_KEY);
             config.put("api_secret", API_SECRET);
+            config.put("resource_type", "video");
+            config.put("chunk_size", 6000000);
 
             Cloudinary cloudinary = new Cloudinary(config);
 
             if (photo != null) {
                 File file = new File(photo.getFilePath());
+                Log.w(TAG, "PhotoTask doInBackground: ###### size of photo file: " + file.length());
                 Map map;
                 try {
                     map = cloudinary.uploader().upload(file, config);
-                    long end = System.currentTimeMillis();
+                    end = System.currentTimeMillis();
                     Log.i(TAG, "----> photo uploaded: " + map.get("url") + " elapsed: "
                             + getElapsed(start, end) + " seconds");
 
@@ -96,6 +107,7 @@ public class CloudinaryAPI {
                     photo.setWidth((int) map.get("width"));
                     photo.setImageSize((Long) map.get("bytes"));
                     photo.setDate(new Date().getTime());
+                    return 0;
 
                 } catch (Exception e) {
                     Log.e(TAG, "CDN uploadToYouTube Failed", e);
@@ -103,29 +115,43 @@ public class CloudinaryAPI {
                 }
             }
             if (video != null) {
-                File file = new File(video.getFilePath());
-                Map map;
                 try {
-                    map = cloudinary.uploader().upload(file, config);
-                    long end = System.currentTimeMillis();
+                    File file = new File(video.getFilePath());
+                    Log.w(TAG, "PhotoTask doInBackground: $$$$$$$$$ size of video file: " + file.length());
+                    //File size too large. Got 190752142. Maximum is 41943040.
+                    if (file.length() > 41943040) {
+                        Log.e(TAG, "doInBackground: REJECTED - file too large " + file.length() );
+                        return 9;
+                    }
+                    Map map = cloudinary.uploader().uploadLarge(file, config);
+                    end = System.currentTimeMillis();
                     Log.i(TAG, "----> video uploaded: " + map.get("url") + " elapsed: "
                             + getElapsed(start, end) + " seconds");
 
                     video.setUrl((String) map.get("secure_url"));
                     video.setDate(new Date().getTime());
-
+                    //*********
+                    for (Object key : map.keySet()) {
+                        String mKey = (String) key;
+                        Log.d(TAG, "cloudinary map: mKey: ".concat(mKey)
+                                .concat((String) map.get(key)));
+                    }
+                    return 0;
                 } catch (Exception e) {
                     Log.e(TAG, "CDN uploadToYouTube Failed", e);
                     return 9;
                 }
             }
-            return 0;
+
+            Log.e(TAG, "doInBackground: ERROR!! - neither photo or video uploaded. Fuck it!");
+            return 9;
         }
 
         @Override
         protected void onPostExecute(final Integer result) {
+            Log.e(TAG, "+++++++ PhotoTask onPostExecute: result = " + result);
             if (result > 0) {
-                listener.onError("Error uploading image to CDN");
+                listener.onError("Error uploading image/video to CDN");
                 return;
             }
             if (video != null) {

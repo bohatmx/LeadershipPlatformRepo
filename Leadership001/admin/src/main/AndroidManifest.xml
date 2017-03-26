@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.oneconnect.leadership.admin">
 
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <!--
+Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
+<a href="openFile:/work/REPOS/REPOS-2016/LeadershipPlatformRepo/Leadership001/admin/build.gradle">Open File</a><br><a href="open.dependency.in.project.structure">Show in Project Structure dialog</a>
+    -->
+
+
+    <!-- <uses-permission android:name="android.permission.WRITE_CALENDAR"/> -->
     <application
         android:name=".AdminApp"
         android:allowBackup="true"
@@ -19,6 +27,7 @@
         <activity
             android:name=".AdminSignInActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,17 +36,51 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity2"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+        <activity
             android:name=".NotifHandlerActivity"
             android:label="@string/title_activity_notif_handler"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AdminMainActivity"
             android:label="@string/title_activity_admin_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".crud.CrudActivity"
             android:label="@string/title_activity_crud"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".calendar.CalendarActivity"
+            android:label="@string/title_activity_calendar"
+            android:parentActivityName=".crud.CrudActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".camera.CameraActivity"
+            android:label="@string/title_activity_calendar"
+            android:parentActivityName=".crud.CrudActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".links.LinksActivity"
+            android:label="@string/title_activity_links"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name="com.oneconnect.leadership.library.video.LeExoPlayerActivity"
+            android:label="@string/title_activity_le_exo_player"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

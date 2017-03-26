@@ -30,6 +30,16 @@
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txtCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:textColor="?attr/colorPrimaryDark"
+                android:layout_toLeftOf="@id/iconAdd"
+                android:layout_marginRight="@dimen/mon_wider"
+                android:textStyle="bold"
+                android:textSize="22sp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

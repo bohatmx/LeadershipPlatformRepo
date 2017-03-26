@@ -2,13 +2,16 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by aubreymalabie on 2/12/17.
  */
 
-public class CountryDTO implements DTOEntity, Serializable, Comparable<CountryDTO>{
+public class CountryDTO  extends BaseDTO implements  Serializable, Comparable<CountryDTO>{
     private String countryID, countryName;
 
     public String getCountryID() {
@@ -27,28 +30,95 @@ public class CountryDTO implements DTOEntity, Serializable, Comparable<CountryDT
         this.countryName = countryName;
     }
 
-    @Override
+    @Exclude
     public int compareTo(@NonNull CountryDTO c) {
         return this.countryName.compareTo(c.countryName);
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return countryName;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
+        return null;
+    }
+
+    @Exclude
+    public String getLine3() {
+        return null;
+    }
+
+    @Exclude
+    public String getLine4() {
         return null;
     }
 
     @Override
-    public String getBottomTitle() {
-        return null;
+    public void setJournalUserID(String userID) {
+
     }
 
     @Override
-    public String getBottomText() {
-        return null;
+    public void setJournalUserName(String userName) {
+
     }
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
+        return stringDateRegistered;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

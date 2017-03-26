@@ -2,20 +2,22 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class EBookDTO implements DTOEntity, Serializable, Comparable<EBookDTO>{
-    private String eBookID, title, description, url, stringDate;
+public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBookDTO>{
+    private String eBookID,  description, url, stringDate;
     private Long date;
     private Integer numberOfPages;
     private String companyID, companyName, stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
-    private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID,  subjectTitle;
+    private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID;
 
     public String getHtml() {
         return html;
@@ -49,12 +51,12 @@ public class EBookDTO implements DTOEntity, Serializable, Comparable<EBookDTO>{
         this.dailyThoughtID = dailyThoughtID;
     }
 
-    public String getSubjectTitle() {
-        return subjectTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSubjectTitle(String subjectTitle) {
-        this.subjectTitle = subjectTitle;
+    public void setTitle(String subjectTitle) {
+        this.title = title;
     }
 
     public String getCompanyID() {
@@ -106,14 +108,6 @@ public class EBookDTO implements DTOEntity, Serializable, Comparable<EBookDTO>{
         this.eBookID = eBookID;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -154,28 +148,40 @@ public class EBookDTO implements DTOEntity, Serializable, Comparable<EBookDTO>{
         this.numberOfPages = numberOfPages;
     }
 
-    @Override
+    @Exclude
     public int compareTo(@NonNull EBookDTO e) {
         return this.title.compareTo(e.title);
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return title;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return description;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return companyName;
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return stringDate;
     }
+
+    @Override
+    public void setJournalUserID(String userID) {
+
+    }
+
+    @Override
+    public void setJournalUserName(String userName) {
+
+    }
+
+
 }

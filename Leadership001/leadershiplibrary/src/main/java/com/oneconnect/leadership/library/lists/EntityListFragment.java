@@ -13,7 +13,7 @@ import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
-import com.oneconnect.leadership.library.data.DTOEntity;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
@@ -38,11 +38,11 @@ public class EntityListFragment extends BaseListingFragment {
     public EntityListFragment() {
     }
 
-    private List<DTOEntity> entities = new ArrayList<>();
+    private List<BaseDTO> entities = new ArrayList<>();
     private BasicEntityAdapter adapter;
     private int type;
     private String stringTitle;
-    private TextView txtTitle;
+    private TextView txtTitle, txtCount;
     private ImageView iconAdd;
     private RecyclerView recyclerView;
     private BasicEntityAdapter.EntityListener mListener;
@@ -70,6 +70,7 @@ public class EntityListFragment extends BaseListingFragment {
 
         view = inflater.inflate(R.layout.fragment_category_list, container, false);
         txtTitle = (TextView) view.findViewById(R.id.txtTitle);
+        txtCount = (TextView) view.findViewById(R.id.txtCount);
         iconAdd = (ImageView) view.findViewById(R.id.iconAdd);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -90,6 +91,7 @@ public class EntityListFragment extends BaseListingFragment {
     }
 
     public void setList() {
+        txtCount.setText(String.valueOf(entities.size()));
         adapter = new BasicEntityAdapter(entities, type, getActivity(), new BasicEntityAdapter.EntityListener() {
             @Override
             public void onAddEntity() {
@@ -97,32 +99,37 @@ public class EntityListFragment extends BaseListingFragment {
             }
 
             @Override
-            public void onDeleteClicked(DTOEntity entity) {
+            public void onDeleteClicked(BaseDTO entity) {
                 mListener.onDeleteClicked(entity);
             }
 
             @Override
-            public void onUpdateClicked(DTOEntity entity) {
+            public void onUpdateClicked(BaseDTO entity) {
                 mListener.onUpdateClicked(entity);
             }
 
             @Override
-            public void onPhotoCaptureRequested(DTOEntity entity) {
+            public void onPhotoCaptureRequested(BaseDTO entity) {
                 mListener.onPhotoCaptureRequested(entity);
             }
 
             @Override
-            public void onVideoCaptureRequested(DTOEntity entity) {
+            public void onVideoCaptureRequested(BaseDTO entity) {
                 mListener.onVideoCaptureRequested(entity);
             }
 
             @Override
-            public void onLocationRequested(DTOEntity entity) {
-                mListener.onLocationRequested(entity);
+            public void onSomeActionRequired(BaseDTO entity) {
+                mListener.onSomeActionRequired(entity);
             }
 
             @Override
-            public void onEntityClicked(DTOEntity entity) {
+            public void onMicrophoneRequired(BaseDTO entity) {
+                mListener.onMicrophoneRequired(entity);
+            }
+
+            @Override
+            public void onEntityClicked(BaseDTO entity) {
                 mListener.onEntityClicked(entity);
             }
         });
@@ -142,13 +149,13 @@ public class EntityListFragment extends BaseListingFragment {
                         entities.add(c);
                     }
                     break;
-                case ResponseBag.COMPANY:
+                case ResponseBag.COMPANIES:
                     stringTitle = ResponseBag.DESC_COMPANY;
                     for (CompanyDTO c : bag.getCompanies()) {
                         entities.add(c);
                     }
                     break;
-                case ResponseBag.COUNTRY:
+                case ResponseBag.COUNTRIES:
                     stringTitle = ResponseBag.DESC_COUNTRY;
                     for (CountryDTO c : bag.getCountries()) {
                         entities.add(c);
@@ -190,7 +197,7 @@ public class EntityListFragment extends BaseListingFragment {
                         entities.add(c);
                     }
                     break;
-                case ResponseBag.PRICE:
+                case ResponseBag.PRICES:
                     stringTitle = ResponseBag.DESC_PRICE;
                     for (PriceDTO c : bag.getPrices()) {
                         entities.add(c);

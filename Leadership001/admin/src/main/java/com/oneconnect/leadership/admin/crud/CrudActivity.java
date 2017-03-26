@@ -1,29 +1,46 @@
 package com.oneconnect.leadership.admin.crud;
 
+import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.admin.calendar.CalendarActivity;
+import com.oneconnect.leadership.admin.camera.CameraActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
+import com.oneconnect.leadership.library.cache.PhotoCache;
+import com.oneconnect.leadership.library.cache.VideoCache;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
-import com.oneconnect.leadership.library.data.DTOEntity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -40,8 +57,14 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
+import com.oneconnect.leadership.library.services.PhotoUploaderService;
+import com.oneconnect.leadership.library.services.VideoUploaderService;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -60,7 +83,13 @@ public class CrudActivity extends AppCompatActivity
     private UserDTO user;
     private int type;
     private Snackbar snackbar;
+    private ProgressDialog progressDialog;
+    private DatePickerDialog datePickerDialog;
+    private WeeklyMessageDTO weeklyMessage;
+    private WeeklyMasterClassDTO weeklyMasterClass;
+    private PodcastDTO podcast;
 
+    private DailyThoughtEditor dailyThoughtEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +125,7 @@ public class CrudActivity extends AppCompatActivity
                 case ResponseBag.NEWS:
                     cachePresenter.getCacheNews();
                     break;
-                case ResponseBag.PRICE:
+                case ResponseBag.PRICES:
                     cachePresenter.getCachePrices();
                     break;
                 case ResponseBag.SUBSCRIPTIONS:
@@ -118,7 +147,145 @@ public class CrudActivity extends AppCompatActivity
                 case ResponseBag.PAYMENTS:
                     break;
             }
+            startPhotoService();
+            startVideoService();
+
+            IntentFilter f = new IntentFilter(PhotoUploaderService.BROADCAST_PHOTO_UPLOADED);
+            LocalBroadcastManager.getInstance(this)
+                    .registerReceiver(new PhotoUploadReceiver(), f);
+
+            IntentFilter f2 = new IntentFilter(VideoUploaderService.BROADCAST_VIDEO_UPLOADED);
+            LocalBroadcastManager.getInstance(this)
+                    .registerReceiver(new VideoUploadReceiver(), f2);
         }
+
+    }
+
+    private void getDate(final int sheetType) {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(year, month, day);
+                Date d = cal.getTime();
+                switch (sheetType) {
+                    case ResponseBag.DAILY_THOUGHTS:
+                        dailyThoughtEditor.setSelectedDate(d);
+                        break;
+                }
+            }
+        }, cal.get(java.util.Calendar.YEAR),
+                cal.get(java.util.Calendar.MONTH),
+                cal.get(java.util.Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    private void startUserBottomSheet(final UserDTO user, int type) {
+
+        final UserEditorBottomSheet myBottomSheet =
+                UserEditorBottomSheet.newInstance(user, type);
+        myBottomSheet.setCrudPresenter(presenter);
+        myBottomSheet.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                UserDTO m = (UserDTO) entity;
+                if (bag.getUsers() == null) {
+                    bag.setUsers(new ArrayList<UserDTO>());
+                }
+                bag.getUsers().add(0, m);
+                setFragment();
+                myBottomSheet.dismiss();
+                showSnackbar(m.getFullName().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+
+            }
+        });
+        myBottomSheet.show(getSupportFragmentManager(), "SHEET_USER");
+
+    }
+
+    private void startCategoryBottomSheet(final CategoryDTO category, int type) {
+
+        final CategoryEditorBottomSheet myBottomSheet =
+                CategoryEditorBottomSheet.newInstance(category, type);
+        myBottomSheet.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                CategoryDTO m = (CategoryDTO) entity;
+                if (bag.getCategories() == null) {
+                    bag.setCategories(new ArrayList<CategoryDTO>());
+                }
+                bag.getCategories().add(0, m);
+                setFragment();
+                myBottomSheet.dismiss();
+                showSnackbar(m.getCategoryName().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+
+            }
+        });
+        myBottomSheet.show(getSupportFragmentManager(), "SHEET_CATEGORY");
+
+    }
+
+    private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
+
+        dailyThoughtEditor =
+                DailyThoughtEditor.newInstance(thought, type);
+        dailyThoughtEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                DailyThoughtDTO m = (DailyThoughtDTO) entity;
+                if (bag.getDailyThoughts() == null) {
+                    bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                }
+                bag.getDailyThoughts().add(0, m);
+                setFragment();
+                dailyThoughtEditor.dismiss();
+                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+
+            }
+        });
+        dailyThoughtEditor.setIconListener(new DailyThoughtEditor.IconListener() {
+            @Override
+            public void onCameraIconClicked() {
+                //todo start choice - pick image or use camera
+                Toasty.success(getApplicationContext(), "Camera will be started when it's ready",
+                        Toast.LENGTH_LONG, true).show();
+            }
+
+            @Override
+            public void onVideoIconClicked() {
+                //todo start choice - pick image or use camera
+                Toasty.warning(getApplicationContext(), "Video will be started when it's ready",
+                        Toast.LENGTH_LONG, true).show();
+            }
+
+            @Override
+            public void onDateIconClicked() {
+                //todo start date picker
+                Toasty.info(getApplicationContext(), "Date picker will be started when it's ready",
+                        Toast.LENGTH_LONG, true).show();
+                getDate(ResponseBag.DAILY_THOUGHTS);
+            }
+
+            @Override
+            public void onURLIconClicked() {
+                //todo - where are the links coming from?
+                Toasty.error(getApplicationContext(), "URL's - how to deal with them?",
+                        Toast.LENGTH_LONG, true).show();
+                Uri chromeUri = Uri.parse("content://com.android.chrome.browser/bookmarks");
+                Log.d(TAG, "onURLIconClicked: ".concat(GSON.toJson(chromeUri)));
+            }
+
+            @Override
+            public void onLocalImageClicked(LocalImage image) {
+                Toasty.info(getApplicationContext(), "Image selected:" + image.getResourceId(),
+                        Toast.LENGTH_LONG, true).show();
+            }
+        });
+        dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
 
     }
 
@@ -137,14 +304,14 @@ public class CrudActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        drawer.openDrawer(GravityCompat.START,true);
+        drawer.openDrawer(GravityCompat.START, true);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setFragment() {
-        Log.w(TAG, "setFragment: starting new fragment" );
+        Log.w(TAG, "setFragment: starting new fragment");
         SharedPrefUtil.saveFragmentType(bag.getType(), this);
         type = bag.getType();
 
@@ -191,7 +358,7 @@ public class CrudActivity extends AppCompatActivity
                 cachePresenter.getCacheWeeklyMessages();
                 break;
             case R.id.action_help:
-                Toasty.warning(this,"Under construction", Toast.LENGTH_SHORT,true).show();
+                Toasty.warning(this, "Under construction", Toast.LENGTH_SHORT, true).show();
                 break;
         }
 
@@ -203,33 +370,43 @@ public class CrudActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_categories:
+                type = ResponseBag.CATEGORIES;
                 cachePresenter.getCacheCategories();
                 break;
             case R.id.nav_daily:
+                type = ResponseBag.DAILY_THOUGHTS;
                 cachePresenter.getCacheDailyThoughts();
                 break;
             case R.id.nav_ebooks:
+                type = ResponseBag.EBOOKS;
                 cachePresenter.getCacheEbooks();
                 break;
             case R.id.nav_podcasts:
+                type = ResponseBag.PODCASTS;
                 cachePresenter.getCachePodcasts();
                 break;
             case R.id.nav_subscrip:
+                type = ResponseBag.SUBSCRIPTIONS;
                 cachePresenter.getCacheSubscriptions();
                 break;
             case R.id.nav_news:
+                type = ResponseBag.NEWS;
                 cachePresenter.getCacheNews();
                 break;
             case R.id.nav_weekly_master:
+                type = ResponseBag.WEEKLY_MASTERCLASS;
                 cachePresenter.getCacheWeeklyMasterclasses();
                 break;
             case R.id.nav_weekly_message:
+                type = ResponseBag.WEEKLY_MESSAGE;
                 cachePresenter.getCacheWeeklyMessages();
                 break;
             case R.id.nav_prices:
+                type = ResponseBag.PRICES;
                 cachePresenter.getCachePrices();
                 break;
             case R.id.nav_users:
+                type = ResponseBag.USERS;
                 cachePresenter.getCacheUsers();
                 break;
         }
@@ -242,20 +419,46 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onEntityAdded(String key) {
         Log.w(TAG, "onEntityAdded: ++++++++++ data has been added, key: ".concat(key));
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThoughtEditor.dismiss();
+                break;
+            case ResponseBag.CATEGORIES:
+
+                break;
+            case ResponseBag.PODCASTS:
+
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                break;
+        }
     }
 
     @Override
-    public void onUserCreated(UserDTO user) {
+    public void onEntityUpdated() {
+        Log.w(TAG, "onEntityUpdated: data has been updated");
+    }
 
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    @Override
+    public void onUserCreated(UserDTO user) {
+        Log.i(TAG, "onUserCreated: ######### CREATED: ".concat(GSON.toJson(user)));
+        presenter.getUsers(this.user.getCompanyID());
+        showSnackbar(user.getFullName().concat(" has been added"), getString(R.string.ok_label), "green");
     }
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
-        Log.i(TAG, "onCategories: "+ list.size());
+        Log.i(TAG, "onCategories: " + list.size());
         bag = new ResponseBag();
         bag.setCategories(list);
+        Collections.sort(bag.getCategories());
         bag.setType(ResponseBag.CATEGORIES);
         cachePresenter.cacheCategories(list);
+
         setFragment();
     }
 
@@ -269,8 +472,10 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onDailyThoughts: " + list.size());
         bag = new ResponseBag();
         bag.setDailyThoughts(list);
+        Collections.sort(bag.getDailyThoughts());
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
+        cachePresenter.cacheDailyThoughts(list);
     }
 
     @Override
@@ -280,6 +485,7 @@ public class CrudActivity extends AppCompatActivity
         bag.seteBooks(list);
         bag.setType(ResponseBag.EBOOKS);
         setFragment();
+        cachePresenter.cacheEbooks(list);
     }
 
     @Override
@@ -294,6 +500,7 @@ public class CrudActivity extends AppCompatActivity
         bag.setPodcasts(list);
         bag.setType(ResponseBag.PODCASTS);
         setFragment();
+        cachePresenter.cachePodcasts(list);
     }
 
     @Override
@@ -306,8 +513,9 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onPrices " + list.size());
         bag = new ResponseBag();
         bag.setPrices(list);
-        bag.setType(ResponseBag.PRICE);
+        bag.setType(ResponseBag.PRICES);
         setFragment();
+        cachePresenter.cachePrices(list);
     }
 
     @Override
@@ -315,8 +523,10 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onUsers " + list.size());
         bag = new ResponseBag();
         bag.setUsers(list);
+        Collections.sort(bag.getUsers());
         bag.setType(ResponseBag.USERS);
         setFragment();
+        cachePresenter.cacheUsers(list);
     }
 
     @Override
@@ -326,6 +536,7 @@ public class CrudActivity extends AppCompatActivity
         bag.setNews(list);
         bag.setType(ResponseBag.NEWS);
         setFragment();
+        cachePresenter.cacheNews(list);
     }
 
     @Override
@@ -335,6 +546,7 @@ public class CrudActivity extends AppCompatActivity
         bag.setSubscriptions(list);
         bag.setType(ResponseBag.SUBSCRIPTIONS);
         setFragment();
+        cachePresenter.cacheSubscriptions(list);
     }
 
     @Override
@@ -349,6 +561,7 @@ public class CrudActivity extends AppCompatActivity
         bag.setWeeklyMasterClasses(list);
         bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
         setFragment();
+        cachePresenter.cacheWeeklyMasterclasses(list);
     }
 
     @Override
@@ -358,6 +571,7 @@ public class CrudActivity extends AppCompatActivity
         bag.setWeeklyMessages(list);
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
         setFragment();
+        cachePresenter.cacheWeeklyMessages(list);
     }
 
     @Override
@@ -375,6 +589,7 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onCacheCategories " + list.size());
         bag = new ResponseBag();
         bag.setCategories(list);
+        Collections.sort(bag.getCategories());
         bag.setType(ResponseBag.CATEGORIES);
         setFragment();
         //refresh anyway
@@ -387,6 +602,7 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onCacheDailyThoughts " + list.size());
         bag = new ResponseBag();
         bag.setDailyThoughts(list);
+        Collections.sort(bag.getDailyThoughts());
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
         presenter.getDailyThoughts(user.getCompanyID());
@@ -427,7 +643,7 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onCachePrices " + list.size());
         bag = new ResponseBag();
         bag.setPrices(list);
-        bag.setType(ResponseBag.PRICE);
+        bag.setType(ResponseBag.PRICES);
         setFragment();
         presenter.getPrices(user.getCompanyID());
     }
@@ -447,6 +663,7 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onCacheUsers " + list.size());
         bag = new ResponseBag();
         bag.setUsers(list);
+        Collections.sort(bag.getUsers());
         bag.setType(ResponseBag.USERS);
         setFragment();
         presenter.getUsers(user.getCompanyID());
@@ -474,8 +691,9 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onError(String message) {
-          showSnackbar(message,"Not OK","red");
+        showSnackbar(message, "Not OK", "red");
     }
+
     public void showSnackbar(String title, String action, String color) {
         snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(Color.parseColor(color));
@@ -493,38 +711,323 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onAddEntity() {
-        //todo start editor of type n
-        Log.w(TAG, "onAddEntity: ................." );
+        Log.w(TAG, "onAddEntity: ........open bottom appropriate sheet");
+        switch (type) {
+            case ResponseBag.USERS:
+                startUserBottomSheet(null, Constants.NEW_ENTITY);
+                break;
+            case ResponseBag.CATEGORIES:
+                startCategoryBottomSheet(null, Constants.NEW_ENTITY);
+                break;
+            case ResponseBag.DAILY_THOUGHTS:
+                startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+                break;
+        }
+
     }
 
     @Override
-    public void onDeleteClicked(DTOEntity entity) {
-        Log.w(TAG, "onDeleteClicked: .............." );
+    public void onDeleteClicked(BaseDTO entity) {
+        Log.w(TAG, "onDeleteClicked: ..............");
 
     }
 
     @Override
-    public void onUpdateClicked(DTOEntity entity) {
-        Log.w(TAG, "onUpdateClicked: .............." );
+    public void onUpdateClicked(BaseDTO entity) {
+        Log.w(TAG, "onUpdateClicked: ..............");
     }
 
     @Override
-    public void onPhotoCaptureRequested(DTOEntity entity) {
-        Log.w(TAG, "onPhotoCaptureRequested: ................." );
+    public void onPhotoCaptureRequested(BaseDTO entity) {
+        Log.w(TAG, "onPhotoCaptureRequested: .................");
+        pickGalleryOrCamera(entity);
+    }
+
+    private void pickGalleryOrCamera(final BaseDTO base) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Select Images")
+                .setMessage("Please select the source of the photos")
+                .setPositiveButton("Use Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startCamera(base);
+                    }
+                }).setNegativeButton("Use Gallery", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        }).show();
+    }
+
+    private void startCamera(BaseDTO entity) {
+
+        Intent m = new Intent(this, CameraActivity.class);
+        m.putExtra("type", CameraActivity.CAMERA_REQUEST);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) entity;
+                m.putExtra("dailyThought", dailyThought);
+                Log.d(TAG, "startCamera: ".concat(GSON.toJson(dailyThought)));
+                break;
+        }
+
+        startActivityForResult(m, CameraActivity.CAMERA_REQUEST);
     }
 
     @Override
-    public void onVideoCaptureRequested(DTOEntity entity) {
-        Log.w(TAG, "onVideoCaptureRequested: ................." );
+    public void onVideoCaptureRequested(BaseDTO entity) {
+        Log.w(TAG, "onVideoCaptureRequested: .................");
+
+        pickGalleryOrVideoCamera(entity);
+    }
+
+    private void pickGalleryOrVideoCamera(final BaseDTO base) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Select Images")
+                .setMessage("Please select the source of the photos")
+                .setPositiveButton("Use Video Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startVideo(base);
+                    }
+                }).setNegativeButton("Use Gallery", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        }).show();
+    }
+
+    private void startVideo(BaseDTO entity) {
+
+        Intent m = new Intent(this, CameraActivity.class);
+        m.putExtra("type", CameraActivity.VIDEO_REQUEST);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) entity;
+                m.putExtra("dailyThought", dailyThought);
+                break;
+        }
+
+        startActivityForResult(m, CameraActivity.VIDEO_REQUEST);
+    }
+
+    public static final int REQUEST_CALENDAR = 6258;
+
+    @Override
+    public void onSomeActionRequired(BaseDTO entity) {
+
+        Log.w(TAG, "onSomeActionRequired: .......".concat(GSON.toJson(entity)));
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) entity;
+                SharedPrefUtil.saveDailyThought(dailyThought, this);
+                startCalendar(ResponseBag.DAILY_THOUGHTS, dailyThought);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) entity;
+                SharedPrefUtil.saveWeeklyMasterclass(weeklyMasterClass, this);
+                startCalendar(ResponseBag.WEEKLY_MASTERCLASS, weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) entity;
+                SharedPrefUtil.saveWeeklyMessage(weeklyMessage, this);
+                startCalendar(ResponseBag.WEEKLY_MESSAGE, weeklyMessage);
+                break;
+            case ResponseBag.PODCASTS:
+                podcast = (PodcastDTO) entity;
+                SharedPrefUtil.savePodcast(podcast, this);
+                startCalendar(ResponseBag.PODCASTS, podcast);
+                break;
+        }
+    }
+
+    private void startCalendar(int type, BaseDTO base) {
+        Intent m = new Intent(this, CalendarActivity.class);
+        m.putExtra("type", type);
+        m.putExtra("base", base);
+
+        Log.d(TAG, "onSomeActionRequired: send to CalendarActivity: "
+                .concat(GSON.toJson(base)));
+
+        startActivityForResult(m, REQUEST_CALENDAR);
     }
 
     @Override
-    public void onLocationRequested(DTOEntity entity) {
-        Log.w(TAG, "onLocationRequested: ......................" );
+    public void onMicrophoneRequired(BaseDTO entity) {
+        Log.w(TAG, "onMicrophoneRequired: ,,,,,,,,,,,,,,,,,,,,");
+        showSnackbar("Audio recording under construction", "OK", "cyan");
+    }
+
+    DailyThoughtDTO dailyThought;
+
+    @Override
+    public void onEntityClicked(BaseDTO entity) {
+        Log.w(TAG, "onEntityClicked: .......".concat(GSON.toJson(entity)));
     }
 
     @Override
-    public void onEntityClicked(DTOEntity entity) {
-        Log.w(TAG, "onEntityClicked: .........................." );
+    public void onActivityResult(int reqCode, int result, Intent data) {
+        Log.w(TAG, "########## onActivityResult: result: " + result
+                + " reqCode: " + reqCode + GSON.toJson(data));
+        switch (reqCode) {
+            case REQUEST_CALENDAR:
+                Log.d(TAG, "onActivityResult: calendar activity returned: " + result);
+                break;
+            case CameraActivity.CAMERA_REQUEST:
+                confirmUpload(data);
+                break;
+            case CameraActivity.VIDEO_REQUEST:
+                confirmUpload(data);
+                break;
+        }
+
+    }
+    private void confirmUpload(final Intent data) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Upload Confirmation")
+                .setMessage("Do you want to upload the captured files?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        saveFiles(data);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                          Toasty.warning(getApplicationContext(),"Media file(s) released",
+                                  Toast.LENGTH_LONG,true).show();
+                    }
+                })
+                .show();
+    }
+    private void saveFiles(Intent data) {
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                saveDailyThoughtFiles(data);
+                break;
+            case ResponseBag.PODCASTS:
+                savePodcastFiles(data);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                saveWeeklyMessageFiles(data);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                saveWeeklyMasterclassFiles(data);
+                break;
+        }
+    }
+
+    private void saveDailyThoughtFiles(Intent data) {
+        ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
+        if (bag == null) return;
+        Log.d(TAG, "saveDailyThoughtFiles: .......");
+        for (PhotoDTO p : bag.getPhotos()) {
+            p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            p.setCaption(dailyThought.getTitle());
+            PhotoCache.addPhoto(p, this, null);
+        }
+        for (VideoDTO p : bag.getVideos()) {
+            p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            p.setCaption(dailyThought.getTitle());
+            Log.e(TAG, "saveDailyThoughtFiles: ".concat(GSON.toJson(p)) );
+            VideoCache.addVideo(p, this, null);
+        }
+        startPhotoService();
+        startVideoService();
+
+    }
+    private void saveWeeklyMessageFiles(Intent data) {
+        ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
+        if (bag == null) return;
+        Log.d(TAG, "saveWeeklyMessageFiles: ..........");
+        for (PhotoDTO p : bag.getPhotos()) {
+            p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
+            p.setCaption(weeklyMessage.getTitle());
+            PhotoCache.addPhoto(p, this, null);
+        }
+        for (VideoDTO p : bag.getVideos()) {
+            p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
+            p.setCaption(weeklyMessage.getTitle());
+            VideoCache.addVideo(p, this, null);
+        }
+        startPhotoService();
+        startVideoService();
+
+    }
+    private void saveWeeklyMasterclassFiles(Intent data) {
+        ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
+        if (bag == null) return;
+        Log.d(TAG, "saveWeeklyMasterclassFiles: ..............");
+        for (PhotoDTO p : bag.getPhotos()) {
+            p.setWeeklyMasterClassID(weeklyMasterClass.getWeeklyMasterClassID());
+            p.setCaption(weeklyMasterClass.getTitle());
+            PhotoCache.addPhoto(p, this, null);
+        }
+        for (VideoDTO p : bag.getVideos()) {
+            p.setWeeklyMasterClassID(weeklyMasterClass.getWeeklyMasterClassID());
+            p.setCaption(weeklyMasterClass.getTitle());
+            VideoCache.addVideo(p, this, null);
+        }
+        startPhotoService();
+        startVideoService();
+
+    }
+    private void savePodcastFiles(Intent data) {
+        ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
+        if (bag == null) return;
+        Log.d(TAG, "savePodcastFiles: ................");
+        for (PhotoDTO p : bag.getPhotos()) {
+            p.setPodcastID(podcast.getPodcastID());
+            p.setCaption(podcast.getTitle());
+            PhotoCache.addPhoto(p, this, null);
+        }
+        for (VideoDTO p : bag.getVideos()) {
+            p.setPodcastID(podcast.getPodcastID());
+            p.setCaption(podcast.getTitle());
+            VideoCache.addVideo(p, this, null);
+        }
+        startPhotoService();
+        startVideoService();
+
+    }
+    private void startVideoService() {
+        Log.d(TAG, "startVideoService: @@@@@@@@@@@@@@@@@@@@@@");
+        Intent m = new Intent(this, VideoUploaderService.class);
+        startService(m);
+    }
+
+    private void startPhotoService() {
+        Log.d(TAG, "startPhotoService: ###################");
+        Intent m = new Intent(this, PhotoUploaderService.class);
+        startService(m);
+    }
+
+    class PhotoUploadReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "onReceive: PhotoUploadReceiver");
+            int cnt = intent.getIntExtra("photos", 0);
+            String msg = "" + cnt + " Photos have been uploaded";
+            Toasty.success(getApplicationContext(), msg,
+                    Toast.LENGTH_LONG, true).show();
+            showSnackbar(msg, getString(R.string.ok_label), Constants.GREEN);
+        }
+    }
+
+    class VideoUploadReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "onReceive: VideoUploadReceiver");
+            int cnt = intent.getIntExtra("videos", 0);
+            String msg = "" + cnt + " Videos have been uploaded";
+            Toasty.success(getApplicationContext(), msg,
+                    Toast.LENGTH_LONG, true).show();
+            showSnackbar(msg, getString(R.string.ok_label), Constants.GREEN);
+        }
     }
 }

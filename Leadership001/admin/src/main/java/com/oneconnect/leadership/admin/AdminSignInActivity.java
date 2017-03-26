@@ -1,7 +1,11 @@
 package com.oneconnect.leadership.admin;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,14 +30,17 @@ public class AdminSignInActivity extends BaseLoginActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.platform_signin);
         type = UserDTO.COMPANY_STAFF;
+        check();
+
+
+    }
+    private void proceed() {
         if (firebaseAuth.getCurrentUser() == null) {
             startLogin();
         } else {
             startMain();
         }
-
     }
-
     @Override
     public void onLoginSucceeded() {
         Log.i(TAG, "+++++++++++++ onLoginSucceeded: ");
@@ -41,16 +48,16 @@ public class AdminSignInActivity extends BaseLoginActivity {
     }
 
     private void startMain() {
-        Toasty.success(this,getString(R.string.success),
-                Toast.LENGTH_LONG,true).show();
-        Intent m = new Intent(this,CrudActivity.class);
+        Toasty.success(this, getString(R.string.success),
+                Toast.LENGTH_LONG, true).show();
+        Intent m = new Intent(this, CrudActivity.class);
         startActivity(m);
     }
 
     @Override
     public void onLoginFailed() {
         Log.e(TAG, "..................onLoginFailed: ");
-        showSnackbar(getString(R.string.login_failed),getString(R.string.not_ok),"red");
+        showSnackbar(getString(R.string.login_failed), getString(R.string.not_ok), "red");
 
     }
 
@@ -62,7 +69,7 @@ public class AdminSignInActivity extends BaseLoginActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         int id = item.getItemId();
+        int id = item.getItemId();
 
         if (id == R.id.action_logout) {
             logoff();
@@ -70,5 +77,52 @@ public class AdminSignInActivity extends BaseLoginActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static final int PERMISSIONS_REQUEST_READ_CALENDAR = 113;
+
+    private void check() {
+        Log.w(TAG, "check: PERMISSIONS_REQUEST_READ_CALENDAR" );
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR},
+                    PERMISSIONS_REQUEST_READ_CALENDAR);
+            return;
+
+        }
+        proceed();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: .................");
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_CALENDAR: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Log.d(TAG, "onRequestPermissionsResult: ".concat(permissions.toString())
+                            .concat("\n").concat(grantResults.toString()));
+                    Log.e(TAG, "onRequestPermissionsResult: PERMISSION_GRANTED");
+                    proceed();
+
+                } else {
+                    Log.e(TAG, "onRequestPermissionsResult: PERMISSION_DENIED" );
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

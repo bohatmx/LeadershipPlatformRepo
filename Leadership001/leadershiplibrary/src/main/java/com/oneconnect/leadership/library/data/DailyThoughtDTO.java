@@ -2,51 +2,38 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class DailyThoughtDTO implements DTOEntity, Serializable, Comparable<DailyThoughtDTO> {
+public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparable<DailyThoughtDTO> {
 
-    private String dailyThoughtID, title, subTitle,
-            text, stringDateRegistered, categoryID, categoryName;
-    private Long dateRegistered;
-    private String companyID, companyName, stringDateUpdated, html;
+    private String dailyThoughtID,
+            text;
+    private String
+            stringDateUpdated, html;
     private boolean active;
-    private Long dateUpdated;
+    private long dateUpdated;
 
+    private HashMap<String, CategoryDTO> categories;
+    private HashMap<String, String> urlLinks;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
-    private HashMap<String, PodcastDTO> podcasts;
-    private HashMap<String, String> urls;
+    private HashMap<String,PodcastDTO> podcasts;
 
     public HashMap<String, PodcastDTO> getPodcasts() {
         return podcasts;
     }
 
-    public String getHtml() {
-        return html;
-    }
-
-    public void setHtml(String html) {
-        this.html = html;
-    }
-
     public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
         this.podcasts = podcasts;
     }
-
-    public HashMap<String, String> getUrls() {
-        return urls;
-    }
-
-    public void setUrls(HashMap<String, String> urls) {
-        this.urls = urls;
-    }
-
 
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;
@@ -64,36 +51,29 @@ public class DailyThoughtDTO implements DTOEntity, Serializable, Comparable<Dail
         this.videos = videos;
     }
 
-    public String getCategoryID() {
-        return categoryID;
+    public HashMap<String, CategoryDTO> getCategories() {
+        return categories;
     }
 
-    public void setCategoryID(String categoryID) {
-        this.categoryID = categoryID;
+    public void setCategories(HashMap<String, CategoryDTO> categories) {
+        this.categories = categories;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getHtml() {
+        return html;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setHtml(String html) {
+        this.html = html;
     }
 
-    public String getCompanyID() {
-        return companyID;
+
+    public HashMap<String, String> getUrlLinks() {
+        return urlLinks;
     }
 
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setUrlLinks(HashMap<String, String> urlLinks) {
+        this.urlLinks = urlLinks;
     }
 
     public String getStringDateUpdated() {
@@ -112,14 +92,13 @@ public class DailyThoughtDTO implements DTOEntity, Serializable, Comparable<Dail
         this.active = active;
     }
 
-    public Long getDateUpdated() {
+    public long getDateUpdated() {
         return dateUpdated;
     }
 
-    public void setDateUpdated(Long dateUpdated) {
+    public void setDateUpdated(long dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
-
 
     public String getDailyThoughtID() {
         return dailyThoughtID;
@@ -127,22 +106,6 @@ public class DailyThoughtDTO implements DTOEntity, Serializable, Comparable<Dail
 
     public void setDailyThoughtID(String dailyThoughtID) {
         this.dailyThoughtID = dailyThoughtID;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
     }
 
     public String getText() {
@@ -153,23 +116,19 @@ public class DailyThoughtDTO implements DTOEntity, Serializable, Comparable<Dail
         this.text = text;
     }
 
-    public String getStringDateRegistered() {
-        return stringDateRegistered;
-    }
 
-    public void setStringDateRegistered(String stringDateRegistered) {
-        this.stringDateRegistered = stringDateRegistered;
-    }
+    @Override
+    public void setJournalUserID(String userID) {
 
-    public Long getDateRegistered() {
-        return dateRegistered;
-    }
-
-    public void setDateRegistered(Long dateRegistered) {
-        this.dateRegistered = dateRegistered;
     }
 
     @Override
+    public void setJournalUserName(String userName) {
+
+    }
+
+
+    @Exclude
     public int compareTo(@NonNull DailyThoughtDTO d) {
         if (dateRegistered > d.dateRegistered) {
             return -1;
@@ -180,23 +139,81 @@ public class DailyThoughtDTO implements DTOEntity, Serializable, Comparable<Dail
         return 0;
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return title;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
+        return subtitle;
+    }
+
+    @Exclude
+    public String getLine3() {
+        return stringDateScheduled;
+    }
+
+    @Exclude
+    public String getLine4() {
         return text;
     }
 
-    @Override
-    public String getBottomTitle() {
-        return categoryName;
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
     }
 
-    @Override
-    public String getBottomText() {
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
         return stringDateRegistered;
     }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

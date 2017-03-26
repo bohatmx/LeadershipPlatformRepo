@@ -2,16 +2,19 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.Date;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PaymentDTO implements DTOEntity, Serializable, Comparable<PaymentDTO> {
-    private String companyID, paymentID,
-            userID, subscriberName, companyName, stringPaymentDate;
+public class PaymentDTO  extends BaseDTO implements  Serializable, Comparable<PaymentDTO> {
+    private String  paymentID,
+            userID, subscriberName, stringPaymentDate;
     private boolean active;
     private long paymentDate;
     private double amount;
@@ -23,24 +26,7 @@ public class PaymentDTO implements DTOEntity, Serializable, Comparable<PaymentDT
     public void setPaymentID(String paymentID) {
         this.paymentID = paymentID;
     }
-
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public boolean isActive() {
+     public boolean isActive() {
         return active;
     }
 
@@ -88,7 +74,7 @@ public class PaymentDTO implements DTOEntity, Serializable, Comparable<PaymentDT
         this.amount = amount;
     }
 
-    @Override
+    @Exclude
     public int compareTo(@NonNull PaymentDTO d) {
         if (paymentDate > d.paymentDate) {
             return -1;
@@ -99,25 +85,93 @@ public class PaymentDTO implements DTOEntity, Serializable, Comparable<PaymentDT
         return 0;
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return subscriberName;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return stringPaymentDate;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return df.format(amount);
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return companyName;
     }
 
     static final DecimalFormat df = new DecimalFormat("###,###,###,###,##0.00");
+
+    @Override
+    public void setJournalUserID(String userID) {
+
+    }
+
+    @Override
+    public void setJournalUserName(String userName) {
+
+    }
+
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
+        return stringDateRegistered;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

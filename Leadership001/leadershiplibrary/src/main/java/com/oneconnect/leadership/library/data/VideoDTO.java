@@ -2,30 +2,111 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class VideoDTO implements DTOEntity, Serializable, Comparable<VideoDTO> {
+public class VideoDTO extends BaseDTO implements  Serializable, Comparable<VideoDTO> {
 
-    String videoID, caption, description, url, filePath;
-    Long date;
-    Integer videoSize, lengthInSeconds;
-    private String companyID, companyName, stringDateUpdated;
+    @Exclude
+    private String filePath;
+    private String videoID, caption, description, url,
+            thumbnailUrl, stringDateUploaded, storageName;
+    private long date;
+    private int  lengthInSeconds;
+    private String userID, stringDateUpdated, stringDate;
     private boolean active;
-    private Long dateUpdated;
-    private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, eBookID, title;
-    private HashMap<String, String> urls;
+    private long dateUpdated, dateUploaded, videoSize;
+    private String weeklyMasterClassID, weeklyMessageID,
+            dailyThoughtID, podcastID, eBookID;
+    private HashMap<String, String> urlLinks;
 
-    public HashMap<String, String> getUrls() {
-        return urls;
+
+    public VideoDTO() {
+        date = new Date().getTime();
+        stringDate = sdf.format(new Date(date));
     }
 
-    public void setUrls(HashMap<String, String> urls) {
-        this.urls = urls;
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
+    }
+
+    public String getStringDateUploaded() {
+        return stringDateUploaded;
+    }
+
+    public void setStringDateUploaded(String stringDateUploaded) {
+        this.stringDateUploaded = stringDateUploaded;
+    }
+
+    public long getDateUploaded() {
+        return dateUploaded;
+    }
+
+    public void setDateUploaded(long dateUploaded) {
+        stringDateUploaded = sdf.format(new Date(dateUploaded));
+        this.dateUploaded = dateUploaded;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getStringDate() {
+        return stringDate;
+    }
+
+    public void setStringDate(String stringDate) {
+        this.stringDate = stringDate;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    @Override
+    public void setJournalUserID(String userID) {
+
+    }
+
+    @Override
+    public void setJournalUserName(String userName) {
+
+    }
+
+
+    public String getPodcastID() {
+        return podcastID;
+    }
+
+    public void setPodcastID(String podcastID) {
+        this.podcastID = podcastID;
+    }
+
+    public HashMap<String, String> getUrlLinks() {
+        return urlLinks;
+    }
+
+    public void setUrlLinks(HashMap<String, String> urlLinks) {
+        this.urlLinks = urlLinks;
     }
 
 
@@ -61,31 +142,6 @@ public class VideoDTO implements DTOEntity, Serializable, Comparable<VideoDTO> {
         this.eBookID = eBookID;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
     public String getStringDateUpdated() {
         return stringDateUpdated;
     }
@@ -102,11 +158,12 @@ public class VideoDTO implements DTOEntity, Serializable, Comparable<VideoDTO> {
         this.active = active;
     }
 
-    public Long getDateUpdated() {
+    public long getDateUpdated() {
         return dateUpdated;
     }
 
-    public void setDateUpdated(Long dateUpdated) {
+    public void setDateUpdated(long dateUpdated) {
+        stringDateUpdated = sdf.format(new Date(dateUpdated));
         this.dateUpdated = dateUpdated;
     }
 
@@ -151,31 +208,31 @@ public class VideoDTO implements DTOEntity, Serializable, Comparable<VideoDTO> {
         this.url = url;
     }
 
-    public Long getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Long date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
-    public Integer getVideoSize() {
+    public long getVideoSize() {
         return videoSize;
     }
 
-    public void setVideoSize(Integer videoSize) {
+    public void setVideoSize(long videoSize) {
         this.videoSize = videoSize;
     }
 
-    public Integer getLengthInSeconds() {
+    public int getLengthInSeconds() {
         return lengthInSeconds;
     }
 
-    public void setLengthInSeconds(Integer lengthInSeconds) {
+    public void setLengthInSeconds(int lengthInSeconds) {
         this.lengthInSeconds = lengthInSeconds;
     }
 
-    @Override
+    @Exclude
     public int compareTo(@NonNull VideoDTO d) {
         if (date > d.date) {
             return -1;
@@ -187,23 +244,81 @@ public class VideoDTO implements DTOEntity, Serializable, Comparable<VideoDTO> {
 
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return title;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return description;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return stringDateUpdated;
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return null;
     }
+
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
+        return stringDateRegistered;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

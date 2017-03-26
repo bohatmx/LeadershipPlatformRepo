@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.lists;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.data.DTOEntity;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 
 import java.text.DecimalFormat;
@@ -27,29 +28,31 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     public interface EntityListener {
         void onAddEntity();
 
-        void onDeleteClicked(DTOEntity entity);
+        void onDeleteClicked(BaseDTO entity);
 
-        void onUpdateClicked(DTOEntity entity);
+        void onUpdateClicked(BaseDTO entity);
 
-        void onPhotoCaptureRequested(DTOEntity entity);
+        void onPhotoCaptureRequested(BaseDTO entity);
 
-        void onVideoCaptureRequested(DTOEntity entity);
+        void onVideoCaptureRequested(BaseDTO entity);
 
-        void onLocationRequested(DTOEntity entity);
+        void onSomeActionRequired(BaseDTO entity);
 
-        void onEntityClicked(DTOEntity entity);
+        void onMicrophoneRequired(BaseDTO entity);
+
+        void onEntityClicked(BaseDTO entity);
 
     }
 
     private EntityListener mListener;
-    private List<DTOEntity> entities;
+    private List<BaseDTO> entities;
     private Context ctx;
     int type;
     public static final Locale locale = Locale.getDefault();
     public static final DecimalFormat sdf = new DecimalFormat("###,###,###,###,##0.0");
 
 
-    public BasicEntityAdapter(List<DTOEntity> entities, int type,
+    public BasicEntityAdapter(List<BaseDTO> entities, int type,
                               Context ctx, EntityListener listener) {
         this.entities = entities;
         this.mListener = listener;
@@ -67,11 +70,11 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     @Override
     public void onBindViewHolder(final EntityViewHolder h, final int position) {
 
-        final DTOEntity p = entities.get(position);
-        h.txtTitle.setText(p.getTitleForAdapter());
-        h.txtLine1.setText(p.getTopText());
-        h.txtSubTitle.setText(p.getBottomTitle());
-        h.txtLine2.setText(p.getBottomText());
+        final BaseDTO p = entities.get(position);
+        h.txtTitle.setText(p.getLine1());
+        h.txtLine1.setText(p.getLine2());
+        h.txtSubTitle.setText(p.getLine3());
+        h.txtLine2.setText(p.getLine4());
         h.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +85,9 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 }
             }
         });
+//        if (position == 0) {
+//            animateIn(h.bottomLayout,p);
+//        }
         h.iconDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,7 +103,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.iconLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onLocationRequested(p);
+                mListener.onSomeActionRequired(p);
             }
         });
         h.iconPhoto.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +116,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             @Override
             public void onClick(View view) {
                 mListener.onVideoCaptureRequested(p);
+            }
+        });
+        h.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onMicrophoneRequired(p);
             }
         });
         h.frameLayout.setOnClickListener(new View.OnClickListener() {
@@ -125,20 +137,23 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         switch (type) {
             case ResponseBag.CATEGORIES:
-                h.txtNumBlack.setVisibility(View.VISIBLE);
-                h.txtNumBlack.setText(String.valueOf(position + 1));
+                h.txtNumGrey.setVisibility(View.VISIBLE);
+                h.txtNumGrey.setText(String.valueOf(position + 1));
+                h.iconLocation.setVisibility(View.GONE);
                 break;
-            case ResponseBag.COMPANY:
+            case ResponseBag.COMPANIES:
                 h.txtNumBlue.setVisibility(View.VISIBLE);
                 h.txtNumBlue.setText(String.valueOf(position + 1));
                 break;
-            case ResponseBag.COUNTRY:
+            case ResponseBag.COUNTRIES:
                 h.txtNumGrey.setVisibility(View.VISIBLE);
                 h.txtNumGrey.setText(String.valueOf(position + 1));
                 break;
             case ResponseBag.DAILY_THOUGHTS:
-                h.txtNumRed.setVisibility(View.VISIBLE);
-                h.txtNumRed.setText(String.valueOf(position + 1));
+                h.iconTopRight.setVisibility(View.GONE);
+                h.txtNumBlue.setVisibility(View.VISIBLE);
+                h.txtNumBlue.setText(String.valueOf(position + 1));
+                h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, android.R.drawable.ic_menu_my_calendar));
                 break;
             case ResponseBag.EBOOKS:
                 h.txtNumGreen.setVisibility(View.VISIBLE);
@@ -160,7 +175,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 h.txtNumGreen.setVisibility(View.VISIBLE);
                 h.txtNumGreen.setText(String.valueOf(position + 1));
                 break;
-            case ResponseBag.PRICE:
+            case ResponseBag.PRICES:
                 h.txtNumBlue.setVisibility(View.VISIBLE);
                 h.txtNumBlue.setText(String.valueOf(position + 1));
                 break;
@@ -169,6 +184,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 h.txtNumGreen.setText(String.valueOf(position + 1));
                 break;
             case ResponseBag.USERS:
+                h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx,android.R.drawable.ic_menu_send));
                 h.txtNumBlack.setVisibility(View.VISIBLE);
                 h.txtNumBlack.setText(String.valueOf(position + 1));
                 break;
@@ -188,7 +204,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     }
 
-    private void animateIn(View view, final DTOEntity entity) {
+    private void animateIn(View view, final BaseDTO entity) {
         view.setVisibility(View.VISIBLE);
         view.setPivotY(0);
         ObjectAnimator an = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1.0f);
@@ -218,7 +234,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         an.start();
     }
 
-    private void animateOut(final View view, final DTOEntity entity) {
+    private void animateOut(final View view, final BaseDTO entity) {
         view.setPivotY(0f);
         ObjectAnimator an = ObjectAnimator.ofFloat(view, "scaleY", 1.0f, 0.5f);
         an.setDuration(200);
@@ -232,7 +248,8 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                mListener.onEntityClicked(entity);
+                view.setVisibility(View.GONE);
+                //mListener.onEntityClicked(entity);
             }
 
             @Override
@@ -257,7 +274,8 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     public class EntityViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtTitle, txtSubTitle, txtLine1, txtLine2,
         txtNumBlack,txtNumBlue,txtNumGrey,txtNumGreen,txtNumRed;
-        protected ImageView iconTopRight, iconDelete, iconUpdate, iconPhoto, iconVideo, iconLocation;
+        protected ImageView iconTopRight, iconDelete, iconUpdate,
+                iconPhoto, iconVideo, iconLocation, iconMicrophone;
         protected View bottomLayout, frameLayout;
 
 
@@ -274,7 +292,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             txtNumRed = (TextView) itemView.findViewById(R.id.txtNumberRed);
 
             iconTopRight = (ImageView) itemView.findViewById(R.id.iconTopRight);
-
+            iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
             iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
             iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
             iconPhoto = (ImageView) itemView.findViewById(R.id.iconCamera);

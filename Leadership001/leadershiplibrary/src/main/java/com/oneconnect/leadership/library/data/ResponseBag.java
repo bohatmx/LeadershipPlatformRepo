@@ -66,10 +66,10 @@ public class ResponseBag implements Serializable {
             USERS = 10,
             NEWS = 11,
             SUBSCRIPTIONS = 12,
-            COMPANY = 13,
-            DEVICE = 14,
-            COUNTRY = 15,
-            PRICE = 16;
+            COMPANIES = 13,
+            DEVICES = 14,
+            COUNTRIES = 15,
+            PRICES = 16;
 
     public static final String
             DESC_CATEGORIES = "Categories",

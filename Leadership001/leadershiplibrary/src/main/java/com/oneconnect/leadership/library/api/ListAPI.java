@@ -270,7 +270,7 @@ public class ListAPI {
             }
         });
     }
-    public void getVideo(String companyID, final DataListener listener) {
+    public void getCompanyVideos(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -293,7 +293,100 @@ public class ListAPI {
             }
         });
     }
-    public void getWeeklyMasterclass(String companyID, final DataListener listener) {
+    public void getDailyThoughtVideos(String dailyThoughtID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
+        Query q = ref.orderByChild("dailyThoughtID").equalTo(dailyThoughtID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setVideos(new ArrayList<VideoDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                        VideoDTO u = shot.getValue(VideoDTO.class);
+                        bag.getVideos().add(u);
+                    }
+                    listener.onResponse(bag);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+    public void getWeeklyMessageVideos(String weeklyMessageID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
+        Query q = ref.orderByChild("weeklyMessageID").equalTo(weeklyMessageID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setVideos(new ArrayList<VideoDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                        VideoDTO u = shot.getValue(VideoDTO.class);
+                        bag.getVideos().add(u);
+                    }
+                    listener.onResponse(bag);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+    public void getWeeklyMasterclassVideos(String weeklyMasterclassID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
+        Query q = ref.orderByChild("weeklyMasterclassID").equalTo(weeklyMasterclassID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setVideos(new ArrayList<VideoDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                        VideoDTO u = shot.getValue(VideoDTO.class);
+                        bag.getVideos().add(u);
+                    }
+                    listener.onResponse(bag);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+    public void getPodcastVideos(String podcastID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
+        Query q = ref.orderByChild("podcastID").equalTo(podcastID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setVideos(new ArrayList<VideoDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                        VideoDTO u = shot.getValue(VideoDTO.class);
+                        bag.getVideos().add(u);
+                    }
+                    listener.onResponse(bag);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getWeeklyMasterclasses(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MASTER_CLASSES);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
         q.addListenerForSingleValueEvent(new ValueEventListener() {

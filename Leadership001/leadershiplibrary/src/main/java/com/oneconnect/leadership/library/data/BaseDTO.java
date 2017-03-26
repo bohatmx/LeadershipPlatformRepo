@@ -1,0 +1,31 @@
+package com.oneconnect.leadership.library.data;
+
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Created by aubreymalabie on 3/19/17.
+ */
+
+public abstract class BaseDTO implements Serializable{
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm:ss");
+    public String stringDateRegistered, stringDateScheduled,
+            journalUserID, journalUserName, title,subtitle;
+    public Long dateRegistered, dateScheduled;
+    public String companyID, companyName;
+
+
+    public BaseDTO() {
+        dateRegistered = new Date().getTime();
+        stringDateRegistered = sdf.format(new Date());
+    }
+
+
+    public abstract void setJournalUserID(String userID);
+    public abstract void setJournalUserName(String userName);
+    public abstract  String getLine1();
+    public abstract  String getLine2();
+    public abstract  String getLine3();
+    public abstract  String getLine4();
+}

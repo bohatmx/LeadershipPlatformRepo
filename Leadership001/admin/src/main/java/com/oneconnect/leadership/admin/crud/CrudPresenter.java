@@ -5,7 +5,7 @@ import com.oneconnect.leadership.library.api.ListAPI;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
-import com.oneconnect.leadership.library.data.DTOEntity;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -37,7 +37,7 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
-    public void addEntity(DTOEntity entity) {
+    public void addEntity(BaseDTO entity) {
           if (entity instanceof CategoryDTO) {
               CategoryDTO c = (CategoryDTO)entity;
               dataAPI.addCategory(c, new DataAPI.DataListener() {
@@ -259,6 +259,24 @@ public class CrudPresenter implements CrudContract.Presenter {
                 @Override
                 public void onResponse(String key) {
                     view.onEntityAdded(key);
+                }
+
+                @Override
+                public void onError(String message) {
+                    view.onError(message);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void updateEntity(BaseDTO entity) {
+        if (entity instanceof UserDTO) {
+            UserDTO u = (UserDTO)entity;
+            dataAPI.updateUser(u, new DataAPI.UpdateListener() {
+                @Override
+                public void onSuccess() {
+                    view.onEntityUpdated();
                 }
 
                 @Override

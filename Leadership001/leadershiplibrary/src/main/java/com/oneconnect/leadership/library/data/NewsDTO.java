@@ -2,8 +2,9 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -11,19 +12,16 @@ import java.util.HashMap;
  * Created by aubreymalabie on 3/17/17.
  */
 
-public class NewsDTO implements DTOEntity, Serializable, Comparable<NewsDTO> {
-    private String companyID, companyName, title, body, newsID,
-            stringArticleDate, stringDateRegistered, html;
-    private long dateRegistered, articleDate;
+public class NewsDTO  extends BaseDTO implements  Serializable, Comparable<NewsDTO> {
+    private String body, newsID,
+            stringArticleDate, html;
+    private long  articleDate;
     private HashMap<String, String> urls;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyy HH:mm:ss");
 
     public NewsDTO() {
-        dateRegistered = new Date().getTime();
-        stringDateRegistered = sdf.format(new Date());
     }
 
     public String getHtml() {
@@ -58,30 +56,6 @@ public class NewsDTO implements DTOEntity, Serializable, Comparable<NewsDTO> {
         this.newsID = newsID;
     }
 
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getBody() {
         return body;
     }
@@ -98,21 +72,16 @@ public class NewsDTO implements DTOEntity, Serializable, Comparable<NewsDTO> {
         this.stringArticleDate = stringArticleDate;
     }
 
-    public String getStringDateRegistered() {
-        return stringDateRegistered;
+    @Override
+    public void setJournalUserID(String userID) {
+
     }
 
-    public void setStringDateRegistered(String stringDateRegistered) {
-        this.stringDateRegistered = stringDateRegistered;
+    @Override
+    public void setJournalUserName(String userName) {
+
     }
 
-    public long getDateRegistered() {
-        return dateRegistered;
-    }
-
-    public void setDateRegistered(long dateRegistered) {
-        this.dateRegistered = dateRegistered;
-    }
 
     public long getArticleDate() {
         return articleDate;
@@ -130,7 +99,7 @@ public class NewsDTO implements DTOEntity, Serializable, Comparable<NewsDTO> {
         this.urls = urls;
     }
 
-    @Override
+    @Exclude
     public int compareTo(@NonNull NewsDTO d) {
         if (dateRegistered > d.dateRegistered) {
             return -1;
@@ -141,23 +110,80 @@ public class NewsDTO implements DTOEntity, Serializable, Comparable<NewsDTO> {
         return 0;
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return title;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return body;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return stringArticleDate;
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return companyName;
     }
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
+        return stringDateRegistered;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

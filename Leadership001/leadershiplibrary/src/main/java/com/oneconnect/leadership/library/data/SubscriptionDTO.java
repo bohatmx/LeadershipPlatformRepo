@@ -2,6 +2,8 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,10 +12,10 @@ import java.util.Date;
  * Created by aubreymalabie on 3/17/17.
  */
 
-public class SubscriptionDTO implements DTOEntity, Serializable, Comparable<SubscriptionDTO> {
-    private String userID, firstName, lastName, companyID, companyName, email,
-            stringDateRegistered, stringPaymentDate, description, subscriptionID;
-    private long dateRegistered, paymentDate;
+public class SubscriptionDTO  extends BaseDTO implements  Serializable, Comparable<SubscriptionDTO> {
+    private String userID, firstName, lastName, email,
+             stringPaymentDate, description, subscriptionID;
+    private long paymentDate;
     private double amount;
     private boolean active;
     private int subscriptionType, periodInMonths;
@@ -118,22 +120,6 @@ public class SubscriptionDTO implements DTOEntity, Serializable, Comparable<Subs
         this.lastName = lastName;
     }
 
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
     public String getStringDateRegistered() {
         return stringDateRegistered;
     }
@@ -150,13 +136,16 @@ public class SubscriptionDTO implements DTOEntity, Serializable, Comparable<Subs
         this.stringPaymentDate = stringPaymentDate;
     }
 
-    public long getDateRegistered() {
-        return dateRegistered;
+    @Override
+    public void setJournalUserID(String userID) {
+
     }
 
-    public void setDateRegistered(long dateRegistered) {
-        this.dateRegistered = dateRegistered;
+    @Override
+    public void setJournalUserName(String userName) {
+
     }
+
 
     public long getPaymentDate() {
         return paymentDate;
@@ -183,7 +172,7 @@ public class SubscriptionDTO implements DTOEntity, Serializable, Comparable<Subs
         this.active = active;
     }
 
-    @Override
+    @Exclude
     public int compareTo(@NonNull SubscriptionDTO d) {
         if (dateRegistered > d.dateRegistered) {
             return -1;
@@ -194,23 +183,76 @@ public class SubscriptionDTO implements DTOEntity, Serializable, Comparable<Subs
         return 0;
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return description;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return stringPaymentDate;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return String.valueOf(amount);
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return stringDateRegistered;
     }
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

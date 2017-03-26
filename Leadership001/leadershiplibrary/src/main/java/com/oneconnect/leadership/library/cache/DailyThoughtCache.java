@@ -81,7 +81,7 @@ public class DailyThoughtCache {
                         for (DailyThoughtDTO u : dailyThoughts) {
                             String json1 = gson.toJson(u);
                             snappydb.put(DAILY_THOUGHT_KEY + u.getDailyThoughtID(), json1);
-                            Log.i(TAG, ".......doInBackground: dailyThought cached: " + u.getCategoryName());
+                            Log.i(TAG, ".......doInBackground: dailyThought cached: " + u.getTitle());
                         }
                         break;
                     case GET_DAILY_THOUGHTS:

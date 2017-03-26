@@ -2,28 +2,22 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by aubreymalabie on 3/16/17.
  */
 
-public class CompanyDTO implements DTOEntity, Serializable, Comparable<CompanyDTO> {
-    private String companyID, companyName, email,
-    stringDateRegistered,
+public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<CompanyDTO> {
+    private String  email,
     countryID, address;
-    private Long dateRegistered;
 
     public CompanyDTO() {
     }
 
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
 
     public String getStringDateRegistered() {
         return stringDateRegistered;
@@ -31,14 +25,6 @@ public class CompanyDTO implements DTOEntity, Serializable, Comparable<CompanyDT
 
     public void setStringDateRegistered(String stringDateRegistered) {
         this.stringDateRegistered = stringDateRegistered;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getEmail() {
@@ -65,36 +51,93 @@ public class CompanyDTO implements DTOEntity, Serializable, Comparable<CompanyDT
         this.address = address;
     }
 
-    public Long getDateRegistered() {
-        return dateRegistered;
-    }
 
-    public void setDateRegistered(Long dateRegistered) {
-        this.dateRegistered = dateRegistered;
+    @Override
+    public void setJournalUserID(String userID) {
+
     }
 
     @Override
+    public void setJournalUserName(String userName) {
+
+    }
+
+    @Exclude
     public int compareTo(@NonNull CompanyDTO c) {
         return this.companyName.compareTo(c.companyName);
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return companyName;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return email;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return address;
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return stringDateRegistered;
     }
+
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

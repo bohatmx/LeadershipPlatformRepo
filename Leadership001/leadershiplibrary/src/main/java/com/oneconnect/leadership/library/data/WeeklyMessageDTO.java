@@ -2,27 +2,71 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class WeeklyMessageDTO implements DTOEntity, Serializable, Comparable<WeeklyMessageDTO> {
+public class WeeklyMessageDTO  extends BaseDTO implements  Serializable, Comparable<WeeklyMessageDTO> {
 
-    private String weeklyMessageID, title, subTitle, text, stringDate;
-    private HashMap<String, PhotoDTO> photos;
-    private HashMap<String, VideoDTO> videos;
-    private HashMap<String, PodcastDTO> podcasts;
+    private String weeklyMessageID,  text, stringDate;
+
     private Long date;
     private Integer year, weekNumber;
-    private CategoryDTO category;
-    private String companyID, companyName, stringDateUpdated, html;
+    private HashMap<String,CategoryDTO> categories;
+    private String  stringDateUpdated, html, thumbnailUrl;
     private boolean active;
     private Long dateUpdated;
     private HashMap<String, String> urls;
+    private HashMap<String, PhotoDTO> photos;
+    private HashMap<String, VideoDTO> videos;
+    private HashMap<String,PodcastDTO> podcasts;
 
+    public HashMap<String, PodcastDTO> getPodcasts() {
+        return podcasts;
+    }
+
+    public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
+        this.podcasts = podcasts;
+    }
+
+    public HashMap<String, PhotoDTO> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(HashMap<String, PhotoDTO> photos) {
+        this.photos = photos;
+    }
+
+    public HashMap<String, VideoDTO> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(HashMap<String, VideoDTO> videos) {
+        this.videos = videos;
+    }
+
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public HashMap<String, CategoryDTO> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(HashMap<String, CategoryDTO> categories) {
+        this.categories = categories;
+    }
 
     public String getHtml() {
         return html;
@@ -38,31 +82,6 @@ public class WeeklyMessageDTO implements DTOEntity, Serializable, Comparable<Wee
 
     public void setUrls(HashMap<String, String> urls) {
         this.urls = urls;
-    }
-
-
-    public HashMap<String, PodcastDTO> getPodcasts() {
-        return podcasts;
-    }
-
-    public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
-        this.podcasts = podcasts;
-    }
-
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getStringDateUpdated() {
@@ -97,22 +116,6 @@ public class WeeklyMessageDTO implements DTOEntity, Serializable, Comparable<Wee
         this.weeklyMessageID = weeklyMessageID;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
     public String getText() {
         return text;
     }
@@ -127,22 +130,6 @@ public class WeeklyMessageDTO implements DTOEntity, Serializable, Comparable<Wee
 
     public void setStringDate(String stringDate) {
         this.stringDate = stringDate;
-    }
-
-    public HashMap<String, PhotoDTO> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(HashMap<String, PhotoDTO> photos) {
-        this.photos = photos;
-    }
-
-    public HashMap<String, VideoDTO> getVideos() {
-        return videos;
-    }
-
-    public void setVideos(HashMap<String, VideoDTO> videos) {
-        this.videos = videos;
     }
 
     public Long getDate() {
@@ -169,15 +156,7 @@ public class WeeklyMessageDTO implements DTOEntity, Serializable, Comparable<Wee
         this.weekNumber = weekNumber;
     }
 
-    public CategoryDTO getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryDTO category) {
-        this.category = category;
-    }
-
-    @Override
+    @Exclude
     public int compareTo(@NonNull WeeklyMessageDTO d) {
         if (date > d.date) {
             return -1;
@@ -189,23 +168,97 @@ public class WeeklyMessageDTO implements DTOEntity, Serializable, Comparable<Wee
 
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return title;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return text;
     }
 
-    @Override
-    public String getBottomTitle() {
-        return category.getCategoryName();
+    @Exclude
+    public String getLine3() {
+        if (categories == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (CategoryDTO c: categories.values()) {
+            sb.append(c.getCategoryName()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Exclude
+    public String getLine4() {
+        return stringDate;
     }
 
     @Override
-    public String getBottomText() {
-        return stringDate;
+    public void setJournalUserID(String userID) {
+
     }
+
+    @Override
+    public void setJournalUserName(String userName) {
+
+    }
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
+        return stringDateRegistered;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }

@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
@@ -30,6 +31,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.ThumbnailDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -61,6 +63,7 @@ public class DataAPI {
     public static final String
             COUNTRIES = "countries",
             CATEGORIES = "categories",
+            CALENDAR_EVENTS = "calendarEvents",
             DAILY_THOUGHTS = "dailyThoughts",
             EBOOKS = "eBooks",
             PAYMENTS = "payments",
@@ -70,6 +73,7 @@ public class DataAPI {
             USERS = "users",
             NEWS = "news",
             DEVICES = "devices",
+            THUMBNAILS = "thumbnails",
             SUBSCRIPTIONS = "subscriptions",
             VIDEOS = "videos",
             COMPANIES = "companies",
@@ -83,11 +87,13 @@ public class DataAPI {
 
         sb.append(getRandomLetter());
         sb.append(getRandomLetter());
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 3; i++) {
             sb.append(random.nextInt(9));
         }
-        sb.append("$");
+        sb.append(getRandomSymbol());
         sb.append(getRandomLetter());
+        sb.append(getRandomSymbol());
+        sb.append(random.nextInt(9));
 
         return sb.toString();
     }
@@ -96,31 +102,58 @@ public class DataAPI {
         return letters[random.nextInt(letters.length - 1)];
     }
 
+    private String getRandomSymbol() {
+        return symbols[random.nextInt(symbols.length - 1)];
+    }
+
     public interface CreateUserListener {
         void onUserCreated(UserDTO user);
+
         void onUserAlreadyExists(UserDTO user);
+
         void onError(String message);
     }
 
     public interface OnSignedIn {
         void onSuccess(FirebaseUser user);
+
         void onError();
+    }
+
+    public interface UpdateListener {
+        void onSuccess();
+
+        void onError(String message);
     }
 
     public interface OnDataRead {
         void onResponse(ResponseBag responseBag);
+
         void onError();
     }
+
     public interface EmailQueryListener {
         void onUserFoundByEmail(UserDTO user);
+
         void onUserNotFoundByEmail();
+
         void onError(String message);
     }
+
     public interface AddUserListener {
         void onUserAdded(UserDTO user);
+
         void onUserAlreadyExists(UserDTO user);
+
         void onError(String message);
     }
+
+    /**
+     * Create new company staff user
+     *
+     * @param user
+     * @param listener
+     */
     public void createUser(final UserDTO user,
                            final CreateUserListener listener) {
         Log.d(TAG, "createUser: starting to create user: " + user.getEmail());
@@ -138,7 +171,7 @@ public class DataAPI {
 
             @Override
             public void onError(String message) {
-               listener.onError(message);
+                listener.onError(message);
             }
         });
 
@@ -170,12 +203,12 @@ public class DataAPI {
                     addUser(user, new AddUserListener() {
                         @Override
                         public void onUserAdded(UserDTO user) {
-                              listener.onUserCreated(user);
+                            listener.onUserCreated(user);
                         }
 
                         @Override
                         public void onUserAlreadyExists(UserDTO user) {
-                             listener.onUserAlreadyExists(user);
+                            listener.onUserAlreadyExists(user);
                         }
 
                         @Override
@@ -216,7 +249,7 @@ public class DataAPI {
                             Log.i(TAG, "####### onComplete: we cool, displayName: "
                                     + fbUser.getDisplayName() + " email: " + fbUser.getEmail()
                                     + " uid: " + fbUser.getUid() + " \ntoken: " + fbUser.getToken(true));
-                             onSignedIn.onSuccess(fbUser);
+                            onSignedIn.onSuccess(fbUser);
                         } else {
                             Log.e(TAG, "------------ sign in FAILED: task not successful");
                             onSignedIn.onError();
@@ -303,12 +336,12 @@ public class DataAPI {
         getUserByEmail(c.getEmail(), new EmailQueryListener() {
             @Override
             public void onUserFoundByEmail(UserDTO user) {
-                  listener.onUserAlreadyExists(user);
+                listener.onUserAlreadyExists(user);
             }
 
             @Override
             public void onUserNotFoundByEmail() {
-                Log.w(TAG, "addUser: onUserNotFoundByEmail: now add the new user to database" );
+                Log.w(TAG, "addUser: onUserNotFoundByEmail: now add the new user to database");
                 DatabaseReference userRef = db.getReference(USERS);
                 log(userRef);
                 userRef.push().setValue(c, new DatabaseReference.CompletionListener() {
@@ -330,10 +363,27 @@ public class DataAPI {
 
             @Override
             public void onError(String message) {
-                 listener.onError(message);
+                listener.onError(message);
             }
         });
 
+
+    }
+
+    public void updateUser(final UserDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(USERS)
+                .child(c.getUserID());
+
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
 
     }
 
@@ -380,6 +430,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addPrice(final PriceDTO price, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PRICES);
         log(ref);
@@ -456,7 +507,7 @@ public class DataAPI {
                     Log.i(TAG, "------------- onComplete: dailyThought added: "
                             + dailyThought.getTitle());
                     dailyThought.setDailyThoughtID(responseRef.getKey());
-                    responseRef.child("countryID").setValue(responseRef.getKey());
+                    responseRef.child("dailyThoughtID").setValue(responseRef.getKey());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());
 
@@ -501,6 +552,47 @@ public class DataAPI {
                             + country.getCountryName());
                     country.setCountryID(responseRef.getKey());
                     responseRef.child("countryID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void addCalendarEvent(final CalendarEventDTO event, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(CALENDAR_EVENTS);
+        log(ref);
+        ref.push().setValue(event, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: calendar event added: ");
+                    event.setCalendarEventID(responseRef.getKey());
+                    responseRef.child("calendarEventID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+    public void addThumbnail(final ThumbnailDTO thumbnail, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(THUMBNAILS);
+        log(ref);
+        ref.push().setValue(thumbnail, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: thumbnail added: ");
+                    thumbnail.setThumbnailID(responseRef.getKey());
+                    responseRef.child("thumbnailID").setValue(responseRef.getKey());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());
 
@@ -675,4 +767,5 @@ public class DataAPI {
 
     private String[] letters = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
             "m", "n", "p", "q", "w", "x", "y", "z"};
+    private String[] symbols = {"!", "@", "%", "^", "*"};
 }

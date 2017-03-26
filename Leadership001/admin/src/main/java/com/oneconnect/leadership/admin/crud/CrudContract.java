@@ -2,7 +2,7 @@ package com.oneconnect.leadership.admin.crud;
 
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
-import com.oneconnect.leadership.library.data.DTOEntity;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -25,7 +25,8 @@ import java.util.List;
 
 public class CrudContract {
     public interface Presenter {
-        void addEntity(DTOEntity entity);
+        void addEntity(BaseDTO entity);
+        void updateEntity(BaseDTO entity);
         void createUser(UserDTO user);
 
         void getCategories(String companyID);
@@ -47,6 +48,7 @@ public class CrudContract {
 
     public interface View {
         void onEntityAdded(String key);
+        void onEntityUpdated();
         void onUserCreated(UserDTO user);
 
         void onCategories(List<CategoryDTO> list);

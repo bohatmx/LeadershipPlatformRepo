@@ -1,17 +1,38 @@
 package com.oneconnect.leadership.library.data;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by aubreymalabie on 11/11/16.
  */
 
-public class DeviceDTO implements Serializable, DTOEntity{
+public class DeviceDTO extends BaseDTO implements Serializable{
 
-    private String model, manufacturer, androidVersion, serialNumber, iosVersion, deviceID;
-    private String companyID, userID, email, firstName,lastName;
+    private String model, manufacturer, androidVersion, serialNumber,
+            iosVersion, deviceID;
+    private String  userID, email,
+            firstName,lastName;
     private int userType;
     private String token;
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm:ss");
+
+    public DeviceDTO() {
+
+    }
+
+    @Override
+    public void setJournalUserID(String userID) {
+
+    }
+
+    @Override
+    public void setJournalUserName(String userName) {
+
+    }
 
     public String getIosVersion() {
         return iosVersion;
@@ -43,14 +64,6 @@ public class DeviceDTO implements Serializable, DTOEntity{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
     }
 
     public String getUserID() {
@@ -117,23 +130,81 @@ public class DeviceDTO implements Serializable, DTOEntity{
         this.serialNumber = serialNumber;
     }
 
-    @Override
-    public String getTitleForAdapter() {
+    @Exclude
+    public String getLine1() {
         return null;
     }
 
-    @Override
-    public String getTopText() {
+    @Exclude
+    public String getLine2() {
         return null;
     }
 
-    @Override
-    public String getBottomTitle() {
+    @Exclude
+    public String getLine3() {
         return null;
     }
 
-    @Override
-    public String getBottomText() {
+    @Exclude
+    public String getLine4() {
         return null;
     }
+
+    public String getStringDateScheduled() {
+        return stringDateScheduled;
+    }
+
+    public void setStringDateScheduled(String stringDateScheduled) {
+        this.stringDateScheduled = stringDateScheduled;
+    }
+
+    public Long getDateScheduled() {
+        return dateScheduled;
+    }
+
+    public void setDateScheduled(Long dateScheduled) {
+        stringDateScheduled = sdf.format(new Date(dateScheduled));
+        this.dateScheduled = dateScheduled;
+    }
+
+    public String getStringDateRegistered() {
+        return stringDateRegistered;
+    }
+
+    public Long getDateRegistered() {
+        return dateRegistered;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
 }
