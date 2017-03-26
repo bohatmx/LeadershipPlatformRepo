@@ -25,6 +25,25 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
     private HashMap<String,String> urlLinks;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
+    private HashMap<String,EBookDTO> ebooks;
+    private HashMap<String,UrlDTO> urls;
+
+    public HashMap<String, UrlDTO> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, UrlDTO> urls) {
+        this.urls = urls;
+    }
+
+    public HashMap<String, EBookDTO> getEbooks() {
+        return ebooks;
+    }
+
+    public void setEbooks(HashMap<String, EBookDTO> ebooks) {
+        this.ebooks = ebooks;
+    }
+
 
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 2/11/17.
@@ -17,7 +18,24 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
     private String companyID, companyName, stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
-    private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID;
+    private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, podcastID;
+    private HashMap<String,UrlDTO> urls;
+
+    public HashMap<String, UrlDTO> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, UrlDTO> urls) {
+        this.urls = urls;
+    }
+
+    public String getPodcastID() {
+        return podcastID;
+    }
+
+    public void setPodcastID(String podcastID) {
+        this.podcastID = podcastID;
+    }
 
     public String getHtml() {
         return html;

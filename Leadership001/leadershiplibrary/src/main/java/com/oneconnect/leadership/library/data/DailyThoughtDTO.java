@@ -22,10 +22,19 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private long dateUpdated;
 
     private HashMap<String, CategoryDTO> categories;
-    private HashMap<String, String> urlLinks;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
     private HashMap<String,PodcastDTO> podcasts;
+    private HashMap<String,EBookDTO> ebooks;
+    private HashMap<String,UrlDTO> urls;
+
+    public HashMap<String, EBookDTO> getEbooks() {
+        return ebooks;
+    }
+
+    public void setEbooks(HashMap<String, EBookDTO> ebooks) {
+        this.ebooks = ebooks;
+    }
 
     public HashMap<String, PodcastDTO> getPodcasts() {
         return podcasts;
@@ -67,13 +76,12 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         this.html = html;
     }
 
-
-    public HashMap<String, String> getUrlLinks() {
-        return urlLinks;
+    public HashMap<String, UrlDTO> getUrls() {
+        return urls;
     }
 
-    public void setUrlLinks(HashMap<String, String> urlLinks) {
-        this.urlLinks = urlLinks;
+    public void setUrls(HashMap<String, UrlDTO> urls) {
+        this.urls = urls;
     }
 
     public String getStringDateUpdated() {

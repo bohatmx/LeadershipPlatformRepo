@@ -32,6 +32,7 @@ import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.ThumbnailDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -65,6 +66,7 @@ public class DataAPI {
             CATEGORIES = "categories",
             CALENDAR_EVENTS = "calendarEvents",
             DAILY_THOUGHTS = "dailyThoughts",
+            URLS = "urls",
             EBOOKS = "eBooks",
             PAYMENTS = "payments",
             PODCASTS = "podcasts",
@@ -583,6 +585,7 @@ public class DataAPI {
             }
         });
     }
+
     public void addThumbnail(final ThumbnailDTO thumbnail, final DataListener listener) {
         final DatabaseReference ref = db.getReference(THUMBNAILS);
         log(ref);
@@ -626,7 +629,7 @@ public class DataAPI {
         });
     }
 
-    public void addEBooks(final EBookDTO eBook, final DataListener listener) {
+    public void addEBook(final EBookDTO eBook, final DataListener listener) {
         final DatabaseReference ref = db.getReference(EBOOKS);
         log(ref);
         ref.push().setValue(eBook, new DatabaseReference.CompletionListener() {
@@ -637,8 +640,20 @@ public class DataAPI {
                             + eBook.getTitle());
                     eBook.seteBookID(responseRef.getKey());
                     responseRef.child("eBookID").setValue(responseRef.getKey());
-                    if (listener != null)
-                        listener.onResponse(responseRef.getKey());
+                    addEBookToEntity(eBook, new DataListener() {
+                        @Override
+                        public void onResponse(String key) {
+                            listener.onResponse(responseRef.getKey());
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Log.e(TAG, "onError: failed to add eBook to entity, msg: ".concat(message));
+                            FirebaseCrash.report(new Exception("Failed to add eBook to entity"));
+                            listener.onResponse(responseRef.getKey());
+                        }
+                    });
+
 
                 } else {
                     if (listener != null)
@@ -660,8 +675,20 @@ public class DataAPI {
                             + photo.getCaption());
                     photo.setPhotoID(responseRef.getKey());
                     responseRef.child("photoID").setValue(responseRef.getKey());
-                    if (listener != null)
-                        listener.onResponse(responseRef.getKey());
+                    addPhotoToEntity(photo, new DataListener() {
+                        @Override
+                        public void onResponse(String key) {
+                            listener.onResponse(responseRef.getKey());
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Log.e(TAG, "onError: failed to add photo to entity, msg: ".concat(message));
+                            FirebaseCrash.report(new Exception("Failed to add photo to entity"));
+                            listener.onResponse(responseRef.getKey());
+                        }
+                    });
+
 
                 } else {
                     if (listener != null)
@@ -683,8 +710,20 @@ public class DataAPI {
                             + video.getCaption());
                     video.setVideoID(responseRef.getKey());
                     responseRef.child("videoID").setValue(responseRef.getKey());
-                    if (listener != null)
-                        listener.onResponse(responseRef.getKey());
+                    addVideoToEntity(video, new DataListener() {
+                        @Override
+                        public void onResponse(String key) {
+                            listener.onResponse(responseRef.getKey());
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Log.e(TAG, "onError: failed to add video to entity, msg: ".concat(message));
+                            FirebaseCrash.report(new Exception("Failed to add video to entity"));
+                            listener.onResponse(responseRef.getKey());
+                        }
+                    });
+
 
                 } else {
                     if (listener != null)
@@ -692,6 +731,312 @@ public class DataAPI {
                 }
             }
         });
+    }
+
+    public void addVideoToEntity(final VideoDTO video, final DataListener listener) {
+        if (video.getDailyThoughtID() == null && video.getWeeklyMasterClassID() == null
+                && video.getWeeklyMessageID() == null && video.getPodcastID() == null) {
+            listener.onResponse("No entity to add to");
+            return;
+
+        }
+        if (video.getDailyThoughtID() != null) {
+            DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
+                    .child(video.getDailyThoughtID()).child(VIDEOS);
+            log(ref);
+            ref.push().setValue(video, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: video added to DailyThought: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (video.getWeeklyMessageID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
+                    .child(video.getWeeklyMessageID()).child(VIDEOS);
+            log(ref);
+            ref.push().setValue(video, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: video added to WeeklyMessage: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (video.getWeeklyMasterClassID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
+                    .child(video.getWeeklyMasterClassID()).child(VIDEOS);
+            log(ref);
+            ref.push().setValue(video, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: video added to MasterClass: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (video.getPodcastID() != null) {
+            DatabaseReference ref = db.getReference(PODCASTS)
+                    .child(video.getPodcastID()).child(VIDEOS);
+            log(ref);
+            ref.push().setValue(video, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: video added to Podcast: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+    }
+
+    public void addPhotoToEntity(final PhotoDTO photo, final DataListener listener) {
+        if (photo.getDailyThoughtID() == null && photo.getWeeklyMasterClassID() == null
+                && photo.getWeeklyMessageID() == null && photo.getPodcastID() == null) {
+            listener.onResponse("No entity to add to");
+            return;
+
+        }
+        if (photo.getDailyThoughtID() != null) {
+            DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
+                    .child(photo.getDailyThoughtID()).child(PHOTOS);
+            log(ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to DailyThought: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (photo.getWeeklyMessageID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
+                    .child(photo.getWeeklyMessageID()).child(PHOTOS);
+            log(ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to WeeklyMessage: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (photo.getWeeklyMasterClassID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
+                    .child(photo.getWeeklyMasterClassID()).child(PHOTOS);
+            log(ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to MasterClass: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (photo.getPodcastID() != null) {
+            DatabaseReference ref = db.getReference(PODCASTS)
+                    .child(photo.getPodcastID()).child(PHOTOS);
+            log(ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to Podcast: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+    }
+
+    public void addEBookToEntity(final EBookDTO ebook, final DataListener listener) {
+        if (ebook.getDailyThoughtID() == null && ebook.getWeeklyMasterClassID() == null
+                && ebook.getWeeklyMessageID() == null && ebook.getPodcastID() == null) {
+            listener.onResponse("No entity to add to");
+            return;
+
+        }
+        if (ebook.getDailyThoughtID() != null) {
+            DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
+                    .child(ebook.getDailyThoughtID()).child(EBOOKS);
+            log(ref);
+            ref.push().setValue(ebook, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: ebook added to DailyThought: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (ebook.getWeeklyMessageID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
+                    .child(ebook.getWeeklyMessageID()).child(EBOOKS);
+            log(ref);
+            ref.push().setValue(ebook, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: ebook added to WeeklyMessage: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (ebook.getWeeklyMasterClassID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
+                    .child(ebook.getWeeklyMasterClassID()).child(EBOOKS);
+            log(ref);
+            ref.push().setValue(ebook, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: ebook added to MasterClass: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+    }
+
+    public void addPodcastToEntity(final PodcastDTO podcast, final DataListener listener) {
+        if (podcast.getDailyThoughtID() == null && podcast.getWeeklyMasterClassID() == null
+                && podcast.getWeeklyMessageID() == null) {
+            listener.onResponse("No entity to add to");
+            return;
+
+        }
+        if (podcast.getDailyThoughtID() != null) {
+            DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
+                    .child(podcast.getDailyThoughtID()).child(PODCASTS);
+            log(ref);
+            ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: podcast added to DailyThought: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (podcast.getWeeklyMessageID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
+                    .child(podcast.getWeeklyMessageID()).child(PODCASTS);
+            log(ref);
+            ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: podcast added to WeeklyMessage: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (podcast.getWeeklyMasterClassID() != null) {
+            DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
+                    .child(podcast.getWeeklyMasterClassID()).child(PODCASTS);
+            log(ref);
+            ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: podcast added to MasterClass: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (podcast.getPodcastID() != null) {
+            DatabaseReference ref = db.getReference(PODCASTS)
+                    .child(podcast.getPodcastID()).child(PODCASTS);
+            log(ref);
+            ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: podcast added to Podcast: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
     }
 
     public void addWeeklyMessage(final WeeklyMessageDTO weeklyMessage, final DataListener listener) {
@@ -750,6 +1095,59 @@ public class DataAPI {
                             + podcast.getTitle());
                     podcast.setPodcastID(responseRef.getKey());
                     responseRef.child("podcastID").setValue(responseRef.getKey());
+                    addPodcastToEntity(podcast, new DataListener() {
+                        @Override
+                        public void onResponse(String key) {
+                            listener.onResponse(responseRef.getKey());
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Log.e(TAG, "onError: failed to add podcast to entity, msg: ".concat(message));
+                            FirebaseCrash.report(new Exception("Failed to add podcast to entity"));
+                            listener.onResponse(responseRef.getKey());
+                        }
+                    });
+
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void addUrl(final UrlDTO url, final String id, int entityType, final DataListener listener) {
+        DatabaseReference ref = null;
+        switch (entityType) {
+            case ResponseBag.DAILY_THOUGHTS:
+                ref = db.getReference(DAILY_THOUGHTS)
+                        .child(id).child(URLS);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                ref = db.getReference(WEEKLY_MASTER_CLASSES)
+                        .child(id).child(URLS);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                ref = db.getReference(WEEKLY_MESSAGES)
+                        .child(id).child(URLS);
+                break;
+            case ResponseBag.PODCASTS:
+                ref = db.getReference(PODCASTS)
+                        .child(id).child(URLS);
+                break;
+            default:
+                listener.onError("Invalid entity entityType");
+                return;
+        }
+        log(ref);
+        ref.push().setValue(url, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: url added: "
+                            + url.getTitle());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());
 

@@ -22,10 +22,28 @@ public class WeeklyMasterClassDTO extends BaseDTO implements  Serializable, Comp
     private String  stringDateUpdated, html, thumbnailUrl;
     private boolean active;
     private Long dateUpdated;
-    private HashMap<String, String> urls;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
     private HashMap<String,PodcastDTO> podcasts;
+    private HashMap<String,EBookDTO> ebooks;
+    private HashMap<String,UrlDTO> urls;
+
+    public HashMap<String, UrlDTO> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, UrlDTO> urls) {
+        this.urls = urls;
+    }
+
+    public HashMap<String, EBookDTO> getEbooks() {
+        return ebooks;
+    }
+
+    public void setEbooks(HashMap<String, EBookDTO> ebooks) {
+        this.ebooks = ebooks;
+    }
+
 
     public HashMap<String, PodcastDTO> getPodcasts() {
         return podcasts;
@@ -99,15 +117,6 @@ public class WeeklyMasterClassDTO extends BaseDTO implements  Serializable, Comp
     public void setHtml(String html) {
         this.html = html;
     }
-
-    public HashMap<String, String> getUrls() {
-        return urls;
-    }
-
-    public void setUrls(HashMap<String, String> urls) {
-        this.urls = urls;
-    }
-
 
     public String getStringDateUpdated() {
         return stringDateUpdated;
