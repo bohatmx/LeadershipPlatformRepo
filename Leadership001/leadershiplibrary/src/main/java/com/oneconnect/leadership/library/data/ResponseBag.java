@@ -55,6 +55,7 @@ public class ResponseBag implements Serializable {
     private List<UrlDTO> urls;
     private List<ThumbnailDTO> thumbnails;
     private List<CalendarEventDTO> calendarEvents;
+    private List<RatingDTO> ratings;
 
     public static final int
             CATEGORIES = 1,
@@ -75,7 +76,8 @@ public class ResponseBag implements Serializable {
             PRICES = 16,
             CALENDAR_EVENTS = 17,
             URLS = 18,
-            THUMBNAILS = 19;
+            THUMBNAILS = 19,
+            RATINGS = 20;
 
     public static final String
             DESC_CATEGORIES = "Categories",
@@ -96,7 +98,16 @@ public class ResponseBag implements Serializable {
             DESC_PRICE = "Prices",
             DESC_CALENDAR_EVENTS = "calendarEvents",
             DESC_URLS = "urls",
+            DESC_RATINGS = "ratings",
             DESC_THUMBNAILS = "thumbnails";
+
+    public List<RatingDTO> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<RatingDTO> ratings) {
+        this.ratings = ratings;
+    }
 
     public List<ThumbnailDTO> getThumbnails() {
         return thumbnails;

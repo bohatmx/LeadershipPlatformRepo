@@ -134,6 +134,16 @@ public class EntityListFragment extends BaseListingFragment {
             }
 
             @Override
+            public void onCalendarRequested(BaseDTO entity) {
+                mListener.onCalendarRequested(entity);
+            }
+
+            @Override
+            public void onEntityDetailRequested(BaseDTO entity) {
+                mListener.onEntityDetailRequested(entity);
+            }
+
+            @Override
             public void onDeleteTooltipRequired(int type) {
                 mListener.onDeleteTooltipRequired(type);
             }
@@ -161,6 +171,11 @@ public class EntityListFragment extends BaseListingFragment {
             @Override
             public void onMicrophoneTooltipRequired(int type) {
                mListener.onMicrophoneTooltipRequired(type);
+            }
+
+            @Override
+            public void onCalendarTooltipRequired(int type) {
+               mListener.onCalendarTooltipRequired(type);
             }
         });
 

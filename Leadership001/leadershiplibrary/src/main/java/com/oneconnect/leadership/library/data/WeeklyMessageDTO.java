@@ -26,6 +26,25 @@ public class WeeklyMessageDTO  extends BaseDTO implements  Serializable, Compara
     private HashMap<String, VideoDTO> videos;
     private HashMap<String,PodcastDTO> podcasts;
     private HashMap<String,EBookDTO> ebooks;
+    private HashMap<String,CalendarEventDTO> calendarEvents;
+    private HashMap<String,RatingDTO> ratings;
+
+    public HashMap<String, RatingDTO> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(HashMap<String, RatingDTO> ratings) {
+        this.ratings = ratings;
+    }
+
+    public HashMap<String, CalendarEventDTO> getCalendarEvents() {
+        return calendarEvents;
+    }
+
+    public void setCalendarEvents(HashMap<String, CalendarEventDTO> calendarEvents) {
+        this.calendarEvents = calendarEvents;
+    }
+
 
     private HashMap<String,UrlDTO> urls;
 

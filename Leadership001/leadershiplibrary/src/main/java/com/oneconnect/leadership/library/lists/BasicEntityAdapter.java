@@ -45,6 +45,8 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         void onMicrophoneRequired(BaseDTO entity);
 
         void onEntityClicked(BaseDTO entity);
+        void onCalendarRequested(BaseDTO entity);
+        void onEntityDetailRequested(BaseDTO entity, int type);
 
         void onDeleteTooltipRequired(int type);
         void onLinksTooltipRequired(int type);
@@ -53,6 +55,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         void onVideoCaptureTooltipRequired(int type);
         void onSomeActionTooltipRequired(int type);
         void onMicrophoneTooltipRequired(int type);
+        void onCalendarTooltipRequired(int type);
 
 
     }
@@ -182,6 +185,20 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 return false;
             }
         });
+//
+        h.iconCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onCalendarRequested(p);
+            }
+        });
+        h.iconCalendar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mListener.onCalendarTooltipRequired(type);
+                return false;
+            }
+        });
 
         h.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +208,30 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 } else {
                     animateOut(h.bottomLayout,p);
                 }
+            }
+        });
+        h.txtLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEntityDetailRequested(p,type);
+            }
+        });
+        h.txtPodcasts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEntityDetailRequested(p,type);
+            }
+        });
+        h.txtPhotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEntityDetailRequested(p,type);
+            }
+        });
+        h.txtVideos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEntityDetailRequested(p,type);
             }
         });
 
@@ -255,6 +296,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 break;
         }
 
+
     }
 
     private void setDailyThought(EntityViewHolder h, int position, DailyThoughtDTO p) {
@@ -280,6 +322,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
 
         h.calLayout.setVisibility(View.VISIBLE);
+        if (p.getCalendarEvents() == null) {
+            h.txtEvents.setVisibility(View.GONE);
+        }else {
+            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
+            h.txtEvents.setVisibility(View.VISIBLE);
+        }
     }
     private void setWeeklyMessage(EntityViewHolder h, int position, WeeklyMessageDTO p) {
         if (p.getPhotos() != null) {
@@ -303,6 +351,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.videosLayout.setVisibility(View.VISIBLE);
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
+        if (p.getCalendarEvents() == null) {
+            h.txtEvents.setVisibility(View.GONE);
+        }else {
+            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
+            h.txtEvents.setVisibility(View.VISIBLE);
+        }
 
     }
     private void setWeeklyMasterclass(EntityViewHolder h, int position, WeeklyMasterClassDTO p) {
@@ -327,6 +381,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.videosLayout.setVisibility(View.VISIBLE);
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
+        if (p.getCalendarEvents() == null) {
+            h.txtEvents.setVisibility(View.GONE);
+        }else {
+            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
+            h.txtEvents.setVisibility(View.VISIBLE);
+        }
 
     }
     private void setEBook(EntityViewHolder h, int position, EBookDTO p) {
@@ -352,7 +412,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
 
-
+        if (p.getCalendarEvents() == null) {
+            h.txtEvents.setVisibility(View.GONE);
+        }else {
+            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
+            h.txtEvents.setVisibility(View.VISIBLE);
+        }
     }
 
     private void animateIn(View view, final BaseDTO entity) {
@@ -426,7 +491,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         protected TextView txtTitle, txtSubTitle, txtLine1, txtLine2,
         txtNumBlack,txtNumBlue,txtNumGrey,txtNumGreen,txtNumRed,
         txtPhotos, txtVideos, txtEvents, txtLinks, txtPodcasts;
-        protected ImageView iconTopRight, iconDelete, iconLinks,
+        protected ImageView iconCalendar, iconDelete, iconLinks,
                 iconPhoto, iconVideo, iconLocation, iconMicrophone;
         protected View bottomLayout, frameLayout, linksLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
@@ -447,10 +512,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             txtPhotos = (TextView) itemView.findViewById(R.id.txtCamera);
             txtVideos = (TextView) itemView.findViewById(R.id.txtVideo);
             txtPodcasts = (TextView) itemView.findViewById(R.id.txtMicrophone);
-            txtEvents = (TextView) itemView.findViewById(R.id.txtLocation);
+            txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
 
-            iconTopRight = (ImageView) itemView.findViewById(R.id.iconTopRight);
+            iconCalendar = (ImageView) itemView.findViewById(R.id.iconTopRight);
             iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
             iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
             iconLinks = (ImageView) itemView.findViewById(R.id.iconUpdate);

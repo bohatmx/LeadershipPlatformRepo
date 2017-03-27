@@ -1,5 +1,8 @@
 package com.oneconnect.leadership.library.data;
 
+import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -7,7 +10,7 @@ import java.util.Date;
  * Created by aubreymalabie on 3/25/17.
  */
 
-public class CalendarEventDTO {
+public class CalendarEventDTO implements Serializable, Comparable<CalendarEventDTO>{
     private String calendarEventID, description, title,
             podcastID, dailyThoughtID, weeklyMessageID, weeklyMasterclassID,
             eBookID, stringStartDate, stringEndDate, stringDateRegistered,
@@ -157,5 +160,16 @@ public class CalendarEventDTO {
 
     public void setDateRegistered(long dateRegistered) {
         this.dateRegistered = dateRegistered;
+    }
+
+    @Override
+    public int compareTo(@NonNull CalendarEventDTO c) {
+        if (this.startDate > c.startDate) {
+            return -1;
+        }
+        if (this.startDate < c.startDate) {
+            return 1;
+        }
+        return 0;
     }
 }

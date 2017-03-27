@@ -91,8 +91,7 @@
                     android:layout_toLeftOf="@+id/iconTopRight"
                     android:text="0"
                     android:layout_marginRight="@dimen/mon_margin"
-                    android:alpha="0.8"
-                    android:textColor="@color/indigo_500"
+                    android:textColor="@color/pink_600"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </RelativeLayout>
@@ -115,7 +114,7 @@
                 android:layout_below="@id/txtTitle"
                 android:layout_marginTop="@dimen/mon_margin"
                 android:layout_marginLeft="@dimen/mon_margin"
-                android:layout_marginBottom="@dimen/mon_margin"
+                android:layout_marginBottom="@dimen/mon_wide"
                 android:text="A subtitle of some sort will be placed here. It probably will not be too long."
                 android:textColor="@color/blue_800"
                 android:textSize="14sp"

@@ -58,6 +58,7 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
+import com.oneconnect.leadership.library.lists.MediaListActivity;
 import com.oneconnect.leadership.library.services.PhotoUploaderService;
 import com.oneconnect.leadership.library.services.VideoUploaderService;
 import com.oneconnect.leadership.library.util.Constants;
@@ -860,33 +861,7 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onSomeActionRequired(BaseDTO entity) {
-        if (isTooltip) {
-            isTooltip = false;
-            return;
-        }
-        Log.w(TAG, "onSomeActionRequired: .......".concat(GSON.toJson(entity)));
-        switch (type) {
-            case ResponseBag.DAILY_THOUGHTS:
-                dailyThought = (DailyThoughtDTO) entity;
-                SharedPrefUtil.saveDailyThought(dailyThought, this);
-                startCalendar(ResponseBag.DAILY_THOUGHTS, dailyThought);
-                break;
-            case ResponseBag.WEEKLY_MASTERCLASS:
-                weeklyMasterClass = (WeeklyMasterClassDTO) entity;
-                SharedPrefUtil.saveWeeklyMasterclass(weeklyMasterClass, this);
-                startCalendar(ResponseBag.WEEKLY_MASTERCLASS, weeklyMasterClass);
-                break;
-            case ResponseBag.WEEKLY_MESSAGE:
-                weeklyMessage = (WeeklyMessageDTO) entity;
-                SharedPrefUtil.saveWeeklyMessage(weeklyMessage, this);
-                startCalendar(ResponseBag.WEEKLY_MESSAGE, weeklyMessage);
-                break;
-            case ResponseBag.PODCASTS:
-                podcast = (PodcastDTO) entity;
-                SharedPrefUtil.savePodcast(podcast, this);
-                startCalendar(ResponseBag.PODCASTS, podcast);
-                break;
-        }
+        Log.d(TAG, "onSomeActionRequired: ");
     }
 
     private void startCalendar(int type, BaseDTO base) {
@@ -917,6 +892,62 @@ public class CrudActivity extends AppCompatActivity
         Log.w(TAG, "onEntityClicked: .......".concat(GSON.toJson(entity)));
     }
 
+    @Override
+    public void onCalendarRequested(BaseDTO entity) {
+        if (isTooltip) {
+            isTooltip = false;
+            return;
+        }
+        Log.w(TAG, "onSomeActionRequired: .......".concat(GSON.toJson(entity)));
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) entity;
+                SharedPrefUtil.saveDailyThought(dailyThought, this);
+                startCalendar(ResponseBag.DAILY_THOUGHTS, dailyThought);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) entity;
+                SharedPrefUtil.saveWeeklyMasterclass(weeklyMasterClass, this);
+                startCalendar(ResponseBag.WEEKLY_MASTERCLASS, weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) entity;
+                SharedPrefUtil.saveWeeklyMessage(weeklyMessage, this);
+                startCalendar(ResponseBag.WEEKLY_MESSAGE, weeklyMessage);
+                break;
+            case ResponseBag.PODCASTS:
+                podcast = (PodcastDTO) entity;
+                SharedPrefUtil.savePodcast(podcast, this);
+                startCalendar(ResponseBag.PODCASTS, podcast);
+                break;
+        }
+    }
+
+    @Override
+    public void onEntityDetailRequested(BaseDTO entity, int entityType) {
+        Log.d(TAG, "onEntityDetailRequested: ");
+        Intent m = new Intent(this, MediaListActivity.class);
+        m.putExtra("type",entityType);
+        switch (entityType) {
+            case ResponseBag.DAILY_THOUGHTS:
+                m.putExtra("dailyThought", (DailyThoughtDTO)entity);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                m.putExtra("weeklyMasterClass", (WeeklyMasterClassDTO)entity);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                m.putExtra("weeklyMessage", (WeeklyMessageDTO)entity);
+                break;
+            case ResponseBag.PODCASTS:
+                m.putExtra("podcast", (PodcastDTO)entity);
+                break;
+            case ResponseBag.EBOOKS:
+                m.putExtra("eBook", (EBookDTO)entity);
+                break;
+        }
+        startActivityForResult(m,REQUEST_MEDIALIST);
+    }
+    private static final int REQUEST_MEDIALIST = 690;
     boolean isTooltip;
     @Override
     public void onDeleteTooltipRequired(int type) {
@@ -942,7 +973,7 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onVideoCaptureTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.warning(this,"Add videos to this record",
+        Toasty.info(this,"Add videos to this record",
                 Toast.LENGTH_SHORT,true).show();
     }
 
@@ -957,6 +988,13 @@ public class CrudActivity extends AppCompatActivity
     public void onMicrophoneTooltipRequired(int type) {
         isTooltip = true;
         Toasty.success(this,"Add audio recording to this record",
+                Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onCalendarTooltipRequired(int type) {
+        isTooltip = true;
+        Toasty.success(this,"Add calendar event to this record",
                 Toast.LENGTH_SHORT,true).show();
     }
 
