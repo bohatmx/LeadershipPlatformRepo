@@ -27,6 +27,15 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,PodcastDTO> podcasts;
     private HashMap<String,EBookDTO> ebooks;
     private HashMap<String,UrlDTO> urls;
+    private HashMap<String,CalendarEventDTO> calendarEvents;
+
+    public HashMap<String, CalendarEventDTO> getCalendarEvents() {
+        return calendarEvents;
+    }
+
+    public void setCalendarEvents(HashMap<String, CalendarEventDTO> calendarEvents) {
+        this.calendarEvents = calendarEvents;
+    }
 
     public HashMap<String, EBookDTO> getEbooks() {
         return ebooks;

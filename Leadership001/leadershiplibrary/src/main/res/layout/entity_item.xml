@@ -17,6 +17,7 @@
             android:id="@+id/frame"
             android:layout_marginTop="@dimen/mon_margin"
             android:layout_marginLeft="@dimen/mon_padding"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -87,13 +88,11 @@
                     android:id="@+id/txtEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/iconTopRight"
-                    android:layout_marginTop="@dimen/mon_padding"
+                    android:layout_toLeftOf="@+id/iconTopRight"
                     android:text="0"
-                    android:layout_marginRight="@dimen/mon_divider"
-                    android:layout_alignParentRight="true"
-                    android:alpha="0.5"
-                    android:textColor="@color/black"
+                    android:layout_marginRight="@dimen/mon_margin"
+                    android:alpha="0.8"
+                    android:textColor="@color/indigo_500"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </RelativeLayout>
@@ -101,7 +100,8 @@
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_below="@id/t0"
-                android:layout_marginTop="@dimen/mon_padding"
+                android:layout_marginTop="@dimen/mon_divider"
+                android:layout_marginLeft="@dimen/mon_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A title will be placed here - daily thought etc. The length here is important and should be the most prominent on this screen."
@@ -113,7 +113,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txtTitle"
-                android:layout_marginTop="@dimen/mon_padding"
+                android:layout_marginTop="@dimen/mon_margin"
+                android:layout_marginLeft="@dimen/mon_margin"
+                android:layout_marginBottom="@dimen/mon_margin"
                 android:text="A subtitle of some sort will be placed here. It probably will not be too long."
                 android:textColor="@color/blue_800"
                 android:textSize="14sp"

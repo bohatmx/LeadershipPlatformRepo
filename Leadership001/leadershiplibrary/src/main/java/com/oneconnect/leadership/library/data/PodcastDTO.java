@@ -28,6 +28,16 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
     private HashMap<String,EBookDTO> ebooks;
     private HashMap<String,UrlDTO> urls;
 
+    private HashMap<String,CalendarEventDTO> calendarEvents;
+
+    public HashMap<String, CalendarEventDTO> getCalendarEvents() {
+        return calendarEvents;
+    }
+
+    public void setCalendarEvents(HashMap<String, CalendarEventDTO> calendarEvents) {
+        this.calendarEvents = calendarEvents;
+    }
+
     public HashMap<String, UrlDTO> getUrls() {
         return urls;
     }

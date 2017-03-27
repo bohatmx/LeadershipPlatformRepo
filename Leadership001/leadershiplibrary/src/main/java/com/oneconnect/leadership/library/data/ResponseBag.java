@@ -53,6 +53,8 @@ public class ResponseBag implements Serializable {
     private List<CountryDTO> countries;
     private List<DeviceDTO> devices;
     private List<UrlDTO> urls;
+    private List<ThumbnailDTO> thumbnails;
+    private List<CalendarEventDTO> calendarEvents;
 
     public static final int
             CATEGORIES = 1,
@@ -70,7 +72,10 @@ public class ResponseBag implements Serializable {
             COMPANIES = 13,
             DEVICES = 14,
             COUNTRIES = 15,
-            PRICES = 16;
+            PRICES = 16,
+            CALENDAR_EVENTS = 17,
+            URLS = 18,
+            THUMBNAILS = 19;
 
     public static final String
             DESC_CATEGORIES = "Categories",
@@ -88,7 +93,26 @@ public class ResponseBag implements Serializable {
             DESC_COMPANY = "Companies",
             DESC_DEVICE = "Devices",
             DESC_COUNTRY = "Countries",
-            DESC_PRICE = "Prices";
+            DESC_PRICE = "Prices",
+            DESC_CALENDAR_EVENTS = "calendarEvents",
+            DESC_URLS = "urls",
+            DESC_THUMBNAILS = "thumbnails";
+
+    public List<ThumbnailDTO> getThumbnails() {
+        return thumbnails;
+    }
+
+    public void setThumbnails(List<ThumbnailDTO> thumbnails) {
+        this.thumbnails = thumbnails;
+    }
+
+    public List<CalendarEventDTO> getCalendarEvents() {
+        return calendarEvents;
+    }
+
+    public void setCalendarEvents(List<CalendarEventDTO> calendarEvents) {
+        this.calendarEvents = calendarEvents;
+    }
 
     public List<UrlDTO> getUrls() {
         return urls;

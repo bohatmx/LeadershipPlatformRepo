@@ -10,7 +10,7 @@ import java.util.Date;
 public class CalendarEventDTO {
     private String calendarEventID, description, title,
             podcastID, dailyThoughtID, weeklyMessageID, weeklyMasterclassID,
-            stringStartDate, stringEndDate, stringDateRegistered,
+            eBookID, stringStartDate, stringEndDate, stringDateRegistered,
             arrangedBy, userID, attendees;
     private long startDate, endDate, dateRegistered;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm:ss");
@@ -19,6 +19,14 @@ public class CalendarEventDTO {
         dateRegistered = new Date().getTime();
         stringDateRegistered = sdf.format(new Date());
 
+    }
+
+    public String geteBookID() {
+        return eBookID;
+    }
+
+    public void seteBookID(String eBookID) {
+        this.eBookID = eBookID;
     }
 
     public String getTitle() {

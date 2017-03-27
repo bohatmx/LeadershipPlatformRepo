@@ -23,6 +23,15 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
     private HashMap<String,PodcastDTO> podcasts;
+    private HashMap<String,CalendarEventDTO> calendarEvents;
+
+    public HashMap<String, CalendarEventDTO> getCalendarEvents() {
+        return calendarEvents;
+    }
+
+    public void setCalendarEvents(HashMap<String, CalendarEventDTO> calendarEvents) {
+        this.calendarEvents = calendarEvents;
+    }
 
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;

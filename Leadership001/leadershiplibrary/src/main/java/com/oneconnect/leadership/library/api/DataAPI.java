@@ -262,10 +262,9 @@ public class DataAPI {
 
     public void getUserByEmail(final String email, final EmailQueryListener listener) {
         Log.d(TAG, "################## getUserByEmail: find user by mail: " + email);
-        final long start = System.currentTimeMillis();
         DatabaseReference usersRef = db.getReference(USERS);
         Query q = usersRef.orderByChild("email").equalTo(email);
-        log(usersRef);
+        log("getUserByEmail",usersRef);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -300,7 +299,7 @@ public class DataAPI {
         DatabaseReference usersRef = db.getReference(USERS);
 
         Query q = usersRef.orderByChild("uid").equalTo(uid);
-        log(usersRef);
+        log("getUserByUid",usersRef);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -345,7 +344,7 @@ public class DataAPI {
             public void onUserNotFoundByEmail() {
                 Log.w(TAG, "addUser: onUserNotFoundByEmail: now add the new user to database");
                 DatabaseReference userRef = db.getReference(USERS);
-                log(userRef);
+                log("addUser",userRef);
                 userRef.push().setValue(c, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -375,7 +374,7 @@ public class DataAPI {
     public void updateUser(final UserDTO c, final UpdateListener listener) {
         DatabaseReference ref = db.getReference(USERS)
                 .child(c.getUserID());
-
+        log("updateUser",ref);
         ref.setValue(c, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -391,7 +390,7 @@ public class DataAPI {
 
     public void addNews(final NewsDTO news, final DataListener listener) {
         final DatabaseReference ref = db.getReference(NEWS);
-        log(ref);
+        log("addNews",ref);
         ref.push().setValue(news, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -413,7 +412,7 @@ public class DataAPI {
 
     public void addPayment(final PaymentDTO payment, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PAYMENTS);
-        log(ref);
+        log("addPayment",ref);
         ref.push().setValue(payment, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -435,7 +434,7 @@ public class DataAPI {
 
     public void addPrice(final PriceDTO price, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PRICES);
-        log(ref);
+        log("addPrice",ref);
         ref.push().setValue(price, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -457,7 +456,7 @@ public class DataAPI {
 
     public void addSubscription(final SubscriptionDTO subscription, final DataListener listener) {
         final DatabaseReference ref = db.getReference(SUBSCRIPTIONS);
-        log(ref);
+        log("addSubscription",ref);
         ref.push().setValue(subscription, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -479,7 +478,7 @@ public class DataAPI {
 
     public void addDevice(final DeviceDTO device, final DataListener listener) {
         final DatabaseReference ref = db.getReference(DEVICES);
-        log(ref);
+        log("addDevice",ref);
         ref.push().setValue(device, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -501,7 +500,7 @@ public class DataAPI {
 
     public void addDailyThought(final DailyThoughtDTO dailyThought, final DataListener listener) {
         final DatabaseReference ref = db.getReference(DAILY_THOUGHTS);
-        log(ref);
+        log("addDailyThought",ref);
         ref.push().setValue(dailyThought, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -523,7 +522,7 @@ public class DataAPI {
 
     public void addCompany(final CompanyDTO company, final DataListener listener) {
         final DatabaseReference ref = db.getReference(COMPANIES);
-        log(ref);
+        log("addCompany",ref);
         ref.push().setValue(company, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -545,7 +544,7 @@ public class DataAPI {
 
     public void addCountry(final CountryDTO country, final DataListener listener) {
         final DatabaseReference ref = db.getReference(COUNTRIES);
-        log(ref);
+        log("addCountry",ref);
         ref.push().setValue(country, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -567,7 +566,7 @@ public class DataAPI {
 
     public void addCalendarEvent(final CalendarEventDTO event, final DataListener listener) {
         final DatabaseReference ref = db.getReference(CALENDAR_EVENTS);
-        log(ref);
+        log("addCalendarEvent",ref);
         ref.push().setValue(event, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -585,10 +584,48 @@ public class DataAPI {
             }
         });
     }
+    public void addCalendarEventToEntity(final CalendarEventDTO event, final DataListener listener) {
+        DatabaseReference ref = null;
+
+        if (event.getDailyThoughtID() != null) {
+            ref = db.getReference(DAILY_THOUGHTS).child(event.getDailyThoughtID());
+        }
+        if (event.getPodcastID() != null) {
+            ref = db.getReference(PODCASTS).child(event.getPodcastID());
+        }
+        if (event.getWeeklyMessageID() != null) {
+            ref = db.getReference(WEEKLY_MESSAGES).child(event.getWeeklyMessageID());
+        }
+        if (event.getWeeklyMasterclassID() != null) {
+            ref = db.getReference(WEEKLY_MASTER_CLASSES).child(event.getWeeklyMasterclassID());
+        }
+        if (event.geteBookID() != null) {
+            ref = db.getReference(EBOOKS).child(event.geteBookID());
+        }
+        if (ref == null) {
+            listener.onError("Invalid type for calendar event");
+            return;
+        }
+        log("addCalendarEventToEntity",ref);
+        ref.push().setValue(event, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: calendar event added to entity");
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
 
     public void addThumbnail(final ThumbnailDTO thumbnail, final DataListener listener) {
         final DatabaseReference ref = db.getReference(THUMBNAILS);
-        log(ref);
+        log("addThumbnail",ref);
         ref.push().setValue(thumbnail, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -609,7 +646,7 @@ public class DataAPI {
 
     public void addCategory(final CategoryDTO category, final DataListener listener) {
         final DatabaseReference ref = db.getReference(CATEGORIES);
-        log(ref);
+        log("addCategory",ref);
         ref.push().setValue(category, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -631,7 +668,7 @@ public class DataAPI {
 
     public void addEBook(final EBookDTO eBook, final DataListener listener) {
         final DatabaseReference ref = db.getReference(EBOOKS);
-        log(ref);
+        log("addEBook",ref);
         ref.push().setValue(eBook, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -665,7 +702,7 @@ public class DataAPI {
 
     public void addPhoto(final PhotoDTO photo, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PHOTOS);
-        log(ref);
+        log("addPhoto",ref);
         ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
@@ -685,7 +722,7 @@ public class DataAPI {
 
     public void addVideo(final VideoDTO video, final DataListener listener) {
         final DatabaseReference ref = db.getReference(VIDEOS);
-        log(ref);
+        log("addVideo",ref);
         ref.push().setValue(video, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
@@ -714,7 +751,7 @@ public class DataAPI {
         if (video.getDailyThoughtID() != null) {
             DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
                     .child(video.getDailyThoughtID()).child(VIDEOS);
-            log(ref);
+            log("addVideoToEntity",ref);
             ref.push().setValue(video, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -732,7 +769,7 @@ public class DataAPI {
         if (video.getWeeklyMessageID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
                     .child(video.getWeeklyMessageID()).child(VIDEOS);
-            log(ref);
+            log("addVideoToEntity",ref);
             ref.push().setValue(video, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -750,7 +787,7 @@ public class DataAPI {
         if (video.getWeeklyMasterClassID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
                     .child(video.getWeeklyMasterClassID()).child(VIDEOS);
-            log(ref);
+            log("addVideoToEntity",ref);
             ref.push().setValue(video, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -768,7 +805,7 @@ public class DataAPI {
         if (video.getPodcastID() != null) {
             DatabaseReference ref = db.getReference(PODCASTS)
                     .child(video.getPodcastID()).child(VIDEOS);
-            log(ref);
+            log("addVideoToEntity",ref);
             ref.push().setValue(video, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -795,7 +832,7 @@ public class DataAPI {
         if (photo.getDailyThoughtID() != null) {
             DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
                     .child(photo.getDailyThoughtID()).child(PHOTOS);
-            log(ref);
+            log("addPhotoToEntity",ref);
             ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -813,7 +850,7 @@ public class DataAPI {
         if (photo.getWeeklyMessageID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
                     .child(photo.getWeeklyMessageID()).child(PHOTOS);
-            log(ref);
+            log("addPhotoToEntity",ref);
             ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -831,7 +868,7 @@ public class DataAPI {
         if (photo.getWeeklyMasterClassID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
                     .child(photo.getWeeklyMasterClassID()).child(PHOTOS);
-            log(ref);
+            log("addPhotoToEntity",ref);
             ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -849,7 +886,7 @@ public class DataAPI {
         if (photo.getPodcastID() != null) {
             DatabaseReference ref = db.getReference(PODCASTS)
                     .child(photo.getPodcastID()).child(PHOTOS);
-            log(ref);
+            log("addPhotoToEntity",ref);
             ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -876,7 +913,7 @@ public class DataAPI {
         if (ebook.getDailyThoughtID() != null) {
             DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
                     .child(ebook.getDailyThoughtID()).child(EBOOKS);
-            log(ref);
+            log("addEBookToEntity",ref);
             ref.push().setValue(ebook, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -894,7 +931,7 @@ public class DataAPI {
         if (ebook.getWeeklyMessageID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
                     .child(ebook.getWeeklyMessageID()).child(EBOOKS);
-            log(ref);
+            log("addEBookToEntity",ref);
             ref.push().setValue(ebook, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -912,7 +949,7 @@ public class DataAPI {
         if (ebook.getWeeklyMasterClassID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
                     .child(ebook.getWeeklyMasterClassID()).child(EBOOKS);
-            log(ref);
+            log("addEBookToEntity",ref);
             ref.push().setValue(ebook, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -939,7 +976,7 @@ public class DataAPI {
         if (podcast.getDailyThoughtID() != null) {
             DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
                     .child(podcast.getDailyThoughtID()).child(PODCASTS);
-            log(ref);
+            log("addPodcastToEntity",ref);
             ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -957,7 +994,7 @@ public class DataAPI {
         if (podcast.getWeeklyMessageID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
                     .child(podcast.getWeeklyMessageID()).child(PODCASTS);
-            log(ref);
+            log("addPodcastToEntity",ref);
             ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -975,7 +1012,7 @@ public class DataAPI {
         if (podcast.getWeeklyMasterClassID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
                     .child(podcast.getWeeklyMasterClassID()).child(PODCASTS);
-            log(ref);
+            log("addPodcastToEntity",ref);
             ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -993,7 +1030,7 @@ public class DataAPI {
         if (podcast.getPodcastID() != null) {
             DatabaseReference ref = db.getReference(PODCASTS)
                     .child(podcast.getPodcastID()).child(PODCASTS);
-            log(ref);
+            log("addPodcastToEntity",ref);
             ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -1012,7 +1049,7 @@ public class DataAPI {
 
     public void addWeeklyMessage(final WeeklyMessageDTO weeklyMessage, final DataListener listener) {
         final DatabaseReference ref = db.getReference(WEEKLY_MESSAGES);
-        log(ref);
+        log("addWeeklyMessage",ref);
         ref.push().setValue(weeklyMessage, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -1034,7 +1071,7 @@ public class DataAPI {
 
     public void addWeeklyMasterClass(final WeeklyMasterClassDTO weeklyMasterClass, final DataListener listener) {
         final DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES);
-        log(ref);
+        log("addWeeklyMasterClass",ref);
         ref.push().setValue(weeklyMasterClass, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError,
@@ -1057,7 +1094,7 @@ public class DataAPI {
 
     public void addPodcast(final PodcastDTO podcast, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PODCASTS);
-        log(ref);
+        log("addPodcast",ref);
         ref.push().setValue(podcast, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -1112,7 +1149,7 @@ public class DataAPI {
                 ref = db.getReference(URLS);
                 return;
         }
-        log(ref);
+        log("addUrl",ref);
         ref.push().setValue(url, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
@@ -1132,6 +1169,9 @@ public class DataAPI {
 
     public static void log(DatabaseReference ref) {
         Log.w("Firebase APIs", "Firebase Request Log: databaseReference: " + ref.getRef().toString());
+    }
+    public static void log(String method,DatabaseReference ref) {
+        Log.w(TAG, method.concat(" - databaseReference: " + ref.getRef().toString()));
     }
 
     private String[] letters = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",

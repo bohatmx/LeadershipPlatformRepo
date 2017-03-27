@@ -17,11 +17,26 @@ public class CalendarPresenter implements CalendarContract.Presenter {
     }
 
     @Override
-    public void addCalendarEvent(CalendarEventDTO event) {
+    public void addCalendarEvent(final CalendarEventDTO event) {
         api.addCalendarEvent(event, new DataAPI.DataListener() {
             @Override
             public void onResponse(String key) {
-                view.onCalendarEventAdded(key);
+                event.setCalendarEventID(key);
+                addEventToEntity(event);
+            }
+
+            @Override
+            public void onError(String message) {
+               view.onError(message);
+            }
+        });
+    }
+
+    private void addEventToEntity(CalendarEventDTO event) {
+        api.addCalendarEventToEntity(event, new DataAPI.DataListener() {
+            @Override
+            public void onResponse(String key) {
+               view.onCalendarEventAdded(key);
             }
 
             @Override
