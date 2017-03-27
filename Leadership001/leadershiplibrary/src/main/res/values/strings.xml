@@ -65,4 +65,7 @@
     <string name="storage_permission_denied">Permission to access storage was denied</string>
 
     <string name="sample_list_load_error">One or more sample lists failed to load</string>
+    <string name="search_hint">Enter search ...</string>
+    <string name="title_activity_media_list">MediaListActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

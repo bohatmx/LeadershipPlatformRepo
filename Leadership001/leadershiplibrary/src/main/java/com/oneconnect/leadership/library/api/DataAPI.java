@@ -499,7 +499,7 @@ public class DataAPI {
         });
     }
 
-    public void addDailyThoughts(final DailyThoughtDTO dailyThought, final DataListener listener) {
+    public void addDailyThought(final DailyThoughtDTO dailyThought, final DataListener listener) {
         final DatabaseReference ref = db.getReference(DAILY_THOUGHTS);
         log(ref);
         ref.push().setValue(dailyThought, new DatabaseReference.CompletionListener() {
@@ -675,24 +675,9 @@ public class DataAPI {
                             + photo.getCaption());
                     photo.setPhotoID(responseRef.getKey());
                     responseRef.child("photoID").setValue(responseRef.getKey());
-                    addPhotoToEntity(photo, new DataListener() {
-                        @Override
-                        public void onResponse(String key) {
-                            listener.onResponse(responseRef.getKey());
-                        }
-
-                        @Override
-                        public void onError(String message) {
-                            Log.e(TAG, "onError: failed to add photo to entity, msg: ".concat(message));
-                            FirebaseCrash.report(new Exception("Failed to add photo to entity"));
-                            listener.onResponse(responseRef.getKey());
-                        }
-                    });
-
-
+                    listener.onResponse(responseRef.getKey());
                 } else {
-                    if (listener != null)
-                        listener.onError(databaseError.getMessage());
+                    listener.onError(databaseError.getMessage());
                 }
             }
         });
@@ -710,24 +695,10 @@ public class DataAPI {
                             + video.getCaption());
                     video.setVideoID(responseRef.getKey());
                     responseRef.child("videoID").setValue(responseRef.getKey());
-                    addVideoToEntity(video, new DataListener() {
-                        @Override
-                        public void onResponse(String key) {
-                            listener.onResponse(responseRef.getKey());
-                        }
-
-                        @Override
-                        public void onError(String message) {
-                            Log.e(TAG, "onError: failed to add video to entity, msg: ".concat(message));
-                            FirebaseCrash.report(new Exception("Failed to add video to entity"));
-                            listener.onResponse(responseRef.getKey());
-                        }
-                    });
-
+                    listener.onResponse(responseRef.getKey());
 
                 } else {
-                    if (listener != null)
-                        listener.onError(databaseError.getMessage());
+                    listener.onError(databaseError.getMessage());
                 }
             }
         });
@@ -748,7 +719,7 @@ public class DataAPI {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
-                        Log.i(TAG, "onComplete: video added to DailyThought: ".concat(databaseReference.getKey()));
+                        Log.i(TAG, "onComplete: video added to DailyThought: ".concat(video.getDailyThoughtID()));
                         listener.onResponse(databaseReference.getKey());
 
                     } else {
@@ -766,7 +737,7 @@ public class DataAPI {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
-                        Log.i(TAG, "onComplete: video added to WeeklyMessage: ".concat(databaseReference.getKey()));
+                        Log.i(TAG, "onComplete: video added to WeeklyMessage: ".concat(video.getWeeklyMessageID()));
                         listener.onResponse(databaseReference.getKey());
 
                     } else {
@@ -784,7 +755,7 @@ public class DataAPI {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
-                        Log.i(TAG, "onComplete: video added to MasterClass: ".concat(databaseReference.getKey()));
+                        Log.i(TAG, "onComplete: video added to MasterClass: ".concat(video.getWeeklyMasterClassID()));
                         listener.onResponse(databaseReference.getKey());
 
                     } else {
@@ -802,7 +773,7 @@ public class DataAPI {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
-                        Log.i(TAG, "onComplete: video added to Podcast: ".concat(databaseReference.getKey()));
+                        Log.i(TAG, "onComplete: video added to Podcast: ".concat(video.getPodcastID()));
                         listener.onResponse(databaseReference.getKey());
 
                     } else {
@@ -1138,7 +1109,7 @@ public class DataAPI {
                         .child(id).child(URLS);
                 break;
             default:
-                listener.onError("Invalid entity entityType");
+                ref = db.getReference(URLS);
                 return;
         }
         log(ref);
@@ -1146,7 +1117,7 @@ public class DataAPI {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
                 if (databaseError == null) {
-                    Log.i(TAG, "------------- onComplete: url added: "
+                    Log.i(TAG, "------------- onComplete: link added: "
                             + url.getTitle());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());

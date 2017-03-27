@@ -53,6 +53,7 @@ public class CameraActivity extends AppCompatActivity {
     private PodcastDTO podcast;
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
+    private MaterialCamera materialCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,14 +130,15 @@ public class CameraActivity extends AppCompatActivity {
                 .audioEncodingBitRate(50000)
                 .maxAllowedFileSize(1024*1024*1024)
                 .videoPreferredHeight(720)
-                .showPortraitWarning(true)
+                .showPortraitWarning(false)
                 .start(VIDEO_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode " + requestCode + " resultCode: " + resultCode);
+        Log.d(TAG, "$$$$$$$$$$$$$$ onActivityResult: requestCode " + requestCode
+                + " resultCode: " + resultCode);
         // Received recording or error from MaterialCamera
         if (requestCode == CAMERA_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -172,6 +174,7 @@ public class CameraActivity extends AppCompatActivity {
         p.setCompanyID(u.getCompanyID());
         p.setCompanyName(u.getCompanyName());
         p.setImageSize(photoFile.length());
+        p.setBytes(photoFile.length());
         photos.add(p);
         Log.i(TAG, "onActivityResult: photoFile: ".concat(getSize(photoFile.length())));
         Toasty.success(this,"Photo taken OK", Toast.LENGTH_SHORT).show();
@@ -216,7 +219,7 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             setResult(RESULT_CANCELED);
         }
-        Log.d(TAG, "onBackPressed: ************** photos: "
+        Log.e(TAG, "onBackPressed: ************** photos: "
                 + photos.size() + " videos: " + videos.size());
 
         finish();

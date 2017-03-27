@@ -83,14 +83,18 @@ public class VideoUploaderService extends IntentService {
             storageAPI.uploadVideo(video, new FirebaseStorageAPI.StorageListener() {
                 @Override
                 public void onResponse(String key) {
-                    video.setVideoID(key);
-                    video.setFilePath(null);
-                    video.setVideoID(null);
-                    addVideoToFirebase(video, videoKey);
                     deleteCachedVideo(videoKey, new DeleteListener() {
                         @Override
                         public void onDeleteComplete() {
                             Log.i(TAG, "onDeleteComplete: we cool, video entry cleared from cache");
+                            success++;
+                            setAnalyticsEvent(video);
+                            if (videos != null) {
+                                index++;
+                                control();
+                            } else {
+                                broadcast();
+                            }
                         }
                     });
                 }
@@ -107,72 +111,12 @@ public class VideoUploaderService extends IntentService {
                 }
             });
 
-//            CloudinaryAPI.uploadVideo(video, new CloudinaryAPI.CloudinaryListener() {
-//                @Override
-//                public void onFileUploaded(PhotoDTO photo) {
-//
-//                }
-//
-//                @Override
-//                public void onVideoUploaded(final VideoDTO video) {
-//                    Log.i(TAG, "onVideoUploaded: ".concat(gson.toJson(video)));
-//                    video.setFilePath(null);
-//                    video.setVideoID(null);
-//                    addVideoToFirebase(video, videoKey);
-//
-//                }
-//
-//                @Override
-//                public void onError(String message) {
-//                    Log.e(TAG, "uploadVideo: Failed, but continuing ...");
-//                    index++;
-//                    failed++;
-//                    control();
-//                }
-//            });
         } catch (Exception e) {
             Log.e(TAG, "uploadVideo: Failed, but continuing ...", e);
             failed++;
             index++;
             control();
         }
-    }
-
-    private void addVideoToFirebase(final VideoDTO video, final String videoKey) {
-        dataAPI.addVideo(video, new DataAPI.DataListener() {
-            @Override
-            public void onResponse(String key) {
-                video.setVideoID(key);
-                Log.i(TAG, "onResponse: video added ".concat(gson.toJson(video)));
-                setAnalyticsEvent(video);
-                deleteCachedVideo(videoKey, new DeleteListener() {
-                    @Override
-                    public void onDeleteComplete() {
-                    }
-                });
-                success++;
-                if (videos != null) {
-                    index++;
-                    control();
-                } else {
-                    broadcast();
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                FirebaseCrash.report(new Exception(
-                        "Unable to upload video: " + gson.toJson(video)));
-                Log.e(TAG, "onError: unable to do da bizness: " + message);
-                failed++;
-                if (videos != null) {
-                    index++;
-                    control();
-                } else {
-                    broadcast();
-                }
-            }
-        });
     }
 
     private interface DeleteListener {

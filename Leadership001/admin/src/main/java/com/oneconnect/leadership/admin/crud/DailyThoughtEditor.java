@@ -42,7 +42,8 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onEntityAdded(String key) {
-        Log.i(TAG, "onEntityAdded: ".concat(key));
+        Log.i(TAG, "******* onEntityAdded: daily thought added to firebase "
+                .concat(key));
         dailyThought.setDailyThoughtID(key);
         bottomSheetListener.onWorkDone(dailyThought);
     }
@@ -206,7 +207,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             editTitle.setError(getString(R.string.enter_subtitle));
             return;
         }
-        Log.d(TAG, "send: starting to send thought to Firebase");
+        Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");
         if (dailyThought == null) {
             dailyThought = new DailyThoughtDTO();
             UserDTO me = SharedPrefUtil.getUser(getActivity());
@@ -230,7 +231,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
         switch (type) {
             case Constants.NEW_ENTITY:
-                Log.w(TAG, "send to Firebase: ".concat(GSON.toJson(dailyThought)));
+                Log.w(TAG, "...sending to Firebase: ".concat(GSON.toJson(dailyThought)));
                 presenter.addEntity(dailyThought);
                 break;
             case Constants.UPDATE_ENTITY:

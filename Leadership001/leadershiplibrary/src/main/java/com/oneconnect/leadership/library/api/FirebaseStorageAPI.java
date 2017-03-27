@@ -14,6 +14,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.ThumbnailDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -150,24 +152,22 @@ public class FirebaseStorageAPI {
     public void uploadPhoto(final PhotoDTO photo,
                             final StorageListener listener) {
 
-        Log.d(TAG, "uploadPhoto: ".concat(photo.getFilePath()));
+        Log.d(TAG, "###### uploadPhoto: ".concat(photo.getFilePath())
+                .concat("\n").concat(GSON.toJson(photo)));
         final File f = new File(photo.getFilePath());
-        if (f.exists()) {
-            Log.d(TAG, "uploadPhoto: prior to upload: "
-                    + f.length() + " - " + f.getAbsolutePath());
-        } else {
+        if (!f.exists()) {
             listener.onError("Cannot find file for upload");
             return;
         }
         StorageReference photoReference = storageReference.child(PHOTOS
                 + "/"
                 + photo.getCaption().concat(" ").concat(sdf.format(new Date())));
-        Log.d(TAG, "uploadPhoto: starting upload ...: " + f.getAbsolutePath());
         try {
             photoReference.putStream(new FileInputStream(f)).addOnSuccessListener(
                     new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i(TAG, "onSuccess: photo uploaded to firebase storage");
                     addPhotoToFirebase(photo, taskSnapshot, listener);
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -200,18 +200,15 @@ public class FirebaseStorageAPI {
                             final StorageListener listener) {
 
         final File f = new File(video.getFilePath());
-        if (f.exists()) {
-            Log.d(TAG, "uploadVideo: prior to upload: "
-                    + getSize(f.length()) + " - " + f.getAbsolutePath());
-        } else {
-            listener.onError("Cannot find file for upload");
+        if (!f.exists()) {
+            listener.onError("Cannot find video file for upload");
             return;
         }
         final String storageName = video.getCaption().concat(" - ").concat(sdf.format(new Date()));
         StorageReference videoReference = storageReference.child(VIDEOS
-                + "/"
                 + storageName);
-        Log.d(TAG, "uploadVideo: starting upload ...: " + f.getAbsolutePath());
+        Log.w(TAG, "uploadVideo: ******** starting upload ...: "
+                + f.getAbsolutePath().concat("\n").concat(GSON.toJson(video)));
         try {
 
             videoReference.putStream(new FileInputStream(f))
@@ -219,9 +216,9 @@ public class FirebaseStorageAPI {
                     new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i(TAG, "onSuccess: ".concat(taskSnapshot.getDownloadUrl().toString()));
-                    video.setStorageName(VIDEOS.concat("/").concat(storageName));
+                    video.setStorageName(VIDEOS.concat(storageName));
                     video.setUrl(taskSnapshot.getDownloadUrl().toString());
+                    Log.d(TAG, "uploadVideo onSuccess: ####### video in firebase storage.....starting addVideoToFirebase method ...");
                     addVideoToFirebase(video, taskSnapshot, listener);
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -247,6 +244,7 @@ public class FirebaseStorageAPI {
         }
     }
 
+    private static  final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private String getPercentage(long transferred, long total) {
         BigDecimal a = new BigDecimal(transferred)
                 .divide(new BigDecimal(total))
@@ -258,19 +256,29 @@ public class FirebaseStorageAPI {
     private void addPhotoToFirebase(final PhotoDTO photo,
                                     UploadTask.TaskSnapshot taskSnapshot,
                                     final StorageListener listener) {
-        Log.i(TAG, "The photo has been succesfully uploaded: "
+        Log.i(TAG, "...about to add photoDTO to firebase: "
                 + taskSnapshot.getDownloadUrl().toString());
         photo.setUrl(taskSnapshot.getDownloadUrl().toString());
-        photo.setBytes(taskSnapshot.getTotalByteCount());
         photo.setDateUploaded(new Date().getTime());
         photo.setFilePath(null);
         photo.setPhotoID(null);
         dataAPI.addPhoto(photo, new DataAPI.DataListener() {
             @Override
-            public void onResponse(String key) {
+            public void onResponse(final String key) {
                 Log.w(TAG, "onResponse: photo added to firebase, OK: " + key);
                 photo.setPhotoID(key);
-                listener.onResponse(key);
+                dataAPI.addPhotoToEntity(photo, new DataAPI.DataListener() {
+                    @Override
+                    public void onResponse(String k) {
+                        listener.onResponse(key);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        listener.onError(message);
+                    }
+                });
+
             }
 
             @Override
@@ -285,19 +293,29 @@ public class FirebaseStorageAPI {
     private void addVideoToFirebase(final VideoDTO video,
                                     UploadTask.TaskSnapshot taskSnapshot,
                                     final StorageListener listener) {
-        Log.i(TAG, "The video has been succesfully uploaded: "
-                + taskSnapshot.getDownloadUrl().toString());
+        Log.d(TAG, ".........adding videoDTO to firebase  ...: "
+                + GSON.toJson(video));
         video.setUrl(taskSnapshot.getDownloadUrl().toString());
-        video.setVideoSize(taskSnapshot.getTotalByteCount());
         video.setDateUploaded(new Date().getTime());
         video.setFilePath(null);
         video.setVideoID(null);
         dataAPI.addVideo(video, new DataAPI.DataListener() {
             @Override
-            public void onResponse(String key) {
-                Log.w(TAG, "onResponse: video added to firebase, OK: " + key);
+            public void onResponse(final String key) {
                 video.setVideoID(key);
-                listener.onResponse(key);
+                Log.w(TAG, "dataAPI addVideo onResponse: ".concat(key).concat(" - adding videoDTO to entity ...") );
+                dataAPI.addVideoToEntity(video, new DataAPI.DataListener() {
+                    @Override
+                    public void onResponse(String k) {
+                        listener.onResponse(key);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                       listener.onError(message);
+                    }
+                });
+
             }
 
             @Override

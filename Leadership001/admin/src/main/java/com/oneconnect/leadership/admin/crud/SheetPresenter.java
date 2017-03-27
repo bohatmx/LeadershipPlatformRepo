@@ -91,7 +91,7 @@ public class SheetPresenter implements SheetContract.Presenter {
         }
         if (entity instanceof DailyThoughtDTO) {
             final DailyThoughtDTO c = (DailyThoughtDTO)entity;
-            api.addDailyThoughts(c, new DataAPI.DataListener() {
+            api.addDailyThought(c, new DataAPI.DataListener() {
                 @Override
                 public void onResponse(String key) {
                     c.setDailyThoughtID(key);
@@ -106,7 +106,7 @@ public class SheetPresenter implements SheetContract.Presenter {
         }
         if (entity instanceof EBookDTO) {
             EBookDTO c = (EBookDTO)entity;
-            api.addEBooks(c, new DataAPI.DataListener() {
+            api.addEBook(c, new DataAPI.DataListener() {
                 @Override
                 public void onResponse(String key) {
                     view.onEntityAdded(key);

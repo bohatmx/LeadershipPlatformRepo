@@ -104,8 +104,8 @@ public class EntityListFragment extends BaseListingFragment {
             }
 
             @Override
-            public void onUpdateClicked(BaseDTO entity) {
-                mListener.onUpdateClicked(entity);
+            public void onLinksRequired(BaseDTO entity) {
+                mListener.onLinksRequired(entity);
             }
 
             @Override
@@ -131,6 +131,36 @@ public class EntityListFragment extends BaseListingFragment {
             @Override
             public void onEntityClicked(BaseDTO entity) {
                 mListener.onEntityClicked(entity);
+            }
+
+            @Override
+            public void onDeleteTooltipRequired(int type) {
+                mListener.onDeleteTooltipRequired(type);
+            }
+
+            @Override
+            public void onLinksTooltipRequired(int type) {
+               mListener.onLinksTooltipRequired(type);
+            }
+
+            @Override
+            public void onPhotoCaptureTooltipRequired(int type) {
+               mListener.onPhotoCaptureTooltipRequired(type);
+            }
+
+            @Override
+            public void onVideoCaptureTooltipRequired(int type) {
+               mListener.onVideoCaptureTooltipRequired(type);
+            }
+
+            @Override
+            public void onSomeActionTooltipRequired(int type) {
+               mListener.onSomeActionTooltipRequired(type);
+            }
+
+            @Override
+            public void onMicrophoneTooltipRequired(int type) {
+               mListener.onMicrophoneTooltipRequired(type);
             }
         });
 

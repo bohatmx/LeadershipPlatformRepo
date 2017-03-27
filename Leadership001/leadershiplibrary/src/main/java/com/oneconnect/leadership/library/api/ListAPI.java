@@ -37,10 +37,13 @@ public class ListAPI {
     public ListAPI() {
         db = FirebaseDatabase.getInstance();
     }
+
     public interface DataListener {
         void onResponse(ResponseBag bag);
+
         void onError(String messsage);
     }
+
     public void getDailyThoughts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -50,12 +53,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
                         bag.getDailyThoughts().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -64,6 +67,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getNews(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.NEWS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -73,12 +77,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setNews(new ArrayList<NewsDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         NewsDTO u = shot.getValue(NewsDTO.class);
                         bag.getNews().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -87,7 +91,8 @@ public class ListAPI {
             }
         });
     }
-    public void getCompanies( final DataListener listener) {
+
+    public void getCompanies(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.COMPANIES);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -95,12 +100,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setCompanies(new ArrayList<CompanyDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         CompanyDTO u = shot.getValue(CompanyDTO.class);
                         bag.getCompanies().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -109,6 +114,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getDevices(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DEVICES);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -118,12 +124,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setDevices(new ArrayList<DeviceDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         DeviceDTO u = shot.getValue(DeviceDTO.class);
                         bag.getDevices().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -132,6 +138,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getPhotos(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PHOTOS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -141,12 +148,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setPhotos(new ArrayList<PhotoDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         PhotoDTO u = shot.getValue(PhotoDTO.class);
                         bag.getPhotos().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -155,6 +162,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getEBooks(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.EBOOKS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -164,12 +172,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.seteBooks(new ArrayList<EBookDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         EBookDTO u = shot.getValue(EBookDTO.class);
                         bag.geteBooks().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -178,6 +186,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getPayments(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PAYMENTS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -187,12 +196,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setPayments(new ArrayList<PaymentDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         PaymentDTO u = shot.getValue(PaymentDTO.class);
                         bag.getPayments().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -201,6 +210,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getPodcasts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PODCASTS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -210,12 +220,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setPodcasts(new ArrayList<PodcastDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         PodcastDTO u = shot.getValue(PodcastDTO.class);
                         bag.getPodcasts().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -224,6 +234,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getPrices(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PRICES);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -233,12 +244,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setPrices(new ArrayList<PriceDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         PriceDTO u = shot.getValue(PriceDTO.class);
                         bag.getPrices().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -247,6 +258,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getSubscriptions(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.SUBSCRIPTIONS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -256,12 +268,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setSubscriptions(new ArrayList<SubscriptionDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         SubscriptionDTO u = shot.getValue(SubscriptionDTO.class);
                         bag.getSubscriptions().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -270,6 +282,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getCompanyVideos(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -279,12 +292,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setVideos(new ArrayList<VideoDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         VideoDTO u = shot.getValue(VideoDTO.class);
                         bag.getVideos().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -293,95 +306,88 @@ public class ListAPI {
             }
         });
     }
-    public void getDailyThoughtVideos(String dailyThoughtID, final DataListener listener) {
-        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
-        Query q = ref.orderByChild("dailyThoughtID").equalTo(dailyThoughtID);
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public void getDailyThoughtVideos(String companyID, final DataListener listener) {
+
+        getCompanyVideos(companyID, new DataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ResponseBag bag = new ResponseBag();
-                bag.setVideos(new ArrayList<VideoDTO>());
-                if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
-                        VideoDTO u = shot.getValue(VideoDTO.class);
-                        bag.getVideos().add(u);
-                    }
-                    listener.onResponse(bag);
-                }
+            public void onResponse(ResponseBag bag) {
+                ResponseBag bagOut = new ResponseBag();
+                bagOut.setVideos(new ArrayList<VideoDTO>());
+                  for (VideoDTO v: bag.getVideos()) {
+                      if (v.getDailyThoughtID() != null) {
+                          bagOut.getVideos().add(v);
+                      }
+                  }
+                  listener.onResponse(bagOut);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onError(databaseError.getMessage());
+            public void onError(String messsage) {
+                listener.onError(messsage);
             }
         });
     }
-    public void getWeeklyMessageVideos(String weeklyMessageID, final DataListener listener) {
-        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
-        Query q = ref.orderByChild("weeklyMessageID").equalTo(weeklyMessageID);
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public void getWeeklyMessageVideos(String companyID, final DataListener listener) {
+        getCompanyVideos(companyID, new DataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ResponseBag bag = new ResponseBag();
-                bag.setVideos(new ArrayList<VideoDTO>());
-                if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
-                        VideoDTO u = shot.getValue(VideoDTO.class);
-                        bag.getVideos().add(u);
+            public void onResponse(ResponseBag bag) {
+                ResponseBag bagOut = new ResponseBag();
+                bagOut.setVideos(new ArrayList<VideoDTO>());
+                for (VideoDTO v: bag.getVideos()) {
+                    if (v.getWeeklyMessageID() != null) {
+                        bagOut.getVideos().add(v);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bagOut);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onError(databaseError.getMessage());
+            public void onError(String messsage) {
+                listener.onError(messsage);
             }
         });
     }
-    public void getWeeklyMasterclassVideos(String weeklyMasterclassID, final DataListener listener) {
-        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
-        Query q = ref.orderByChild("weeklyMasterclassID").equalTo(weeklyMasterclassID);
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public void getWeeklyMasterclassVideos(String companyID, final DataListener listener) {
+        getCompanyVideos(companyID, new DataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ResponseBag bag = new ResponseBag();
-                bag.setVideos(new ArrayList<VideoDTO>());
-                if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
-                        VideoDTO u = shot.getValue(VideoDTO.class);
-                        bag.getVideos().add(u);
+            public void onResponse(ResponseBag bag) {
+                ResponseBag bagOut = new ResponseBag();
+                bagOut.setVideos(new ArrayList<VideoDTO>());
+                for (VideoDTO v: bag.getVideos()) {
+                    if (v.getWeeklyMasterClassID() != null) {
+                        bagOut.getVideos().add(v);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bagOut);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onError(databaseError.getMessage());
+            public void onError(String messsage) {
+                listener.onError(messsage);
             }
         });
     }
-    public void getPodcastVideos(String podcastID, final DataListener listener) {
-        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
-        Query q = ref.orderByChild("podcastID").equalTo(podcastID);
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public void getPodcastVideos(String companyID, final DataListener listener) {
+        getCompanyVideos(companyID, new DataListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ResponseBag bag = new ResponseBag();
-                bag.setVideos(new ArrayList<VideoDTO>());
-                if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
-                        VideoDTO u = shot.getValue(VideoDTO.class);
-                        bag.getVideos().add(u);
+            public void onResponse(ResponseBag bag) {
+                ResponseBag bagOut = new ResponseBag();
+                bagOut.setVideos(new ArrayList<VideoDTO>());
+                for (VideoDTO v: bag.getVideos()) {
+                    if (v.getPodcastID() != null) {
+                        bagOut.getVideos().add(v);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bagOut);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                listener.onError(databaseError.getMessage());
+            public void onError(String messsage) {
+                listener.onError(messsage);
             }
         });
     }
@@ -395,12 +401,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setWeeklyMasterClasses(new ArrayList<WeeklyMasterClassDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         WeeklyMasterClassDTO u = shot.getValue(WeeklyMasterClassDTO.class);
                         bag.getWeeklyMasterClasses().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -409,6 +415,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getWeeklyMessages(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MESSAGES);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -418,12 +425,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setWeeklyMessages(new ArrayList<WeeklyMessageDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         WeeklyMessageDTO u = shot.getValue(WeeklyMessageDTO.class);
                         bag.getWeeklyMessages().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -432,6 +439,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getCategories(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.CATEGORIES);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -441,12 +449,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setCategories(new ArrayList<CategoryDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         CategoryDTO u = shot.getValue(CategoryDTO.class);
                         bag.getCategories().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -455,6 +463,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getAllSubscribers(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.USERS);
         Query q = ref.orderByChild("userType").equalTo(UserDTO.SUBSCRIBER);
@@ -464,12 +473,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setUsers(new ArrayList<UserDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         UserDTO u = shot.getValue(UserDTO.class);
                         bag.getUsers().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -478,6 +487,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getAllLeaders(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.USERS);
         Query q = ref.orderByChild("userType").equalTo(UserDTO.LEADER);
@@ -487,12 +497,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setUsers(new ArrayList<UserDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         UserDTO u = shot.getValue(UserDTO.class);
                         bag.getUsers().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -501,6 +511,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getAllStaff(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.USERS);
         Query q = ref.orderByChild("userType").equalTo(UserDTO.COMPANY_STAFF);
@@ -510,12 +521,12 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setUsers(new ArrayList<UserDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         UserDTO u = shot.getValue(UserDTO.class);
                         bag.getUsers().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
@@ -524,6 +535,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getCompanyStaff(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.USERS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -533,17 +545,17 @@ public class ListAPI {
                 ResponseBag bag = new ResponseBag();
                 bag.setUsers(new ArrayList<UserDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    for (DataSnapshot shot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         UserDTO u = shot.getValue(UserDTO.class);
                         bag.getUsers().add(u);
                     }
-                    listener.onResponse(bag);
                 }
+                listener.onResponse(bag);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                  listener.onError(databaseError.getMessage());
+                listener.onError(databaseError.getMessage());
             }
         });
     }

@@ -52,6 +52,7 @@ public class ResponseBag implements Serializable {
     private List<CompanyDTO> companies;
     private List<CountryDTO> countries;
     private List<DeviceDTO> devices;
+    private List<UrlDTO> urls;
 
     public static final int
             CATEGORIES = 1,
@@ -88,6 +89,14 @@ public class ResponseBag implements Serializable {
             DESC_DEVICE = "Devices",
             DESC_COUNTRY = "Countries",
             DESC_PRICE = "Prices";
+
+    public List<UrlDTO> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<UrlDTO> urls) {
+        this.urls = urls;
+    }
 
     public List<DeviceDTO> getDevices() {
         return devices;

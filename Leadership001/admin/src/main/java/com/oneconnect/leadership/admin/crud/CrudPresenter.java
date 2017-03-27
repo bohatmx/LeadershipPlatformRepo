@@ -96,7 +96,7 @@ public class CrudPresenter implements CrudContract.Presenter {
         }
         if (entity instanceof DailyThoughtDTO) {
             DailyThoughtDTO c = (DailyThoughtDTO)entity;
-            dataAPI.addDailyThoughts(c, new DataAPI.DataListener() {
+            dataAPI.addDailyThought(c, new DataAPI.DataListener() {
                 @Override
                 public void onResponse(String key) {
                     view.onEntityAdded(key);
@@ -110,7 +110,7 @@ public class CrudPresenter implements CrudContract.Presenter {
         }
         if (entity instanceof EBookDTO) {
             EBookDTO c = (EBookDTO)entity;
-            dataAPI.addEBooks(c, new DataAPI.DataListener() {
+            dataAPI.addEBook(c, new DataAPI.DataListener() {
                 @Override
                 public void onResponse(String key) {
                     view.onEntityAdded(key);
@@ -474,7 +474,7 @@ public class CrudPresenter implements CrudContract.Presenter {
 
     @Override
     public void getVideos(String companyID) {
-         listAPI.getVideo(companyID, new ListAPI.DataListener() {
+         listAPI.getCompanyVideos(companyID, new ListAPI.DataListener() {
              @Override
              public void onResponse(ResponseBag bag) {
                  view.onVideos(bag.getVideos());
@@ -489,7 +489,7 @@ public class CrudPresenter implements CrudContract.Presenter {
 
     @Override
     public void getWeeklyMasterclasses(String companyID) {
-          listAPI.getWeeklyMasterclass(companyID, new ListAPI.DataListener() {
+          listAPI.getWeeklyMasterclasses(companyID, new ListAPI.DataListener() {
               @Override
               public void onResponse(ResponseBag bag) {
                   view.onWeeklyMasterclasses(bag.getWeeklyMasterClasses());

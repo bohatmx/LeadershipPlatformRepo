@@ -39,7 +39,10 @@
             android:name=".video.LeYouTubePlayerActivity"
             android:label="@string/title_activity_le_you_tube"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".lists.MediaListActivity"
+            android:label="@string/title_activity_media_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

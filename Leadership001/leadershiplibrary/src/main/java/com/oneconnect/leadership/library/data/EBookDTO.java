@@ -15,11 +15,38 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
     private String eBookID,  description, url, stringDate;
     private Long date;
     private Integer numberOfPages;
-    private String companyID, companyName, stringDateUpdated, html;
+    private String stringDateUpdated, html;
     private boolean active;
     private Long dateUpdated;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, podcastID;
     private HashMap<String,UrlDTO> urls;
+    private HashMap<String, PhotoDTO> photos;
+    private HashMap<String, VideoDTO> videos;
+    private HashMap<String,PodcastDTO> podcasts;
+
+    public HashMap<String, PhotoDTO> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(HashMap<String, PhotoDTO> photos) {
+        this.photos = photos;
+    }
+
+    public HashMap<String, VideoDTO> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(HashMap<String, VideoDTO> videos) {
+        this.videos = videos;
+    }
+
+    public HashMap<String, PodcastDTO> getPodcasts() {
+        return podcasts;
+    }
+
+    public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
+        this.podcasts = podcasts;
+    }
 
     public HashMap<String, UrlDTO> getUrls() {
         return urls;
@@ -75,22 +102,6 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
 
     public void setTitle(String subjectTitle) {
         this.title = title;
-    }
-
-    public String getCompanyID() {
-        return companyID;
-    }
-
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getStringDateUpdated() {

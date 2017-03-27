@@ -34,6 +34,7 @@ import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.calendar.CalendarActivity;
 import com.oneconnect.leadership.admin.camera.CameraActivity;
+import com.oneconnect.leadership.admin.links.LinksActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.PhotoCache;
@@ -235,13 +236,13 @@ public class CrudActivity extends AppCompatActivity
         dailyThoughtEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
             @Override
             public void onWorkDone(BaseDTO entity) {
+                dailyThoughtEditor.dismiss();
                 DailyThoughtDTO m = (DailyThoughtDTO) entity;
                 if (bag.getDailyThoughts() == null) {
                     bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
                 }
                 bag.getDailyThoughts().add(0, m);
                 setFragment();
-                dailyThoughtEditor.dismiss();
                 showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
                         .string.ok_label), "green");
 
@@ -729,17 +730,56 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onDeleteClicked(BaseDTO entity) {
         Log.w(TAG, "onDeleteClicked: ..............");
+        if (isTooltip) {
+            isTooltip = false;
+            return;
+        }
 
     }
 
     @Override
-    public void onUpdateClicked(BaseDTO entity) {
-        Log.w(TAG, "onUpdateClicked: ..............");
+    public void onLinksRequired(BaseDTO entity) {
+        Log.w(TAG, "onLinksRequired: ..............");
+        if (isTooltip) {
+            isTooltip = false;
+            return;
+        }
+        Intent m = null;
+        switch (type) {
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO)entity;
+                m = new Intent(this, LinksActivity.class);
+                m.putExtra("weeklyMasterClass", weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO)entity;
+                m = new Intent(this, LinksActivity.class);
+                m.putExtra("weeklyMessage", weeklyMessage);
+                break;
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO)entity;
+                m = new Intent(this, LinksActivity.class);
+                m.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.PODCASTS:
+                podcast = (PodcastDTO)entity;
+                m = new Intent(this, LinksActivity.class);
+                m.putExtra("podcast", podcast);
+                break;
+        }
+        m.putExtra("type", type);
+        startActivityForResult(m, REQUEST_LINKS);
     }
+
+    public static final int REQUEST_LINKS = 1875;
 
     @Override
     public void onPhotoCaptureRequested(BaseDTO entity) {
         Log.w(TAG, "onPhotoCaptureRequested: .................");
+        if (isTooltip) {
+            isTooltip = false;
+            return;
+        }
         pickGalleryOrCamera(entity);
     }
 
@@ -778,7 +818,10 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onVideoCaptureRequested(BaseDTO entity) {
         Log.w(TAG, "onVideoCaptureRequested: .................");
-
+        if (isTooltip) {
+            isTooltip = false;
+            return;
+        }
         pickGalleryOrVideoCamera(entity);
     }
 
@@ -817,7 +860,10 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onSomeActionRequired(BaseDTO entity) {
-
+        if (isTooltip) {
+            isTooltip = false;
+            return;
+        }
         Log.w(TAG, "onSomeActionRequired: .......".concat(GSON.toJson(entity)));
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
@@ -857,6 +903,10 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onMicrophoneRequired(BaseDTO entity) {
         Log.w(TAG, "onMicrophoneRequired: ,,,,,,,,,,,,,,,,,,,,");
+        if (isTooltip) {
+            isTooltip = false;
+            return;
+        }
         showSnackbar("Audio recording under construction", "OK", "cyan");
     }
 
@@ -867,10 +917,53 @@ public class CrudActivity extends AppCompatActivity
         Log.w(TAG, "onEntityClicked: .......".concat(GSON.toJson(entity)));
     }
 
+    boolean isTooltip;
+    @Override
+    public void onDeleteTooltipRequired(int type) {
+        isTooltip = true;
+        Toasty.warning(this,"Remove this record",
+                Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onLinksTooltipRequired(int type) {
+        isTooltip = true;
+        Toasty.info(this,"Add internet links to this record",
+                Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onPhotoCaptureTooltipRequired(int type) {
+        isTooltip = true;
+        Toasty.warning(this,"Add photos to this record",
+                Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onVideoCaptureTooltipRequired(int type) {
+        isTooltip = true;
+        Toasty.warning(this,"Add videos to this record",
+                Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onSomeActionTooltipRequired(int type) {
+        isTooltip = true;
+        Toasty.error(this,"Add calendar event to this record",
+                Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onMicrophoneTooltipRequired(int type) {
+        isTooltip = true;
+        Toasty.success(this,"Add audio recording to this record",
+                Toast.LENGTH_SHORT,true).show();
+    }
+
     @Override
     public void onActivityResult(int reqCode, int result, Intent data) {
         Log.w(TAG, "########## onActivityResult: result: " + result
-                + " reqCode: " + reqCode + GSON.toJson(data));
+                + " reqCode: " + reqCode);
         switch (reqCode) {
             case REQUEST_CALENDAR:
                 Log.d(TAG, "onActivityResult: calendar activity returned: " + result);
@@ -884,6 +977,7 @@ public class CrudActivity extends AppCompatActivity
         }
 
     }
+
     private void confirmUpload(final Intent data) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Upload Confirmation")
@@ -897,12 +991,13 @@ public class CrudActivity extends AppCompatActivity
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                          Toasty.warning(getApplicationContext(),"Media file(s) released",
-                                  Toast.LENGTH_LONG,true).show();
+                        Toasty.warning(getApplicationContext(), "Media file(s) released",
+                                Toast.LENGTH_LONG, true).show();
                     }
                 })
                 .show();
     }
+
     private void saveFiles(Intent data) {
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
@@ -932,13 +1027,14 @@ public class CrudActivity extends AppCompatActivity
         for (VideoDTO p : bag.getVideos()) {
             p.setDailyThoughtID(dailyThought.getDailyThoughtID());
             p.setCaption(dailyThought.getTitle());
-            Log.e(TAG, "saveDailyThoughtFiles: ".concat(GSON.toJson(p)) );
+            Log.e(TAG, "saveDailyThoughtFiles: ".concat(GSON.toJson(p)));
             VideoCache.addVideo(p, this, null);
         }
         startPhotoService();
         startVideoService();
 
     }
+
     private void saveWeeklyMessageFiles(Intent data) {
         ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
         if (bag == null) return;
@@ -957,6 +1053,7 @@ public class CrudActivity extends AppCompatActivity
         startVideoService();
 
     }
+
     private void saveWeeklyMasterclassFiles(Intent data) {
         ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
         if (bag == null) return;
@@ -975,6 +1072,7 @@ public class CrudActivity extends AppCompatActivity
         startVideoService();
 
     }
+
     private void savePodcastFiles(Intent data) {
         ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
         if (bag == null) return;
@@ -993,6 +1091,7 @@ public class CrudActivity extends AppCompatActivity
         startVideoService();
 
     }
+
     private void startVideoService() {
         Log.d(TAG, "startVideoService: @@@@@@@@@@@@@@@@@@@@@@");
         Intent m = new Intent(this, VideoUploaderService.class);

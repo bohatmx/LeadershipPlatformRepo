@@ -1,25 +1,38 @@
 package com.oneconnect.leadership.admin.links;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.UrlDTO;
+import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
-public class LinksActivity extends AppCompatActivity {
+public class LinksActivity extends AppCompatActivity implements LinksContract.View {
     public static final String TAG = LinksActivity.class.getSimpleName();
     private TextView txtTitle;
     private ImageView iconAdd;
@@ -32,6 +45,9 @@ public class LinksActivity extends AppCompatActivity {
     private Snackbar snackbar;
     private FloatingActionButton fab;
     private int type;
+    private LinksPresenter presenter;
+    private TextInputEditText editSearch;
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,35 +55,103 @@ public class LinksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_links);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Supporting Links");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        presenter = new LinksPresenter(this);
+
+        type = getIntent().getIntExtra("type", 0);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) getIntent()
+                        .getSerializableExtra("dailyThought");
+                getSupportActionBar().setSubtitle(dailyThought.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(dailyThought)));
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) getIntent()
+                        .getSerializableExtra("weeklyMasterClass");
+                getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(weeklyMasterClass)));
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) getIntent()
+                        .getSerializableExtra("weeklyMessage");
+                getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(weeklyMessage)));
+                break;
+            case ResponseBag.PODCASTS:
+                podcast = (PodcastDTO) getIntent()
+                        .getSerializableExtra("podcast");
+                getSupportActionBar().setSubtitle(podcast.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(podcast)));
+                break;
+        }
 
         setup();
     }
 
     private void setup() {
         webView = (WebView) findViewById(R.id.webView);
-        txtTitle = (TextView) findViewById(R.id.txtTitle);
+        editSearch = (TextInputEditText) findViewById(R.id.editSearch);
         iconAdd = (ImageView) findViewById(R.id.iconAdd);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                hideKeyboard();
+                startSearch();
             }
         });
         iconAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideKeyboard();
+                confirm();
+            }
+        });
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
+        webView.setWebViewClient(new WebViewClient() {
+
+            public void onPageFinished(WebView view, String url) {
+                Log.i(TAG, "Finished loading URL: " + url);
+                hideKeyboard();
+
+            }
+
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Log.e(TAG, "Error: " + description);
+                hideKeyboard();
 
             }
         });
+
+        webView.loadUrl("https://www.google.com");
     }
 
+    private void startSearch() {
+        if (TextUtils.isEmpty(editSearch.getText())) {
+            editSearch.setError("Enter search text");
+            return;
+        }
+        hideKeyboard();
+        String[] parts = editSearch.getText().toString().split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            sb.append(parts[i]).append("+");
+        }
+        webView.loadUrl("https://www.google.com/search?q=".concat(sb.toString()));
+    }
 
     private void confirm() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(webView.getTitle()).append("\n");
+        sb.append(webView.getUrl());
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Confirmation")
-                .setMessage("Do you want to add this link?")
+                .setMessage("Do you want to add this link?\n\n".concat(sb.toString()))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -82,7 +166,61 @@ public class LinksActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
     private void addLink() {
         Log.d(TAG, "addLink: ............".concat(webView.getTitle()));
+
+        UrlDTO u = new UrlDTO();
+        UserDTO user = SharedPrefUtil.getUser(this);
+        u.setCompanyID(user.getCompanyID());
+        u.setCompanyName(user.getCompanyName());
+        u.setTitle(webView.getTitle());
+        u.setUrl(webView.getUrl());
+
+        showSnackbar("Adding link ....", "OK", "yellow");
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                presenter.addLink(u, dailyThought.getDailyThoughtID(), type);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                presenter.addLink(u, weeklyMasterClass.getWeeklyMasterClassID(), type);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                presenter.addLink(u, weeklyMessage.getWeeklyMessageID(), type);
+                break;
+            case ResponseBag.PODCASTS:
+                presenter.addLink(u, podcast.getPodcastID(), type);
+                break;
+        }
+
+    }
+
+    public void showSnackbar(String title, String action, String color) {
+        snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
+
+    }
+
+    @Override
+    public void onLinkAdded(String key) {
+        Log.i(TAG, "onLinkAdded: .................. ".concat(key));
+        showSnackbar(webView.getTitle().concat(" ADDED."), "OK", "green");
+    }
+
+    @Override
+    public void onError(String message) {
+        showSnackbar(message, "bad", "red");
+    }
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editSearch.getWindowToken(), 0);
     }
 }
