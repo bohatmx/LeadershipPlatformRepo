@@ -24,8 +24,5 @@ public abstract class BaseDTO implements Serializable{
 
     public abstract void setJournalUserID(String userID);
     public abstract void setJournalUserName(String userName);
-    public abstract  String getLine1();
-    public abstract  String getLine2();
-    public abstract  String getLine3();
-    public abstract  String getLine4();
+
 }

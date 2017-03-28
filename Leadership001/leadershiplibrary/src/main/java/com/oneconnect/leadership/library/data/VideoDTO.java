@@ -245,26 +245,6 @@ public class VideoDTO extends BaseDTO implements  Serializable, Comparable<Video
 
     }
 
-    @Exclude
-    public String getLine1() {
-        return title;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return description;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return stringDateUpdated;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return null;
-    }
-
     public String getStringDateScheduled() {
         return stringDateScheduled;
     }

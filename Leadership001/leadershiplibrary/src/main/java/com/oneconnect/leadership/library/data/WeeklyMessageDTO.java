@@ -198,33 +198,6 @@ public class WeeklyMessageDTO  extends BaseDTO implements  Serializable, Compara
 
     }
 
-    @Exclude
-    public String getLine1() {
-        return title;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return text;
-    }
-
-    @Exclude
-    public String getLine3() {
-        if (categories == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (CategoryDTO c: categories.values()) {
-            sb.append(c.getCategoryName()).append("\n");
-        }
-        return sb.toString();
-    }
-
-    @Exclude
-    public String getLine4() {
-        return stringDate;
-    }
-
     @Override
     public void setJournalUserID(String userID) {
 

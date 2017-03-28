@@ -14,22 +14,32 @@ import java.util.HashMap;
 
 public class UserDTO  extends BaseDTO implements Serializable, Comparable<UserDTO>{
 
+    private ClientDTO client;        //not null if user belongs to this client
     public static final int
             SUBSCRIBER = 1,
             COMPANY_STAFF = 2,
             LEADER = 3;
     private String userID, firstName, lastName,
             email, cellphone, password, uid,
-            userDescription;
+            userDescription, clientID;
     private int userType;
     public static final String
             DESC_SUBSCRIBER = "Subscriber",
              DESC_STAFF = "Company Staff",
             DESC_LEADER = "Leader";
     private HashMap<String, DeviceDTO> devices;
+    private HashMap<String, SubscriptionDTO> subscriptions;       //null if user subscription via client
 
     public UserDTO() {
 
+    }
+
+    public HashMap<String, SubscriptionDTO> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(HashMap<String, SubscriptionDTO> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     public HashMap<String, DeviceDTO> getDevices() {
@@ -38,6 +48,22 @@ public class UserDTO  extends BaseDTO implements Serializable, Comparable<UserDT
 
     public void setDevices(HashMap<String, DeviceDTO> devices) {
         this.devices = devices;
+    }
+
+    public ClientDTO getClient() {
+        return client;
+    }
+
+    public void setClient(ClientDTO client) {
+        this.client = client;
+    }
+
+    public String getClientID() {
+        return clientID;
+    }
+
+    public void setClientID(String clientID) {
+        this.clientID = clientID;
     }
 
     @Exclude
@@ -145,24 +171,6 @@ public class UserDTO  extends BaseDTO implements Serializable, Comparable<UserDT
         return n1.compareTo(n2);
     }
 
-    @Exclude
-    public String getLine1() {
-        return getFullName();
-    }
-
-    @Exclude
-    public String getLine2() {
-        return email;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return companyName;
-    }
-    @Exclude
-    public String getLine4() {
-        return stringDateRegistered;
-    }
     public String getStringDateScheduled() {
         return stringDateScheduled;
     }

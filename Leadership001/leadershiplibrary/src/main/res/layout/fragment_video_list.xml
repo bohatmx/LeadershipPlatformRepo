@@ -10,6 +10,7 @@
         android:layout_marginRight="@dimen/mon_margin"
         android:layout_marginLeft="@dimen/mon_margin"
         android:layout_marginBottom="@dimen/mon_margin"
+        android:layout_marginTop="@dimen/mon_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="@dimen/mon_divider_small">

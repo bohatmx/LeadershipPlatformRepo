@@ -201,26 +201,6 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
         return this.title.compareTo(e.title);
     }
 
-    @Exclude
-    public String getLine1() {
-        return title;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return description;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return companyName;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return stringDate;
-    }
-
     @Override
     public void setJournalUserID(String userID) {
 

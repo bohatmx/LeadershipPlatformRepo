@@ -15,12 +15,27 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by aubreymalabie on 3/16/17.
  */
 
 public class Util {
+
+    public static Date getDateAtMidnite(Date selectedDate) {
+
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.setTime(selectedDate);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return  cal.getTime();
+
+    }
 
     public static void getFileFromBitmap(Bitmap bitmap, File file) {
 

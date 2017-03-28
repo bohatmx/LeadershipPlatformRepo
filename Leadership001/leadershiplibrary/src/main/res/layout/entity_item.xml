@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iconTopRight"
+                    android:id="@+id/iconCalendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -88,7 +88,7 @@
                     android:id="@+id/txtEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/iconTopRight"
+                    android:layout_toLeftOf="@+id/iconCalendar"
                     android:text="0"
                     android:layout_marginRight="@dimen/mon_margin"
                     android:textColor="@color/pink_600"
@@ -108,17 +108,17 @@
                 android:textStyle="normal" />
 
             <TextView
-                android:id="@+id/txtLine1"
+                android:id="@+id/txtDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txtTitle"
                 android:layout_marginTop="@dimen/mon_margin"
                 android:layout_marginLeft="@dimen/mon_margin"
                 android:layout_marginBottom="@dimen/mon_wide"
-                android:text="A subtitle of some sort will be placed here. It probably will not be too long."
+                android:text="Wednesday 30 December 2099 12:36"
                 android:textColor="@color/blue_800"
-                android:textSize="14sp"
-                android:textStyle="normal" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/titleLayout"
             android:background="@color/grey_100"
-            android:paddingTop="@dimen/mon_wider"
+            android:paddingTop="@dimen/mon_wide"
             android:layout_marginTop="@dimen/mon_wide">
 
             <TextView
@@ -135,30 +135,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/mon_margin"
-                android:text="Wednesday 30 December 2099 12:36"
+                android:text="A subtitle of some sort will ingabit this little happy space. Hopefully there will be a little meat so that this text does not look too skinny."
                 android:layout_marginRight="@dimen/mon_margin"
                 android:textColor="@color/indigo_500"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtLine2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txtSubtitle"
-                android:layout_marginTop="@dimen/mon_padding"
-                android:layout_marginLeft="@dimen/mon_margin"
-                android:layout_marginRight="@dimen/mon_margin"
-                android:text="This could be a tooltip after long click? or use Toasty?"
-                android:textColor="@color/grey_700"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="normal" />
+
 
             <LinearLayout
                 android:id="@+id/iconLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtLine2"
+                android:layout_below="@id/txtSubtitle"
                 android:layout_marginTop="@dimen/mon_wider"
                 android:paddingBottom="@dimen/mon_wide"
                 android:orientation="horizontal">

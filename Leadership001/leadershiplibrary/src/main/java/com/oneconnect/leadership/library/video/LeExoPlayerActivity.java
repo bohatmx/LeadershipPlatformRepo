@@ -306,6 +306,7 @@ public class LeExoPlayerActivity extends AppCompatActivity
         Log.w(TAG, "preparePlayer: needNewPlayer: " + needNewPlayer
                 + " needRetrySource: " + needRetrySource);
 
+        //todo uncomment to use test videos
         //prepareTestVideos();
 
         Log.w(TAG, "preparePlayer: ".concat(GSON.toJson(videos)) );

@@ -222,26 +222,6 @@ public class WeeklyMasterClassDTO extends BaseDTO implements  Serializable, Comp
 
     }
 
-    @Exclude
-    public String getLine1() {
-        return title;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return text;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return companyName;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return stringDate;
-    }
-
     @Override
     public void setJournalUserID(String userID) {
 

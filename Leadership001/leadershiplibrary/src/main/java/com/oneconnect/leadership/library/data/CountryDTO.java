@@ -35,26 +35,6 @@ public class CountryDTO  extends BaseDTO implements  Serializable, Comparable<Co
         return this.countryName.compareTo(c.countryName);
     }
 
-    @Exclude
-    public String getLine1() {
-        return countryName;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return null;
-    }
-
     @Override
     public void setJournalUserID(String userID) {
 

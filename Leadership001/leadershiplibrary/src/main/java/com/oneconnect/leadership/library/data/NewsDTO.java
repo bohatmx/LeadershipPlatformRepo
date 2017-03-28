@@ -110,25 +110,6 @@ public class NewsDTO  extends BaseDTO implements  Serializable, Comparable<NewsD
         return 0;
     }
 
-    @Exclude
-    public String getLine1() {
-        return title;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return body;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return stringArticleDate;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return companyName;
-    }
     public String getStringDateScheduled() {
         return stringDateScheduled;
     }

@@ -15,6 +15,8 @@ import com.oneconnect.leadership.library.data.BaseDTO;
 public abstract class BaseBottomSheet extends BottomSheetDialogFragment {
     public interface BottomSheetListener {
         void onWorkDone(BaseDTO entity);
+        void onDateRequired();
+        void onError(String message);
     }
 
     public SheetPresenter presenter;

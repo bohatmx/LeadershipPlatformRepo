@@ -166,26 +166,6 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         return 0;
     }
 
-    @Exclude
-    public String getLine1() {
-        return title;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return subtitle;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return stringDateScheduled;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return text;
-    }
-
     public String getStringDateScheduled() {
         return stringDateScheduled;
     }

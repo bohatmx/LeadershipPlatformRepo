@@ -85,25 +85,6 @@ public class PaymentDTO  extends BaseDTO implements  Serializable, Comparable<Pa
         return 0;
     }
 
-    @Exclude
-    public String getLine1() {
-        return subscriberName;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return stringPaymentDate;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return df.format(amount);
-    }
-
-    @Exclude
-    public String getLine4() {
-        return companyName;
-    }
 
     static final DecimalFormat df = new DecimalFormat("###,###,###,###,##0.00");
 

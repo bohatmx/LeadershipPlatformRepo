@@ -67,26 +67,6 @@ public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<Com
         return this.companyName.compareTo(c.companyName);
     }
 
-    @Exclude
-    public String getLine1() {
-        return companyName;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return email;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return address;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return stringDateRegistered;
-    }
-
     public String getStringDateScheduled() {
         return stringDateScheduled;
     }

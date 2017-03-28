@@ -88,6 +88,7 @@ public class MediaListActivity extends AppCompatActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Media Package");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {

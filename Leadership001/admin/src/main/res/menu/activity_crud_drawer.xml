@@ -25,19 +25,12 @@
         <item
             android:id="@+id/nav_subscrip"
             android:icon="@drawable/ic_attach_money"
-            android:title="Subscriptions" />
-        <item
-            android:id="@+id/nav_news"
-            android:icon="@drawable/ic_favorite_red"
-            android:title="News" />
+            android:title="Subscription Types" />
+
         <item
             android:id="@+id/nav_categories"
             android:icon="@drawable/ic_list_bulleted"
             android:title="Categories" />
-        <item
-            android:id="@+id/nav_prices"
-            android:icon="@drawable/ic_attach_money"
-            android:title="Prices" />
         <item
             android:id="@+id/nav_users"
             android:icon="@drawable/ic_people"

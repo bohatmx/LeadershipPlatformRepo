@@ -2,8 +2,6 @@ package com.oneconnect.leadership.library.data;
 
 import android.support.annotation.NonNull;
 
-import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -62,25 +60,6 @@ public class CategoryDTO  extends BaseDTO implements  Serializable, Comparable<C
         return this.categoryName.compareTo(c.categoryName);
     }
 
-    @Exclude
-    public String getLine1() {
-        return categoryName;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return null;
-    }
 
     @Override
     public void setJournalUserID(String userID) {

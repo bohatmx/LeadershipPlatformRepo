@@ -130,26 +130,6 @@ public class PriceDTO  extends BaseDTO implements  Serializable, Comparable<Pric
 
     }
 
-    @Exclude
-    public String getLine1() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return null;
-    }
-
     @Override
     public void setJournalUserID(String userID) {
 

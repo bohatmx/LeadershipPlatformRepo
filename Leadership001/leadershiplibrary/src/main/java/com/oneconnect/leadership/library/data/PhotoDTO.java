@@ -195,26 +195,6 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
         return 0;
     }
 
-    @Exclude
-    public String getLine1() {
-        return caption;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return companyName;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return null;
-    }
-
     @Override
     public void setJournalUserID(String userID) {
 

@@ -1,7 +1,5 @@
 package com.oneconnect.leadership.library.data;
 
-import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -128,26 +126,6 @@ public class DeviceDTO extends BaseDTO implements Serializable{
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
-    }
-
-    @Exclude
-    public String getLine1() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return null;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return null;
     }
 
     public String getStringDateScheduled() {

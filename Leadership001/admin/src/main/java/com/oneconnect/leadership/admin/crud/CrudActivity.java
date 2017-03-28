@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -92,6 +91,8 @@ public class CrudActivity extends AppCompatActivity
     private PodcastDTO podcast;
 
     private DailyThoughtEditor dailyThoughtEditor;
+    private WeeklyMessageEditor weeklyMessageEditor;
+    private WeeklyMasterclassEditor weeklyMasterclassEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,12 @@ public class CrudActivity extends AppCompatActivity
                     case ResponseBag.DAILY_THOUGHTS:
                         dailyThoughtEditor.setSelectedDate(d);
                         break;
+                    case ResponseBag.WEEKLY_MESSAGE:
+                        weeklyMessageEditor.setSelectedDate(d);
+                        break;
+                    case ResponseBag.WEEKLY_MASTERCLASS:
+                        weeklyMasterclassEditor.setSelectedDate(d);
+                        break;
                 }
             }
         }, cal.get(java.util.Calendar.YEAR),
@@ -202,6 +209,16 @@ public class CrudActivity extends AppCompatActivity
                         .string.ok_label), "green");
 
             }
+
+            @Override
+            public void onDateRequired() {
+                Log.d(TAG, "onDateRequired: date not required");
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message,"bad",Constants.RED);
+            }
         });
         myBottomSheet.show(getSupportFragmentManager(), "SHEET_USER");
 
@@ -225,6 +242,16 @@ public class CrudActivity extends AppCompatActivity
                         .string.ok_label), "green");
 
             }
+
+            @Override
+            public void onDateRequired() {
+                Log.d(TAG, "onDateRequired: none needed");
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message,"bad",Constants.RED);
+            }
         });
         myBottomSheet.show(getSupportFragmentManager(), "SHEET_CATEGORY");
 
@@ -237,7 +264,6 @@ public class CrudActivity extends AppCompatActivity
         dailyThoughtEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
             @Override
             public void onWorkDone(BaseDTO entity) {
-                dailyThoughtEditor.dismiss();
                 DailyThoughtDTO m = (DailyThoughtDTO) entity;
                 if (bag.getDailyThoughts() == null) {
                     bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
@@ -248,46 +274,82 @@ public class CrudActivity extends AppCompatActivity
                         .string.ok_label), "green");
 
             }
-        });
-        dailyThoughtEditor.setIconListener(new DailyThoughtEditor.IconListener() {
-            @Override
-            public void onCameraIconClicked() {
-                //todo start choice - pick image or use camera
-                Toasty.success(getApplicationContext(), "Camera will be started when it's ready",
-                        Toast.LENGTH_LONG, true).show();
-            }
 
             @Override
-            public void onVideoIconClicked() {
-                //todo start choice - pick image or use camera
-                Toasty.warning(getApplicationContext(), "Video will be started when it's ready",
-                        Toast.LENGTH_LONG, true).show();
-            }
-
-            @Override
-            public void onDateIconClicked() {
-                //todo start date picker
-                Toasty.info(getApplicationContext(), "Date picker will be started when it's ready",
-                        Toast.LENGTH_LONG, true).show();
+            public void onDateRequired() {
                 getDate(ResponseBag.DAILY_THOUGHTS);
             }
 
             @Override
-            public void onURLIconClicked() {
-                //todo - where are the links coming from?
-                Toasty.error(getApplicationContext(), "URL's - how to deal with them?",
-                        Toast.LENGTH_LONG, true).show();
-                Uri chromeUri = Uri.parse("content://com.android.chrome.browser/bookmarks");
-                Log.d(TAG, "onURLIconClicked: ".concat(GSON.toJson(chromeUri)));
+            public void onError(String message) {
+                showSnackbar(message,"bad",Constants.RED);
+            }
+        });
+
+        dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
+
+    }
+    private void startWeeklyMessageBottomSheet(final WeeklyMessageDTO weeklyMessage, int type) {
+
+        weeklyMessageEditor =
+                WeeklyMessageEditor.newInstance(weeklyMessage, type);
+        weeklyMessageEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                WeeklyMessageDTO m = (WeeklyMessageDTO) entity;
+                if (bag.getWeeklyMessages() == null) {
+                    bag.setWeeklyMessages(new ArrayList<WeeklyMessageDTO>());
+                }
+                bag.getWeeklyMessages().add(0, m);
+                setFragment();
+                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+
             }
 
             @Override
-            public void onLocalImageClicked(LocalImage image) {
-                Toasty.info(getApplicationContext(), "Image selected:" + image.getResourceId(),
-                        Toast.LENGTH_LONG, true).show();
+            public void onDateRequired() {
+                getDate(ResponseBag.WEEKLY_MESSAGE);
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message,"bad",Constants.RED);
             }
         });
-        dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
+        weeklyMessageEditor.show(getSupportFragmentManager(), "SHEET_WEEKLY_MESSAGE");
+
+    }
+
+    private void startWeeklyMasterclassBottomSheet(final WeeklyMasterClassDTO weeklyMasterClass, int type) {
+
+        weeklyMasterclassEditor =
+                WeeklyMasterclassEditor.newInstance(weeklyMasterClass, type);
+        weeklyMasterclassEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                WeeklyMasterClassDTO m = (WeeklyMasterClassDTO) entity;
+                if (bag.getWeeklyMasterClasses() == null) {
+                    bag.setWeeklyMasterClasses(new ArrayList<WeeklyMasterClassDTO>());
+                }
+                bag.getWeeklyMasterClasses().add(0, m);
+                setFragment();
+                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+
+            }
+
+            @Override
+            public void onDateRequired() {
+                getDate(ResponseBag.WEEKLY_MASTERCLASS);
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message,"bad",Constants.RED);
+            }
+        });
+        weeklyMasterclassEditor.show(getSupportFragmentManager(), "SHEET_WEEKLY_MASTERCLASS");
 
     }
 
@@ -723,6 +785,12 @@ public class CrudActivity extends AppCompatActivity
                 break;
             case ResponseBag.DAILY_THOUGHTS:
                 startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                startWeeklyMessageBottomSheet(null, Constants.NEW_ENTITY);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                startWeeklyMasterclassBottomSheet(null, Constants.NEW_ENTITY);
                 break;
         }
 

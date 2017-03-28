@@ -3,20 +3,18 @@ package com.oneconnect.leadership.admin.crud;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
-import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
@@ -28,23 +26,19 @@ import java.util.Date;
  * Created by aubreymalabie on 3/18/17.
  */
 
-public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View {
-    private DailyThoughtDTO dailyThought;
-    ;
-
+public class WeeklyMasterclassEditor extends BaseBottomSheet
+        implements SheetContract.View {
+    private WeeklyMasterClassDTO weeklyMasterClass;
     private TextInputEditText editTitle, editSubtitle;
-    private RecyclerView recyclerView;
-    private ImageView iconCamera, iconVideo, iconDate, iconURLs;
-    private View iconLayout;
-    private Button btn, btnDate;
+    private Button btnSend, btnDate;
     private Date selectedDate;
 
     @Override
     public void onEntityAdded(String key) {
         Log.i(TAG, "******* onEntityAdded: daily thought added to firebase "
                 .concat(key));
-        dailyThought.setDailyThoughtID(key);
-        bottomSheetListener.onWorkDone(dailyThought);
+        weeklyMasterClass.setWeeklyMasterClassID(key);
+        bottomSheetListener.onWorkDone(weeklyMasterClass);
         this.dismiss();
     }
 
@@ -60,15 +54,16 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onError(String message) {
-          bottomSheetListener.onError(message);
+         bottomSheetListener.onError(message);
     }
 
-    static DailyThoughtEditor newInstance(DailyThoughtDTO dailyThought, int type) {
-        DailyThoughtEditor f = new DailyThoughtEditor();
+
+    static WeeklyMasterclassEditor newInstance(WeeklyMasterClassDTO weeklyMasterClass, int type) {
+        WeeklyMasterclassEditor f = new WeeklyMasterclassEditor();
         Bundle args = new Bundle();
         args.putInt("type", type);
-        if (dailyThought != null) {
-            args.putSerializable("dailyThought", dailyThought);
+        if (weeklyMasterClass != null) {
+            args.putSerializable("weeklyMasterClass", weeklyMasterClass);
         }
         f.setArguments(args);
         return f;
@@ -77,7 +72,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dailyThought = (DailyThoughtDTO) getArguments().getSerializable("dailyThought");
+        weeklyMasterClass = (WeeklyMasterClassDTO) getArguments().getSerializable("weeklyMasterClass");
         type = getArguments().getInt("type", 0);
         presenter = new SheetPresenter(this);
 
@@ -87,9 +82,16 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_thought_editor, container, false);
-        btn = (Button) view.findViewById(R.id.btn);
+        btnSend = (Button) view.findViewById(R.id.btn);
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                send();
+            }
+        });
         btnDate = (Button) view.findViewById(R.id.btnDate);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +99,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 bottomSheetListener.onDateRequired();
             }
         });
-
 
 
         return view;
@@ -114,15 +115,15 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             editTitle.setError(getString(R.string.enter_subtitle));
             return;
         }
-        Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");
-        if (dailyThought == null) {
-            dailyThought = new DailyThoughtDTO();
+        Log.d(TAG, "send: @@@@@@@@@@@ starting to send weeky message to Firebase");
+        if (weeklyMasterClass == null) {
+            weeklyMasterClass = new WeeklyMasterClassDTO();
             UserDTO me = SharedPrefUtil.getUser(getActivity());
-            dailyThought.setCompanyID(me.getCompanyID());
-            dailyThought.setCompanyName(me.getCompanyName());
-            dailyThought.setActive(true);
-            dailyThought.setJournalUserID(me.getUserID());
-            dailyThought.setJournalUserName(me.getFullName());
+            weeklyMasterClass.setCompanyID(me.getCompanyID());
+            weeklyMasterClass.setCompanyName(me.getCompanyName());
+            weeklyMasterClass.setActive(true);
+            weeklyMasterClass.setJournalUserID(me.getUserID());
+            weeklyMasterClass.setJournalUserName(me.getFullName());
 
         }
         if (selectedDate == null) {
@@ -130,16 +131,16 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             bottomSheetListener.onDateRequired();
             return;
         } else {
-            dailyThought.setDateScheduled(selectedDate.getTime());
+            weeklyMasterClass.setDateScheduled(selectedDate.getTime());
         }
-        dailyThought.setTitle(editTitle.getText().toString());
-        dailyThought.setSubtitle(editSubtitle.getText().toString());
+        weeklyMasterClass.setTitle(editTitle.getText().toString());
+        weeklyMasterClass.setSubtitle(editSubtitle.getText().toString());
 
 
         switch (type) {
             case Constants.NEW_ENTITY:
-                Log.w(TAG, "...sending to Firebase: ".concat(GSON.toJson(dailyThought)));
-                presenter.addEntity(dailyThought);
+                Log.w(TAG, "...sending to Firebase: ".concat(GSON.toJson(weeklyMasterClass)));
+                presenter.addEntity(weeklyMasterClass);
                 break;
             case Constants.UPDATE_ENTITY:
 
@@ -151,11 +152,10 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     public void setSelectedDate(Date selectedDate) {
-
-        this.selectedDate  = Util.getDateAtMidnite(selectedDate);
+        this.selectedDate = Util.getDateAtMidnite(selectedDate);
         btnDate.setText(sdf.format(this.selectedDate));
-        if (dailyThought != null) {
-            dailyThought.setDateScheduled(this.selectedDate.getTime());
+        if (weeklyMasterClass != null) {
+            weeklyMasterClass.setDateScheduled(this.selectedDate.getTime());
             if (isReadyToSend) {
                 isReadyToSend = false;
                 send();
@@ -164,8 +164,8 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         }
     }
 
-    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy");
-    public static final String TAG = DailyThoughtEditor.class.getSimpleName();
+    public static final String TAG = WeeklyMasterclassEditor.class.getSimpleName();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy");
 
 }

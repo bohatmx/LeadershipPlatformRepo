@@ -237,26 +237,6 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
 
     }
 
-    @Exclude
-    public String getLine1() {
-        return title;
-    }
-
-    @Exclude
-    public String getLine2() {
-        return subtitle;
-    }
-
-    @Exclude
-    public String getLine3() {
-        return subjectTitle;
-    }
-
-    @Exclude
-    public String getLine4() {
-        return stringDate;
-    }
-
     @Override
     public void setJournalUserID(String userID) {
 
