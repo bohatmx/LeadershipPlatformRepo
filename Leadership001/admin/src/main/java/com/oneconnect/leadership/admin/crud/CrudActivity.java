@@ -898,7 +898,7 @@ public class CrudActivity extends AppCompatActivity
             isTooltip = false;
             return;
         }
-        Log.w(TAG, "onSomeActionRequired: .......".concat(GSON.toJson(entity)));
+        Log.w(TAG, "onCalendarRequested: .......".concat(GSON.toJson(entity)));
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) entity;

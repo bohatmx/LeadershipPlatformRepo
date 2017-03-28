@@ -12,7 +12,7 @@ public class RatingDTO implements Serializable {
     private String ratingID, companyID, companyName,
             podcastID, dailyThoughtID, weeklyMessageID, weeklyMasterclassID,
             eBookID, stringDate, title,
-            userID;
+            userID, comment, userName;
     private int rating;
     private long date;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm:ss");
@@ -23,12 +23,28 @@ public class RatingDTO implements Serializable {
 
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public String getRatingID() {
         return ratingID;
     }
 
     public void setRatingID(String ratingID) {
         this.ratingID = ratingID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getCompanyID() {

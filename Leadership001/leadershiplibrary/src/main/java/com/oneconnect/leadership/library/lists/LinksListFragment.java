@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,32 +13,38 @@ import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UrlDTO;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link VideoListener} interface
+ * {@link UrlListener} interface
  * to handle interaction events.
  * Use the {@link LinksListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LinksListFragment extends Fragment {
-    private VideoListener mListener;
+public class LinksListFragment extends Fragment implements PageFragment{
+    public static final String TAG = LinksListFragment.class.getSimpleName();
+    private UrlListener mListener;
 
     public LinksListFragment() {
         // Required empty public constructor
     }
 
-    private List<UrlDTO> videos;
+    private List<UrlDTO> urls;
     private View view;
     private RecyclerView recyclerView;
 
-    public static LinksListFragment newInstance(List<UrlDTO> list) {
+    public static LinksListFragment newInstance(HashMap<String, UrlDTO> list) {
         LinksListFragment fragment = new LinksListFragment();
         Bundle args = new Bundle();
         ResponseBag bag = new ResponseBag();
-        bag.setUrls(list);
+        bag.setUrls(new ArrayList<UrlDTO>());
+        for (UrlDTO u: list.values()) {
+            bag.getUrls().add(u);
+        }
         args.putSerializable("bag", bag);
         fragment.setArguments(args);
         return fragment;
@@ -48,13 +55,14 @@ public class LinksListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ResponseBag  bag = (ResponseBag) getArguments().getSerializable("bag");
-            videos = bag.getUrls();
+            urls = bag.getUrls();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: *****************");
         view =  inflater.inflate(R.layout.fragment_links_list, container, false);
 
         return view;
@@ -63,11 +71,11 @@ public class LinksListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof VideoListener) {
-            mListener = (VideoListener) context;
+        if (context instanceof UrlListener) {
+            mListener = (UrlListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement VideoListener");
+                    + " must implement UrlListener");
         }
     }
 
@@ -75,6 +83,11 @@ public class LinksListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Useful Links";
     }
 
     /**
@@ -87,7 +100,7 @@ public class LinksListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface VideoListener {
-        void onVideoTapped(UrlDTO video);
+    public interface UrlListener {
+        void onUrlTapped(UrlDTO url);
     }
 }

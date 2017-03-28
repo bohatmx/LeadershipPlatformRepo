@@ -139,9 +139,10 @@ public class EntityListFragment extends BaseListingFragment {
             }
 
             @Override
-            public void onEntityDetailRequested(BaseDTO entity) {
-                mListener.onEntityDetailRequested(entity);
+            public void onEntityDetailRequested(BaseDTO entity, int type) {
+                mListener.onEntityDetailRequested(entity,type);
             }
+
 
             @Override
             public void onDeleteTooltipRequired(int type) {

@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.lists;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.ResponseBag;
-import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,30 +21,29 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PhotoListener} interface
+ * {@link EBookListener} interface
  * to handle interaction events.
- * Use the {@link PhotoListFragment#newInstance} factory method to
+ * Use the {@link EBookListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PhotoListFragment extends Fragment implements PageFragment{
-    private PhotoListener mListener;
-    public static final String TAG = PhotoListFragment.class.getSimpleName();
-
-    public PhotoListFragment() {
+public class EBookListFragment extends Fragment implements PageFragment{
+    private EBookListener mListener;
+    public static final String TAG = EBookListFragment.class.getSimpleName();
+    public EBookListFragment() {
         // Required empty public constructor
     }
 
-    private List<PhotoDTO> photos;
+    private List<EBookDTO> eBooks;
     private View view;
     private RecyclerView recyclerView;
 
-    public static PhotoListFragment newInstance(HashMap<String, PhotoDTO> list) {
-        PhotoListFragment fragment = new PhotoListFragment();
+    public static EBookListFragment newInstance(HashMap<String, EBookDTO> list) {
+        EBookListFragment fragment = new EBookListFragment();
         Bundle args = new Bundle();
         ResponseBag bag = new ResponseBag();
-        bag.setPhotos(new ArrayList<PhotoDTO>());
-        for (PhotoDTO p: list.values()) {
-            bag.getPhotos().add(p);
+        bag.seteBooks(new ArrayList<EBookDTO>());
+        for (EBookDTO v: list.values()) {
+            bag.geteBooks().add(v);
         }
         args.putSerializable("bag", bag);
         fragment.setArguments(args);
@@ -55,15 +55,18 @@ public class PhotoListFragment extends Fragment implements PageFragment{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ResponseBag  bag = (ResponseBag) getArguments().getSerializable("bag");
-            photos = bag.getPhotos();
+            eBooks = bag.geteBooks();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ...............");
-        view =  inflater.inflate(R.layout.fragment_photo_list, container, false);
+        Log.d(TAG, "onCreateView: #################");
+        view =  inflater.inflate(R.layout.fragment_ebook_list, container, false);
+        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(lm);
 
         return view;
     }
@@ -71,11 +74,11 @@ public class PhotoListFragment extends Fragment implements PageFragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof PhotoListener) {
-            mListener = (PhotoListener) context;
+        if (context instanceof EBookListener) {
+            mListener = (EBookListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement PhotoListener");
+                    + " must implement EBookListener");
         }
     }
 
@@ -87,7 +90,7 @@ public class PhotoListFragment extends Fragment implements PageFragment{
 
     @Override
     public String getTitle() {
-        return "Photographs";
+        return "EBooks";
     }
 
     /**
@@ -100,7 +103,7 @@ public class PhotoListFragment extends Fragment implements PageFragment{
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface PhotoListener {
-        void onPhotoTapped(PhotoDTO photo);
+    public interface EBookListener {
+        void onEBookTapped(EBookDTO eBook);
     }
 }

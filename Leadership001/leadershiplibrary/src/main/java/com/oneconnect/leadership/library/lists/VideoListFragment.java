@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.VideoDTO;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,8 +26,9 @@ import java.util.List;
  * Use the {@link VideoListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VideoListFragment extends Fragment {
+public class VideoListFragment extends Fragment implements PageFragment {
     private VideoListener mListener;
+    public static final String TAG = VideoListFragment.class.getSimpleName();
 
     public VideoListFragment() {
         // Required empty public constructor
@@ -34,11 +38,14 @@ public class VideoListFragment extends Fragment {
     private View view;
     private RecyclerView recyclerView;
 
-    public static VideoListFragment newInstance(List<VideoDTO> list) {
+    public static VideoListFragment newInstance(HashMap<String, VideoDTO> list) {
         VideoListFragment fragment = new VideoListFragment();
         Bundle args = new Bundle();
         ResponseBag bag = new ResponseBag();
-        bag.setVideos(list);
+        bag.setVideos(new ArrayList<VideoDTO>());
+        for (VideoDTO v: list.values()) {
+            bag.getVideos().add(v);
+        }
         args.putSerializable("bag", bag);
         fragment.setArguments(args);
         return fragment;
@@ -56,6 +63,7 @@ public class VideoListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: %%%%%%%%%%%%%%%%%%%%%%");
         view =  inflater.inflate(R.layout.fragment_video_list, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
@@ -79,6 +87,11 @@ public class VideoListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Videos";
     }
 
     /**

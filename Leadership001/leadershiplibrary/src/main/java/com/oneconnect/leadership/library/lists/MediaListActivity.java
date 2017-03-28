@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,12 +20,31 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.UrlDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
+import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.DepthPageTransformer;
+import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class MediaListActivity extends AppCompatActivity {
+public class MediaListActivity extends AppCompatActivity implements
+        VideoListFragment.VideoListener,
+        EBookListFragment.EBookListener,
+        PhotoListFragment.PhotoListener,
+        LinksListFragment.UrlListener,
+        PodcastListFragment.PodcastListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,24 +60,75 @@ public class MediaListActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private Toolbar toolbar;
+    private Snackbar snackbar;
+    private FloatingActionButton fab;
+    private VideoListFragment videoListFragment;
+    private PhotoListFragment photoListFragment;
+    private PodcastListFragment podcastListFragment;
+    private LinksListFragment linksListFragment;
+    private EBookListFragment eBookListFragment;
+    private int type;
+    private DailyThoughtDTO dailyThought;
+    private WeeklyMessageDTO weeklyMessage;
+    private WeeklyMasterClassDTO weeklyMasterClass;
+    private PodcastDTO podcast;
+    private EBookDTO eBook;
+    private HashMap<String, VideoDTO> videos;
+    private HashMap<String, PodcastDTO> podcasts;
+    private HashMap<String, PhotoDTO> photos;
+    public static final String TAG = MediaListActivity.class.getSimpleName();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        getSupportActionBar().setTitle("Media Package");
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        type = getIntent().getIntExtra("type", 0);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) getIntent()
+                        .getSerializableExtra("dailyThought");
+                getSupportActionBar().setSubtitle(dailyThought.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(dailyThought)));
+                break;
+            case ResponseBag.PODCASTS:
+                podcast = (PodcastDTO) getIntent()
+                        .getSerializableExtra("podcast");
+                getSupportActionBar().setSubtitle(podcast.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(podcast)));
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) getIntent()
+                        .getSerializableExtra("weeklyMasterClass");
+                getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(weeklyMasterClass)));
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) getIntent()
+                        .getSerializableExtra("weeklyMessage");
+                getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(weeklyMessage)));
+                break;
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) getIntent()
+                        .getSerializableExtra("eBook");
+                getSupportActionBar().setSubtitle(eBook.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(eBook)));
+                break;
+        }
+        setup();
+        buildTabs();
+    }
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+    private void setup() {
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,30 +136,217 @@ public class MediaListActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
 
+    private void buildTabs() {
+        pageFragments = new ArrayList<>();
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                setDailyThoughtTabs();
+                break;
+            case ResponseBag.PODCASTS:
+                setPodcastTabs();
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                setWeeklyMasterClassTabs();
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                setWeeklyMessageTabs();
+                break;
+            case ResponseBag.EBOOKS:
+                setEbookTabs();
+                break;
+        }
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setPageTransformer(true, new DepthPageTransformer());
+    }
+
+    private void setDailyThoughtTabs() {
+        if (dailyThought.getVideos() != null && !dailyThought.getVideos().isEmpty()) {
+            videoListFragment = VideoListFragment.newInstance(dailyThought.getVideos());
+            videos = dailyThought.getVideos();
+            pageFragments.add(videoListFragment);
+        }
+        if (dailyThought.getPhotos() != null && !dailyThought.getPhotos().isEmpty()) {
+            photoListFragment = PhotoListFragment.newInstance(dailyThought.getPhotos());
+            photos = dailyThought.getPhotos();
+            pageFragments.add(photoListFragment);
+        }
+        if (dailyThought.getUrls() != null && !dailyThought.getUrls().isEmpty()) {
+            linksListFragment = LinksListFragment.newInstance(dailyThought.getUrls());
+            pageFragments.add(linksListFragment);
+        }
+        if (dailyThought.getPodcasts() != null && !dailyThought.getPodcasts().isEmpty()) {
+            podcastListFragment = PodcastListFragment.newInstance(dailyThought.getPodcasts());
+            pageFragments.add(podcastListFragment);
+        }
+        if (dailyThought.getEbooks() != null && !dailyThought.getEbooks().isEmpty()) {
+            eBookListFragment = EBookListFragment.newInstance(dailyThought.getEbooks());
+            pageFragments.add(eBookListFragment);
+        }
+        Log.i(TAG, "setDailyThoughtTabs: tabs set up: " + pageFragments.size());
+    }
+
+    private void setWeeklyMasterClassTabs() {
+        if (weeklyMasterClass.getVideos() != null && !weeklyMasterClass.getVideos().isEmpty()) {
+            videoListFragment = VideoListFragment.newInstance(weeklyMasterClass.getVideos());
+            videos = weeklyMasterClass.getVideos();
+            pageFragments.add(videoListFragment);
+        }
+        if (weeklyMasterClass.getPhotos() != null && !weeklyMasterClass.getPhotos().isEmpty()) {
+            photoListFragment = PhotoListFragment.newInstance(weeklyMasterClass.getPhotos());
+            photos = weeklyMasterClass.getPhotos();
+            pageFragments.add(photoListFragment);
+        }
+        if (weeklyMasterClass.getUrls() != null && !weeklyMasterClass.getUrls().isEmpty()) {
+            linksListFragment = LinksListFragment.newInstance(weeklyMasterClass.getUrls());
+            pageFragments.add(linksListFragment);
+        }
+        if (weeklyMasterClass.getPodcasts() != null && !weeklyMasterClass.getPodcasts().isEmpty()) {
+            podcastListFragment = PodcastListFragment.newInstance(weeklyMasterClass.getPodcasts());
+            pageFragments.add(podcastListFragment);
+        }
+        if (weeklyMasterClass.getEbooks() != null && !weeklyMasterClass.getEbooks().isEmpty()) {
+            eBookListFragment = EBookListFragment.newInstance(weeklyMasterClass.getEbooks());
+            pageFragments.add(eBookListFragment);
+        }
+        Log.i(TAG, "setWeeklyMasterClassTabs: " + pageFragments.size());
+    }
+
+    private void setWeeklyMessageTabs() {
+        if (weeklyMessage.getVideos() != null && !weeklyMessage.getVideos().isEmpty()) {
+            videoListFragment = VideoListFragment.newInstance(weeklyMessage.getVideos());
+            videos = weeklyMessage.getVideos();
+            pageFragments.add(videoListFragment);
+        }
+        if (weeklyMessage.getPhotos() != null && !weeklyMessage.getPhotos().isEmpty()) {
+            photoListFragment = PhotoListFragment.newInstance(weeklyMessage.getPhotos());
+            photos = weeklyMessage.getPhotos();
+            pageFragments.add(photoListFragment);
+        }
+        if (weeklyMessage.getUrls() != null && !weeklyMessage.getUrls().isEmpty()) {
+            linksListFragment = LinksListFragment.newInstance(weeklyMessage.getUrls());
+            pageFragments.add(linksListFragment);
+        }
+        if (weeklyMessage.getPodcasts() != null && !weeklyMessage.getPodcasts().isEmpty()) {
+            podcastListFragment = PodcastListFragment.newInstance(weeklyMessage.getPodcasts());
+            pageFragments.add(podcastListFragment);
+        }
+        if (weeklyMessage.getEbooks() != null && !weeklyMessage.getEbooks().isEmpty()) {
+            eBookListFragment = EBookListFragment.newInstance(weeklyMessage.getEbooks());
+            pageFragments.add(eBookListFragment);
+        }
+        Log.i(TAG, "setWeeklyMessageTabs: " + pageFragments.size());
+    }
+
+    private void setPodcastTabs() {
+        if (podcast.getVideos() != null && !podcast.getVideos().isEmpty()) {
+            videoListFragment = VideoListFragment.newInstance(podcast.getVideos());
+            videos = podcast.getVideos();
+            pageFragments.add(videoListFragment);
+        }
+        if (podcast.getPhotos() != null && !podcast.getPhotos().isEmpty()) {
+            photoListFragment = PhotoListFragment.newInstance(podcast.getPhotos());
+            photos = podcast.getPhotos();
+            pageFragments.add(photoListFragment);
+        }
+        if (podcast.getUrls() != null && !podcast.getUrls().isEmpty()) {
+            linksListFragment = LinksListFragment.newInstance(podcast.getUrls());
+            pageFragments.add(linksListFragment);
+        }
+
+        if (podcast.getEbooks() != null && !podcast.getEbooks().isEmpty()) {
+            eBookListFragment = EBookListFragment.newInstance(podcast.getEbooks());
+            pageFragments.add(eBookListFragment);
+        }
+        Log.i(TAG, "setPodcastTabs: " + pageFragments.size());
+    }
+
+    private void setEbookTabs() {
+        if (eBook.getVideos() != null && !eBook.getVideos().isEmpty()) {
+            videoListFragment = VideoListFragment.newInstance(eBook.getVideos());
+            videos = eBook.getVideos();
+            pageFragments.add(videoListFragment);
+        }
+        if (eBook.getPhotos() != null && !eBook.getPhotos().isEmpty()) {
+            photoListFragment = PhotoListFragment.newInstance(eBook.getPhotos());
+            pageFragments.add(photoListFragment);
+        }
+        if (eBook.getUrls() != null && !eBook.getUrls().isEmpty()) {
+            linksListFragment = LinksListFragment.newInstance(eBook.getUrls());
+            pageFragments.add(linksListFragment);
+        }
+        Log.i(TAG, "setEbookTabs: " + pageFragments.size());
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_media_list, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_video) {
+            startExoPlayer();
+            return true;
+        }
+        if (id == R.id.action_photo) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startExoPlayer() {
+
+        if (!videos.isEmpty()) {
+            ResponseBag bag = new ResponseBag();
+            bag.setVideos(new ArrayList<VideoDTO>());
+            for (VideoDTO v: videos.values()) {
+                 bag.getVideos().add(v);
+            }
+            Intent m = new Intent(this,LeExoPlayerActivity.class);
+            m.putExtra("bag",bag);
+            startActivity(m);
+        }
+    }
+    @Override
+    public void onPhotoTapped(PhotoDTO photo) {
+
+    }
+
+    @Override
+    public void onPodcastTapped(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onEBookTapped(EBookDTO eBook) {
+
+    }
+
+    @Override
+    public void onVideoTapped(VideoDTO video) {
+        Log.i(TAG, "onVideoTapped: play video: " + video.getTitle());
+        Intent m = new Intent(this, LeExoPlayerActivity.class);
+        ResponseBag bag = new ResponseBag();
+        bag.setVideos(new ArrayList<VideoDTO>());
+        bag.getVideos().add(video);
+        m.putExtra("bag", bag);
+        startActivity(m);
+
+    }
+
+    @Override
+    public void onUrlTapped(UrlDTO url) {
+
     }
 
     /**
@@ -137,9 +396,7 @@ public class MediaListActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return (Fragment) pageFragments.get(position);
         }
 
         @Override

@@ -62,6 +62,8 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.App;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -299,14 +301,14 @@ public class LeExoPlayerActivity extends AppCompatActivity
             preparePlayer(needNewPlayer);
         }
     }
-
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private void preparePlayer(boolean needNewPlayer) {
         Log.w(TAG, "preparePlayer: needNewPlayer: " + needNewPlayer
                 + " needRetrySource: " + needRetrySource);
 
-        prepareTestVideos();
+        //prepareTestVideos();
 
-
+        Log.w(TAG, "preparePlayer: ".concat(GSON.toJson(videos)) );
         Uri[] uris = new Uri[videos.size()];
         MediaSource[] mediaSources = new MediaSource[videos.size()];
         String[] extensions = new String[videos.size()];
