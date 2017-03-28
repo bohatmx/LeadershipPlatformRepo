@@ -453,10 +453,7 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.SUBSCRIPTIONS;
                 cachePresenter.getCacheSubscriptions();
                 break;
-            case R.id.nav_news:
-                type = ResponseBag.NEWS;
-                cachePresenter.getCacheNews();
-                break;
+
             case R.id.nav_weekly_master:
                 type = ResponseBag.WEEKLY_MASTERCLASS;
                 cachePresenter.getCacheWeeklyMasterclasses();
@@ -465,10 +462,7 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.WEEKLY_MESSAGE;
                 cachePresenter.getCacheWeeklyMessages();
                 break;
-            case R.id.nav_prices:
-                type = ResponseBag.PRICES;
-                cachePresenter.getCachePrices();
-                break;
+
             case R.id.nav_users:
                 type = ResponseBag.USERS;
                 cachePresenter.getCacheUsers();

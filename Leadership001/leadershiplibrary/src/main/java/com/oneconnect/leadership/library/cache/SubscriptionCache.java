@@ -81,7 +81,7 @@ public class SubscriptionCache {
                         for (SubscriptionDTO u : subscriptions) {
                             String json1 = gson.toJson(u);
                             snappydb.put(SUBSCRIPTION_KEY + u.getSubscriptionID(), json1);
-                            Log.i(TAG, ".......doInBackground: subscription cached: " + u.getDescription());
+                            Log.i(TAG, ".......doInBackground: subscription cached: ");
                         }
                         break;
                     case GET_SUBSCRIPTIONS:

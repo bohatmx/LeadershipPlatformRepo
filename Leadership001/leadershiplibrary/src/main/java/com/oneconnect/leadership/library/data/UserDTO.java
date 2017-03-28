@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class UserDTO  extends BaseDTO implements Serializable, Comparable<UserDTO>{
+public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO> {
 
     private ClientDTO client;        //not null if user belongs to this client
     public static final int
@@ -25,7 +25,7 @@ public class UserDTO  extends BaseDTO implements Serializable, Comparable<UserDT
     private int userType;
     public static final String
             DESC_SUBSCRIBER = "Subscriber",
-             DESC_STAFF = "Company Staff",
+            DESC_STAFF = "Company Staff",
             DESC_LEADER = "Leader";
     private HashMap<String, DeviceDTO> devices;
     private HashMap<String, SubscriptionDTO> subscriptions;       //null if user subscription via client
@@ -71,6 +71,7 @@ public class UserDTO  extends BaseDTO implements Serializable, Comparable<UserDT
         if (firstName == null) return null;
         return firstName.concat(" ").concat(lastName);
     }
+
     public String getUserDescription() {
         return userDescription;
     }

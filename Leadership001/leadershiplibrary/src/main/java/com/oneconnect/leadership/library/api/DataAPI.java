@@ -464,7 +464,7 @@ public class DataAPI {
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
                 if (databaseError == null) {
                     Log.i(TAG, "------------- onComplete: subscription added: "
-                            + subscription.getCompanyName());
+                            + subscription.getAmount());
                     subscription.setSubscriptionID(responseRef.getKey());
                     responseRef.child("subscriptionID").setValue(responseRef.getKey());
                     if (listener != null)

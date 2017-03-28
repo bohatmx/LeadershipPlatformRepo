@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -25,6 +28,7 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -75,7 +79,8 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     private List<BaseDTO> entities;
     private Context ctx;
     int type;
-    public static final DecimalFormat sdf = new DecimalFormat("###,###,###,###,##0.0");
+    public static final DecimalFormat df = new DecimalFormat("###,###,###,###,##0.0");
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm");
 
 
     public BasicEntityAdapter(List<BaseDTO> entities, int type,
@@ -320,7 +325,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     private void setDailyThought(EntityViewHolder h, int position, DailyThoughtDTO p) {
         h.txtTitle.setText(p.getTitle());
-        h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+        h.txtDate.setText(df.format(new Date(p.getDateScheduled())));
         h.txtSubTitle.setText(p.getSubtitle());
 
         if (p.getPhotos() != null) {
@@ -355,7 +360,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     private void setPodcast(EntityViewHolder h, int position, PodcastDTO p) {
         h.txtTitle.setText(p.getTitle());
-        h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+        h.txtDate.setText(df.format(new Date(p.getDateScheduled())));
         h.txtSubTitle.setText(p.getSubtitle());
 
         if (p.getPhotos() != null) {
@@ -387,9 +392,16 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         }
     }
 
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private void setWeeklyMessage(EntityViewHolder h, int position, WeeklyMessageDTO p) {
+        Log.d("BasicEntityAdapter", "setWeeklyMessage: ".concat(GSON.toJson(p)));
         h.txtTitle.setText(p.getTitle());
-        h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+        if (p.getDateScheduled() != null) {
+            h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+            h.txtDate.setVisibility(View.VISIBLE);
+        } else {
+            h.txtDate.setVisibility(View.GONE);
+        }
         h.txtSubTitle.setText(p.getSubtitle());
 
         if (p.getPhotos() != null) {
