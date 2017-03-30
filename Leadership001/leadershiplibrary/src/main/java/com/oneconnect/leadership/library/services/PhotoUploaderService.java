@@ -103,6 +103,11 @@ public class PhotoUploaderService extends IntentService {
                         }
 
                         @Override
+                        public void onProgress(long transferred, long size) {
+
+                        }
+
+                        @Override
                         public void onError(String message) {
                             FirebaseCrash.report(new Exception(
                                     "Unable to upload photo: " + gson.toJson(photo)));

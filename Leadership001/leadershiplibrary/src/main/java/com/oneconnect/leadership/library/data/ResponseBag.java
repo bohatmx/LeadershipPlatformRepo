@@ -56,6 +56,7 @@ public class ResponseBag implements Serializable {
     private List<ThumbnailDTO> thumbnails;
     private List<CalendarEventDTO> calendarEvents;
     private List<RatingDTO> ratings;
+    private List<SubscriptionTypeDTO> subscriptionTypes;
 
     public static final int
             CATEGORIES = 1,
@@ -77,7 +78,8 @@ public class ResponseBag implements Serializable {
             CALENDAR_EVENTS = 17,
             URLS = 18,
             THUMBNAILS = 19,
-            RATINGS = 20;
+            RATINGS = 20,
+            SUBSCRIPTION_TYPES = 21;
 
     public static final String
             DESC_CATEGORIES = "Categories",
@@ -92,6 +94,7 @@ public class ResponseBag implements Serializable {
             DESC_USERS = "Users & Subscribers",
             DESC_NEWS = "News Articles",
             DESC_SUBSCRIPTIONS = "Subscriptions",
+            DESC_SUBSCRIPTION_TYPES = "SubscriptionTypes",
             DESC_COMPANY = "Companies",
             DESC_DEVICE = "Devices",
             DESC_COUNTRY = "Countries",
@@ -100,6 +103,14 @@ public class ResponseBag implements Serializable {
             DESC_URLS = "urls",
             DESC_RATINGS = "ratings",
             DESC_THUMBNAILS = "thumbnails";
+
+    public List<SubscriptionTypeDTO> getSubscriptionTypes() {
+        return subscriptionTypes;
+    }
+
+    public void setSubscriptionTypes(List<SubscriptionTypeDTO> subscriptionTypes) {
+        this.subscriptionTypes = subscriptionTypes;
+    }
 
     public List<RatingDTO> getRatings() {
         return ratings;

@@ -4,12 +4,11 @@
     package="com.oneconnect.leadership.admin">
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+
     <!--
 Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
 <a href="openFile:/work/REPOS/REPOS-2016/LeadershipPlatformRepo/Leadership001/admin/build.gradle">Open File</a><br><a href="open.dependency.in.project.structure">Show in Project Structure dialog</a>
     -->
-
-
     <!-- <uses-permission android:name="android.permission.WRITE_CALENDAR"/> -->
     <application
         android:name=".AdminApp"
@@ -72,16 +71,13 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:label="@string/title_activity_links"
             android:parentActivityName=".crud.CrudActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.oneconnect.leadership.library.video.LeExoPlayerActivity"
             android:label="@string/title_activity_le_exo_player"
+            android:screenOrientation="landscape"
+            android:parentActivityName=".camera.VideoSelectionActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
         </activity>
         <activity
             android:name="com.oneconnect.leadership.library.video.LeYouTubePlayerActivity"
@@ -89,9 +85,15 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.oneconnect.leadership.library.lists.MediaListActivity"
+            android:label="@string/title_activity_media_list"
             android:parentActivityName=".crud.CrudActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_media_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".camera.VideoSelectionActivity"
+            android:label="@string/title_activity_video_selection"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".crud.CrudActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

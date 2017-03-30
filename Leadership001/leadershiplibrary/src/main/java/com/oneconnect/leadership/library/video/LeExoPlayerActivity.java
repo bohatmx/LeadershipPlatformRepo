@@ -77,7 +77,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//Bitmap thumb = ThumbnailUtils.createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
 public class LeExoPlayerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ExoPlayer.EventListener, PlaybackControlView.VisibilityListener {

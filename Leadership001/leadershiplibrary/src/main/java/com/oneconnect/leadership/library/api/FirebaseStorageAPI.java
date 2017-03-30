@@ -51,7 +51,7 @@ public class FirebaseStorageAPI {
 
     public interface StorageListener {
         void onResponse(String key);
-
+        void onProgress(long transferred, long size);
         void onError(String message);
     }
 
@@ -227,6 +227,7 @@ public class FirebaseStorageAPI {
                     Log.e(TAG, "### onProgress: bytes transferred: "
                             + getSize(taskSnapshot.getBytesTransferred())
                             + " from total " + getSize(f.length()));
+                    listener.onProgress(taskSnapshot.getBytesTransferred(), f.length());
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

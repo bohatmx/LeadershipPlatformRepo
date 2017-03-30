@@ -100,6 +100,11 @@ public class VideoUploaderService extends IntentService {
                 }
 
                 @Override
+                public void onProgress(long transferred, long size) {
+
+                }
+
+                @Override
                 public void onError(String message) {
                     FirebaseCrash.report(new Exception("Video file upload failed: "
                             .concat(video.getTitle())));

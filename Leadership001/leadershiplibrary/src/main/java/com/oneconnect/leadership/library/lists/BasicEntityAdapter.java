@@ -325,7 +325,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     private void setDailyThought(EntityViewHolder h, int position, DailyThoughtDTO p) {
         h.txtTitle.setText(p.getTitle());
-        h.txtDate.setText(df.format(new Date(p.getDateScheduled())));
+        if (p.getDateScheduled() != null) {
+            h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+            h.txtDate.setVisibility(View.VISIBLE);
+        } else {
+            h.txtDate.setVisibility(View.GONE);
+        }
         h.txtSubTitle.setText(p.getSubtitle());
 
         if (p.getPhotos() != null) {
@@ -360,7 +365,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     private void setPodcast(EntityViewHolder h, int position, PodcastDTO p) {
         h.txtTitle.setText(p.getTitle());
-        h.txtDate.setText(df.format(new Date(p.getDateScheduled())));
+        if (p.getDateScheduled() != null) {
+            h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+            h.txtDate.setVisibility(View.VISIBLE);
+        } else {
+            h.txtDate.setVisibility(View.GONE);
+        }
         h.txtSubTitle.setText(p.getSubtitle());
 
         if (p.getPhotos() != null) {
@@ -437,7 +447,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     private void setWeeklyMasterclass(EntityViewHolder h, int position, WeeklyMasterClassDTO p) {
         h.txtTitle.setText(p.getTitle());
-        h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+        if (p.getDateScheduled() != null) {
+            h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+            h.txtDate.setVisibility(View.VISIBLE);
+        } else {
+            h.txtDate.setVisibility(View.GONE);
+        }
         h.txtSubTitle.setText(p.getSubtitle());
 
         if (p.getPhotos() != null) {

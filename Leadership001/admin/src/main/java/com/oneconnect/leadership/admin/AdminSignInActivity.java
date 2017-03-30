@@ -79,17 +79,20 @@ public class AdminSignInActivity extends BaseLoginActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static final int PERMISSIONS_REQUEST_READ_CALENDAR = 113;
+    public static final int PERMISSIONS_REQUEST = 113;
 
     private void check() {
-        Log.w(TAG, "check: PERMISSIONS_REQUEST_READ_CALENDAR" );
+        Log.w(TAG, "check: PERMISSIONS_REQUEST" );
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CALENDAR)
+                Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR},
-                    PERMISSIONS_REQUEST_READ_CALENDAR);
+                    new String[]{Manifest.permission.READ_CALENDAR,
+                            Manifest.permission.WRITE_CALENDAR,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST);
             return;
 
         }
@@ -101,7 +104,7 @@ public class AdminSignInActivity extends BaseLoginActivity {
                                            String permissions[], int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult: .................");
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_READ_CALENDAR: {
+            case PERMISSIONS_REQUEST: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

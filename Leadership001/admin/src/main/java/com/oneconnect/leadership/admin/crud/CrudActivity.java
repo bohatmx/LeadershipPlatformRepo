@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,7 @@ import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.calendar.CalendarActivity;
 import com.oneconnect.leadership.admin.camera.CameraActivity;
+import com.oneconnect.leadership.admin.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.admin.links.LinksActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -62,10 +65,13 @@ import com.oneconnect.leadership.library.services.PhotoUploaderService;
 import com.oneconnect.leadership.library.services.VideoUploaderService;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -160,8 +166,40 @@ public class CrudActivity extends AppCompatActivity
             IntentFilter f2 = new IntentFilter(VideoUploaderService.BROADCAST_VIDEO_UPLOADED);
             LocalBroadcastManager.getInstance(this)
                     .registerReceiver(new VideoUploadReceiver(), f2);
+            getPhotosOnDevice();
         }
 
+    }
+
+
+    public ArrayList<String> getPhotosOnDevice() {
+
+        HashSet<String> videoItemHashSet = new HashSet<>();
+        String[] projection = {MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.DISPLAY_NAME};
+        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+        try {
+            cursor.moveToFirst();
+            do {
+                videoItemHashSet.add((cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))));
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "getPhotosOnDevice: ", e);
+        }
+        ArrayList<String> downloadedList = new ArrayList<>(videoItemHashSet);
+        for (String id : downloadedList) {
+            Log.d(TAG, "getPhotosOnDevice: ".concat(id));
+        }
+        return downloadedList;
+    }
+
+    private void getVideoFiles() {
+        List<File> files = Util.getFiles("mp4");
+        Log.d(TAG, "getVideoFiles: " + files.size());
+        for (File f : files) {
+            Log.w(TAG, "getVideoFiles: ".concat(f.getAbsolutePath()));
+        }
     }
 
     private void getDate(final int sheetType) {
@@ -217,7 +255,7 @@ public class CrudActivity extends AppCompatActivity
 
             @Override
             public void onError(String message) {
-                showSnackbar(message,"bad",Constants.RED);
+                showSnackbar(message, "bad", Constants.RED);
             }
         });
         myBottomSheet.show(getSupportFragmentManager(), "SHEET_USER");
@@ -250,7 +288,7 @@ public class CrudActivity extends AppCompatActivity
 
             @Override
             public void onError(String message) {
-                showSnackbar(message,"bad",Constants.RED);
+                showSnackbar(message, "bad", Constants.RED);
             }
         });
         myBottomSheet.show(getSupportFragmentManager(), "SHEET_CATEGORY");
@@ -282,13 +320,14 @@ public class CrudActivity extends AppCompatActivity
 
             @Override
             public void onError(String message) {
-                showSnackbar(message,"bad",Constants.RED);
+                showSnackbar(message, "bad", Constants.RED);
             }
         });
 
         dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
 
     }
+
     private void startWeeklyMessageBottomSheet(final WeeklyMessageDTO weeklyMessage, int type) {
 
         weeklyMessageEditor =
@@ -314,7 +353,7 @@ public class CrudActivity extends AppCompatActivity
 
             @Override
             public void onError(String message) {
-                showSnackbar(message,"bad",Constants.RED);
+                showSnackbar(message, "bad", Constants.RED);
             }
         });
         weeklyMessageEditor.show(getSupportFragmentManager(), "SHEET_WEEKLY_MESSAGE");
@@ -346,7 +385,7 @@ public class CrudActivity extends AppCompatActivity
 
             @Override
             public void onError(String message) {
-                showSnackbar(message,"bad",Constants.RED);
+                showSnackbar(message, "bad", Constants.RED);
             }
         });
         weeklyMasterclassEditor.show(getSupportFragmentManager(), "SHEET_WEEKLY_MASTERCLASS");
@@ -810,22 +849,22 @@ public class CrudActivity extends AppCompatActivity
         Intent m = null;
         switch (type) {
             case ResponseBag.WEEKLY_MASTERCLASS:
-                weeklyMasterClass = (WeeklyMasterClassDTO)entity;
+                weeklyMasterClass = (WeeklyMasterClassDTO) entity;
                 m = new Intent(this, LinksActivity.class);
                 m.putExtra("weeklyMasterClass", weeklyMasterClass);
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
-                weeklyMessage = (WeeklyMessageDTO)entity;
+                weeklyMessage = (WeeklyMessageDTO) entity;
                 m = new Intent(this, LinksActivity.class);
                 m.putExtra("weeklyMessage", weeklyMessage);
                 break;
             case ResponseBag.DAILY_THOUGHTS:
-                dailyThought = (DailyThoughtDTO)entity;
+                dailyThought = (DailyThoughtDTO) entity;
                 m = new Intent(this, LinksActivity.class);
                 m.putExtra("dailyThought", dailyThought);
                 break;
             case ResponseBag.PODCASTS:
-                podcast = (PodcastDTO)entity;
+                podcast = (PodcastDTO) entity;
                 m = new Intent(this, LinksActivity.class);
                 m.putExtra("podcast", podcast);
                 break;
@@ -897,12 +936,34 @@ public class CrudActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startVideo(base);
                     }
-                }).setNegativeButton("Use Gallery", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+                })
+                .setNegativeButton("Pick from Device", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startVideoSelection(base);
+                    }
+                }).show();
+    }
 
-            }
-        }).show();
+    private void startVideoSelection(BaseDTO base) {
+        Intent m = new Intent(this, VideoSelectionActivity.class);
+        m.putExtra("type", type);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) base;
+                m.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) base;
+                m.putExtra("weeklyMasterClass", weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) base;
+                m.putExtra("weeklyMessage", weeklyMessage);
+                break;
+        }
+
+        startActivity(m);
     }
 
     private void startVideo(BaseDTO entity) {
@@ -913,6 +974,14 @@ public class CrudActivity extends AppCompatActivity
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) entity;
                 m.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) entity;
+                m.putExtra("weeklyMasterClass", weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) entity;
+                m.putExtra("weeklyMessage", weeklyMessage);
                 break;
         }
 
@@ -989,75 +1058,77 @@ public class CrudActivity extends AppCompatActivity
     public void onEntityDetailRequested(BaseDTO entity, int entityType) {
         Log.d(TAG, "onEntityDetailRequested: ");
         Intent m = new Intent(this, MediaListActivity.class);
-        m.putExtra("type",entityType);
+        m.putExtra("type", entityType);
         switch (entityType) {
             case ResponseBag.DAILY_THOUGHTS:
-                m.putExtra("dailyThought", (DailyThoughtDTO)entity);
+                m.putExtra("dailyThought", (DailyThoughtDTO) entity);
                 break;
             case ResponseBag.WEEKLY_MASTERCLASS:
-                m.putExtra("weeklyMasterClass", (WeeklyMasterClassDTO)entity);
+                m.putExtra("weeklyMasterClass", (WeeklyMasterClassDTO) entity);
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
-                m.putExtra("weeklyMessage", (WeeklyMessageDTO)entity);
+                m.putExtra("weeklyMessage", (WeeklyMessageDTO) entity);
                 break;
             case ResponseBag.PODCASTS:
-                m.putExtra("podcast", (PodcastDTO)entity);
+                m.putExtra("podcast", (PodcastDTO) entity);
                 break;
             case ResponseBag.EBOOKS:
-                m.putExtra("eBook", (EBookDTO)entity);
+                m.putExtra("eBook", (EBookDTO) entity);
                 break;
         }
-        startActivityForResult(m,REQUEST_MEDIALIST);
+        startActivityForResult(m, REQUEST_MEDIALIST);
     }
+
     private static final int REQUEST_MEDIALIST = 690;
     boolean isTooltip;
+
     @Override
     public void onDeleteTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.warning(this,"Remove this record",
-                Toast.LENGTH_SHORT,true).show();
+        Toasty.warning(this, "Remove this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onLinksTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.info(this,"Add internet links to this record",
-                Toast.LENGTH_SHORT,true).show();
+        Toasty.info(this, "Add internet links to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onPhotoCaptureTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.warning(this,"Add photos to this record",
-                Toast.LENGTH_SHORT,true).show();
+        Toasty.warning(this, "Add photos to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onVideoCaptureTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.info(this,"Add videos to this record",
-                Toast.LENGTH_SHORT,true).show();
+        Toasty.info(this, "Add videos to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onSomeActionTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.error(this,"Add calendar event to this record",
-                Toast.LENGTH_SHORT,true).show();
+        Toasty.error(this, "Add calendar event to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onMicrophoneTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.success(this,"Add audio recording to this record",
-                Toast.LENGTH_SHORT,true).show();
+        Toasty.success(this, "Add audio recording to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onCalendarTooltipRequired(int type) {
         isTooltip = true;
-        Toasty.success(this,"Add calendar event to this record",
-                Toast.LENGTH_SHORT,true).show();
+        Toasty.success(this, "Add calendar event to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override

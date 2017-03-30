@@ -18,6 +18,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.SubscriptionTypeDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -283,6 +284,30 @@ public class ListAPI {
         });
     }
 
+    public void getSubscriptionTypes(String companyID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.SUBSCRIPTION_TYPES);
+        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setSubscriptions(new ArrayList<SubscriptionDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        SubscriptionTypeDTO u = shot.getValue(SubscriptionTypeDTO.class);
+                        bag.getSubscriptionTypes().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
     public void getCompanyVideos(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -314,12 +339,12 @@ public class ListAPI {
             public void onResponse(ResponseBag bag) {
                 ResponseBag bagOut = new ResponseBag();
                 bagOut.setVideos(new ArrayList<VideoDTO>());
-                  for (VideoDTO v: bag.getVideos()) {
-                      if (v.getDailyThoughtID() != null) {
-                          bagOut.getVideos().add(v);
-                      }
-                  }
-                  listener.onResponse(bagOut);
+                for (VideoDTO v : bag.getVideos()) {
+                    if (v.getDailyThoughtID() != null) {
+                        bagOut.getVideos().add(v);
+                    }
+                }
+                listener.onResponse(bagOut);
             }
 
             @Override
@@ -335,7 +360,7 @@ public class ListAPI {
             public void onResponse(ResponseBag bag) {
                 ResponseBag bagOut = new ResponseBag();
                 bagOut.setVideos(new ArrayList<VideoDTO>());
-                for (VideoDTO v: bag.getVideos()) {
+                for (VideoDTO v : bag.getVideos()) {
                     if (v.getWeeklyMessageID() != null) {
                         bagOut.getVideos().add(v);
                     }
@@ -356,7 +381,7 @@ public class ListAPI {
             public void onResponse(ResponseBag bag) {
                 ResponseBag bagOut = new ResponseBag();
                 bagOut.setVideos(new ArrayList<VideoDTO>());
-                for (VideoDTO v: bag.getVideos()) {
+                for (VideoDTO v : bag.getVideos()) {
                     if (v.getWeeklyMasterClassID() != null) {
                         bagOut.getVideos().add(v);
                     }
@@ -377,7 +402,7 @@ public class ListAPI {
             public void onResponse(ResponseBag bag) {
                 ResponseBag bagOut = new ResponseBag();
                 bagOut.setVideos(new ArrayList<VideoDTO>());
-                for (VideoDTO v: bag.getVideos()) {
+                for (VideoDTO v : bag.getVideos()) {
                     if (v.getPodcastID() != null) {
                         bagOut.getVideos().add(v);
                     }

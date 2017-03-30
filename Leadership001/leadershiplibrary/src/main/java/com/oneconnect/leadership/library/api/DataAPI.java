@@ -32,6 +32,7 @@ import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.SubscriptionTypeDTO;
 import com.oneconnect.leadership.library.data.ThumbnailDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
@@ -78,6 +79,7 @@ public class DataAPI {
             DEVICES = "devices",
             THUMBNAILS = "thumbnails",
             SUBSCRIPTIONS = "subscriptions",
+            SUBSCRIPTION_TYPES = "subscriptionTypes",
             VIDEOS = "videos",
             RATINGS = "ratings",
             COMPANIES = "companies",
@@ -467,6 +469,27 @@ public class DataAPI {
                             + subscription.getAmount());
                     subscription.setSubscriptionID(responseRef.getKey());
                     responseRef.child("subscriptionID").setValue(responseRef.getKey());
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+    public void addSubscriptionType(final SubscriptionTypeDTO subscriptionType, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(SUBSCRIPTION_TYPES);
+        log("addSubscriptionType", ref);
+        ref.push().setValue(subscriptionType, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: subscriptionType added: "
+                            + subscriptionType.getAmount());
+                    subscriptionType.setSubscriptionTypeID(responseRef.getKey());
+                    responseRef.child("subscriptionTypeID").setValue(responseRef.getKey());
                     if (listener != null)
                         listener.onResponse(responseRef.getKey());
 
