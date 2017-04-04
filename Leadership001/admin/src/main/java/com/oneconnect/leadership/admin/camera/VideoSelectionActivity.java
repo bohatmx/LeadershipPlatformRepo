@@ -32,6 +32,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 
 public class VideoSelectionActivity extends AppCompatActivity implements VideoUploadContract.View {
@@ -93,12 +94,23 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     public void getVideosOnDevice() {
 
         HashSet<String> videoItemHashSet = new HashSet<>();
-        String[] projection = {MediaStore.Video.VideoColumns.DATA, MediaStore.Video.Media.DISPLAY_NAME};
+        String[] projection = {
+                MediaStore.Video.VideoColumns.DATA,
+                MediaStore.Video.VideoColumns.DURATION,
+                MediaStore.Video.Thumbnails.DATA,
+                MediaStore.Video.Media.DISPLAY_NAME
+        };
         Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
         try {
             cursor.moveToFirst();
             do {
-                videoItemHashSet.add((cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))));
+
+                Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
+                String path =  cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
+                Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
+                localVideos.add(new LocalVideo(duration,path));
+                videoItemHashSet.add(path);
             } while (cursor.moveToNext());
 
             cursor.close();
@@ -230,5 +242,15 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         });
         snackbar.show();
 
+    }
+    List<LocalVideo> localVideos = new ArrayList<>();
+    class LocalVideo {
+        long duration;
+        String path;
+
+        public LocalVideo(long duration, String path) {
+            this.duration = duration;
+            this.path = path;
+        }
     }
 }
