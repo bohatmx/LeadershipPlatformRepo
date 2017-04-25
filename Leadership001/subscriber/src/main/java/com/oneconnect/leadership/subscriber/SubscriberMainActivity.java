@@ -197,7 +197,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-       // setUpViewPager();
+        setUpViewPager();
     }
 
     private int type;
@@ -225,12 +225,17 @@ public class SubscriberMainActivity extends AppCompatActivity
 
         pageFragmentList = new ArrayList<>();
         dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
-        // entityListFragment = EntityListFragment.newInstance(bag);
-        //podcastListFragment = PodcastListFragment.newInstance(podcast.getFilePath(), bag);
-        //videoListFragment = VideoListFragment.newInstance("bag",bag);
-        //eBookListFragment = EBookListFragment.newInstance();
+        //podcastListFragment = PodcastListFragment.newInstance();
+       // videoListFragment = VideoListFragment.newInstance("bag",bag);
+       // eBookListFragment = EBookListFragment.newInstance();
 
-         pageFragmentList.add(dailyThoughtListFragment);
+        dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
+        //podcastListFragment.set
+
+       //  pageFragmentList.add(dailyThoughtListFragment);
+        //pageFragmentList.add(podcastListFragment);
+        //pageFragmentList.add(videoListFragment);
+        //pageFragmentList.add(eBookListFragment);
 
         try {
             adapter = new PagerAdapter(getSupportFragmentManager());

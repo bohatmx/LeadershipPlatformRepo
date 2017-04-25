@@ -87,6 +87,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private int type;
     private DailyThoughtDTO dailyThought;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -466,4 +467,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onCalendarTooltipRequired(int type) {
 
     }
+
+
+
+
 }

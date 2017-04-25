@@ -31,6 +31,10 @@
 
     <string name="audio">Audio</string>
 
+    <string name="daily_thought">Daily Thought</string>
+
+    <string name="podcast">Podcasts</string>
+
     <string name="text">Text</string>
 
     <string name="retry">Retry</string>
