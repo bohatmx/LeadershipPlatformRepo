@@ -24,6 +24,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_media">Media</string>
     <string name="title_activity_le_exo_player">LeExoPlayerActivity</string>
 
     <string name="video">Video</string>
@@ -68,4 +69,15 @@
     <string name="search_hint">Enter search ...</string>
     <string name="title_activity_media_list">MediaListActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_subscriber_drawer">SubscriberDrawerActivity</string>
+
+    <string name="sign_out">Sign Out</string>
+    <string name="title_activity_audio_player">AudioPlayerActivity</string>
+
+    <string name="confirm_photo">Use Photo</string>
+    <string name="confirm_video">Use Video</string>
+    <string name="title_activity_daily_thought">DailyThoughtActivity</string>
+    <string name="title_activity_podcast">PodcastActivity</string>
+    <string name="title_activity_video">VideoActivity</string>
+    <string name="title_activity_e_book">eBookActivity</string>
 </resources>

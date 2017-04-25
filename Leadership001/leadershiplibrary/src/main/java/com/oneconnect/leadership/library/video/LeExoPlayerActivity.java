@@ -115,6 +115,7 @@ public class LeExoPlayerActivity extends AppCompatActivity
     private long resumePosition;
     private Toolbar toolbar;
     private Snackbar snackbar;
+    String podcastText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +135,7 @@ public class LeExoPlayerActivity extends AppCompatActivity
         if (bag != null) {
             videos = bag.getVideos();
             podcasts = bag.getPodcasts();
+
         } else {
             videos = new ArrayList<>();
             podcasts = new ArrayList<>();
@@ -297,6 +299,11 @@ public class LeExoPlayerActivity extends AppCompatActivity
             //debugViewHelper.start();
         }
         if (needNewPlayer || needRetrySource) {
+            podcastText = intent.getStringExtra("podcast");
+            if (podcastText != null) {
+                prepareAudioPlayer(needNewPlayer);
+                return;
+            }
             preparePlayer(needNewPlayer);
         }
     }
@@ -315,6 +322,39 @@ public class LeExoPlayerActivity extends AppCompatActivity
 
         int index = 0;
         for (VideoDTO v: videos) {
+            Uri uri = Uri.parse(v.getUrl());
+            uris[index] = uri;
+            index++;
+        }
+
+        for (int i = 0; i < uris.length; i++) {
+            mediaSources[i] = buildMediaSource(uris[i], extensions[i]);
+        }
+        MediaSource mediaSource = mediaSources.length == 1 ? mediaSources[0]
+                : new ConcatenatingMediaSource(mediaSources);
+        boolean haveResumePosition = resumeWindow != C.INDEX_UNSET;
+        if (haveResumePosition) {
+            player.seekTo(resumeWindow, resumePosition);
+        }
+        player.prepare(mediaSource, !haveResumePosition, false);
+        needRetrySource = false;
+        updateButtonVisibilities();
+    }
+
+    private void prepareAudioPlayer(boolean needNewPlayer) {
+        Log.w(TAG, "prepareAudioPlayer: needNewPlayer: " + needNewPlayer
+                + " needRetrySource: " + needRetrySource);
+
+        //todo uncomment to use test videos
+        //prepareTestVideos();
+
+        Log.w(TAG, "prepareAudioPlayer: ".concat(GSON.toJson(podcasts)) );
+        Uri[] uris = new Uri[podcasts.size()];
+        MediaSource[] mediaSources = new MediaSource[podcasts.size()];
+        String[] extensions = new String[podcasts.size()];
+
+        int index = 0;
+        for (PodcastDTO v: podcasts) {
             Uri uri = Uri.parse(v.getUrl());
             uris[index] = uri;
             index++;

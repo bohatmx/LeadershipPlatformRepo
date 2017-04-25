@@ -16,7 +16,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ThumbnailDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.Util;
@@ -41,7 +43,8 @@ public class FirebaseStorageAPI {
     private StorageReference storageReference;
     private DataAPI dataAPI;
     public static final String STORAGE_URL = "gs://leadershipplatform-158316.appspot.com",
-            PHOTOS = "photos/", VIDEOS = "videos/", THUMBNAILS = "thumbnails/";
+            PHOTOS = "photos/", VIDEOS = "videos/", THUMBNAILS = "thumbnails/", PODCASTS = "podcasts/",
+            EBOOKS = "ebooks/";
 
 
     public FirebaseStorageAPI() {
@@ -204,7 +207,7 @@ public class FirebaseStorageAPI {
             listener.onError("Cannot find video file for upload");
             return;
         }
-        final String storageName = video.getCaption().concat(" - ").concat(sdf.format(new Date()));
+        final String storageName = video.getFilePath()/*getCaption()*/.concat(" - ").concat(sdf.format(new Date()));
         StorageReference videoReference = storageReference.child(VIDEOS
                 + storageName);
         Log.w(TAG, "uploadVideo: ******** starting upload ...: "
@@ -242,6 +245,104 @@ public class FirebaseStorageAPI {
             FirebaseCrash.report(new Exception("Video file upload failed: "
                     .concat(video.getTitle())));
             listener.onError("Unable to upload the video file");
+        }
+    }
+
+    public void uploadEbook(final EBookDTO eBook,
+                            final StorageListener listener) {
+
+        final File f = new File(eBook.getFilePath());
+        if (!f.exists()) {
+            listener.onError("Cannot find eBook file for upload");
+            return;
+        }
+        final String storageName = eBook.getFilePath()/*getCaption()*/.concat(" - ").concat(sdf.format(new Date()));
+        StorageReference eBookReference = storageReference.child(EBOOKS
+                + storageName);
+        Log.w(TAG, "uploadEbook: ******** starting upload ...: "
+                + f.getAbsolutePath().concat("\n").concat(GSON.toJson(eBook)));
+        try {
+
+            eBookReference.putStream(new FileInputStream(f))
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    eBook.setStorageName(EBOOKS.concat(storageName));
+                                    eBook.setUrl(taskSnapshot.getDownloadUrl().toString());
+                                    Log.d(TAG, "uploadEbook onSuccess: ####### eBook in firebase storage.....starting addEbookToFirebase method ...");
+                                    addEBookToFirebase(eBook, taskSnapshot, listener);
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e(TAG, "### onProgress: bytes transferred: "
+                            + getSize(taskSnapshot.getBytesTransferred())
+                            + " from total " + getSize(f.length()));
+                    listener.onProgress(taskSnapshot.getBytesTransferred(), f.length());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    FirebaseCrash.report(new Exception("Ebook file upload failed: "));
+                    listener.onError("Ebook upload failed");
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, "uploadEbook: we fell down", e);
+            FirebaseCrash.report(new Exception("Ebook file upload failed: "
+                    .concat(eBook.getTitle())));
+            listener.onError("Unable to upload the eBook file");
+        }
+    }
+
+    public void uploadPodcast(final PodcastDTO podcast,
+                            final StorageListener listener) {
+
+        final File f = new File(podcast.getFilePath());
+        if (!f.exists()) {
+            listener.onError("Cannot find podcast file for upload");
+            return;
+        }
+        final String storageName = podcast.getFilePath()/*getCaption()*/.concat(" - ").concat(sdf.format(new Date()));
+        StorageReference podcastReference = storageReference.child(PODCASTS
+                + storageName);
+        Log.w(TAG, "uploadPodcast: ******** starting upload ...: "
+                + f.getAbsolutePath().concat("\n").concat(GSON.toJson(podcast)));
+        try {
+
+            podcastReference.putStream(new FileInputStream(f))
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    podcast.setStorageName(PODCASTS.concat(storageName));
+                                    podcast.setUrl(taskSnapshot.getDownloadUrl().toString());
+                                    Log.d(TAG, "uploadPodcast onSuccess: ####### podcast in firebase storage.....starting addPodcastToFirebase method ...");
+                                    addPodcastToFirebase(podcast, taskSnapshot, listener);
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e(TAG, "### onProgress: bytes transferred: "
+                            + getSize(taskSnapshot.getBytesTransferred())
+                            + " from total " + getSize(f.length()));
+                    listener.onProgress(taskSnapshot.getBytesTransferred(), f.length());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    FirebaseCrash.report(new Exception("Podcast file upload failed: "));
+                    listener.onError("Podcast upload failed");
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, "uploadPodcast: we fell down", e);
+            FirebaseCrash.report(new Exception("Podcast file upload failed: "
+                    .concat(podcast.getTitle())));
+            listener.onError("Unable to upload the podcast file");
         }
     }
 
@@ -314,6 +415,78 @@ public class FirebaseStorageAPI {
                     @Override
                     public void onError(String message) {
                        listener.onError(message);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(String message) {
+                listener.onError(message);
+            }
+        });
+
+    }
+
+    private void addPodcastToFirebase(final PodcastDTO podcast,
+                                    UploadTask.TaskSnapshot taskSnapshot,
+                                    final StorageListener listener) {
+        Log.d(TAG, ".........adding PodcastDTO to firebase  ...: "
+                + GSON.toJson(podcast));
+        podcast.setUrl(taskSnapshot.getDownloadUrl().toString());
+        podcast.setDateScheduled(new Date().getTime());
+        podcast.setFilePath(null);
+        podcast.setPodcastID(null);
+        dataAPI.addPodcast(podcast, new DataAPI.DataListener() {
+            @Override
+            public void onResponse(final String key) {
+                podcast.setPodcastID(key);
+                Log.w(TAG, "dataAPI addPodcast onResponse: ".concat(key).concat(" - adding PodcastDTO to entity ...") );
+                dataAPI.addPodcastToEntity(podcast, new DataAPI.DataListener() {
+                    @Override
+                    public void onResponse(String k) {
+                        listener.onResponse(key);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        listener.onError(message);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(String message) {
+                listener.onError(message);
+            }
+        });
+
+    }
+
+    private void addEBookToFirebase(final EBookDTO eBook,
+                                      UploadTask.TaskSnapshot taskSnapshot,
+                                      final StorageListener listener) {
+        Log.d(TAG, ".........adding EBookDTO to firebase  ...: "
+                + GSON.toJson(eBook));
+        eBook.setUrl(taskSnapshot.getDownloadUrl().toString());
+        eBook.setDate(new Date().getTime());/*setDateScheduled(new Date().getTime());*/
+        eBook.setFilePath(null);
+        eBook.seteBookID(null);
+        dataAPI.addEBook(eBook, new DataAPI.DataListener() {
+            @Override
+            public void onResponse(final String key) {
+                eBook.seteBookID(key);
+                Log.w(TAG, "dataAPI addEBook onResponse: ".concat(key).concat(" - adding EBookDTO to entity ...") );
+                dataAPI.addEBookToEntity(eBook, new DataAPI.DataListener() {
+                    @Override
+                    public void onResponse(String k) {
+                        listener.onResponse(key);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        listener.onError(message);
                     }
                 });
 

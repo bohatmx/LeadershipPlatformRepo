@@ -18,6 +18,9 @@ import android.util.Log;
 import android.view.View;
 
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
+import com.oneconnect.leadership.library.camera.VideoAdapter;
+import com.oneconnect.leadership.library.camera.VideoUploadContract;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UserDTO;

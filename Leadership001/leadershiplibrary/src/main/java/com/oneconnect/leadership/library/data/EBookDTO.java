@@ -15,9 +15,9 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
     private String eBookID,  description, url, stringDate;
     private Long date;
     private Integer numberOfPages;
-    private String stringDateUpdated, html;
+    private String stringDateUpdated, html, filePath, storageName;
     private boolean active;
-    private Long dateUpdated;
+    private Long dateUpdated, ebookSize;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, podcastID;
     private HashMap<String,UrlDTO> urls;
     private HashMap<String, PhotoDTO> photos;
@@ -211,5 +211,27 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
 
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
 
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
+    }
+
+    public Long getEbookSize() {
+        return ebookSize;
+    }
+
+    public void setEbookSize(Long ebookSize) {
+        this.ebookSize = ebookSize;
+    }
 }

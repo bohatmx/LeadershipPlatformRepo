@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_daily_thought"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Daily Thought" />
+        <item
+            android:id="@+id/nav_podcast"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Podcast" />
+        <item
+            android:id="@+id/nav_video"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Video" />
+        <item
+            android:id="@+id/nav_eBooks"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="EBooks" />
+    </group>
+
+
+
+</menu>

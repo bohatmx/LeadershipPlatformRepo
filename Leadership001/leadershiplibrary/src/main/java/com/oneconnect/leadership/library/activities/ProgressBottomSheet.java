@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.camera;
+package com.oneconnect.leadership.library.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.oneconnect.leadership.admin.R;
+
+import com.oneconnect.leadership.library.R;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

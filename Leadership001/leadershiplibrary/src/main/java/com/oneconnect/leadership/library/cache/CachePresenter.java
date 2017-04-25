@@ -10,6 +10,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
@@ -179,6 +180,21 @@ public class CachePresenter implements CacheContract.Presenter {
     }
 
     @Override
+    public void cacheVideos(List<VideoDTO> list) {
+        VideoCache.getVideos(context, new VideoCache.ReadListener() {
+            @Override
+            public void onDataRead(List<VideoDTO> videos) {
+                view.onCacheVideos(videos);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void getCacheCategories() {
         CategoryCache.getCategories(context, new CategoryCache.ReadListener() {
             @Override
@@ -326,5 +342,10 @@ public class CachePresenter implements CacheContract.Presenter {
                 view.onError(message);
             }
         });
+    }
+
+    @Override
+    public void getCacheVideos() {
+
     }
 }

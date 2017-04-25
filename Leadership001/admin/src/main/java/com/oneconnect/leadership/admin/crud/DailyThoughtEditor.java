@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.SheetContract;
+import com.oneconnect.leadership.library.activities.SheetPresenter;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.util.Constants;
@@ -30,7 +33,7 @@ import java.util.Date;
 
 public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View {
     private DailyThoughtDTO dailyThought;
-    ;
+
 
     private TextInputEditText editTitle, editSubtitle;
     private RecyclerView recyclerView;
@@ -88,6 +91,12 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_thought_editor, container, false);
         btn = (Button) view.findViewById(R.id.btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                send();
+            }
+        });
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
         btnDate = (Button) view.findViewById(R.id.btnDate);

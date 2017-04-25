@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         app:cardElevation="@dimen/mon_divider_small">
         <RelativeLayout
+            android:visibility="gone"
             android:padding="@dimen/mon_margin"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

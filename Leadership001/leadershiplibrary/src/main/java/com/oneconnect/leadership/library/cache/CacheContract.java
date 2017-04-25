@@ -8,6 +8,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
@@ -29,6 +30,7 @@ public class CacheContract {
         void cacheUsers(List<UserDTO> list);
         void cacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list);
         void cacheWeeklyMessages(List<WeeklyMessageDTO> list);
+        void cacheVideos(List<VideoDTO> list);
 
         void getCacheCategories();
         void getCacheDailyThoughts();
@@ -40,6 +42,7 @@ public class CacheContract {
         void getCacheUsers();
         void getCacheWeeklyMasterclasses();
         void getCacheWeeklyMessages();
+        void getCacheVideos();
     }
     public interface View {
         void onDataCached();
@@ -48,6 +51,7 @@ public class CacheContract {
         void onCacheEbooks(List<EBookDTO> list);
         void onCacheNews(List<NewsDTO> list);
         void onCachePodcasts(List<PodcastDTO> list);
+        void onCacheVideos(List<VideoDTO> list);
         void onCachePrices(List<PriceDTO> list);
         void onCacheSubscriptions(List<SubscriptionDTO> list);
         void onCacheUsers(List<UserDTO> list);

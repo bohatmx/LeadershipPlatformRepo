@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.crud;
+package com.oneconnect.leadership.library.activities;
 
 import com.oneconnect.leadership.library.api.DataAPI;
 import com.oneconnect.leadership.library.data.CategoryDTO;

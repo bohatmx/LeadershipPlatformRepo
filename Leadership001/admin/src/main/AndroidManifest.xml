@@ -62,7 +62,7 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".camera.CameraActivity"
+            android:name="com.oneconnect.leadership.library.camera.CameraActivity"
             android:label="@string/title_activity_calendar"
             android:parentActivityName=".crud.CrudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -75,10 +75,9 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
         <activity
             android:name="com.oneconnect.leadership.library.video.LeExoPlayerActivity"
             android:label="@string/title_activity_le_exo_player"
+            android:parentActivityName="com.oneconnect.leadership.library.camera.VideoSelectionActivity"
             android:screenOrientation="landscape"
-            android:parentActivityName=".camera.VideoSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.oneconnect.leadership.library.video.LeYouTubePlayerActivity"
             android:label="@string/title_activity_le_you_tube"
@@ -90,10 +89,24 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".camera.VideoSelectionActivity"
+            android:name="com.oneconnect.leadership.library.camera.VideoSelectionActivity"
             android:label="@string/title_activity_video_selection"
-            android:screenOrientation="portrait"
             android:parentActivityName=".crud.CrudActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.oneconnect.leadership.library.audio.PodcastSelectionActivity"
+            android:label="@string/title_activity_podcast_selection"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.oneconnect.leadership.library.audio.AudioPlayerActivity"
+            android:label="@string/title_activity_audio_player"
+            android:parentActivityName=".crud.CrudActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ebook.EbookSelectionActivity"
+            android:label="@string/title_activity_ebook_selection"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

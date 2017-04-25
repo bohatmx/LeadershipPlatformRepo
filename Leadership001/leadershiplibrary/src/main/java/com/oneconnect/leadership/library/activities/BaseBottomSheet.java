@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.crud;
+package com.oneconnect.leadership.library.activities;
 
 import android.animation.ObjectAnimator;
 import android.support.design.widget.BottomSheetDialogFragment;

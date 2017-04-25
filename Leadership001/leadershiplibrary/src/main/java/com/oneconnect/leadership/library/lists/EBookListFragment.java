@@ -10,9 +10,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.SubscriberContract;
+import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
+import com.oneconnect.leadership.library.adapters.EbookAdapter;
+import com.oneconnect.leadership.library.cache.CacheContract;
+import com.oneconnect.leadership.library.cache.CachePresenter;
+import com.oneconnect.leadership.library.cache.DailyThoughtCache;
+import com.oneconnect.leadership.library.cache.EbookCache;
+import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CategoryDTO;
+import com.oneconnect.leadership.library.data.CompanyDTO;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PaymentDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
+import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,16 +55,22 @@ import java.util.List;
  * Use the {@link EBookListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EBookListFragment extends Fragment implements PageFragment{
+public class EBookListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
+        BasicEntityAdapter.EntityListener{
     private EBookListener mListener;
+    private SubscriberPresenter presenter;
+    private CachePresenter cachePresenter;
+    private ResponseBag  bag;
     public static final String TAG = EBookListFragment.class.getSimpleName();
+
     public EBookListFragment() {
         // Required empty public constructor
     }
 
-    private List<EBookDTO> eBooks;
+    private List<EBookDTO> eBooks = new ArrayList<>();
     private View view;
     private RecyclerView recyclerView;
+    private Context ctx;
 
     public static EBookListFragment newInstance(HashMap<String, EBookDTO> list) {
         EBookListFragment fragment = new EBookListFragment();
@@ -50,12 +85,26 @@ public class EBookListFragment extends Fragment implements PageFragment{
         return fragment;
     }
 
+    private EBookDTO eBook;
+    private int type;
+    private UserDTO user;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ResponseBag  bag = (ResponseBag) getArguments().getSerializable("bag");
             eBooks = bag.geteBooks();
+            Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
+            eBook = (EBookDTO) getArguments().getSerializable("eBook");
+            type = getArguments().getInt("type", 0);
+
+            presenter = new SubscriberPresenter(this);
+            cachePresenter = new CachePresenter(this, ctx);
+
+
+            user = SharedPrefUtil.getUser(ctx);
+            type = SharedPrefUtil.getFragmentType(ctx);
         }
     }
 
@@ -64,12 +113,43 @@ public class EBookListFragment extends Fragment implements PageFragment{
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: #################");
         view =  inflater.inflate(R.layout.fragment_ebook_list, container, false);
+        presenter = new SubscriberPresenter(this);
+        ctx = getActivity();
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
 
+        getCachedEBooks();
+        getEBooks();
+
         return view;
     }
+
+    private void getCachedEBooks() {
+        EbookCache.getEbooks(ctx, new EbookCache.ReadListener() {
+            @Override
+            public void onDataRead(List<EBookDTO> ebooks) {
+                Log.d(LOG, "onDataRead: EBooks: " + ebooks);
+            }
+
+            @Override
+            public void onError(String message) {
+                getCachedEBooks();
+            }
+        });
+    }
+
+    private void getEBooks() {
+        Log.d(LOG, "************** getEBooks: " );
+        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+            presenter.getAllEBooks();
+        } else {
+            Log.d(LOG, "user is null");
+        }
+    }
+
+    EbookAdapter adapter;
+    static final String LOG = EBookListFragment.class.getSimpleName();
 
     @Override
     public void onAttach(Context context) {
@@ -91,6 +171,277 @@ public class EBookListFragment extends Fragment implements PageFragment{
     @Override
     public String getTitle() {
         return "EBooks";
+    }
+
+    @Override
+    public void onAddEntity() {
+
+    }
+
+    @Override
+    public void onDeleteClicked(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onPhotoCaptureRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onVideoCaptureRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onSomeActionRequired(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onMicrophoneRequired(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onEntityClicked(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onCalendarRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onEntityDetailRequested(BaseDTO entity, int type) {
+
+    }
+
+    @Override
+    public void onDeleteTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onLinksTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onPhotoCaptureTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onVideoCaptureTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onSomeActionTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onMicrophoneTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onCalendarTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onDataCached() {
+
+    }
+
+    @Override
+    public void onCacheCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheEbooks(List<EBookDTO> list) {
+        Log.i(LOG, "onCacheEbooks " + list.size());
+    }
+
+    @Override
+    public void onCacheNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onEntityAdded(String key) {
+
+    }
+
+    @Override
+    public void onEntityUpdated() {
+
+    }
+
+    @Override
+    public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCompanies(List<CompanyDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onAllEBooks(List<EBookDTO> list) {
+        Log.i(LOG, "onEbooks: " + list.size());
+        this.eBooks = list;
+        adapter = new EbookAdapter(list, ctx);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onEbooks(List<EBookDTO> list) {
+        Log.i(LOG, "onEbooks: " + list.size());
+        this.eBooks = list;
+        adapter = new EbookAdapter(list, ctx);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onPayments(List<PaymentDTO> list) {
+
+    }
+
+    @Override
+    public void onPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onPrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onError(String message) {
+
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.camera;
+package com.oneconnect.leadership.library.camera;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,7 +20,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;

@@ -21,4 +21,6 @@
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="title_activity_links">LinksActivity</string>
     <string name="title_activity_video_selection">VideoSelectionActivity</string>
+    <string name="title_activity_podcast_selection">PodcastSelectionActivity</string>
+    <string name="title_activity_ebook_selection">EbookSelectionActivity</string>
 </resources>

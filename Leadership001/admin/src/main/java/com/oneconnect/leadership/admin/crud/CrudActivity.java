@@ -33,9 +33,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.admin.calendar.CalendarActivity;
-import com.oneconnect.leadership.admin.camera.CameraActivity;
-import com.oneconnect.leadership.admin.camera.VideoSelectionActivity;
+import com.oneconnect.leadership.library.camera.CameraActivity;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
+import com.oneconnect.leadership.admin.ebook.EbookSelectionActivity;
 import com.oneconnect.leadership.admin.links.LinksActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -480,14 +483,14 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.DAILY_THOUGHTS;
                 cachePresenter.getCacheDailyThoughts();
                 break;
-            case R.id.nav_ebooks:
+            /*case R.id.nav_ebooks:
                 type = ResponseBag.EBOOKS;
                 cachePresenter.getCacheEbooks();
-                break;
-            case R.id.nav_podcasts:
+                break;*/
+            /*case R.id.nav_podcasts:
                 type = ResponseBag.PODCASTS;
                 cachePresenter.getCachePodcasts();
-                break;
+                break;*/
             case R.id.nav_subscrip:
                 type = ResponseBag.SUBSCRIPTIONS;
                 cachePresenter.getCacheSubscriptions();
@@ -506,6 +509,21 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.USERS;
                 cachePresenter.getCacheUsers();
                 break;
+
+            case R.id.nav_videos:
+                type = ResponseBag.VIDEOS;
+                Intent intent = new Intent(CrudActivity.this, VideoSelectionActivity.class);
+                startActivity(intent);
+
+            case R.id.nav_podcasts:
+                type = ResponseBag.PODCASTS;
+                Intent intent1 = new Intent(CrudActivity.this, PodcastSelectionActivity.class);
+                startActivity(intent1);
+
+            case R.id.nav_ebooks:
+                type = ResponseBag.EBOOKS;
+                Intent intent2 = new Intent(CrudActivity.this, EbookSelectionActivity.class);
+                startActivity(intent2);
         }
 
 
@@ -733,6 +751,16 @@ public class CrudActivity extends AppCompatActivity
         bag.setType(ResponseBag.PODCASTS);
         setFragment();
         presenter.getPodcasts(user.getCompanyID());
+    }
+
+    @Override
+    public void onCacheVideos(List<VideoDTO> list) {
+        Log.i(TAG, "onCacheVideos " + list.size());
+        bag = new ResponseBag();
+        bag.setVideos(list);
+        bag.setType(ResponseBag.VIDEOS);
+        setFragment();
+        presenter.getVideos(user.getCompanyID());
     }
 
     @Override

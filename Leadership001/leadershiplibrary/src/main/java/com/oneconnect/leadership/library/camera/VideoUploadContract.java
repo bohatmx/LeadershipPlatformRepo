@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.camera;
+package com.oneconnect.leadership.library.camera;
 
 import com.oneconnect.leadership.library.data.VideoDTO;
 

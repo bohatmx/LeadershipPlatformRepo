@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.audio.AudioPlayerActivity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
@@ -86,7 +87,7 @@ public class MediaListActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_media_list);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Media Package");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -130,6 +131,7 @@ public class MediaListActivity extends AppCompatActivity implements
     private void setup() {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -295,7 +297,9 @@ public class MediaListActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.action_video) {
-            startExoPlayer();
+            if (!videos.isEmpty()) {
+                startExoPlayer();
+            }
             return true;
         }
         if (id == R.id.action_photo) {
@@ -325,6 +329,16 @@ public class MediaListActivity extends AppCompatActivity implements
 
     @Override
     public void onPodcastTapped(PodcastDTO podcast) {
+        if (!podcasts.isEmpty()) {
+            ResponseBag bag = new ResponseBag();
+            bag.setPodcasts(new ArrayList<PodcastDTO>());
+            for (PodcastDTO p : podcasts.values()) {
+                bag.getPodcasts().add(p);
+            }
+            Intent intent = new Intent(this, AudioPlayerActivity.class);
+            intent.putExtra("bag", bag);
+            startActivity(intent);
+        }
 
     }
 

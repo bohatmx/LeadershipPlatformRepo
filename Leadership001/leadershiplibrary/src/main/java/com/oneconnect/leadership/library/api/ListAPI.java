@@ -1,5 +1,8 @@
 package com.oneconnect.leadership.library.api;
 
+import android.util.Log;
+
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -68,6 +71,203 @@ public class ListAPI {
             }
         });
     }
+
+    public void getAllEBooks(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.EBOOKS);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(LOG, dataSnapshot.getValue().toString());
+                ResponseBag bag = new ResponseBag();
+                bag.seteBooks(new ArrayList<EBookDTO>());
+                //if (dataSnapshot.getChildrenCount() > 0) {
+                //  for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                EBookDTO e = dataSnapshot.getValue(EBookDTO.class);
+                bag.geteBooks().add(e);
+                //      }
+                //   }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllPodcasts(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.PODCASTS);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(LOG, dataSnapshot.getValue().toString());
+                ResponseBag bag = new ResponseBag();
+                bag.setPodcasts(new ArrayList<PodcastDTO>());
+                //if (dataSnapshot.getChildrenCount() > 0) {
+                //  for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                PodcastDTO p = dataSnapshot.getValue(PodcastDTO.class);
+                bag.getPodcasts().add(p);
+                //      }
+                //   }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllVideos(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(LOG, dataSnapshot.getValue().toString());
+                ResponseBag bag = new ResponseBag();
+                bag.setVideos(new ArrayList<VideoDTO>());
+                //if (dataSnapshot.getChildrenCount() > 0) {
+                //  for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                VideoDTO v = dataSnapshot.getValue(VideoDTO.class);
+                bag.getVideos().add(v);
+                //      }
+                //   }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllDailyThoughts(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(LOG, dataSnapshot.getValue().toString());
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+               // if (dataSnapshot.getChildrenCount() > 0) {
+                //    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO dt = dataSnapshot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(dt);
+            //        }
+             //   }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllCompanyDailyThoughts(String companyID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
+        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        q.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(LOG, dataSnapshot.getValue().toString());
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO dt = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
 
     public void getNews(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.NEWS);
@@ -584,4 +784,6 @@ public class ListAPI {
             }
         });
     }
+
+    static final String LOG = ListAPI.class.getSimpleName();
 }

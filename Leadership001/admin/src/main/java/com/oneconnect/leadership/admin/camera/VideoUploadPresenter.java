@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.admin.camera;
 
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
+import com.oneconnect.leadership.library.camera.VideoUploadContract;
 import com.oneconnect.leadership.library.data.VideoDTO;
 
 /**

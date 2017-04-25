@@ -65,6 +65,11 @@ dependencies {
 
 
 
+    compile('com.firebaseui:firebase-ui:1.2.0', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'customtabs'
+    })
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -86,11 +91,6 @@ dependencies {
     compile 'com.google.firebase:firebase-invites:10.2.1'
     compile 'com.google.firebase:firebase-ads:10.2.1'
     compile 'com.google.firebase:firebase-core:10.2.1'
-    compile ('com.firebaseui:firebase-ui:1.2.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'com.android.support', module: 'customtabs'
-    })
     compile 'com.firebaseui:firebase-ui-auth:1.2.0'
     compile 'com.firebase:firebase-client-android:2.5.2'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.2'

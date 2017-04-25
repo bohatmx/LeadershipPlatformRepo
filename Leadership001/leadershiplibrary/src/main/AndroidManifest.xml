@@ -36,7 +36,27 @@
             android:name=".services.VideoUploaderService"
             android:exported="false" />
 
-
+        <activity android:name=".video.LeYouTubePlayerActivity" />
+        <activity
+            android:name=".activities.SubscriberDrawerActivity"
+            android:label="@string/title_activity_subscriber_drawer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.DailyThoughtActivity"
+            android:label="@string/title_activity_daily_thought"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.PodcastActivity"
+            android:label="@string/title_activity_podcast"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.VideoActivity"
+            android:label="@string/title_activity_video"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.eBookActivity"
+            android:label="@string/title_activity_e_book"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
