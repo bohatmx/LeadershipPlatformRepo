@@ -304,13 +304,6 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
     private void readEbook(String path) {
 
-
-
-       /* Intent m = new Intent(this, AudioPlayerActivity.class);
-        ResponseBag bag = new ResponseBag();
-        bag.setPodcasts(new ArrayList<PodcastDTO>());
-        PodcastDTO v = new PodcastDTO();*/
-
         File f = new File(path);
         if (f.exists()) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -318,11 +311,6 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
-
-        /*v.setUrl(Uri.fromFile(f).toString());
-        bag.getPodcasts().add(v);
-        m.putExtra("bag",bag);
-        startActivity(m);*/
     }
 
     private void uploadEbook(String path) {

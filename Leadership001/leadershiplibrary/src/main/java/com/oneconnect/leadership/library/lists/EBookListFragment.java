@@ -1,7 +1,10 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,9 +46,15 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
+import org.joda.time.DateTime;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -137,6 +146,95 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                 getCachedEBooks();
             }
         });
+
+        File dir = Environment.getExternalStorageDirectory();
+        File myDir = new File(dir, "leadership");
+        if (!myDir.exists()) {
+            myDir.mkdir();
+        }
+        File[] files = myDir.listFiles();
+        filePathList = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().contains(",pdf")) {
+                        filePathList.add(file.getAbsolutePath());
+
+                }
+            }
+        }
+
+        if (filePathList.isEmpty()) {
+            Log.d(LOG, "getCachedEbooks: filePathList is empty");
+        } else {
+            fileContainerList.clear();
+            for (String d : filePathList) {
+                fileContainerList.add(new FileContainer(d));
+            }
+            Collections.sort(fileContainerList);
+            filePathList.clear();
+            for (FileContainer f : fileContainerList) {
+                filePathList.add(f.fileName);
+            }
+            setList();
+        }
+    }
+
+
+    private void setList() {
+        adapter = new EbookAdapter(eBooks, ctx, new EbookAdapter.EbookAdapterListener() {
+            @Override
+            public void onReadClicked(String path) {
+                File file = new File(path);
+                Log.e(LOG, "pdf file: " + file.getAbsolutePath() + " length: " + file.length());
+                if (file.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    ctx.startActivity(intent);
+                }
+            }
+        });
+    }
+
+    List<FileContainer> fileContainerList = new ArrayList<>();
+
+    class FileContainer implements Comparable<FileContainer> {
+        String fileName;
+        Date date;
+
+        public FileContainer(String filename) {
+            this.fileName = filename;
+            try {
+                Pattern patt = Pattern.compile("-");
+                String[] parts = patt.split(filename);
+
+                DateTime dateTime = new DateTime(Integer.parseInt(parts[1]),
+                        Integer.parseInt(parts[2]), 1, 0, 0);
+                date = dateTime.toDate();
+            } catch (Exception e) {
+                Log.e("FileContainer", "problem", e);
+                date = new Date();
+            }
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+
+        @Override
+        public int compareTo(FileContainer another) {
+            if (this.date.before(another.date)) {
+                return 1;
+            }
+            if (this.date.after(another.date)) {
+                return -1;
+            }
+            return 0;
+        }
     }
 
     private void getEBooks() {
@@ -363,12 +461,42 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     }
 
+    List<String> filePathList = new ArrayList<>();
+
+
     @Override
-    public void onAllEBooks(List<EBookDTO> list) {
+    public void onAllEBooks(final List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
         this.eBooks = list;
-        adapter = new EbookAdapter(list, ctx);
+        adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
+            @Override
+            public void onReadClicked(String path) {
+                File f = new File(path);
+                if (f.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(f), "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                //readEbook(path);
+
+
+            }
+        });
         recyclerView.setAdapter(adapter);
+    }
+
+    private void readEbook(String path) {
+    Log.d(LOG, "Path for reading Ebook: " + path);
+        File f = new File(path);
+        if (f.exists()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(f), "application/pdf");
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } {
+            Log.d(LOG, "File doesn't exist, try something else");
+        }
     }
 
     @Override
@@ -380,7 +508,12 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     public void onEbooks(List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
         this.eBooks = list;
-        adapter = new EbookAdapter(list, ctx);
+        adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
+            @Override
+            public void onReadClicked(String path) {
+                //readEbook(path);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 

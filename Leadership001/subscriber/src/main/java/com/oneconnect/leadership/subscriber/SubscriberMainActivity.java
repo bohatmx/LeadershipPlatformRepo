@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -75,7 +76,7 @@ import java.util.List;
 
 public class SubscriberMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener/*, DailyThoughtAdapter.DailyThoughtAdapterlistener*//*,
+        SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener, DailyThoughtAdapter.DailyThoughtAdapterlistener/*,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener*/{
 
 
@@ -99,6 +100,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private CachePresenter cachePresenter;
     private SubscriberPresenter presenter;
     private UserDTO user;
+    TextView usernametxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,10 +111,12 @@ public class SubscriberMainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
 
-
-
         page = getIntent().getStringExtra("page");
 
+        usernametxt = (TextView) findViewById(R.id.usernametxt);
+        /*if (SharedPrefUtil.getUser(ctx).getFullName() != null) {
+            usernametxt.setText(SharedPrefUtil.getUser(ctx).getFullName());
+        }*/
         mPager = (ViewPager) findViewById(com.oneconnect.leadership.library.R.id.viewpager);
         PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip.setVisibility(View.VISIBLE);
@@ -225,14 +229,14 @@ public class SubscriberMainActivity extends AppCompatActivity
 
         pageFragmentList = new ArrayList<>();
         dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
-        //podcastListFragment = PodcastListFragment.newInstance();
+       // podcastListFragment = PodcastListFragment.newInstance(bag.getDailyThoughts());
        // videoListFragment = VideoListFragment.newInstance("bag",bag);
        // eBookListFragment = EBookListFragment.newInstance();
 
         dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
         //podcastListFragment.set
 
-       //  pageFragmentList.add(dailyThoughtListFragment);
+         pageFragmentList.add(dailyThoughtListFragment);
         //pageFragmentList.add(podcastListFragment);
         //pageFragmentList.add(videoListFragment);
         //pageFragmentList.add(eBookListFragment);
@@ -613,6 +617,11 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onCalendarTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onThoughtClicked(int position) {
 
     }
 

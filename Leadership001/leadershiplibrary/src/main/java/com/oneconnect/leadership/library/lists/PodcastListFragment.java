@@ -289,7 +289,12 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void onAllPodcasts(List<PodcastDTO> list) {
         Log.i(LOG, "onAllPodcasts: " + list.size());
         this.podcasts = list;
-        adapter = new PodcastAdapter(list, ctx);
+        adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
+            @Override
+            public void onPlayClicked(int position) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
@@ -307,7 +312,12 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void onPodcasts(List<PodcastDTO> list) {
         Log.i(LOG, "onPodcasts: " + list.size());
         this.podcasts = list;
-        adapter = new PodcastAdapter(list, ctx);
+        adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
+            @Override
+            public void onPlayClicked(int position) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
 
     }

@@ -1,6 +1,8 @@
 package com.oneconnect.leadership.admin.ebook;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,8 +50,6 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         final String path = paths.get(position);
         File file = new File(path);
         Log.w("EbookAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
-        /*Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Audio.Thumbnails.MINI_KIND);
-        holder.image.setImageBitmap(thumb);*/
         holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_clipboard));
         int i = path.lastIndexOf("/");
         holder.txtFileName.setText(path.substring(i + 1));
@@ -66,6 +66,8 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
             }
         });
     }
+
+
     @Override
     public int getItemCount() {
         return paths.size();

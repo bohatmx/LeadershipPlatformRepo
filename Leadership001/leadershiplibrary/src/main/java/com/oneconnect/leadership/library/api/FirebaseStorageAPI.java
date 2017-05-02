@@ -2,6 +2,7 @@ package com.oneconnect.leadership.library.api;
 
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -91,6 +92,8 @@ public class FirebaseStorageAPI {
                     }
                 });
     }
+
+
 
     public void uploadThumbnail(final ThumbnailDTO thumbnail,
                                 final StorageListener listener) {
@@ -256,7 +259,7 @@ public class FirebaseStorageAPI {
             listener.onError("Cannot find eBook file for upload");
             return;
         }
-        final String storageName = eBook.getFilePath()/*getCaption()*/.concat(" - ").concat(sdf.format(new Date()));
+        final String storageName = eBook.getFilePath()/*.concat(" - ").concat(sdf.format(new Date()))*/;
         StorageReference eBookReference = storageReference.child(EBOOKS
                 + storageName);
         Log.w(TAG, "uploadEbook: ******** starting upload ...: "
@@ -305,7 +308,7 @@ public class FirebaseStorageAPI {
             listener.onError("Cannot find podcast file for upload");
             return;
         }
-        final String storageName = podcast.getFilePath()/*getCaption()*/.concat(" - ").concat(sdf.format(new Date()));
+        final String storageName = podcast.getFilePath().concat(" - ").concat(sdf.format(new Date()));
         StorageReference podcastReference = storageReference.child(PODCASTS
                 + storageName);
         Log.w(TAG, "uploadPodcast: ******** starting upload ...: "
@@ -470,7 +473,7 @@ public class FirebaseStorageAPI {
         Log.d(TAG, ".........adding EBookDTO to firebase  ...: "
                 + GSON.toJson(eBook));
         eBook.setUrl(taskSnapshot.getDownloadUrl().toString());
-        eBook.setDate(new Date().getTime());/*setDateScheduled(new Date().getTime());*/
+        eBook.setDate(new Date().getTime());
         eBook.setFilePath(null);
         eBook.seteBookID(null);
         dataAPI.addEBook(eBook, new DataAPI.DataListener() {
@@ -499,4 +502,5 @@ public class FirebaseStorageAPI {
         });
 
     }
+
 }
