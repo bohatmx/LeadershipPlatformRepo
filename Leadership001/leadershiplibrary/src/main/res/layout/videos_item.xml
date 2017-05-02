@@ -12,13 +12,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/image"
+        <VideoView
+            android:id="@+id/videoView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_videocam" />
+            android:layout_height="200dp"/>
         <TextView
             android:id="@+id/fileName"
             android:layout_width="wrap_content"
@@ -27,7 +24,7 @@
             android:textColor="@color/grey_500"
             android:textSize="12sp"
             android:layout_marginRight="@dimen/mon_margin"
-            android:layout_below="@id/image"
+            android:layout_below="@id/videoView"
             android:text="Filename inserted here" />
 
         <RelativeLayout

@@ -1,6 +1,8 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,7 +47,9 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,6 +158,20 @@ public class VideoListFragment extends Fragment implements PageFragment, Subscri
         } else {
             Log.d(LOG, "user is null");
         }
+    }
+
+    private void playVideo(String path) {
+
+        Intent m = new Intent(getContext(), LeExoPlayerActivity.class);
+        //ResponseBag bag = new ResponseBag();
+        //bag.setVideos(new ArrayList<VideoDTO>());
+        //VideoDTO v = new VideoDTO();
+        File f = new File(path);
+        //v.setUrl(Uri.fromFile(f).toString());
+        Uri.fromFile(f).toString();
+        //bag.getVideos().add(v);
+        m.putExtra("bag",bag);
+        startActivity(m);
     }
 
 
@@ -372,7 +390,12 @@ public class VideoListFragment extends Fragment implements PageFragment, Subscri
     public void onAllVideos(List<VideoDTO> list) {
         Log.i(LOG, "onAllVideos: " + list.size());
         this.videos = list;
-        adapter = new VideosAdapter(list, ctx);
+        adapter = new VideosAdapter(list, ctx, new VideosAdapter.VideosAdapterListener() {
+            @Override
+            public void onPlayClicked(String path) {
+                playVideo(path);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
@@ -430,7 +453,12 @@ public class VideoListFragment extends Fragment implements PageFragment, Subscri
     public void onVideos(List<VideoDTO> list) {
         Log.i(LOG, "onVideos: " + list.size());
         this.videos = list;
-        adapter = new VideosAdapter(list, ctx);
+        adapter = new VideosAdapter(list, ctx, new VideosAdapter.VideosAdapterListener() {
+            @Override
+            public void onPlayClicked(String path) {
+                playVideo(path);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 

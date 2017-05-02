@@ -20,6 +20,32 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_microphone" />
         <TextView
+            android:layout_marginLeft="16dp"
+            android:id="@+id/initialTime"
+            android:layout_below="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00"/>
+
+        <TextView
+            android:layout_marginRight="16dp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/finalTime"
+            android:layout_below="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3:59"/>
+
+        <SeekBar
+            android:layout_margin="16dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/initialTime"
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_margin="16dp"
             android:id="@+id/fileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +53,7 @@
             android:textColor="@color/grey_500"
             android:textSize="12sp"
             android:layout_marginRight="@dimen/mon_margin"
-            android:layout_below="@id/image"
+            android:layout_below="@+id/seekBar"
             android:text="Filename inserted here" />
 
         <RelativeLayout

@@ -52,8 +52,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final DailyViewHolder dvh = (DailyViewHolder) holder;
         dvh.txtTitle.setText(dt.getTitle());
         dvh.txtSubtitle.setText(dt.getSubtitle());
-        Date d = new Date(dt.getDateScheduled());
-        dvh.txtDate.setText("" + sd1.format(d));
+        //Date d = new Date(dt.ggetDateScheduled());
+        dvh.txtDate.setText(dt.getStringDateScheduled()/*"" + sd1.format(d)*/);
 
 
     }

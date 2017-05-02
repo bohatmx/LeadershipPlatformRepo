@@ -93,7 +93,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             bag = (ResponseBag) getArguments().getSerializable("bag");
-            Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
+//            Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
             dailyThought = (DailyThoughtDTO) getArguments().getSerializable("dailyThought");
             type = getArguments().getInt("type", 0);
 

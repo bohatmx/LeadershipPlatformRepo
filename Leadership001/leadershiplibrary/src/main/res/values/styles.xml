@@ -175,7 +175,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:padding">@dimen/mon_margin</item>
-        <item name="android:background">@color/indigo_900</item>
+        <item name="android:background">@color/indigo_500</item>
     </style>
 
 
