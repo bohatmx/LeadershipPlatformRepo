@@ -23,6 +23,10 @@
             android:id="@+id/nav_master"
             android:icon="@drawable/ic_info"
             android:title="Weekly Master Classes" />
+        <item
+            android:id="@+id/nav_weekly"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Weekly Message" />
     </group>
 
    <!-- <item android:title="Communicate">

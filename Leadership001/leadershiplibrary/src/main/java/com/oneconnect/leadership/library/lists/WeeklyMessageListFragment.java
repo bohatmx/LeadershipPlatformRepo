@@ -1,8 +1,10 @@
 package com.oneconnect.leadership.library.lists;
 
-import android.support.v4.app.Fragment;
+import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,11 +15,11 @@ import android.view.ViewGroup;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
-import com.oneconnect.leadership.library.adapters.MasterAdapter;
+import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
+import com.oneconnect.leadership.library.adapters.WeeklyMessageAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
-import com.oneconnect.leadership.library.cache.WeeklyMasterclassCache;
-import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.cache.WeeklyMessageCache;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -41,44 +43,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Kurisani on 2017/05/02.
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link WeeklyMessageListFragment} interface
+ * to handle interaction events.
+ * Use the {@link WeeklyMessageListFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
+public class WeeklyMessageListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View{
 
-public class MasterListFragment extends Fragment implements PageFragment, SubscriberContract.View,
-        CacheContract.View, BasicEntityAdapter.EntityListener {
-
-    private MasterAdapter.MasterAdapterListener mListener;
-    private ResponseBag bag;
-    private EntityListFragment entityListFragment;
+    private WeeklyMessageAdapter.WeeklyMessageAdapterListener mListener;
     private RecyclerView recyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
+    private ResponseBag bag;
+    private int type;
+    private WeeklyMessageDTO weeklyMessage;
+    private Context ctx;
     private UserDTO user;
+    private List<WeeklyMessageDTO> weeklyMessageList = new ArrayList<>();
+    private View view;
 
-    public MasterListFragment(){
-
+    public WeeklyMessageListFragment() {
+        // Required empty public constructor
     }
 
-    public static MasterListFragment newInstance(){
-        MasterListFragment fragment = new MasterListFragment();
+
+    public static WeeklyMessageListFragment newInstance() {
+        WeeklyMessageListFragment fragment = new WeeklyMessageListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    private int type;
-    private WeeklyMasterClassDTO weeklyMaster;
-    private View view;
-    private Context ctx;
-    MasterAdapter adapter;
-    private List<WeeklyMasterClassDTO> weeklyMasterList = new ArrayList<>();
-
     @Override
-    public void onCreate(Bundle SavedInstanceState){
-        super.onCreate(SavedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             bag = (ResponseBag) getArguments().getSerializable("bag");
-            weeklyMaster = (WeeklyMasterClassDTO) getArguments().getSerializable("weeklyMasterClass");
+            weeklyMessage = (WeeklyMessageDTO) getArguments().getSerializable("weeklyMessage");
             type = getArguments().getInt("type", 0);
 
             presenter = new SubscriberPresenter(this);
@@ -89,10 +92,13 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_weekly_master_class_list, container, false);
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_weekly_message_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
 
@@ -102,124 +108,58 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        getCachedWeeklyMasterClasses();
-        getWeeklyMasterClasses();
+        getCachedWeeklyMessages();
+        getWeeklyMessages();
+
 
         return view;
     }
-    static final String LOG = MasterListFragment.class.getSimpleName();
 
-    public void getWeeklyMasterClasses() {
-        Log.d(LOG, "************** getWeeklyMasterClasses: " );
+    private void getCachedWeeklyMessages() {
+        WeeklyMessageCache.getWeeklyMessages(ctx, new WeeklyMessageCache.ReadListener() {
+            @Override
+            public void onDataRead(List<WeeklyMessageDTO> weeklyMessages) {
+                Log.d(LOG, "onDataRead: WeeklyMessages: " + weeklyMessages);
+            }
+
+            @Override
+            public void onError(String message) {
+            getCachedWeeklyMessages();
+            }
+        });
+    }
+
+    private void getWeeklyMessages() {
+        Log.d(LOG, "************** getWeeklyMessages: " );
         if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllWeeklyMasterClasses();
+            presenter.getAllWeeklyMessages();
         } else {
             Log.d(LOG, "user is null");
         }
     }
 
-    private void getCachedWeeklyMasterClasses() {
-        WeeklyMasterclassCache.getWeeklyMasterclasses(ctx, new WeeklyMasterclassCache.ReadListener() {
-            @Override
-            public void onDataRead(List<WeeklyMasterClassDTO> weeklyMasterClass) {
-                Log.d(LOG, "onDataRead: WeeklyMasterClasses: " + weeklyMasterClass);
-            }
 
-            @Override
-            public void onError(String message) {
 
-                getCachedWeeklyMasterClasses();
-            }
-        });
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            mListener = (WeeklyMessageAdapter.WeeklyMessageAdapterListener) activity;
+        } catch(ClassCastException e) {
+            throw new RuntimeException(activity.toString()
+                    + " must implement WeeklyMessageAdapterListener");
+        }
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     @Override
     public String getTitle() {
         return null;
-    }
-
-    @Override
-    public void onAddEntity() {
-
-    }
-
-    @Override
-    public void onDeleteClicked(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onLinksRequired(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onPhotoCaptureRequested(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onVideoCaptureRequested(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onSomeActionRequired(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onMicrophoneRequired(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onEntityClicked(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onCalendarRequested(BaseDTO entity) {
-
-    }
-
-    @Override
-    public void onEntityDetailRequested(BaseDTO entity, int type) {
-
-    }
-
-    @Override
-    public void onDeleteTooltipRequired(int type) {
-
-    }
-
-    @Override
-    public void onLinksTooltipRequired(int type) {
-
-    }
-
-    @Override
-    public void onPhotoCaptureTooltipRequired(int type) {
-
-    }
-
-    @Override
-    public void onVideoCaptureTooltipRequired(int type) {
-
-    }
-
-    @Override
-    public void onSomeActionTooltipRequired(int type) {
-
-    }
-
-    @Override
-    public void onMicrophoneTooltipRequired(int type) {
-
-    }
-
-    @Override
-    public void onCalendarTooltipRequired(int type) {
-
     }
 
     @Override
@@ -274,18 +214,6 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-        WeeklyMasterclassCache.getWeeklyMasterclasses(ctx, new WeeklyMasterclassCache.ReadListener() {
-            @Override
-            public void onDataRead(List<WeeklyMasterClassDTO> weeklyMasterClass) {
-                Log.d(LOG, "onDataRead: weeklyMasterClass: " + weeklyMasterClass);
-            }
-
-            @Override
-            public void onError(String message) {
-
-                getCachedWeeklyMasterClasses();
-            }
-        });
 
     }
 
@@ -344,9 +272,14 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     }
 
+    WeeklyMessageAdapter adapter;
+
     @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
-
+        Log.w(LOG, "onAllWeeklyMessages: " + list.size());
+        this.weeklyMessageList = list;
+        adapter = new WeeklyMessageAdapter(list, ctx);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -401,10 +334,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-        Log.i(LOG, "onWeeklyMasterclasses: " + list.size());
-        this.weeklyMasterList = list;
-        adapter = new MasterAdapter(ctx, list);
-        recyclerView.setAdapter(adapter);
+
     }
 
     @Override
@@ -421,6 +351,8 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void onError(String message) {
 
     }
+
+    static final String LOG = WeeklyMessageListFragment.class.getSimpleName();
 
     String pageTitle;
 

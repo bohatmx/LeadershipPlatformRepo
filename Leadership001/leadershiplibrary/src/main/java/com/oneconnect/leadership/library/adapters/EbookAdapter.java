@@ -49,16 +49,18 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         final EBookDTO v = mList.get(position);
         final EbookViewHolder vvh = (EbookViewHolder) holder;
-        int i = v.getStorageName().lastIndexOf("/");
-        vvh.fileName.setText(v.getStorageName().substring(i + 1));
+        String displayName = v.getStorageName().split("\\.", 2)[0];
+        int i = displayName/*v.getStorageName()*/.lastIndexOf("/");
+        //
+
+        //
+        vvh.fileName.setText(displayName/*v.getStorageName()*/.substring(i + 1));
         //vvh.fileName.setText(v.getUrl());
         vvh.image.setImageDrawable(ctx.getDrawable(R.drawable.ic_clipboard));
         final String bookUrl = v.getUrl();
-        vvh.btnPlay.setOnClickListener(new View.OnClickListener() {
+        vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //listener.onReadClicked(book);
-                /*readEbook(bookUrl);*/
                 File f = new File(bookUrl);
                 if (f.exists()) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -68,6 +70,20 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             }
         });
+        /*vvh.btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //listener.onReadClicked(book);
+                *//*readEbook(bookUrl);*//*
+                File f = new File(bookUrl);
+                if (f.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(f), "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    ctx.startActivity(intent);
+                }
+            }
+        });*/
     }
 
     private void readEbook(String path) {
@@ -89,16 +105,19 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image;
+        protected ImageView image, bookIcon;
         protected Button btnPlay, btnUpload;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             image = (ImageView) itemView.findViewById(R.id.image);
+            image.setVisibility(View.GONE);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+            btnPlay.setVisibility(View.GONE);
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnUpload.setVisibility(View.GONE);
+            bookIcon = (ImageView) itemView.findViewById(R.id.bookIcon);
 
         }
     }

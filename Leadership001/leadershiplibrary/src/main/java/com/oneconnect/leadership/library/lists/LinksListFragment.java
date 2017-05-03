@@ -85,9 +85,16 @@ public class LinksListFragment extends Fragment implements PageFragment{
         mListener = null;
     }
 
+    String pageTitle;
+
     @Override
     public String getTitle() {
-        return "Useful Links";
+        return pageTitle;
+    }
+
+    @Override
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
     }
 
     /**

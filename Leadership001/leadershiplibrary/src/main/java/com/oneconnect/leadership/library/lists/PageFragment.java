@@ -6,4 +6,5 @@ package com.oneconnect.leadership.library.lists;
 
 public interface PageFragment {
     String getTitle();
+    void setPageTitle(String pageTitle);
 }

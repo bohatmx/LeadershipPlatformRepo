@@ -11,68 +11,66 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
-import com.oneconnect.leadership.library.util.Util;
+import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
- * Created by Kurisani on 2017/05/02.
+ * Created by Nkululeko on 2017/05/03.
  */
 
-public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<WeeklyMasterClassDTO> mList;
+    private List<WeeklyMessageDTO> mList;
     private Context ctx;
-    private MasterAdapterListener listener;
+    private WeeklyMessageAdapterListener listener;
 
-
-    public interface MasterAdapterListener{
-       void onMasterClicked(int position);
+    public interface WeeklyMessageAdapterListener {
+        void onMessageClicked();
     }
 
-    public MasterAdapter(Context ctx, List<WeeklyMasterClassDTO> mList){
-        this.ctx = ctx;
+    public WeeklyMessageAdapter(List<WeeklyMessageDTO> mList, Context ctx) {
         this.mList = mList;
+        this.ctx = ctx;
     }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item_two,parent, false);
-        return new MasterViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item, parent, false);
+        return new WeeklyMessageViewHolder(v);
     }
-
-    static final SimpleDateFormat sd1 = new SimpleDateFormat(" dd-MM-yyyy HH:mm");
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final WeeklyMasterClassDTO dt = mList.get(position);
-        final MasterViewHolder dvh = (MasterViewHolder) holder;
-        dvh.txtEvents.setText("" + position);
-        dvh.txtTitle.setText(dt.getTitle());
-        dvh.txtSubtitle.setText(dt.getSubtitle());
-        dvh.txtDate.setText(dt.getStringDateScheduled());
 
-        if (dt.getVideos() != null) {
-            dvh.txtVideo.setText("" + dt.getVideos().size());
+        final WeeklyMessageDTO wm = mList.get(position);
+        final WeeklyMessageViewHolder wmvh = (WeeklyMessageViewHolder) holder;
+        wmvh.txtEvents.setText("" + position);
+        wmvh.txtTitle.setText(wm.getTitle());
+        wmvh.txtSubtitle.setText(wm.getSubtitle());
+        wmvh.txtDate.setText(wm.getStringDateScheduled());
+
+        if (wm.getVideos() != null) {
+            wmvh.txtVideo.setText("" + wm.getVideos().size());
         }
-        if (dt.getPhotos() != null) {
-            dvh.txtCamera.setText("" + dt.getPhotos().size());
+        if (wm.getPhotos() != null) {
+            wmvh.txtCamera.setText("" + wm.getPhotos().size());
         }
-        if (dt.getPodcasts() != null) {
-            dvh.txtMicrophone.setText("" + dt.getPodcasts().size());
+        if (wm.getPodcasts() != null) {
+            wmvh.txtMicrophone.setText("" + wm.getPodcasts().size());
+        }
+        if (wm.getUrls() != null) {
+            wmvh.txtLinks.setText("" + wm.getUrls().size());
         }
 
-        if (dt.getUrls() != null) {
-            dvh.txtLinks.setText("" + dt.getUrls().size());
-        }
     }
 
     @Override
     public int getItemCount() {
         return mList == null ? 0 : mList.size();
     }
-    public class MasterViewHolder extends RecyclerView.ViewHolder {
+
+    public class WeeklyMessageViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera;
@@ -80,7 +78,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout;
 
-        public MasterViewHolder(View itemView) {
+        public WeeklyMessageViewHolder(View itemView) {
             super(itemView);
             txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
@@ -99,7 +97,6 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
 
 
-        }
     }
-
+}
 }

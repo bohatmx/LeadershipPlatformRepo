@@ -266,9 +266,16 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         mListener = null;
     }
 
+    String pageTitle;
+
     @Override
     public String getTitle() {
-        return "EBooks";
+        return pageTitle;
+    }
+
+    @Override
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
     }
 
     @Override
@@ -484,6 +491,11 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
+
     }
 
     private void readEbook(String path) {

@@ -193,9 +193,16 @@ public class VideoListFragment extends Fragment implements PageFragment, Subscri
         mListener = null;
     }
 
+    String pageTitle;
+
     @Override
     public String getTitle() {
-        return "Videos";
+        return pageTitle;
+    }
+
+    @Override
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
     }
 
 
@@ -401,6 +408,11 @@ public class VideoListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onAllEBooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
 
     }
 

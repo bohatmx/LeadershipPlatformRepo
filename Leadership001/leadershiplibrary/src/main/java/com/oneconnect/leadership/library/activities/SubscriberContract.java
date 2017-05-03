@@ -32,7 +32,7 @@ public class SubscriberContract {
         void getDailyThoughts(String companyID);
         void getAllCompanyDailyThoughts(String companyID);
         void getAllDailyThoughts();
-
+        void getAllWeeklyMessages();
         void getAllWeeklyMasterClasses();
 
         void getAllVideos();
@@ -66,6 +66,7 @@ public class SubscriberContract {
         void onAllDailyThoughts(List<DailyThoughtDTO> list);
         void onAllVideos(List<VideoDTO> list);
         void onAllEBooks(List<EBookDTO> list);
+        void onAllWeeklyMessages(List<WeeklyMessageDTO> list);
         void onAllPodcasts(List<PodcastDTO> list);
         void onEbooks(List<EBookDTO> list);
         void onPayments(List<PaymentDTO> list);

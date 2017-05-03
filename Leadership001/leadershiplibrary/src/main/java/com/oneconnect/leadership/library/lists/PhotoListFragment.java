@@ -85,9 +85,16 @@ public class PhotoListFragment extends Fragment implements PageFragment{
         mListener = null;
     }
 
+    String pageTitle;
+
     @Override
     public String getTitle() {
-        return "Photographs";
+        return pageTitle;
+    }
+
+    @Override
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
     }
 
     /**
