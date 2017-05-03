@@ -32,6 +32,9 @@ public class SubscriberContract {
         void getDailyThoughts(String companyID);
         void getAllCompanyDailyThoughts(String companyID);
         void getAllDailyThoughts();
+
+        void getAllWeeklyMasterClasses();
+
         void getAllVideos();
         void getAllPodcasts();
         void getAllEBooks();

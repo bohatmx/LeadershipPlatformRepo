@@ -168,6 +168,30 @@ public class ListAPI {
         });
     }
 
+            public void getAllWeeklyMasterClasses(final DataListener listener) {
+                DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MASTER_CLASSES);
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d(LOG, dataSnapshot.getValue().toString());
+                        ResponseBag bag = new ResponseBag();
+                        bag.setWeeklyMasterClasses(new ArrayList<WeeklyMasterClassDTO>());
+                        if (dataSnapshot.getChildrenCount() > 0) {
+                            for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                                WeeklyMasterClassDTO dt = shot.getValue(WeeklyMasterClassDTO.class);
+                                bag.getWeeklyMasterClasses().add(dt);
+                            }
+                        }
+                        listener.onResponse(bag);
+                    }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
     public void getAllCompanyDailyThoughts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);

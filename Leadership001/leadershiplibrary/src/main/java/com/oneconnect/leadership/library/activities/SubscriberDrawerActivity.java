@@ -154,6 +154,9 @@ public class SubscriberDrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_eBooks) {
 
         }
+        else if (id == R.id.nav_master) {
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

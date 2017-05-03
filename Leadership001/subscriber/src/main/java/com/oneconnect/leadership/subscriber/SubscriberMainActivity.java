@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.activities.DailyThoughtActivity;
+import com.oneconnect.leadership.library.activities.MasterActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -276,6 +277,9 @@ public class SubscriberMainActivity extends AppCompatActivity
                 if (page.equalsIgnoreCase("eBooks")) {
                     mPager.setCurrentItem(3);
                 }
+                if (page.equalsIgnoreCase("Weekly Master Classes")) {
+                    mPager.setCurrentItem(4);
+                }
             }
         }
 
@@ -440,7 +444,13 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-
+        Log.i(TAG, "onWeeklyMasterclasses: " + list.size());
+        bag = new ResponseBag();
+        bag.setWeeklyMasterClasses(list);
+        Collections.sort(bag.getDailyThoughts());
+        bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
+        setFragment();
+        cachePresenter.cacheWeeklyMasterclasses(list);
     }
 
     @Override
@@ -726,7 +736,12 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
             startActivity(intent);
             return true;
         }
+        else if (id == R.id.nav_master) {
 
+            Intent intent = new Intent(SubscriberMainActivity.this, MasterActivity.class);
+            startActivity(intent);
+            return true;
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -112,6 +112,21 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     }
 
     @Override
+    public void getAllWeeklyMasterClasses() {
+        listAPI.getAllWeeklyMasterClasses(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onWeeklyMasterclasses(bag.getWeeklyMasterClasses());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
     public void getAllVideos() {
         listAPI.getAllVideos(new ListAPI.DataListener() {
             @Override

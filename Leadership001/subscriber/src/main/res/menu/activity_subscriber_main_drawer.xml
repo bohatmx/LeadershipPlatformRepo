@@ -18,6 +18,11 @@
             android:id="@+id/nav_eBooks"
             android:icon="@drawable/ic_clipboard"
             android:title="eBooks" />
+
+        <item
+            android:id="@+id/nav_master"
+            android:icon="@drawable/ic_info"
+            android:title="Weekly Master Classes" />
     </group>
 
    <!-- <item android:title="Communicate">
