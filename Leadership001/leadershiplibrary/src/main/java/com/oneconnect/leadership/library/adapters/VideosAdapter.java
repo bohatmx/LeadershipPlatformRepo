@@ -68,6 +68,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Uri video = Uri.parse(v.getUrl());
             vvh.videoView.setMediaController(mediaController);
             vvh.videoView.setVideoURI(video);
+            vvh.videoView.seekTo(100);
         } catch (Exception e) {
             Log.e(LOG,"Video something went wrong: " + e.getMessage());
         }
@@ -87,9 +88,25 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 //listener.onPlayClicked(s);
             }
         });
+
+        vvh.shareicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
+
+
     }
 
-
+    private void shareIt() {
+        //sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(sharingIntent);
+    }
 
     @Override
     public int getItemCount() {
@@ -100,7 +117,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     MediaController mediaController;
     public class VideosViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image;
+        protected ImageView image, shareicon;
         protected Button btnPlay;
         protected VideoView videoView;
 
@@ -112,7 +129,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             videoView = (VideoView) itemView.findViewById(R.id.videoView);
             mediaController = new MediaController(ctx);
             mediaController.setAnchorView(videoView);
-
+            shareicon = (ImageView) itemView.findViewById(R.id.shareicon);
         }
     }
     static final String LOG = VideosAdapter.class.getSimpleName();

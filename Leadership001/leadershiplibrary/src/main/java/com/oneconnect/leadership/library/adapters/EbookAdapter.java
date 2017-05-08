@@ -77,6 +77,13 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
               //  }
             }
         });
+
+        vvh.iconshar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
         /*vvh.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +98,14 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             }
         });*/
+    }
+    private void shareIt() {
+        //sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(sharingIntent);
     }
 
     private void readEbook(String path) {
@@ -112,7 +127,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image, bookIcon;
+        protected ImageView image, bookIcon, iconshar;
         protected Button btnPlay, btnUpload;
 
         public EbookViewHolder(View itemView) {
@@ -125,7 +140,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnUpload.setVisibility(View.GONE);
             bookIcon = (ImageView) itemView.findViewById(R.id.bookIcon);
-
+            iconshar = (ImageView) itemView.findViewById(R.id.iconshar);
         }
     }
 }

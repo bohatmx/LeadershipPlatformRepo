@@ -79,13 +79,19 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         final DailyThoughtDTO dt = mList.get(position);
         final DailyViewHolder dvh = (DailyViewHolder) holder;
-        dvh.txtEvents.setText("" + position);
+        dvh.txtEvents.setText("" + (position + 1));
         dvh.txtTitle.setText(dt.getTitle());
         dvh.txtSubtitle.setText(dt.getSubtitle());
         //Date d = new Date(dt.ggetDateScheduled());
         dvh.txtDate.setText(dt.getStringDateScheduled()/*"" + sd1.format(d)*/);
         dvh.iconCamera.setImageDrawable(ctx.getDrawable(R.drawable.ic_photo_black_24dp));
         dvh.iconUpdate.setImageDrawable(ctx.getDrawable(R.drawable.ic_link_black_24dp));
+        dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
 
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
@@ -264,7 +270,14 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
     }
-
+    private void shareIt() {
+        //sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(sharingIntent);
+    }
     private void playVideo(String path) {
 
         Intent m = new Intent(ctx, LeExoPlayerActivity.class);
@@ -306,7 +319,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
-            iconCalendar.setVisibility(View.GONE);
+            //iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);
