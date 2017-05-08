@@ -45,6 +45,7 @@ import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.PhotoCache;
 import com.oneconnect.leadership.library.cache.VideoCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -812,6 +813,16 @@ public class CrudActivity extends AppCompatActivity
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
         setFragment();
         presenter.getWeeklyMessages(user.getCompanyID());
+    }
+
+    @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
     }
 
     @Override

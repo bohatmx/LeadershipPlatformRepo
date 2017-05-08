@@ -27,6 +27,7 @@ import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.PodcastCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -95,8 +96,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ResponseBag  bag = (ResponseBag) getArguments().getSerializable("bag");
-            podcasts = bag.getPodcasts();
-            //Log.d(LOG, "bagSize: " + bag.getVideos().size());
+            podcasts= bag.getPodcasts();
             podcast = (PodcastDTO) getArguments().getSerializable("podcast");
             type = getArguments().getInt("type", 0);
 
@@ -243,6 +243,16 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onEntityAdded(String key) {
 
     }
@@ -293,6 +303,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
 
     }
@@ -308,6 +323,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
+
     }
 
     @Override

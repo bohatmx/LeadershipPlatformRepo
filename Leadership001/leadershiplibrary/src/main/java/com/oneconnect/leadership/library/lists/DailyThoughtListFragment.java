@@ -30,6 +30,7 @@ import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -54,25 +55,30 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link DailyThoughtListFragment} interface
+ * to handle interaction events.
+ * Use the {@link DailyThoughtListFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
-    private DailyThoughtAdapter.DailyThoughtAdapterlistener mListener;
+    //private DailyThoughtAdapter.DailyThoughtAdapterlistener mListener;
+    private DailyThoughtListener mListener;
     private RecyclerView recyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
-    private DailyThoughListener dailyThoughtListener;
-
-    public interface DailyThoughListener {
-        void onDailyThoughtTapped(DailyThoughtDTO thought);
-    }
 
     public DailyThoughtListFragment() {
         // Required empty public constructor
     }
 
+    // TODO: Rename and change types and number of parameters
     public static DailyThoughtListFragment newInstance() {
         DailyThoughtListFragment fragment = new DailyThoughtListFragment();
         Bundle args = new Bundle();
@@ -156,9 +162,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-         if (context instanceof DailyThoughListener) {
-            dailyThoughtListener = (DailyThoughListener) context;
+        if (context instanceof DailyThoughtListener) {
+            mListener = (DailyThoughtListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement DailyThoughtListener");
@@ -168,7 +173,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     @Override
     public void onDetach() {
         super.onDetach();
-        dailyThoughtListener = null;
+        mListener = null;
     }
 
 
@@ -186,7 +191,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public String getTitle() {
-        return null;
+        return pageTitle;
     }
 
     @Override
@@ -249,12 +254,22 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
 
     }
 
     @Override
     public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
 
     }
 
@@ -380,6 +395,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onError(String message) {
 
     }
@@ -470,6 +495,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
 
-
+    public interface DailyThoughtListener {
+        void onDailyThoughtTapped(DailyThoughtDTO dailyThought);
+    }
 
 }

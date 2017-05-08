@@ -2,10 +2,12 @@ package com.oneconnect.leadership.library.cache;
 
 import android.content.Context;
 
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
@@ -195,6 +197,36 @@ public class CachePresenter implements CacheContract.Presenter {
     }
 
     @Override
+    public void cachePhotos(List<PhotoDTO> list) {
+        PhotoCache.getPhotos(context, new PhotoCache.ReadListener() {
+            @Override
+            public void onDataRead(List<PhotoDTO> photos) {
+                view.onCachePhotos(photos);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
+    public void cacheCalendarEvents(List<CalendarEventDTO> list) {
+        CalendarEventCache.getCalendarEvents(context, new CalendarEventCache.ReadListener() {
+            @Override
+            public void onDataRead(List<CalendarEventDTO> calendarEvents) {
+                view.onCacheCalendarEvents(calendarEvents);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void getCacheCategories() {
         CategoryCache.getCategories(context, new CategoryCache.ReadListener() {
             @Override
@@ -346,6 +378,31 @@ public class CachePresenter implements CacheContract.Presenter {
 
     @Override
     public void getCacheVideos() {
+        VideoCache.getVideos(context, new VideoCache.ReadListener() {
+            @Override
+            public void onDataRead(List<VideoDTO> videos) {
+                view.onCacheVideos(videos);
+            }
 
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
+    public void getCalendarEvents() {
+            CalendarEventCache.getCalendarEvents(context, new CalendarEventCache.ReadListener() {
+                @Override
+                public void onDataRead(List<CalendarEventDTO> calendarEvents) {
+                    view.onCacheCalendarEvents(calendarEvents);
+                }
+
+                @Override
+                public void onError(String message) {
+                    view.onError(message);
+                }
+            });
     }
 }

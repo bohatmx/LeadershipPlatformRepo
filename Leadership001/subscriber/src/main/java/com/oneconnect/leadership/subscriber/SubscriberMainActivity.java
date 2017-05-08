@@ -34,17 +34,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.activities.DailyThoughtActivity;
 import com.oneconnect.leadership.library.activities.MasterActivity;
+import com.oneconnect.leadership.library.activities.PhotoActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.activities.VideoActivity;
 import com.oneconnect.leadership.library.activities.eBookActivity;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
-import com.oneconnect.leadership.library.adapters.EbookAdapter;
 import com.oneconnect.leadership.library.adapters.WeeklyMessageAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -63,12 +64,14 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
+import com.oneconnect.leadership.library.lists.CalendarEventListFragment;
 import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.lists.EBookListFragment;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.lists.MasterListFragment;
 import com.oneconnect.leadership.library.lists.MediaListActivity;
 import com.oneconnect.leadership.library.lists.PageFragment;
+import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
 import com.oneconnect.leadership.library.lists.VideoListFragment;
 import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
@@ -83,8 +86,12 @@ import java.util.List;
 
 public class SubscriberMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener, DailyThoughtAdapter.DailyThoughtAdapterlistener, WeeklyMessageAdapter.WeeklyMessageAdapterListener,
-        PodcastListFragment.PodcastListener, VideoListFragment.VideoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughListener , WeeklyMessageListFragment.WeeklyMessageListener, MasterListFragment.MasterListener{
+        SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener,
+        MasterListFragment.WeeklyMasterClassListener, WeeklyMessageListFragment.WeeklyMessageListener,
+        CalendarEventListFragment.CalendarEventListener
+        /*DailyThoughtAdapter.DailyThoughtAdapterlistener, WeeklyMessageAdapter.WeeklyMessageAdapterListener*/,
+        PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
+        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener{
 
 
     private WeeklyMessageDTO weeklyMessage;
@@ -223,7 +230,6 @@ public class SubscriberMainActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-       // dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
         entityListFragment = EntityListFragment.newInstance(bag);
         //entityListFragment.setListener(this);
 
@@ -234,6 +240,8 @@ public class SubscriberMainActivity extends AppCompatActivity
     private PagerAdapter adapter;
     MasterListFragment masterListFragment;
     WeeklyMessageListFragment weeklyMessageListFragment;
+    PhotoListFragment photoListFragment;
+    CalendarEventListFragment calendarEventListFragment;
 
 
     private void setUpViewPager() {
@@ -243,24 +251,33 @@ public class SubscriberMainActivity extends AppCompatActivity
         dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
         masterListFragment = MasterListFragment.newInstance();
         weeklyMessageListFragment = WeeklyMessageListFragment.newInstance();
+        photoListFragment = PhotoListFragment.newInstance(new HashMap<String, PhotoDTO>());
         videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
         eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
+        calendarEventListFragment = CalendarEventListFragment.newInstance();
+
 
         dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
         masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
         weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
+        photoListFragment.setPageTitle(ctx.getString(R.string.photo));
         videoListFragment.setPageTitle(ctx.getString(R.string.video));
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
+        calendarEventListFragment.setPageTitle(ctx.getString(R.string.calendar_events));
 
 
-        pageFragmentList.add(dailyThoughtListFragment);
+         pageFragmentList.add(dailyThoughtListFragment);
         pageFragmentList.add(masterListFragment);
         pageFragmentList.add(weeklyMessageListFragment);
+        pageFragmentList.add(photoListFragment);
+
         pageFragmentList.add(videoListFragment);
         pageFragmentList.add(podcastListFragment);
         pageFragmentList.add(eBookListFragment);
+
+        pageFragmentList.add(calendarEventListFragment);
 
         try {
             adapter = new PagerAdapter(getSupportFragmentManager());
@@ -291,20 +308,26 @@ public class SubscriberMainActivity extends AppCompatActivity
                 if (page.equalsIgnoreCase("Daily Thoughts")) {
                     mPager.setCurrentItem(0);
                 }
-                if (page.equalsIgnoreCase("Podcast")) {
+                if (page.equalsIgnoreCase("Weekly Master Classes")) {
                     mPager.setCurrentItem(1);
                 }
-                if (page.equalsIgnoreCase("Video")) {
+                if (page.equalsIgnoreCase("Weekly Message")) {
                     mPager.setCurrentItem(2);
                 }
-                if (page.equalsIgnoreCase("eBooks")) {
+                if (page.equalsIgnoreCase("Photo")) {
                     mPager.setCurrentItem(3);
                 }
-                if (page.equalsIgnoreCase("Weekly Master Classes")) {
+                if (page.equalsIgnoreCase("Video")) {
                     mPager.setCurrentItem(4);
                 }
-                if (page.equalsIgnoreCase("Weekly Message")) {
+                if (page.equalsIgnoreCase("Podcast")) {
                     mPager.setCurrentItem(5);
+                }
+                if (page.equalsIgnoreCase("eBooks")) {
+                    mPager.setCurrentItem(6);
+                }
+                if (page.equalsIgnoreCase("Calendar Event")) {
+                    mPager.setCurrentItem(7);
                 }
             }
         }
@@ -330,21 +353,25 @@ public class SubscriberMainActivity extends AppCompatActivity
                 if (item.getItemId() == R.id.nav_weekly_message) {
                     mPager.setCurrentItem(2, true);
                     return true;
-                }else if (item.getItemId() == R.id.nav_podcast) {
+                }
+                if (item.getItemId() == R.id.nav_photo) {
                     mPager.setCurrentItem(3, true);
-                    Intent intent = new Intent(SubscriberMainActivity.this, PodcastActivity.class);
-                    startActivity(intent);
-
                     return true;
-                } else if (item.getItemId() == R.id.nav_video) {
+                }
+                if (item.getItemId() == R.id.nav_video) {
                     mPager.setCurrentItem(4, true);
-                    Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
-                    startActivity(intent);
                     return true;
-                } else if (item.getItemId() == R.id.nav_eBooks) {
+                }
+                if (item.getItemId() == R.id.nav_podcast) {
                     mPager.setCurrentItem(5, true);
-                    Intent intent = new Intent(SubscriberMainActivity.this, eBookActivity.class);
-                    startActivity(intent);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_eBooks) {
+                    mPager.setCurrentItem(6, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_calender_events) {
+                    mPager.setCurrentItem(7, true);
                     return true;
                 }
                 return false;
@@ -436,6 +463,18 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+        Log.i(TAG, "onAllPhotos: " + list.size());
+        bag = new ResponseBag();
+        bag.setPhotos(list);
+        Collections.sort(bag.getPhotos());
+        bag.setType(ResponseBag.PHOTOS);
+        setFragment();
+        cachePresenter.cachePhotos(list);
+        presenter.getAllPhotos();
+    }
+
+    @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
         Log.i(TAG, "onAllWeeklyMessages: " + list.size());
         bag = new ResponseBag();
@@ -457,6 +496,18 @@ public class SubscriberMainActivity extends AppCompatActivity
         setFragment();
         cachePresenter.cachePodcasts(list);
         presenter.getAllPodcasts();
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
+        Log.i(TAG, "onAllCalendarEvents: " + list.size());
+        bag = new ResponseBag();
+        bag.setCalendarEvents(list);
+        Collections.sort(bag.getCalendarEvents());
+        bag.setType(ResponseBag.CALENDAR_EVENTS);
+        setFragment();
+        cachePresenter.cacheCalendarEvents(list);
+        presenter.getAllCalendarEvents();
     }
 
     @Override
@@ -629,6 +680,26 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+        Log.i(TAG, "onCachePhotos " + list.size());
+        bag = new ResponseBag();
+        bag.setPhotos(list);
+        bag.setType(ResponseBag.PHOTOS);
+        setFragment();
+        presenter.getAllPhotos();
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+        Log.i(TAG, "onCacheCalendarEvents " + list.size());
+        bag = new ResponseBag();
+        bag.setCalendarEvents(list);
+        bag.setType(ResponseBag.CALENDAR_EVENTS);
+        setFragment();
+        presenter.getAllCalendarEvents();
+    }
+
+    @Override
     public void onError(String message) {
 
     }
@@ -719,12 +790,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onThoughtClicked(int position) {
-
-    }
-
-    @Override
-    public void onMessageClicked() {
+    public void onPhotoTapped(PhotoDTO photo) {
 
     }
 
@@ -738,24 +804,28 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     }
 
-
     @Override
     public void onEBookTapped(EBookDTO eBook) {
 
     }
 
     @Override
-    public void onDailyThoughtTapped(DailyThoughtDTO thought) {
+    public void onDailyThoughtTapped(DailyThoughtDTO dailyThought) {
 
     }
 
     @Override
-    public void onWeeklyMessageTapped(WeeklyMessageDTO message) {
+    public void onWeeklyMasterClassTapped(WeeklyMasterClassDTO weeklyMasterClass) {
 
     }
 
     @Override
-    public void onWeeklyMasterClassesTapped(WeeklyMasterClassDTO master) {
+    public void onMessageTapped(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onCalendarEventTapped(CalendarEventDTO calendarEvent) {
 
     }
 
@@ -827,6 +897,14 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
             startActivity(intent);
             return true;
         }
+
+        if (id == R.id.action_photo){
+            Intent intent = new Intent(SubscriberMainActivity.this, PhotoActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+
 
         return super.onOptionsItemSelected(item);
     }

@@ -1,9 +1,11 @@
 package com.oneconnect.leadership.library.cache;
 
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
@@ -31,6 +33,8 @@ public class CacheContract {
         void cacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list);
         void cacheWeeklyMessages(List<WeeklyMessageDTO> list);
         void cacheVideos(List<VideoDTO> list);
+        void cachePhotos(List<PhotoDTO> list);
+        void cacheCalendarEvents(List<CalendarEventDTO> list);
 
         void getCacheCategories();
         void getCacheDailyThoughts();
@@ -43,6 +47,7 @@ public class CacheContract {
         void getCacheWeeklyMasterclasses();
         void getCacheWeeklyMessages();
         void getCacheVideos();
+        void getCalendarEvents();
     }
     public interface View {
         void onDataCached();
@@ -57,7 +62,8 @@ public class CacheContract {
         void onCacheUsers(List<UserDTO> list);
         void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list);
         void onCacheWeeklyMessages(List<WeeklyMessageDTO> list);
-
+        void onCachePhotos(List<PhotoDTO> list);
+        void onCacheCalendarEvents(List<CalendarEventDTO> list);
         void onError(String message);
     }
 }

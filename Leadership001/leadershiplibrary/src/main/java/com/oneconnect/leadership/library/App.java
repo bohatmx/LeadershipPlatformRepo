@@ -6,6 +6,7 @@ package com.oneconnect.leadership.library;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -67,6 +68,12 @@ public class App extends Application {
 
     public boolean useExtensionRenderers() {
         return BuildConfig.FLAVOR.equals("withExtensions");
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
 }

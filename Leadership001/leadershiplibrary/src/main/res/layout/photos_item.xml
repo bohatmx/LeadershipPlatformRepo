@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/mon_padding">
+
+    <ImageView
+        android:id="@+id/photoView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/bayscape"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/captiontxt"
+        android:padding="@dimen/mon_padding"
+        android:layout_toRightOf="@+id/photoView"
+        android:textColor="@color/blue_500"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="the caption text goes here"/>
+</RelativeLayout>

@@ -30,6 +30,7 @@ import com.oneconnect.leadership.library.cache.VideoCache;
 import com.oneconnect.leadership.library.camera.VideoAdapter;
 import com.oneconnect.leadership.library.camera.VideoUploadContract;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -354,6 +355,16 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onEntityAdded(String key) {
 
     }
@@ -412,12 +423,22 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     }
 
     @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
 
     }
 
     @Override
     public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
 
     }
 
@@ -517,4 +538,6 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     public interface VideoListener {
         void onVideoTapped(VideoDTO video);
     }
+
+
 }

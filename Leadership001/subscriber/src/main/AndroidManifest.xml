@@ -33,7 +33,12 @@
         <activity
             android:name=".SubscriberMainActivity"
             android:label="@string/title_activity_subscriber_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity android:name="com.oneconnect.leadership.library.lists.MediaListActivity"
             android:parentActivityName=".SubscriberMainActivity"
@@ -58,6 +63,22 @@
         <activity android:name="com.oneconnect.leadership.library.activities.PodcastActivity"
             android:label="@string/title_activity_podcast"
             android:parentActivityName=".SubscriberMainActivity"/>
+
+        <activity android:name="com.oneconnect.leadership.library.activities.WebViewActivity"
+            android:label="@string/title_activity_web_view"
+            android:parentActivityName=".SubscriberMainActivity"/>
+
+        <activity android:name="com.oneconnect.leadership.library.video.LeExoPlayerActivity"
+            android:label="@string/title_activity_le_exo_player"
+            android:parentActivityName=".SubscriberMainActivity"/>
+
+        <activity android:name="com.oneconnect.leadership.library.video.VideoPlayerActivity"
+            android:label="@string/title_activity_video_player"
+            android:parentActivityName=".SubscriberMainActivity"/>
+        <activity android:name="com.oneconnect.leadership.library.activities.PhotoActivity"
+            android:label="@string/title_activity_main"
+            android:parentActivityName=".SubscriberMainActivity"/>
+
 
     </application>
 

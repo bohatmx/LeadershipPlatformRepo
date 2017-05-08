@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by aubreymalabie on 2/11/17.
@@ -29,6 +31,11 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,UrlDTO> urls;
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
+
+
+    private List<VideoDTO> videoList;
+    private List<PhotoDTO> photoList;
+
 
     public HashMap<String, RatingDTO> getRatings() {
         return ratings;
@@ -61,6 +68,30 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
 
     public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
         this.podcasts = podcasts;
+    }
+
+
+    public List<VideoDTO> getVideoList() {
+        return videoList;
+    }
+
+    public void setVideoList(List<VideoDTO> videoList) {
+        this.videoList = videoList;
+    }
+
+    public List<PhotoDTO> getPhotoList() {
+        List<PhotoDTO> list = new ArrayList<>();
+        if (/*photos*/photoList != null) {
+            for (PhotoDTO p: photoList/*photos.values()*/) {
+                list.add(p);
+            }
+        }
+        return list/*photos*/;
+        /*return photoList;*/
+    }
+
+    public void setPhotoList(List<PhotoDTO> photoList) {
+        this.photoList = photoList;
     }
 
     public HashMap<String, PhotoDTO> getPhotos() {

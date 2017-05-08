@@ -2,44 +2,57 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_daily_thought"
-            android:icon="@drawable/ic_chat"
-            android:title="Daily Thought" />
-        <item
-            android:id="@+id/nav_podcast"
-            android:icon="@drawable/ic_microphone"
-            android:title="Podcast" />
-        <item
-            android:id="@+id/nav_video"
-            android:icon="@drawable/ic_videocam"
-            android:title="Video" />
-        <item
-            android:id="@+id/nav_eBooks"
-            android:icon="@drawable/ic_clipboard"
-            android:title="eBooks" />
-
-        <item
-            android:id="@+id/nav_master"
-            android:icon="@drawable/ic_info"
-            android:title="Weekly Master Classes" />
-        <item
-            android:id="@+id/nav_weekly"
-            android:icon="@drawable/ic_menu_send"
-            android:title="Weekly Message" />
+        <item android:title="Message">
+            <menu>
+                <item
+                    android:id="@+id/nav_daily_thought"
+                    android:icon="@drawable/ic_comment_black_24dp"
+                    android:title="Daily Thought" />
+                <item
+                    android:id="@+id/nav_master"
+                    android:icon="@drawable/ic_class_black_24dp"
+                    android:title="Weekly Master Classes" />
+                <item
+                    android:id="@+id/nav_weekly"
+                    android:icon="@drawable/ic_chat"
+                    android:title="Weekly Message" />
+            </menu>
+        </item>
     </group>
 
-   <!-- <item android:title="Communicate">
+    <item android:title="Events">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_calender_events"
+                android:icon="@drawable/ic_event_black_24dp"
+                android:title="Calendar Events" />
         </menu>
-    </item>-->
+    </item>
+
+    <item android:title="Media">
+        <menu>
+            <item
+                android:id="@+id/nav_photo"
+                android:icon="@drawable/ic_photo_black_24dp"
+                android:title="Photo" />
+            <item
+                android:id="@+id/nav_podcast"
+                android:icon="@drawable/ic_microphone"
+                android:title="Podcast" />
+            <item
+                android:id="@+id/nav_video"
+                android:icon="@drawable/ic_videocam"
+                android:title="Video" />
+        </menu>
+    </item>
+
+    <item android:title="Read">
+        <menu>
+            <item
+                android:id="@+id/nav_eBooks"
+                android:icon="@drawable/ic_library_books_black_24dp"
+                android:title="Books" />
+        </menu>
+    </item>
 
 </menu>
