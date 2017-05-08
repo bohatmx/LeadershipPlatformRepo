@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,21 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(pvh.photoView);
         pvh.txtDate.setText(p.getStringDate());
+
+        pvh.iconshare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
+    }
+    private void shareIt() {
+        //sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(sharingIntent);
     }
 
     @Override
@@ -64,7 +80,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public class PhotoViewHolder extends RecyclerView.ViewHolder {
         protected TextView captiontxt, txtDate;
-        protected ImageView photoView;
+        protected ImageView photoView, iconshare;
 
         public PhotoViewHolder(View itemView) {
             super(itemView);
@@ -73,7 +89,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtDate.setVisibility(View.GONE);
             photoView = (ImageView) itemView.findViewById(R.id.photoView);
-
+            iconshare = (ImageView) itemView.findViewById(R.id.iconshare);
         }
     }
 }

@@ -16,7 +16,7 @@
             android:layout_height="200dp"
             android:scaleType="fitXY"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_clipboard" />
+            android:src="@drawable/ebook" />
         <TextView
             android:layout_toRightOf="@+id/bookIcon"
             android:id="@+id/fileName"
@@ -30,11 +30,19 @@
             android:text="Filename inserted here" />
 
         <ImageView
+            android:id="@+id/iconshar"
+            android:layout_below="@+id/image"
+            android:layout_toRightOf="@+id/fileName"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/share" />
+
+        <ImageView
             android:layout_margin="8dp"
             android:layout_below="@+id/image"
             android:id="@+id/bookIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/ic_book_black_24dp"/>
 
         <RelativeLayout

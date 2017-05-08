@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -157,6 +158,13 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
 
+        pvh.headerpic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
+
         /*pvh.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,7 +214,14 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
     }
-
+    private void shareIt() {
+        //sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(sharingIntent);
+    }
     private TextView  initTimetxt, finalTimetxt;
     private SeekBar seekbar;
 
@@ -239,7 +254,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class PodcastsViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image, playIMG, pauseIMG, stopIMG;
+        protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic;
         protected Button btnPlay, btnUpload;
 
         public PodcastsViewHolder(View itemView) {
@@ -252,6 +267,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnUpload.setVisibility(View.GONE);
             seekbar = (SeekBar) itemView.findViewById(R.id.seekBar);
+            headerpic = (ImageView) itemView.findViewById(R.id.headerpic);
             /*seekBar.setProgress(0);
             seekBar.setMax(100);*/
 

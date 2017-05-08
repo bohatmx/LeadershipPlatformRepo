@@ -22,6 +22,8 @@
             android:layout_below="@+id/photoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/accent_teal"
+            android:textStyle="bold"
             android:text="the caption text goes here"/>
 
         <TextView
@@ -31,6 +33,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Monday, 10 April 2015 11:19:15"/>
+
+        <ImageView
+            android:id="@+id/iconshare"
+            android:layout_below="@+id/captiontxt"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/txtDate"
+            android:src="@drawable/share" />
     </RelativeLayout>
 
 

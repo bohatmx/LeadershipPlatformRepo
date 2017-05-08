@@ -56,6 +56,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     private UserDTO user;
+    private MasterListener masterListener;
+
+    public interface MasterListener {
+        void onWeeklyMasterClassesTapped(WeeklyMasterClassDTO master);
+    }
 
     public MasterListFragment(){
 
@@ -245,7 +250,6 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void onCalendarTooltipRequired(int type) {
 
     }
-
     @Override
     public void onDataCached() {
 

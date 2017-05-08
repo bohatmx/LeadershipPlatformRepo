@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +51,19 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         final WeeklyMessageDTO wm = mList.get(position);
         final WeeklyMessageViewHolder wmvh = (WeeklyMessageViewHolder) holder;
-        wmvh.txtEvents.setText("" + position);
+        wmvh.txtEvents.setText("" + (position + 1));
         wmvh.txtTitle.setText(wm.getTitle());
         wmvh.txtSubtitle.setText(wm.getSubtitle());
         wmvh.txtDate.setText(wm.getStringDateScheduled());
         wmvh.iconCamera.setImageDrawable(ctx.getDrawable(R.drawable.ic_photo_black_24dp));
         wmvh.iconUpdate.setImageDrawable(ctx.getDrawable(R.drawable.ic_link_black_24dp));
+
+        wmvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
 
         if (wm.getVideos() != null) {
             wmvh.txtVideo.setText("" + wm.getVideos().size());
@@ -91,7 +99,14 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
     }
-
+    private void shareIt() {
+        //sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(sharingIntent);
+    }
     @Override
     public int getItemCount() {
         return mList == null ? 0 : mList.size();
@@ -112,7 +127,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
-            iconCalendar.setVisibility(View.GONE);
+           // iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);

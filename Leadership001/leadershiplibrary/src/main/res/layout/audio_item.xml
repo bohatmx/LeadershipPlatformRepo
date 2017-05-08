@@ -16,7 +16,7 @@
             android:layout_height="200dp"
             android:scaleType="fitXY"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_microphone" />
+            android:src="@drawable/audios" />
 
         <RelativeLayout
             android:id="@+id/controlLayout"
@@ -61,7 +61,9 @@
             android:layout_height="wrap_content"
             android:textColor="@color/blue_500"
             android:textSize="12sp"
+            android:textStyle="bold"
             android:text="Filename inserted here" />
+
 
         <RelativeLayout
             android:layout_width="match_parent"

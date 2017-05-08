@@ -1,10 +1,12 @@
 package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
@@ -48,6 +50,22 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
         cevh.startDate.setText(ce.getStringStartDate());
         cevh.endLabel.setText("End Date: ");
         cevh.endDate.setText(ce.getStringEndDate());
+
+        cevh.shareevent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
+    }
+
+    private void shareIt() {
+        //sharing implementation here
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(sharingIntent);
     }
 
     @Override
@@ -57,6 +75,8 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class CalendarEventViewHolder extends RecyclerView.ViewHolder {
         protected TextView titletxt, descriptiontxt, startLabel, startDate, endLabel, endDate;
+        protected ImageView shareevent;
+
         public CalendarEventViewHolder(View itemView) {
             super(itemView);
             titletxt = (TextView) itemView.findViewById(R.id.titletxt);
@@ -65,7 +85,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
             startDate = (TextView) itemView.findViewById(R.id.startDate);
             endLabel = (TextView) itemView.findViewById(R.id.endLabel);
             endDate = (TextView) itemView.findViewById(R.id.endDate);
-
+            shareevent = (ImageView) itemView.findViewById(R.id.shareevent);
 
         }
     }
