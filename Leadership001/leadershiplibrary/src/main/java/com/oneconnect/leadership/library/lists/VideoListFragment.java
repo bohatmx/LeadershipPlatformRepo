@@ -62,7 +62,7 @@ import java.util.List;
  * Use the {@link VideoListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class VideoListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
+public class VideoListFragment extends Fragment implements VideoAdapter.VideoAdapterListener, PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener {
     private VideoListener mListener;
     public static final String TAG = VideoListFragment.class.getSimpleName();
@@ -491,6 +491,16 @@ public class VideoListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onError(String message) {
+
+    }
+
+    @Override
+    public void onPlayVideoTapped(String path) {
+
+    }
+
+    @Override
+    public void onUploadVideoTapped(String path) {
 
     }
 

@@ -63,7 +63,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     private UserDTO user;
     private List<WeeklyMessageDTO> weeklyMessageList = new ArrayList<>();
     private View view;
+    private WeeklyMessageListener weeklyListener;
 
+    public interface WeeklyMessageListener {
+        void onWeeklyMessageTapped(WeeklyMessageDTO message);
+    }
     public WeeklyMessageListFragment() {
         // Required empty public constructor
     }

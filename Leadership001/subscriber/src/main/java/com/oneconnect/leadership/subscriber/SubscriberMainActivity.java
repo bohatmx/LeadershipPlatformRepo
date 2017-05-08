@@ -40,6 +40,7 @@ import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.activities.VideoActivity;
 import com.oneconnect.leadership.library.activities.eBookActivity;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
+import com.oneconnect.leadership.library.adapters.EbookAdapter;
 import com.oneconnect.leadership.library.adapters.WeeklyMessageAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -77,12 +78,13 @@ import com.oneconnect.leadership.subscriber.services.SubscriberMessagingService;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class SubscriberMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener, DailyThoughtAdapter.DailyThoughtAdapterlistener, WeeklyMessageAdapter.WeeklyMessageAdapterListener/*,
-        PodcastListFragment.PodcastListener, VideoListFragment.VideoListener*/{
+        SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener, DailyThoughtAdapter.DailyThoughtAdapterlistener, WeeklyMessageAdapter.WeeklyMessageAdapterListener,
+        PodcastListFragment.PodcastListener, VideoListFragment.VideoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughListener , WeeklyMessageListFragment.WeeklyMessageListener, MasterListFragment.MasterListener{
 
 
     private WeeklyMessageDTO weeklyMessage;
@@ -241,16 +243,24 @@ public class SubscriberMainActivity extends AppCompatActivity
         dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
         masterListFragment = MasterListFragment.newInstance();
         weeklyMessageListFragment = WeeklyMessageListFragment.newInstance();
-
+        videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
+        podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
+        eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
 
         dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
         masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
         weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
+        videoListFragment.setPageTitle(ctx.getString(R.string.video));
+        podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
+        eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
 
 
-         pageFragmentList.add(dailyThoughtListFragment);
+        pageFragmentList.add(dailyThoughtListFragment);
         pageFragmentList.add(masterListFragment);
         pageFragmentList.add(weeklyMessageListFragment);
+        pageFragmentList.add(videoListFragment);
+        pageFragmentList.add(podcastListFragment);
+        pageFragmentList.add(eBookListFragment);
 
         try {
             adapter = new PagerAdapter(getSupportFragmentManager());
@@ -280,7 +290,7 @@ public class SubscriberMainActivity extends AppCompatActivity
             if (page != null) {
                 if (page.equalsIgnoreCase("Daily Thoughts")) {
                     mPager.setCurrentItem(0);
-                }/*
+                }
                 if (page.equalsIgnoreCase("Podcast")) {
                     mPager.setCurrentItem(1);
                 }
@@ -289,12 +299,12 @@ public class SubscriberMainActivity extends AppCompatActivity
                 }
                 if (page.equalsIgnoreCase("eBooks")) {
                     mPager.setCurrentItem(3);
-                }*/
+                }
                 if (page.equalsIgnoreCase("Weekly Master Classes")) {
-                    mPager.setCurrentItem(1);
+                    mPager.setCurrentItem(4);
                 }
                 if (page.equalsIgnoreCase("Weekly Message")) {
-                    mPager.setCurrentItem(2);
+                    mPager.setCurrentItem(5);
                 }
             }
         }
@@ -321,15 +331,18 @@ public class SubscriberMainActivity extends AppCompatActivity
                     mPager.setCurrentItem(2, true);
                     return true;
                 }else if (item.getItemId() == R.id.nav_podcast) {
+                    mPager.setCurrentItem(3, true);
                     Intent intent = new Intent(SubscriberMainActivity.this, PodcastActivity.class);
                     startActivity(intent);
 
                     return true;
                 } else if (item.getItemId() == R.id.nav_video) {
+                    mPager.setCurrentItem(4, true);
                     Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
                     startActivity(intent);
                     return true;
                 } else if (item.getItemId() == R.id.nav_eBooks) {
+                    mPager.setCurrentItem(5, true);
                     Intent intent = new Intent(SubscriberMainActivity.this, eBookActivity.class);
                     startActivity(intent);
                     return true;
@@ -712,6 +725,37 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onMessageClicked() {
+
+    }
+
+    @Override
+    public void onPodcastTapped(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onVideoTapped(VideoDTO video) {
+
+    }
+
+
+    @Override
+    public void onEBookTapped(EBookDTO eBook) {
+
+    }
+
+    @Override
+    public void onDailyThoughtTapped(DailyThoughtDTO thought) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageTapped(WeeklyMessageDTO message) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassesTapped(WeeklyMasterClassDTO master) {
 
     }
 

@@ -54,14 +54,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DailyThoughtListFragment} interface
- * to handle interaction events.
- * Use the {@link DailyThoughtListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
@@ -71,12 +63,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
+    private DailyThoughListener dailyThoughtListener;
+
+    public interface DailyThoughListener {
+        void onDailyThoughtTapped(DailyThoughtDTO thought);
+    }
 
     public DailyThoughtListFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static DailyThoughtListFragment newInstance() {
         DailyThoughtListFragment fragment = new DailyThoughtListFragment();
         Bundle args = new Bundle();
@@ -93,7 +89,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             bag = (ResponseBag) getArguments().getSerializable("bag");
-//            Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
             dailyThought = (DailyThoughtDTO) getArguments().getSerializable("dailyThought");
             type = getArguments().getInt("type", 0);
 
@@ -159,20 +154,21 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-       try{
-          mListener = (DailyThoughtAdapter.DailyThoughtAdapterlistener) activity;
-       } catch(ClassCastException e) {
-           throw new RuntimeException(activity.toString()
-                   + " must implement DailyThoughtListener");
-       }
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+         if (context instanceof DailyThoughListener) {
+            dailyThoughtListener = (DailyThoughListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement DailyThoughtListener");
+        }
        }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        dailyThoughtListener = null;
     }
 
 

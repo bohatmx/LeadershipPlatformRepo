@@ -56,7 +56,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         //
         vvh.fileName.setText(displayName/*v.getStorageName()*/.substring(i + 1));
         //vvh.fileName.setText(v.getUrl());
-        vvh.image.setImageDrawable(ctx.getDrawable(R.drawable.ic_clipboard));
+        vvh.image.setImageDrawable(ctx.getDrawable(R.drawable.ebook));
         final String bookUrl = v.getUrl();
         vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override

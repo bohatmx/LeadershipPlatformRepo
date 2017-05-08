@@ -16,7 +16,7 @@
             android:layout_height="200dp"
             android:scaleType="fitXY"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_microphone" />
+            android:src="@drawable/audios" />
 
         <RelativeLayout
             android:id="@+id/controlLayout"

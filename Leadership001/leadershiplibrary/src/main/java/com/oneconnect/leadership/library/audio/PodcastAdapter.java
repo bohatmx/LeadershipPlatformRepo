@@ -50,7 +50,7 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
         Log.w("PodcastAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
         /*Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Audio.Thumbnails.MINI_KIND);
         holder.image.setImageBitmap(thumb);*/
-        holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_microphone));
+        holder.image.setImageDrawable(context.getDrawable(R.drawable.audios));
         int i = path.lastIndexOf("/");
         holder.txtFileName.setText(path.substring(i + 1));
         holder.btnUpload.setOnClickListener(new View.OnClickListener() {

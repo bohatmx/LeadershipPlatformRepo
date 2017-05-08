@@ -104,7 +104,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         if (getArguments() != null) {
             ResponseBag  bag = (ResponseBag) getArguments().getSerializable("bag");
             eBooks = bag.geteBooks();
-            Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
+            //Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
             eBook = (EBookDTO) getArguments().getSerializable("eBook");
             type = getArguments().getInt("type", 0);
 

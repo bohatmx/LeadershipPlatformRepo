@@ -95,8 +95,8 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ResponseBag  bag = (ResponseBag) getArguments().getSerializable("bag");
-            podcasts= bag.getPodcasts();
-            Log.d(LOG, "bagSize: " + bag.getVideos().size());
+            podcasts = bag.getPodcasts();
+            //Log.d(LOG, "bagSize: " + bag.getVideos().size());
             podcast = (PodcastDTO) getArguments().getSerializable("podcast");
             type = getArguments().getInt("type", 0);
 
