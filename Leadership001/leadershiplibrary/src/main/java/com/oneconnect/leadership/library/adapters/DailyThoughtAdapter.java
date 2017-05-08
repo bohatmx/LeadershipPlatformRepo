@@ -97,6 +97,9 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     } else {
                         dvh.videoAdapterLayout.setVisibility(View.GONE);
                     }
+                    mediaController = new MediaController(ctx);
+                    mediaController.setAnchorView(dvh.videoView);
+
                     DailyThoughtDTO dtd = mList.get(position);
                     Map map = dtd.getVideos();
                     VideoDTO vDTO;
@@ -105,20 +108,22 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         try {
                             Uri video = Uri.parse(vDTO.getUrl());
                             dvh.videoView.setVideoPath(vDTO.getUrl());
-                          //  dvh.videoView.setMediaController(mediaController);
+                            dvh.videoView.setMediaController(mediaController);
                             dvh.videoView.setVideoURI(video);
+                            dvh.videoView.requestFocus();
+                            dvh.videoView.seekTo(100);
 
                         } catch (Exception e) {
                             Log.e(LOG,"Video something went wrong: " + e.getMessage());
                         }
 
-                        dvh.videoView.requestFocus();
-                        dvh.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                        /*dvh.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(MediaPlayer mp) {
 
                             }
-                        });
+                        });*/
 
                         dvh.btnPlay.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -341,8 +346,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             //
             videoAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.videoAdapterLayout);
             videoView = (VideoView) itemView.findViewById(R.id.videoView);
-            mediaController = new MediaController(ctx);
-            mediaController.setAnchorView(videoView);
+
             //
 
             //

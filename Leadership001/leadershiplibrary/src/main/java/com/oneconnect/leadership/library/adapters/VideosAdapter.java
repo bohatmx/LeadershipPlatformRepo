@@ -68,6 +68,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Uri video = Uri.parse(v.getUrl());
             vvh.videoView.setMediaController(mediaController);
             vvh.videoView.setVideoURI(video);
+            vvh.videoView.seekTo(100);
         } catch (Exception e) {
             Log.e(LOG,"Video something went wrong: " + e.getMessage());
         }
