@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.admin;
 
 import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.oneconnect.leadership.library.App;
@@ -23,9 +24,5 @@ public class AdminApp extends App {
 
     }
 
-   /* @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }*/
+
 }

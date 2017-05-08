@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.WebViewActivity;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 
@@ -61,13 +62,19 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File f = new File(bookUrl);
-                if (f.exists()) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.fromFile(f), "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    Intent intent = new Intent(ctx, WebViewActivity.class);
+                    intent.putExtra("links", bookUrl/*mList.get(position).getUrls()*/);
                     ctx.startActivity(intent);
-                }
+                //listener.onReadClicked(bookUrl);
+                //File f = new File(bookUrl);
+                //if (f.exists()) {
+                    /*Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(bookUrl), "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    ctx.startActivity(intent);*/
+              //  }
             }
         });
         /*vvh.btnPlay.setOnClickListener(new View.OnClickListener() {

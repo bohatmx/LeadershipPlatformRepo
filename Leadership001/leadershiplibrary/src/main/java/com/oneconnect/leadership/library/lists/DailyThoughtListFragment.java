@@ -30,6 +30,7 @@ import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -65,7 +66,8 @@ import java.util.List;
 public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
-    private DailyThoughtAdapter.DailyThoughtAdapterlistener mListener;
+    //private DailyThoughtAdapter.DailyThoughtAdapterlistener mListener;
+    private DailyThoughtListener mListener;
     private RecyclerView recyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
@@ -93,7 +95,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             bag = (ResponseBag) getArguments().getSerializable("bag");
-//            Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
             dailyThought = (DailyThoughtDTO) getArguments().getSerializable("dailyThought");
             type = getArguments().getInt("type", 0);
 
@@ -159,14 +160,14 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-       try{
-          mListener = (DailyThoughtAdapter.DailyThoughtAdapterlistener) activity;
-       } catch(ClassCastException e) {
-           throw new RuntimeException(activity.toString()
-                   + " must implement DailyThoughtListener");
-       }
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof DailyThoughtListener) {
+            mListener = (DailyThoughtListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement DailyThoughtListener");
+        }
        }
 
     @Override
@@ -190,7 +191,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public String getTitle() {
-        return null;
+        return pageTitle;
     }
 
     @Override
@@ -253,12 +254,22 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
 
     }
 
     @Override
     public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
 
     }
 
@@ -384,6 +395,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onError(String message) {
 
     }
@@ -474,6 +495,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
 
-
+    public interface DailyThoughtListener {
+        void onDailyThoughtTapped(DailyThoughtDTO dailyThought);
+    }
 
 }

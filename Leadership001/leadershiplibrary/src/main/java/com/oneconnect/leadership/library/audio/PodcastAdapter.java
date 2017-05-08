@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
@@ -66,15 +67,17 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return paths.size();
     }
 
     public class PodcastViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtFileName;
+        protected TextView txtFileName, initialTime, finalTime;
         protected ImageView image;
         protected Button btnUpload, btnPlay;
+        protected RelativeLayout controlLayout;
 
         public PodcastViewHolder(View itemView) {
             super(itemView);
@@ -82,6 +85,12 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
             image = (ImageView) itemView.findViewById(R.id.image);
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+            controlLayout = (RelativeLayout) itemView.findViewById(R.id.controlLayout);
+            controlLayout.setVisibility(View.GONE);
+            initialTime = (TextView) itemView.findViewById(R.id.initialTime);
+            initialTime.setVisibility(View.GONE);
+            finalTime = (TextView) itemView.findViewById(R.id.finalTime);
+            finalTime.setVisibility(View.GONE);
         }
 
     }

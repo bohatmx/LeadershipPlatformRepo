@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
 import com.oneconnect.leadership.library.cache.EbookCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -104,7 +106,6 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         if (getArguments() != null) {
             ResponseBag  bag = (ResponseBag) getArguments().getSerializable("bag");
             eBooks = bag.geteBooks();
-            Log.d(LOG, "bagSize: " + bag.getDailyThoughts().size());
             eBook = (EBookDTO) getArguments().getSerializable("eBook");
             type = getArguments().getInt("type", 0);
 
@@ -146,37 +147,6 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                 getCachedEBooks();
             }
         });
-
-        File dir = Environment.getExternalStorageDirectory();
-        File myDir = new File(dir, "leadership");
-        if (!myDir.exists()) {
-            myDir.mkdir();
-        }
-        File[] files = myDir.listFiles();
-        filePathList = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                if (file.getName().contains(",pdf")) {
-                        filePathList.add(file.getAbsolutePath());
-
-                }
-            }
-        }
-
-        if (filePathList.isEmpty()) {
-            Log.d(LOG, "getCachedEbooks: filePathList is empty");
-        } else {
-            fileContainerList.clear();
-            for (String d : filePathList) {
-                fileContainerList.add(new FileContainer(d));
-            }
-            Collections.sort(fileContainerList);
-            filePathList.clear();
-            for (FileContainer f : fileContainerList) {
-                filePathList.add(f.fileName);
-            }
-            setList();
-        }
     }
 
 
@@ -184,14 +154,20 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         adapter = new EbookAdapter(eBooks, ctx, new EbookAdapter.EbookAdapterListener() {
             @Override
             public void onReadClicked(String path) {
-                File file = new File(path);
-                Log.e(LOG, "pdf file: " + file.getAbsolutePath() + " length: " + file.length());
-                if (file.exists()) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    ctx.startActivity(intent);
-                }
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(path), "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                ctx.startActivity(intent);
+                //  File file = new File(path);
+                //  Log.e(LOG, "pdf file: " + file.getAbsolutePath() + " length: " + file.length());
+                // if (file.exists()) {
+
+              //      Intent intent = new Intent(Intent.ACTION_VIEW);
+               //     intent.setDataAndType(Uri.fromFile(path), "application/pdf");
+                //    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //    ctx.startActivity(intent);
+            //    }
             }
         });
     }
@@ -424,6 +400,16 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onEntityAdded(String key) {
 
     }
@@ -478,19 +464,30 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
             @Override
             public void onReadClicked(String path) {
-                File f = new File(path);
-                if (f.exists()) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.fromFile(f), "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+          //      File f = new File(path);
+            //    if (f.exists()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(path), "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent newIntent = Intent.createChooser(intent, "Open File");
+                try {
+                    ctx.startActivity(newIntent);
+                } catch(ActivityNotFoundException e) {
+                    Log.e(LOG, "Failed to open pdf");
                 }
+               // startActivity(intent);
+              //  }
                 //readEbook(path);
 
 
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
     }
 
     @Override
@@ -517,12 +514,27 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onEbooks(List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
         this.eBooks = list;
         adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
             @Override
             public void onReadClicked(String path) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(path), "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+               // Intent newIntent = Intent.createChooser(intent, "Choose an Application");
+                try {
+                    ctx.startActivity(intent);
+                } catch(ActivityNotFoundException e) {
+                    Log.e(LOG, "Failed to open pdf");
+                }
                 //readEbook(path);
             }
         });

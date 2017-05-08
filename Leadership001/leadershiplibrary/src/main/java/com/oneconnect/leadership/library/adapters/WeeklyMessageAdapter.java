@@ -10,10 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nkululeko on 2017/05/03.
@@ -41,7 +46,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         final WeeklyMessageDTO wm = mList.get(position);
         final WeeklyMessageViewHolder wmvh = (WeeklyMessageViewHolder) holder;
@@ -49,12 +54,34 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         wmvh.txtTitle.setText(wm.getTitle());
         wmvh.txtSubtitle.setText(wm.getSubtitle());
         wmvh.txtDate.setText(wm.getStringDateScheduled());
+        wmvh.iconCamera.setImageDrawable(ctx.getDrawable(R.drawable.ic_photo_black_24dp));
+        wmvh.iconUpdate.setImageDrawable(ctx.getDrawable(R.drawable.ic_link_black_24dp));
 
         if (wm.getVideos() != null) {
             wmvh.txtVideo.setText("" + wm.getVideos().size());
         }
         if (wm.getPhotos() != null) {
             wmvh.txtCamera.setText("" + wm.getPhotos().size());
+            wmvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        wmvh.photoAdapterLayout.setVisibility(View.VISIBLE);
+                        WeeklyMessageDTO dtd = mList.get(position);
+                        Map map = dtd.getPhotos();
+                        PhotoDTO vDTO;
+                        String url;
+                        for (Object value : map.values()) {
+                            vDTO = (PhotoDTO) value;
+                            url = vDTO.getUrl();
+                            Glide.with(ctx)
+                                    .load(url)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .into(wmvh.photoView);
+                            wmvh.captiontxt.setText(vDTO.getCaption());
+                        }
+                    }
+                });
+
         }
         if (wm.getPodcasts() != null) {
             wmvh.txtMicrophone.setText("" + wm.getPodcasts().size());
@@ -72,11 +99,11 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class WeeklyMessageViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
-                txtVideo, txtCamera;
-        protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera;
+                txtVideo, txtCamera, captiontxt;
+        protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
-        protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout;
+        protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout, photoAdapterLayout;
 
         public WeeklyMessageViewHolder(View itemView) {
             super(itemView);
@@ -96,6 +123,56 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             txtVideo = (TextView) itemView.findViewById(R.id.txtVideo);
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
 
+            iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
+            iconMicrophone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (podcastAdapterLayout.getVisibility() == View.GONE){
+                        podcastAdapterLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        podcastAdapterLayout.setVisibility(View.GONE);
+                    }
+                }
+            });
+            iconVideo = (ImageView) itemView.findViewById(R.id.iconVideo);
+            iconVideo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (videoAdapterLayout.getVisibility() == View.GONE){
+                        videoAdapterLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        videoAdapterLayout.setVisibility(View.GONE);
+                    }
+                }
+            });
+            iconCamera = (ImageView) itemView.findViewById(R.id.iconCamera);
+            iconCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (photoAdapterLayout.getVisibility() == View.GONE){
+                        photoAdapterLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        photoAdapterLayout.setVisibility(View.GONE);
+                    }
+                }
+            });
+            iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+
+            // layouts
+            podcastAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.podcastAdapterLayout);
+
+            //
+
+            //
+            videoAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.videoAdapterLayout);
+
+            //
+
+            //
+            photoAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.photoAdapterLayout);
+            photoView = (ImageView) itemView.findViewById(R.id.photoView);
+            captiontxt = (TextView) itemView.findViewById(R.id.captiontxt);
+            //
 
     }
 }

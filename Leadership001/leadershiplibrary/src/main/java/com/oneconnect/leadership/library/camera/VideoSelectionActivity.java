@@ -139,6 +139,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         recyclerView.setAdapter(adapter);
     }
 
+
     private void playVideo(String path) {
 
         Intent m = new Intent(this, LeExoPlayerActivity.class);

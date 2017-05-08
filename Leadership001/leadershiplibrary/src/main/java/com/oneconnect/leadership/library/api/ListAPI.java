@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -179,6 +180,54 @@ public class ListAPI {
                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         DailyThoughtDTO dt = shot.getValue(DailyThoughtDTO.class);
                         bag.getDailyThoughts().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllCalendarEvents(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.CALENDAR_EVENTS);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(LOG, dataSnapshot.getValue().toString());
+                ResponseBag bag = new ResponseBag();
+                bag.setCalendarEvents(new ArrayList<CalendarEventDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        CalendarEventDTO ce = shot.getValue(CalendarEventDTO.class);
+                        bag.getCalendarEvents().add(ce);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllPhotos(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.PHOTOS);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(LOG, dataSnapshot.getValue().toString());
+                ResponseBag bag = new ResponseBag();
+                bag.setPhotos(new ArrayList<PhotoDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        PhotoDTO dt = shot.getValue(PhotoDTO.class);
+                        bag.getPhotos().add(dt);
                     }
                 }
                 listener.onResponse(bag);

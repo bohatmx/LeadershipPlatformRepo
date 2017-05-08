@@ -188,6 +188,36 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
         });
     }
 
+    @Override
+    public void getAllPhotos() {
+        listAPI.getAllPhotos(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onAllPhotos(bag.getPhotos());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
+    public void getAllCalendarEvents() {
+        listAPI.getAllCalendarEvents(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onAllCalendarEvents(bag.getCalendarEvents());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
 
     @Override
     public void getEbooks(String companyID) {

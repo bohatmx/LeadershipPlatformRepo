@@ -232,6 +232,10 @@
                         android:textColor="@color/teal_700"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+
+
+
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -321,6 +325,34 @@
 
 
             </LinearLayout>
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/podcastAdapterLayout"
+                android:layout_below="@+id/iconLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include
+                    layout="@layout/audio_item"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/videoAdapterLayout"
+                android:layout_below="@+id/iconLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include
+                    layout="@layout/videos_item"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/photoAdapterLayout"
+                android:layout_below="@+id/iconLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include
+                    layout="@layout/photos_item"/>
+            </RelativeLayout>
+
 
 
         </RelativeLayout>

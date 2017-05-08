@@ -20,6 +20,8 @@ import com.oneconnect.leadership.library.adapters.WeeklyMessageAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.WeeklyMessageCache;
+import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -50,9 +52,10 @@ import java.util.List;
  * Use the {@link WeeklyMessageListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WeeklyMessageListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View{
+public class WeeklyMessageListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener {
 
-    private WeeklyMessageAdapter.WeeklyMessageAdapterListener mListener;
+    //private WeeklyMessageAdapter.WeeklyMessageAdapterListener mListener;
+    private WeeklyMessageListener mListener;
     private RecyclerView recyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
@@ -141,13 +144,13 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try{
-            mListener = (WeeklyMessageAdapter.WeeklyMessageAdapterListener) activity;
-        } catch(ClassCastException e) {
-            throw new RuntimeException(activity.toString()
-                    + " must implement WeeklyMessageAdapterListener");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof WeeklyMessageListener) {
+            mListener = (WeeklyMessageListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement WeeklyMessageListener");
         }
     }
 
@@ -157,10 +160,6 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
         mListener = null;
     }
 
-    @Override
-    public String getTitle() {
-        return null;
-    }
 
     @Override
     public void onDataCached() {
@@ -223,6 +222,16 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onEntityAdded(String key) {
 
     }
@@ -272,6 +281,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     }
 
+    @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
     WeeklyMessageAdapter adapter;
 
     @Override
@@ -284,6 +298,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     @Override
     public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
 
     }
 
@@ -352,11 +371,105 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     }
 
+    @Override
+    public void onAddEntity() {
+
+    }
+
+    @Override
+    public void onDeleteClicked(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onPhotoCaptureRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onVideoCaptureRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onSomeActionRequired(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onMicrophoneRequired(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onEntityClicked(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onCalendarRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onEntityDetailRequested(BaseDTO entity, int type) {
+
+    }
+
+    @Override
+    public void onDeleteTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onLinksTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onPhotoCaptureTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onVideoCaptureTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onSomeActionTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onMicrophoneTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onCalendarTooltipRequired(int type) {
+
+    }
+
+    public interface WeeklyMessageListener {
+        void onMessageTapped(WeeklyMessageDTO weeklyMessage);
+    }
+
     static final String LOG = WeeklyMessageListFragment.class.getSimpleName();
 
     String pageTitle;
 
     public String getPageTitle() {
+        return pageTitle;
+    }
+
+    @Override
+    public String getTitle() {
         return pageTitle;
     }
 

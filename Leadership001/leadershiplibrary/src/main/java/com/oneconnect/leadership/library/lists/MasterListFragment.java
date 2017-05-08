@@ -18,6 +18,7 @@ import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.WeeklyMasterclassCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -47,7 +48,8 @@ import java.util.List;
 public class MasterListFragment extends Fragment implements PageFragment, SubscriberContract.View,
         CacheContract.View, BasicEntityAdapter.EntityListener {
 
-    private MasterAdapter.MasterAdapterListener mListener;
+    //private MasterAdapter.MasterAdapterListener mListener;
+    private WeeklyMasterClassListener mListener;
     private ResponseBag bag;
     private EntityListFragment entityListFragment;
     private RecyclerView recyclerView;
@@ -132,9 +134,31 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
             }
         });
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof WeeklyMasterClassListener) {
+            mListener = (WeeklyMasterClassListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement WeeklyMasterClassListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface WeeklyMasterClassListener {
+        void onWeeklyMasterClassTapped(WeeklyMasterClassDTO weeklyMasterClass);
+    }
+
     @Override
     public String getTitle() {
-        return null;
+        return pageTitle;
     }
 
     @Override
@@ -295,6 +319,16 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     }
 
     @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onEntityAdded(String key) {
 
     }
@@ -345,12 +379,22 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     }
 
     @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
 
     }
 
     @Override
     public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
 
     }
 
@@ -431,4 +475,6 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void setPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
     }
+
+
 }

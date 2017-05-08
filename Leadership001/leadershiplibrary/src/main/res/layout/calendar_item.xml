@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/mon_padding">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:id="@+id/titletxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="title"/>
+
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:layout_below="@+id/titletxt"
+            android:id="@+id/descriptiontxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="description"/>
+
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:layout_below="@+id/descriptiontxt"
+            android:id="@+id/startLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start: "/>
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:layout_below="@+id/descriptiontxt"
+            android:id="@+id/startDate"
+            android:layout_toRightOf="@+id/startLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thursday 20 march 1945"/>
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:layout_below="@+id/startLabel"
+            android:id="@+id/endLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End: "/>
+
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:layout_below="@+id/startDate"
+            android:id="@+id/endDate"
+            android:layout_toRightOf="@+id/startLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thursday 20 march 1945"/>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

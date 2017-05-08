@@ -57,6 +57,7 @@ dependencies {
     //    compile 'com.afollestad:material-camera:0.4.4'
     compile project(path: ':backend', configuration: 'android-endpoints')
     // https://mvnrepository.com/artifact/com.cloudinary/cloudinary-android
+
     // https://mvnrepository.com/artifact/com.cloudinary/cloudinary-core
     compile('com.firebaseui:firebase-ui:1.2.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -65,6 +66,12 @@ dependencies {
     })
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile files('libs/pdf-js-0.5.5.jar')
+    /*compile files('libs/objenesis-1.2.jar')*/
+
+    /*compile files('libs/kryo-2.20.jar')*/
+    compile('com.esotericsoftware:kryonet:2.22.0-RC1') {
+        exclude module: 'kryo'
+    }
     compile 'com.cloudinary:cloudinary-android:1.9.1'
     compile 'com.cloudinary:cloudinary-core:1.9.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -112,7 +119,13 @@ dependencies {
     compile 'com.google.android.exoplayer:extension-okhttp:r2.3.0'
     compile 'com.github.piasy:rxandroidaudio:1.5.0'
     compile 'com.github.piasy:AudioProcessor:1.5.0'
+    compile 'com.android.support:multidex:1.0.0'
+    /*compile "com.esotericsoftware:kryo:3.0.1"
+        compile ("com.esotericsoftware:kryonet:2.22.0-RC1") {
+            exclude module : 'kryo'
+        }*/
     testCompile 'junit:junit:4.12'
+    compile files('libs/kryo-2.20.jar')
 }
 
 

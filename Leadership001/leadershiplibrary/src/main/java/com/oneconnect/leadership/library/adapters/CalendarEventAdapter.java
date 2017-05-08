@@ -1,0 +1,72 @@
+package com.oneconnect.leadership.library.adapters;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
+
+import java.util.List;
+
+/**
+ * Created by Nkululeko on 2017/05/07.
+ */
+
+public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private List<CalendarEventDTO> mList;
+    private Context ctx;
+    private CalendarEventAdapterlistener listener;
+
+    public CalendarEventAdapter(List<CalendarEventDTO> mList, Context ctx) {
+        this.mList = mList;
+        this.ctx = ctx;
+    }
+
+    public interface CalendarEventAdapterlistener{
+        void onCalendarEventClicked(CalendarEventDTO calanderEvent);
+
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_item, parent, false);
+        return new CalendarEventViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final CalendarEventDTO ce = mList.get(position);
+        final CalendarEventViewHolder cevh = (CalendarEventViewHolder) holder;
+        cevh.titletxt.setText(ce.getTitle());
+        cevh.descriptiontxt.setText(ce.getDescription());
+        cevh.startLabel.setText("Start Date: ");
+        cevh.startDate.setText(ce.getStringStartDate());
+        cevh.endLabel.setText("End Date: ");
+        cevh.endDate.setText(ce.getStringEndDate());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mList == null ? 0 : mList.size();
+    }
+
+    public class CalendarEventViewHolder extends RecyclerView.ViewHolder {
+        protected TextView titletxt, descriptiontxt, startLabel, startDate, endLabel, endDate;
+        public CalendarEventViewHolder(View itemView) {
+            super(itemView);
+            titletxt = (TextView) itemView.findViewById(R.id.titletxt);
+            descriptiontxt = (TextView) itemView.findViewById(R.id.descriptiontxt);
+            startLabel = (TextView) itemView.findViewById(R.id.startLabel);
+            startDate = (TextView) itemView.findViewById(R.id.startDate);
+            endLabel = (TextView) itemView.findViewById(R.id.endLabel);
+            endDate = (TextView) itemView.findViewById(R.id.endDate);
+
+
+        }
+    }
+}

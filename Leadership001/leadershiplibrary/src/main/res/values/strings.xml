@@ -25,20 +25,27 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_media">Media</string>
+    <string name="action_photo">Photo</string>
     <string name="title_activity_le_exo_player">LeExoPlayerActivity</string>
 
-    <string name="video">Video</string>
+    <string name="video">Videos</string>
 
-    <string name="audio">Audio</string>
+    <string name="audio">Podcasts</string>
 
-    <string name="daily_thought">Daily Thought</string>
+    <string name="daily_thought">Daily Thoughts</string>
 
-    <string name="weeky_master_class">Weekly Masterclass</string>
+    <string name="weeky_master_class">Weekly Masterclasss</string>
 
-    <string name="weekly_message">Weekly Message</string>
+    <string name="weekly_message">Weekly Messages</string>
+
+    <string name="photo">Photos</string>
 
     <string name="podcast">Podcasts</string>
-    
+
+    <string name="ebooks">Ebooks</string>
+
+    <string name="calendar_events">Calendar Events</string>
+
     <string name="Photographs">Photographs</string>
 
     <string name="text">Text</string>
@@ -91,4 +98,7 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="title_activity_e_book">eBookActivity</string>
     <string name="title_activity_weekly_classes">WeeklyMasterClasses</string>
+    <string name="title_activity_web_view">WebViewActivity</string>
+    <string name="title_activity_video_player">VideoPlayerActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
