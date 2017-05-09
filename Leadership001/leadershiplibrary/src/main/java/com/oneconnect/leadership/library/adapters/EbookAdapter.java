@@ -1,8 +1,10 @@
 package com.oneconnect.leadership.library.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,12 +112,26 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void readEbook(String path) {
         File f = new File(path);
-        if (f.exists()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(f), "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+       if (f.exists()) {
+            //Intent intent = new Intent(Intent.ACTION_VIEW);
+            //intent.setDataAndType(Uri.fromFile(f), "application/pdf");
+           // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+           // ctx.startActivity(intent);
+
+
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/"+ path);
+        Intent target = new Intent(Intent.ACTION_VIEW);
+        target.setDataAndType(Uri.fromFile(file),"application/pdf");
+        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+        Intent intent = Intent.createChooser(target, "Open File");
+        try {
             ctx.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            // Instruct the user to install a PDF reader here, or something
         }
+
+       }
     }
 
 
