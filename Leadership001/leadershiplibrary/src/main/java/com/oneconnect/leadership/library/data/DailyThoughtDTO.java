@@ -32,9 +32,9 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
 
-
+/*
     private List<VideoDTO> videoList;
-    private List<PhotoDTO> photoList;
+    private List<PhotoDTO> photoList;*/
 
 
     public HashMap<String, RatingDTO> getRatings() {
@@ -71,7 +71,7 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     }
 
 
-    public List<VideoDTO> getVideoList() {
+    /*public List<VideoDTO> getVideoList() {
         return videoList;
     }
 
@@ -81,19 +81,19 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
 
     public List<PhotoDTO> getPhotoList() {
         List<PhotoDTO> list = new ArrayList<>();
-        if (/*photos*/photoList != null) {
-            for (PhotoDTO p: photoList/*photos.values()*/) {
+        if (*//*photos*//*photoList != null) {
+            for (PhotoDTO p: photoList*//*photos.values()*//*) {
                 list.add(p);
             }
         }
-        return list/*photos*/;
-        /*return photoList;*/
+        return list*//*photos*//*;
+        *//*return photoList;*//*
     }
 
     public void setPhotoList(List<PhotoDTO> photoList) {
         this.photoList = photoList;
     }
-
+*/
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;
     }

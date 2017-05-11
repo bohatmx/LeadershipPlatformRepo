@@ -321,10 +321,36 @@
                         android:textColor="@color/red_700"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+
+
                 </RelativeLayout>
 
 
             </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:layout_below="@+id/iconLayout"
+                android:id="@+id/imageRecyclerView"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_below="@+id/iconLayout"
+                android:id="@+id/videoRecyclerView"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_below="@+id/iconLayout"
+                android:id="@+id/urlRecyclerView"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_below="@+id/iconLayout"
+                android:id="@+id/podcastRecyclerView"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
             <RelativeLayout
                 android:visibility="gone"
                 android:id="@+id/podcastAdapterLayout"
@@ -332,7 +358,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <include
-                    layout="@layout/audio_item"/>
+                    layout="@layout/audio_item"
+                    android:visibility="gone"/>
             </RelativeLayout>
             <RelativeLayout
                 android:visibility="gone"
@@ -341,7 +368,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <include
-                    layout="@layout/videos_item"/>
+                    layout="@layout/mini_video_item"
+                    android:visibility="gone"/>
             </RelativeLayout>
             <RelativeLayout
                 android:visibility="gone"
@@ -350,7 +378,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <include
-                    layout="@layout/photos_item"/>
+                    layout="@layout/photos_item"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/urlAdapterLayout"
+                android:layout_below="@+id/iconLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include
+                    layout="@layout/url_item"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
 

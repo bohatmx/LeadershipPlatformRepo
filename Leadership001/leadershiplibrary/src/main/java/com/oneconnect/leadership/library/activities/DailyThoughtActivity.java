@@ -28,6 +28,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -94,6 +95,31 @@ public class DailyThoughtActivity extends AppCompatActivity implements DailyThou
 
     @Override
     public void onThoughtClicked(int position) {
+
+    }
+
+    @Override
+    public void onPhotoRequired(PhotoDTO photo) {
+
+    }
+
+    @Override
+    public void onVideoRequired(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onPodcastRequired(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onUrlRequired(UrlDTO url) {
+
+    }
+
+    @Override
+    public void onPhotosRequired(List<PhotoDTO> list) {
 
     }
 

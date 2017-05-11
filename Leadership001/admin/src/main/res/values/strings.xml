@@ -23,4 +23,5 @@
     <string name="title_activity_video_selection">VideoSelectionActivity</string>
     <string name="title_activity_podcast_selection">PodcastSelectionActivity</string>
     <string name="title_activity_ebook_selection">EbookSelectionActivity</string>
+    <string name="title_activity_photo_selection">PhotoSelectionActivity</string>
 </resources>

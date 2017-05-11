@@ -95,6 +95,8 @@ public class FirebaseStorageAPI {
 
 
 
+
+
     public void uploadThumbnail(final ThumbnailDTO thumbnail,
                                 final StorageListener listener) {
 

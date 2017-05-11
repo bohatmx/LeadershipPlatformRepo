@@ -102,6 +102,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface PodcastAdapterListener {
         void onPlayClicked(int position);
+        void onPodcastRequired(PodcastDTO podcast);
     }
 
 
@@ -125,7 +126,6 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final PodcastsViewHolder pvh = (PodcastsViewHolder) holder;
         int i = v.getStorageName().lastIndexOf("/");
         pvh.fileName.setText(v.getStorageName().substring(i + 1));
-       // pvh.image.setImageDrawable(ctx.getDrawable(R.drawable.ic_microphone));
         final String podcastURL = v.getUrl();
 
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {

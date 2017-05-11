@@ -35,10 +35,9 @@ public class WebViewActivity extends AppCompatActivity {
     WebView webView;
     Context ctx;
     int position;
-    String podcasts, videoUrl,/* videos,*/ links, linkUrl, photos;
+    String  linkUrl;
     TextView txtName;
     Intent intent;
-    List<VideoDTO> videos ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +50,13 @@ public class WebViewActivity extends AppCompatActivity {
         webView = new WebView(this);
         intent = getIntent();
 
-
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         txtName = (TextView) findViewById(R.id.txtName);
         //
-        linkUrl = intent.getStringExtra("links");
-//        txtName.setText(linkUrl);
-
-       // WebSettings settings = webView.getSettings();
+        linkUrl = intent.getStringExtra("url");
         webView.getSettings().setJavaScriptEnabled(true);
-        //webView.getSettings().setDomStorageEnabled(true);
-        /*webView.getSettings().setPluginState(WebSettings.PluginState.ON);*/
+        webView.getSettings().setPluginState(WebSettings.PluginState.ON);
         webView.getSettings().setLoadWithOverviewMode(true);
-        //webView.setWebViewClient(new WebViewClient());
         webView.setWebViewClient(new WebViewClient() {
 
                     @Override
@@ -71,45 +64,12 @@ public class WebViewActivity extends AppCompatActivity {
                         handler.proceed();
                     }
                 });
-        webView.loadUrl(/*"www.google.com"*/linkUrl);
+        webView.loadUrl(linkUrl);
         setContentView(webView);
-       // setWebView(position);
     }
-
-    private class leadershipWebViewClient extends  WebViewClient {
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url/*WebResourceRequest request*/) {
-            webView.loadUrl(url);
-            return true;
-        }
-
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
-        }
-    }
-
     private static final String TEXT = "text/html", UTF = "UTF-8";
 
-    private void setWebView(int position){
-        switch (position){
-            case 0:
-                webView.loadUrl(linkUrl);
-               // webView.loadData(linkUrl/*txtName.getText().toString()*//*videoUrl*//*podcasts.toString()*/, TEXT, UTF);
-                break;
-            /*case 1:
-                webView.loadData(videos.*//*getBytes().*//*toString(), TEXT, UTF);
-                break;
-            case 2:
-                webView.loadData(links.*//*getBytes().*//*toString(), TEXT, UTF);
-                break;
-            case 3:
-                webView.loadData(photos.*//*getBytes().*//*toString(), TEXT, UTF);
-                break;*/
-        }
 
-    }
 
 
 

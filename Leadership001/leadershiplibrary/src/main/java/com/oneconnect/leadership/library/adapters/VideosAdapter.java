@@ -42,6 +42,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface VideosAdapterListener {
         void onPlayClicked(String path);
+        void onVideoRequired(VideoDTO video);
     }
 
     public VideosAdapter(List<VideoDTO> mList, Context ctx, VideosAdapterListener listener) {
@@ -65,6 +66,8 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         int i = v.getStorageName().lastIndexOf("/");
         vvh.fileName.setText(v.getStorageName().substring(i + 1));
         try {
+            mediaController = new MediaController(ctx);
+            mediaController.setAnchorView(vvh.videoView);
             Uri video = Uri.parse(v.getUrl());
             vvh.videoView.setMediaController(mediaController);
             vvh.videoView.setVideoURI(video);
@@ -127,8 +130,6 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             image = (ImageView) itemView.findViewById(R.id.image);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             videoView = (VideoView) itemView.findViewById(R.id.videoView);
-            mediaController = new MediaController(ctx);
-            mediaController.setAnchorView(videoView);
             shareicon = (ImageView) itemView.findViewById(R.id.shareicon);
         }
     }

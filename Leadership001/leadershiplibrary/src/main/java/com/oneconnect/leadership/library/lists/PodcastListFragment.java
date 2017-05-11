@@ -321,6 +321,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
             public void onPlayClicked(int position) {
 
             }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -347,6 +352,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
             @Override
             public void onPlayClicked(int position) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
 
             }
         });
