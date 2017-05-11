@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.lists;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.youtube.player.internal.e;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,20 +71,32 @@ import java.util.regex.Pattern;
  */
 public class EBookListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
+
     private EBookListener mListener;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     public static final String TAG = EBookListFragment.class.getSimpleName();
-
-    public EBookListFragment() {
-        // Required empty public constructor
-    }
-
     private List<EBookDTO> eBooks = new ArrayList<>();
     private View view;
     private RecyclerView recyclerView;
     private Context ctx;
+    private  EbookAdapter ebookAdapter;
+    private EBookDTO eBook;
+    private int type;
+    private UserDTO user;
+
+    public EBookListFragment() {
+
+    }
+
+    public void setEBook(EBookDTO ebook) {
+        Log.d(LOG, "### setEBook");
+        this.eBook = ebook;
+        ebook.getTitle();
+        getCachedEBooks();
+    }
+
 
     public static EBookListFragment newInstance(HashMap<String, EBookDTO> list) {
         EBookListFragment fragment = new EBookListFragment();
@@ -95,10 +110,6 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         fragment.setArguments(args);
         return fragment;
     }
-
-    private EBookDTO eBook;
-    private int type;
-    private UserDTO user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,6 +158,38 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                 getCachedEBooks();
             }
         });
+
+        File dir = Environment.getExternalStorageDirectory();
+        File myDir = new File(dir, "leadership");
+        if (!myDir.exists()) {
+            myDir.mkdir();
+        }
+        File[] files = myDir.listFiles();
+        filePathList = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().contains(eBook.getTitle())) {
+                    if (file.getName().contains(".pdf")) {
+                        filePathList.add(file.getAbsolutePath());
+                    }
+                }
+            }
+        }
+
+        if (filePathList.isEmpty()) {
+            Log.d(LOG, "getCachedEBooks: filePathList is empty");
+        } else {
+            fileContainerList.clear();
+            for (String d : filePathList) {
+                fileContainerList.add(new FileContainer(d));
+            }
+            Collections.sort(fileContainerList);
+            filePathList.clear();
+            for (FileContainer f : fileContainerList) {
+                filePathList.add(f.fileName);
+            }
+            setList();
+        }
     }
 
 
@@ -155,19 +198,20 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
             @Override
             public void onReadClicked(String path) {
 
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(path), "application/pdf");
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                ctx.startActivity(intent);
-                //  File file = new File(path);
-                //  Log.e(LOG, "pdf file: " + file.getAbsolutePath() + " length: " + file.length());
-                // if (file.exists()) {
-
-              //      Intent intent = new Intent(Intent.ACTION_VIEW);
-               //     intent.setDataAndType(Uri.fromFile(path), "application/pdf");
-                //    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //    ctx.startActivity(intent);
-            //    }
+                File file = new File(filePathList.get(0));
+                Log.e(LOG, "pdf file: " + file.getAbsolutePath() + " length: " + file.length());
+                if (file.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    ctx.startActivity(intent);
+                } else {
+                    Log.d(LOG, "Statement is still downloading");
+                }
+                LinearLayoutManager lm = new LinearLayoutManager(getActivity(),
+                        LinearLayoutManager.VERTICAL,false);
+                recyclerView.setLayoutManager(lm);
+                recyclerView.setAdapter(ebookAdapter);
             }
         });
     }
@@ -220,6 +264,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         } else {
             Log.d(LOG, "user is null");
         }
+
     }
 
     EbookAdapter adapter;
@@ -356,7 +401,28 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onCacheEbooks(List<EBookDTO> list) {
+
         Log.i(LOG, "onCacheEbooks " + list.size());
+
+        File dir = Environment.getExternalStorageDirectory();
+        File myDir = new File(dir, "leadership");
+        if (!myDir.exists()) {
+            myDir.mkdir();
+        }
+        File[] files = myDir.listFiles();
+        filePathList = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().contains(eBook.getTitle())) {
+                    if (file.getName().contains("statement.pdf")) {
+                        filePathList.add(file.getAbsolutePath());
+                    }
+                }
+            }
+
+        }
+
+
     }
 
     @Override
