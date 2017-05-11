@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.lists;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -112,6 +113,10 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
+
+        /*recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));*/
+
+
 
         getCachedPhotos();
         getPhotos();
@@ -381,7 +386,12 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
     public void onAllPhotos(List<PhotoDTO> list) {
         Log.i(LOG, "onAllPhotos: " + list.size());
         this.photos = list;
-        adapter = new PhotoAdapter(list, ctx);
+        adapter = new PhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+            @Override
+            public void onPhotoClicked(PhotoDTO photo) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 

@@ -53,12 +53,11 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final EBookDTO v = mList.get(position);
         final EbookViewHolder vvh = (EbookViewHolder) holder;
         String displayName = v.getStorageName().split("\\.", 2)[0];
-        int i = displayName/*v.getStorageName()*/.lastIndexOf("/");
+        int i = displayName.lastIndexOf("/");
         //
 
         //
         vvh.fileName.setText(displayName/*v.getStorageName()*/.substring(i + 1));
-        //vvh.fileName.setText(v.getUrl());
         vvh.image.setImageDrawable(ctx.getDrawable(R.drawable.ebook));
         final String bookUrl = v.getUrl();
         vvh.bookIcon.setOnClickListener(new View.OnClickListener() {

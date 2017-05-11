@@ -1,31 +1,21 @@
 package com.oneconnect.leadership.library.lists;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.activities.SheetPresenter;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
-import com.oneconnect.leadership.library.api.ListAPI;
+import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.PhotoAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
@@ -43,16 +33,16 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
-import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -68,7 +58,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     //private DailyThoughtAdapter.DailyThoughtAdapterlistener mListener;
     private DailyThoughtListener mListener;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView, photoRecyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
@@ -122,10 +112,17 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         ctx = getActivity();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        photoRecyclerView = (RecyclerView) view.findViewById(R.id.photoRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager llm2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        photoRecyclerView.setLayoutManager(llm2);
+        photoRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        photoRecyclerView.setHasFixedSize(true);
+
 
         getCachedDailyThoughts();
         getDailyThoughts();
@@ -223,23 +220,134 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        adapter = new DailyThoughtAdapter(ctx, list);
+        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    @Override
+                    public void onPhotoClicked(PhotoDTO photo) {
+
+                    }
+                });
+                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
+    /*PhotoAdapter photoAdapter;*/
+
+    MiniPhotoAdapter miniPhotoAdapter;
     @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onAllCompanyDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        adapter = new DailyThoughtAdapter(ctx, list);
+        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    @Override
+                    public void onPhotoClicked(PhotoDTO photo) {
+
+                    }
+                });
+                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+    public void onAllDailyThoughts(final List<DailyThoughtDTO> list) {
         Log.w(LOG, "onAllDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        adapter = new DailyThoughtAdapter(ctx, list);
+        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+                /*photoAdapter = new PhotoAdapter(dailyThoughtList)*/
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    @Override
+                    public void onPhotoClicked(PhotoDTO photo) {
+
+                    }
+                });
+                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 

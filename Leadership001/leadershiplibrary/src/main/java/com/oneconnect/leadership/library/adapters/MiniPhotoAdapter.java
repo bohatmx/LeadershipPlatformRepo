@@ -17,52 +17,40 @@ import com.oneconnect.leadership.library.data.PhotoDTO;
 import java.util.List;
 
 /**
- * Created by Nkululeko on 2017/05/05.
+ * Created by Nkululeko on 2017/05/10.
  */
 
-public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MiniPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<PhotoDTO> mList;
     private Context ctx;
-    private PhotoAdapterlistener listener;
-
-
-    public interface PhotoAdapterlistener{
-        void onPhotoClicked(PhotoDTO photo);
-
-    }
-
-    public PhotoAdapter(List<PhotoDTO> mList, Context ctx, PhotoAdapterlistener listener) {
-        this.mList = mList;
-        this.ctx = ctx;
-        this.listener = listener;
-    }
+    private PhotoAdapter.PhotoAdapterlistener listener;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.photo_item, parent, false);
-        return new PhotoViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.photos_item, parent, false);
+        return new MiniPhotoViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         final PhotoDTO p = mList.get(position);
-        final PhotoViewHolder pvh = (PhotoViewHolder) holder;
+        final MiniPhotoViewHolder pvh = (MiniPhotoViewHolder) holder;
         pvh.captiontxt.setText(p.getCaption());
         Glide.with(ctx)
                 .load(p.getUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(pvh.photoView);
-        pvh.txtDate.setText(p.getStringDate());
 
-        pvh.iconshare.setOnClickListener(new View.OnClickListener() {
+        /*pvh.iconshare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareIt();
             }
-        });
+        });*/
     }
+
     private void shareIt() {
         //sharing implementation here
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -72,25 +60,35 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ctx.startActivity(sharingIntent);
     }
 
+
     @Override
     public int getItemCount() {
         return mList == null ? 0 : mList.size();
     }
 
 
+    public interface PhotoAdapterlistener{
+        void onPhotoClicked(PhotoDTO photo);
 
-    public class PhotoViewHolder extends RecyclerView.ViewHolder {
-        protected TextView captiontxt, txtDate;
+    }
+
+    public MiniPhotoAdapter(List<PhotoDTO> mList, Context ctx, PhotoAdapter.PhotoAdapterlistener listener) {
+        this.mList = mList;
+        this.ctx = ctx;
+        this.listener = listener;
+    }
+
+
+    public class MiniPhotoViewHolder extends RecyclerView.ViewHolder {
+        protected TextView captiontxt;
         protected ImageView photoView, iconshare;
 
-        public PhotoViewHolder(View itemView) {
+        public MiniPhotoViewHolder(View itemView) {
             super(itemView);
 
             captiontxt = (TextView) itemView.findViewById(R.id.captiontxt);
-            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
-            txtDate.setVisibility(View.GONE);
             photoView = (ImageView) itemView.findViewById(R.id.photoView);
-            iconshare = (ImageView) itemView.findViewById(R.id.iconshare);
+
         }
     }
 }

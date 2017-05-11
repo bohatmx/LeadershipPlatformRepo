@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.admin.calendar.CalendarActivity;
@@ -515,16 +516,29 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.VIDEOS;
                 Intent intent = new Intent(CrudActivity.this, VideoSelectionActivity.class);
                 startActivity(intent);
+                break;
 
             case R.id.nav_podcasts:
                 type = ResponseBag.PODCASTS;
                 Intent intent1 = new Intent(CrudActivity.this, PodcastSelectionActivity.class);
                 startActivity(intent1);
+                break;
+
 
             case R.id.nav_ebooks:
                 type = ResponseBag.EBOOKS;
                 Intent intent2 = new Intent(CrudActivity.this, EbookSelectionActivity.class);
                 startActivity(intent2);
+                break;
+
+            case R.id.nav_photos:
+                type = ResponseBag.PHOTOS;
+                Intent intent3 = new Intent(CrudActivity.this, PhotoSelectionActivity.class);
+                startActivity(intent3);
+                break;
+
+
+
         }
 
 
@@ -574,7 +588,6 @@ public class CrudActivity extends AppCompatActivity
         Collections.sort(bag.getCategories());
         bag.setType(ResponseBag.CATEGORIES);
         cachePresenter.cacheCategories(list);
-
         setFragment();
     }
 
@@ -621,7 +634,12 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onPhotos(List<PhotoDTO> list) {
-
+        Log.i(TAG, "onPhotos " + list.size());
+        bag = new ResponseBag();
+        bag.setPhotos(list);
+        bag.setType(ResponseBag.PHOTOS);
+        setFragment();
+        cachePresenter.cachePhotos(list);
     }
 
     @Override
@@ -667,7 +685,12 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onVideos(List<VideoDTO> list) {
-
+        Log.i(TAG, "onVideos " + list.size());
+        bag = new ResponseBag();
+        bag.setVideos(list);
+        bag.setType(ResponseBag.VIDEOS);
+        setFragment();
+        cachePresenter.cacheVideos(list);
     }
 
     @Override
@@ -924,6 +947,8 @@ public class CrudActivity extends AppCompatActivity
         pickGalleryOrCamera(entity);
     }
 
+    private static int RESULT_LOAD_IMG = 1;
+
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Select Images")
@@ -936,10 +961,15 @@ public class CrudActivity extends AppCompatActivity
                 }).setNegativeButton("Use Gallery", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(intent, RESULT_LOAD_IMG);
 
             }
         }).show();
     }
+
+
 
     private void startCamera(BaseDTO entity) {
 
@@ -1053,6 +1083,8 @@ public class CrudActivity extends AppCompatActivity
             return;
         }
         showSnackbar("Audio recording under construction", "OK", "cyan");
+
+
     }
 
     DailyThoughtDTO dailyThought;
@@ -1184,6 +1216,9 @@ public class CrudActivity extends AppCompatActivity
             case CameraActivity.VIDEO_REQUEST:
                 confirmUpload(data);
                 break;
+            /*case PhotoSelectionActivity.PHOTO_REQUEST:
+                confirmUpload(data);
+                break;*/
         }
 
     }
@@ -1301,6 +1336,7 @@ public class CrudActivity extends AppCompatActivity
         startVideoService();
 
     }
+
 
     private void startVideoService() {
         Log.d(TAG, "startVideoService: @@@@@@@@@@@@@@@@@@@@@@");

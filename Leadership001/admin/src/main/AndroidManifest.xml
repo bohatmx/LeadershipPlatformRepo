@@ -107,7 +107,13 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
         <activity
             android:name=".ebook.EbookSelectionActivity"
             android:label="@string/title_activity_ebook_selection"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".photo.PhotoSelectionActivity"
+            android:label="@string/title_activity_photo_selection"
+            android:parentActivityName=".crud.CrudActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

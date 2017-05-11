@@ -413,6 +413,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             public void onPlayClicked(String path) {
                 playVideo(path);
             }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -490,6 +495,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             @Override
             public void onPlayClicked(String path) {
                 playVideo(path);
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
             }
         });
         recyclerView.setAdapter(adapter);

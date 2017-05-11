@@ -1,5 +1,7 @@
 package com.oneconnect.leadership.library.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
@@ -7,11 +9,13 @@ import com.google.firebase.database.Exclude;
 import java.io.Serializable;
 import java.util.Date;
 
+import static com.oneconnect.leadership.library.lists.BasicEntityAdapter.sdf;
+
 /**
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<PhotoDTO> {
+public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<PhotoDTO>, Parcelable {
 
     @Exclude
     private String filePath;
@@ -28,6 +32,40 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
         date = new Date().getTime();
         stringDate = sdf.format(new Date());
     }
+
+    protected PhotoDTO(Parcel in) {
+        filePath = in.readString();
+        photoID = in.readString();
+        caption = in.readString();
+        url = in.readString();
+        height = in.readInt();
+        width = in.readInt();
+        bytes = in.readLong();
+        date = in.readLong();
+        imageSize = in.readLong();
+        dateUploaded = in.readLong();
+        userID = in.readString();
+        userName = in.readString();
+        stringDateUploaded = in.readString();
+        stringDate = in.readString();
+        weeklyMasterClassID = in.readString();
+        weeklyMessageID = in.readString();
+        dailyThoughtID = in.readString();
+        eBookID = in.readString();
+        podcastID = in.readString();
+    }
+
+    public static final Creator<PhotoDTO> CREATOR = new Creator<PhotoDTO>() {
+        @Override
+        public PhotoDTO createFromParcel(Parcel in) {
+            return new PhotoDTO(in);
+        }
+
+        @Override
+        public PhotoDTO[] newArray(int size) {
+            return new PhotoDTO[size];
+        }
+    };
 
     public long getBytes() {
         return bytes;
@@ -262,4 +300,14 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
         this.companyName = companyName;
     }
 
+    ////
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(caption);
+    }
 }

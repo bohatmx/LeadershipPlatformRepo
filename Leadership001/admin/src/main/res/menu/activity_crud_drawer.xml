@@ -32,6 +32,11 @@
                 android:icon="@drawable/ic_minibus"
                 android:title="Podcasts" />
             <item
+                android:id="@+id/nav_photos"
+                android:icon="@drawable/picture"
+                android:title="Photos"/>
+
+            <item
                 android:id="@+id/nav_subscrip"
                 android:icon="@drawable/ic_attach_money"
                 android:title="Subscription Types" />
