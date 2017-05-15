@@ -41,6 +41,7 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -393,6 +394,7 @@ public class CalendarEventListFragment extends Fragment implements PageFragment,
     public void onAllCalendarEvents(List<CalendarEventDTO> list) {
         Log.i(LOG, "onAllCalendarEvents: " + list.size());
         this.calendarEventList = list;
+        Collections.sort(list);
         adapter = new CalendarEventAdapter(list, ctx);
         recyclerView.setAdapter(adapter);
     }

@@ -527,6 +527,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     public void onAllEBooks(final List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
         this.eBooks = list;
+//        Collections.sort(list);
         adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
             @Override
             public void onReadClicked(String path) {
@@ -588,6 +589,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     public void onEbooks(List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
         this.eBooks = list;
+        Collections.sort(list);
         adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
             @Override
             public void onReadClicked(String path) {

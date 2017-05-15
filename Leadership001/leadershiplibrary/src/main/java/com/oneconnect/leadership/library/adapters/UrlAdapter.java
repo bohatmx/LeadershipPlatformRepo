@@ -60,7 +60,6 @@ public class UrlAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         });
 
-        //listener.onUrlClicked(u.getUrl());
 
     }
 

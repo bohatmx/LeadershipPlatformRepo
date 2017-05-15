@@ -42,6 +42,7 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -220,6 +221,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
+        Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
@@ -260,13 +262,12 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         recyclerView.setAdapter(adapter);
     }
 
-    /*PhotoAdapter photoAdapter;*/
-
     MiniPhotoAdapter miniPhotoAdapter;
     @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onAllCompanyDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
+        Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
@@ -311,6 +312,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onAllDailyThoughts(final List<DailyThoughtDTO> list) {
         Log.w(LOG, "onAllDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
+        Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {

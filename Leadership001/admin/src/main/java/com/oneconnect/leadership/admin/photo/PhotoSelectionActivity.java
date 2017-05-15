@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.ebook.EbookAdapter;
@@ -31,10 +32,14 @@ import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import es.dmoral.toasty.Toasty;
 
 public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View{
 
@@ -285,6 +290,26 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         presenter.uploadPhoto(p);
     }
 
+    private File photoFile,  currentThumbFile;
+    private List<PhotoDTO> photos = new ArrayList<>();
+
+
+    private void savePhotoFile(Uri uri) {
+        photoFile = new File(uri.getPath());
+        PhotoDTO p = new PhotoDTO();
+        p.setFilePath(photoFile.getAbsolutePath());
+        UserDTO u = SharedPrefUtil.getUser(this);
+        p.setJournalUserName(u.getFullName());
+        p.setJournalUserID(u.getUserID());
+        p.setCompanyID(u.getCompanyID());
+        p.setCompanyName(u.getCompanyName());
+        p.setImageSize(photoFile.length());
+        p.setBytes(photoFile.length());
+        photos.add(p);
+        Log.i(LOG, "onActivityResult: photoFile: ".concat(getSize(photoFile.length())));
+        Toasty.success(this,"Photo taken OK", Toast.LENGTH_SHORT).show();
+    }
+
     public void showSnackbar(String title, String action, String color) {
         snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(Color.parseColor(color));
@@ -295,7 +320,13 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             }
         });
         snackbar.show();
+    }
 
+    private static final DecimalFormat df = new DecimalFormat("###,###,###,###,##0.00");
+
+    private String getSize(long num) {
+        BigDecimal d = new BigDecimal(num).divide(new BigDecimal(1024*1024));
+        return df.format(d.doubleValue()) + " MB";
     }
 
     @Override
@@ -312,6 +343,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     public void onError(String message) {
 
     }
+
+
 
     static final String LOG = PhotoSelectionActivity.class.getSimpleName();
 }

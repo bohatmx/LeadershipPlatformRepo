@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.admin.crud;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +29,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
@@ -114,6 +118,11 @@ public class CrudActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Leadership Platform");
         getSupportActionBar().setSubtitle("Data Management");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }
+
         setup();
 
         presenter = new CrudPresenter(this);
@@ -963,7 +972,8 @@ public class CrudActivity extends AppCompatActivity
             public void onClick(DialogInterface dialogInterface, int i) {
             Intent intent = new Intent(Intent.ACTION_VIEW, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                startActivityForResult(intent, RESULT_LOAD_IMG);
+               // startActivityForResult(intent, RESULT_LOAD_IMG);
+                startPhotoGallerySelection(base);
 
             }
         }).show();
@@ -1035,6 +1045,26 @@ public class CrudActivity extends AppCompatActivity
         startActivity(m);
     }
 
+    private void startPhotoGallerySelection(BaseDTO base){
+        Intent intent = new Intent(this, PhotoSelectionActivity.class);
+        intent.putExtra("type", type);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) base;
+                intent.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) base;
+                intent.putExtra("weeklyMasterClass", weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) base;
+                intent.putExtra("weeklyMessage", weeklyMessage);
+                break;
+        }
+        startActivity(intent);
+    }
+
     private void startVideo(BaseDTO entity) {
 
         Intent m = new Intent(this, CameraActivity.class);
@@ -1057,7 +1087,7 @@ public class CrudActivity extends AppCompatActivity
         startActivityForResult(m, CameraActivity.VIDEO_REQUEST);
     }
 
-    public static final int REQUEST_CALENDAR = 6258;
+    public static final int REQUEST_CALENDAR = 6258, REQUEST_PHOTO = 7000;
 
     @Override
     public void onSomeActionRequired(BaseDTO entity) {
@@ -1083,9 +1113,31 @@ public class CrudActivity extends AppCompatActivity
             return;
         }
         showSnackbar("Audio recording under construction", "OK", "cyan");
+        startPodcastSelection(entity);
 
 
     }
+
+    private void startPodcastSelection(BaseDTO base){
+        Intent intent = new Intent(this, PodcastSelectionActivity.class);
+        intent.putExtra("type", type);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) base;
+                intent.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) base;
+                intent.putExtra("weeklyMasterClass", weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) base;
+                intent.putExtra("weeklyMessage", weeklyMessage);
+                break;
+        }
+        startActivity(intent);
+    }
+
 
     DailyThoughtDTO dailyThought;
 
@@ -1216,9 +1268,12 @@ public class CrudActivity extends AppCompatActivity
             case CameraActivity.VIDEO_REQUEST:
                 confirmUpload(data);
                 break;
-            /*case PhotoSelectionActivity.PHOTO_REQUEST:
+            case /*PhotoSelectionActivity.PHOTO_REQUEST*/REQUEST_PHOTO:
+                if (reqCode == Activity.RESULT_OK) {
+                  //  data
+                }
                 confirmUpload(data);
-                break;*/
+                break;
         }
 
     }

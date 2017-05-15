@@ -42,6 +42,7 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -294,6 +295,7 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
         Log.w(LOG, "onAllWeeklyMessages: " + list.size());
         this.weeklyMessageList = list;
+//        Collections.sort(list);
         adapter = new WeeklyMessageAdapter(list, ctx);
         recyclerView.setAdapter(adapter);
     }
