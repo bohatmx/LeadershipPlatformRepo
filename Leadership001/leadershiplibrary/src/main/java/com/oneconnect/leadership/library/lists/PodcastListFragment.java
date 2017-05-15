@@ -47,6 +47,7 @@ import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -316,6 +317,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void onAllPodcasts(List<PodcastDTO> list) {
         Log.i(LOG, "onAllPodcasts: " + list.size());
         this.podcasts = list;
+//        Collections.sort(list);
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
             @Override
             public void onPlayClicked(int position) {
@@ -349,6 +351,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void onPodcasts(List<PodcastDTO> list) {
         Log.i(LOG, "onPodcasts: " + list.size());
         this.podcasts = list;
+        Collections.sort(list);
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
             @Override
             public void onPlayClicked(int position) {

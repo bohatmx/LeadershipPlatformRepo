@@ -119,35 +119,14 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         dvh.videoAdapterLayout.setVisibility(View.GONE);
                         dvh.videoRecyclerView.setVisibility(View.GONE);
                     }
-                   /* mediaController = new MediaController(ctx);
-                    mediaController.setAnchorView(dvh.videoView);*/
 
                     DailyThoughtDTO dtd = mList.get(position);
                     List<VideoDTO> videoList = new ArrayList<>();
                     Map map = dtd.getVideos();
-                    VideoDTO vDTO;/* = new VideoDTO();*/
-                    String videoUrl;
-                    List<String> videoUrlList = new ArrayList<String>();
+                    VideoDTO vDTO;
                     for (Object value : map.values()) {
                         vDTO = (VideoDTO) value;
-                        //videoUrl = vDTO.getUrl();
                         videoList.add(vDTO);
-                        /*videoList*///videoUrlList.add(vDTO.getUrl());
-                        int i = vDTO.getStorageName().lastIndexOf("/");
-                        //dvh.videoFileName.setText(vDTO.getStorageName().substring(i + 1));
-
-                       /* try {
-                            Uri video = Uri.parse(vDTO.getUrl());
-                            dvh.videoView.setVideoPath(vDTO.getUrl());
-                            mediaController.setAnchorView(dvh.videoView);
-                            dvh.videoView.setMediaController(mediaController);
-                            dvh.videoView.setVideoURI(video);
-                            dvh.videoView.requestFocus();
-                            dvh.videoView.seekTo(100);
-
-                        } catch (Exception e) {
-                            Log.e(LOG,"Video something went wrong: " + e.getMessage());
-                        }*/
                     }
 
                     miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
@@ -167,22 +146,12 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     });
 
-
                     dvh.videoRecyclerView.setAdapter(miniVideoAdapter);
                     dvh.btnPlay.setVisibility(View.GONE);
 
                     dvh.btnPlay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                       /* mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mp) {
-                                mp.start();
-                                dvh.videoView.start();
-                            }
-                        });*/
-
-
                         }
                     });
                 }
@@ -194,7 +163,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (dvh.photoAdapterLayout.getVisibility() == View.GONE){
                         dvh.photoAdapterLayout.setVisibility(View.VISIBLE);
                         dvh.imageRecyclerView.setVisibility(View.VISIBLE);
@@ -203,11 +171,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         dvh.imageRecyclerView.setVisibility(View.GONE);
                     }
 
-
-
                     DailyThoughtDTO dtd = mList.get(position);
                     List<PhotoDTO> urlList = new ArrayList<>();
-
 
                     Map map = dtd.getPhotos();
                     PhotoDTO vDTO;
@@ -215,7 +180,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     for (Object value : map.values()) {
                         vDTO = (PhotoDTO) value;
                         photoUrl = vDTO.getUrl();
-                        urlList.add(vDTO/*photoUrl*/);
+                        urlList.add(vDTO);
 
                         Glide.with(ctx)
                                 .load(photoUrl)
@@ -223,7 +188,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
                     }
-                    /*dvh.imageRecyclerView.setVisibility(View.VISIBLE);*/
 
                     miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
                         @Override
@@ -232,8 +196,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     });
                     dvh.imageRecyclerView.setAdapter(miniPhotoAdapter);
-
-                   // listener.onPhotosRequired(urlList/*dtd.getPhotos()*/);
                 }
             });
         }
@@ -290,7 +252,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 mediaPlayer.start();
                             }
                         });
-
                         //
 
                         //
@@ -315,8 +276,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         });
                         //
                     }
-
-                    //dvh.podcastRecyclerView.setVisibility(View.VISIBLE);
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
                         @Override
@@ -360,29 +319,15 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         urlList.add(vDTO);
                     }
 
-
-                    /*dvh.urlRecyclerView.setVisibility(View.VISIBLE);*/
-
                     urlAdapter = new UrlAdapter(urlList, ctx, new UrlAdapter.UrlAdapterListener() {
                         @Override
                         public void onUrlClicked(final String url) {
-                            /*Intent intent = new Intent(ctx, WebViewActivity.class);
-                            intent.putExtra("url", url);
-                            ctx.startActivity(intent);*/
-                            /*dvh.urlTxt.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            });*/
-
                         }
                     });
 
                     dvh.urlRecyclerView.setAdapter(urlAdapter);
                 }
             });
-
         }
 
         dvh.iconDelete.setOnClickListener(new View.OnClickListener() {
@@ -401,18 +346,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
         ctx.startActivity(sharingIntent);
-    }
-    private void playVideo(String path) {
-
-        Intent m = new Intent(ctx, LeExoPlayerActivity.class);
-        ResponseBag bag = new ResponseBag();
-        bag.setVideos(new ArrayList<VideoDTO>());
-        VideoDTO v = new VideoDTO();
-        File f = new File(path);
-        v.setUrl(Uri.fromFile(f).toString());
-        bag.getVideos().add(v);
-        m.putExtra("bag",bag);
-        ctx.startActivity(m);
     }
 
     MediaController mediaController;
@@ -436,13 +369,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /*protected VideoView videoView;*/
         //
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
-
-        //
-        protected List<VideoDTO> videoList;
-        protected List<PodcastDTO> podcastList;
-        protected List<UrlDTO> urlList;
-        public List<PhotoDTO> photoList;
-        //
 
 
         public DailyViewHolder(View itemView) {
@@ -479,7 +405,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             iconCamera = (ImageView) itemView.findViewById(R.id.iconCamera);
 
             iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
-
             //
             imageRecyclerView = (RecyclerView) itemView.findViewById(R.id.imageRecyclerView);
             imageRecyclerView.setVisibility(View.GONE);
@@ -503,25 +428,18 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             urlRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
             urlRecyclerView.setHasFixedSize(true);
 
-
             podcastRecyclerView = (RecyclerView) itemView.findViewById(R.id.podcastRecyclerView);
             podcastRecyclerView.setVisibility(View.GONE);
             LinearLayoutManager llm4 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
             podcastRecyclerView.setLayoutManager(llm4);
             podcastRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
             podcastRecyclerView.setHasFixedSize(true);
-
-
             // layouts
             podcastAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.podcastAdapterLayout);
-
             //
 
             //
             videoAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.videoAdapterLayout);
-           /* videoView = (VideoView) itemView.findViewById(R.id.videoView);
-           */
-
             //
 
             //
@@ -532,44 +450,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             urlAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.urlAdapterLayout);
             urlTxt = (TextView) itemView.findViewById(R.id.urlTxt);
-
-
-            /*iconVideo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (videoAdapterLayout.getVisibility() == View.GONE){
-                        videoAdapterLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        videoAdapterLayout.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-            iconMicrophone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (podcastAdapterLayout.getVisibility() == View.GONE){
-                        podcastAdapterLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        podcastAdapterLayout.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-            iconCamera.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (photoAdapterLayout.getVisibility() == View.GONE){
-                        photoAdapterLayout.setVisibility(View.VISIBLE);
-                    } else {
-                        photoAdapterLayout.setVisibility(View.GONE);
-                    }
-                }
-            });*/
-
-
-
-
         }
     }
 

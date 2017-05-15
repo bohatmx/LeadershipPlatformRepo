@@ -39,6 +39,7 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -451,6 +452,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
         Log.i(LOG, "onWeeklyMasterclasses: " + list.size());
         this.weeklyMasterList = list;
+//        Collections.sort(list);
         adapter = new MasterAdapter(ctx, list);
         recyclerView.setAdapter(adapter);
     }

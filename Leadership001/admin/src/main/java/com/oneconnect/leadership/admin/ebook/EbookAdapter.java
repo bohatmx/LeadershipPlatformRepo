@@ -50,7 +50,6 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         final String path = paths.get(position);
         File file = new File(path);
         Log.w("EbookAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
-        holder.image.setImageDrawable(context.getDrawable(R.drawable.ebook));
         int i = path.lastIndexOf("/");
         holder.txtFileName.setText(path.substring(i + 1));
         holder.btnUpload.setOnClickListener(new View.OnClickListener() {
@@ -75,13 +74,11 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
 
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtFileName;
-        protected ImageView image;
         protected Button btnUpload, btnPlay;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
             txtFileName = (TextView) itemView.findViewById(R.id.fileName);
-            image = (ImageView) itemView.findViewById(R.id.image);
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
         }

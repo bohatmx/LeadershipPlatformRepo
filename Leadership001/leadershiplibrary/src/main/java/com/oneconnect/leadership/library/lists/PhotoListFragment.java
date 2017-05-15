@@ -39,6 +39,7 @@ import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -386,6 +387,7 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
     public void onAllPhotos(List<PhotoDTO> list) {
         Log.i(LOG, "onAllPhotos: " + list.size());
         this.photos = list;
+        Collections.sort(list);
         adapter = new PhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
             @Override
             public void onPhotoClicked(PhotoDTO photo) {

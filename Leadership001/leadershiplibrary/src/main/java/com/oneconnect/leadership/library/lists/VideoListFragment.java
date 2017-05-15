@@ -52,6 +52,7 @@ import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -408,6 +409,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     public void onAllVideos(List<VideoDTO> list) {
         Log.i(LOG, "onAllVideos: " + list.size());
         this.videos = list;
+        Collections.sort(list);
         adapter = new VideosAdapter(list, ctx, new VideosAdapter.VideosAdapterListener() {
             @Override
             public void onPlayClicked(String path) {
@@ -491,6 +493,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     public void onVideos(List<VideoDTO> list) {
         Log.i(LOG, "onVideos: " + list.size());
         this.videos = list;
+        Collections.sort(list);
         adapter = new VideosAdapter(list, ctx, new VideosAdapter.VideosAdapterListener() {
             @Override
             public void onPlayClicked(String path) {

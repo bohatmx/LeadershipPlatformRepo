@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
@@ -60,6 +63,12 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("EBook Selection & Upload");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }
+
         presenter = new EbookUploadPresenter(this);
 
         type = getIntent().getIntExtra("type", 0);

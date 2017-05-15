@@ -49,9 +49,11 @@ public class MiniPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         final PodcastDTO v = mList.get(position);
-        final PodcastAdapter.PodcastsViewHolder pvh = (PodcastAdapter.PodcastsViewHolder) holder;
+        final MiniPodcastViewHolder pvh = (MiniPodcastViewHolder) holder;
         int i = v.getStorageName().lastIndexOf("/");
-        pvh.fileName.setText(v.getStorageName().substring(i + 1));
+        if (v.getStorageName() != null) {
+        pvh.podcastNametxt.setText(v.getStorageName().substring(i + 1));
+        }
         final String podcastURL = v.getUrl();
 
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
@@ -128,13 +130,13 @@ public class MiniPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public class MiniPodcastViewHolder extends RecyclerView.ViewHolder {
-        protected TextView fileName;
+        protected TextView podcastNametxt;
         protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic;
         protected Button btnPlay, btnUpload;
 
         public MiniPodcastViewHolder(View itemView) {
             super(itemView);
-            fileName = (TextView) itemView.findViewById(R.id.fileName);
+            podcastNametxt = (TextView) itemView.findViewById(R.id.podcastNametxt);
             headerpic = (ImageView) itemView.findViewById(R.id.headerpic);
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);
             pauseIMG = (ImageView) itemView.findViewById(R.id.pauseIMG);
