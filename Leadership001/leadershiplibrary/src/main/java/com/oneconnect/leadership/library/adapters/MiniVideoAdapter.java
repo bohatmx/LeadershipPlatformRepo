@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -90,7 +91,16 @@ public class MiniVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     }
-
+    private void shareIt() {
+        //sharing implementation here
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
+        String sAux = "\nLet me recommend you this application\n\n";
+        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
+        i.putExtra(Intent.EXTRA_TEXT, sAux);
+        ctx.startActivity(Intent.createChooser(i, "choose one"));
+    }
     @Override
     public int getItemCount() {
         return mList == null ? 0 : mList.size();

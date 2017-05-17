@@ -313,11 +313,13 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void shareIt() {
         //sharing implementation here
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
-        ctx.startActivity(sharingIntent);
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
+        String sAux = "\nLet me recommend you this application\n\n";
+        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
+        i.putExtra(Intent.EXTRA_TEXT, sAux);
+        ctx.startActivity(Intent.createChooser(i, "choose one"));
     }
 
     @Override

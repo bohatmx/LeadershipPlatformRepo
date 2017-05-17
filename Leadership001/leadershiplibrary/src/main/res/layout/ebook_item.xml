@@ -33,8 +33,8 @@
             android:layout_margin="8dp"
             android:layout_below="@+id/image"
             android:id="@+id/bookIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/ic_book_black_24dp"/>
 
         <RelativeLayout

@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_notif_handler">NotifHandlerActivity</string>
-    <string name="title_activity_subscriber_main">SubscriberMainActivity</string>
+    <string name="title_activity_subscriber_main">Leadership</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

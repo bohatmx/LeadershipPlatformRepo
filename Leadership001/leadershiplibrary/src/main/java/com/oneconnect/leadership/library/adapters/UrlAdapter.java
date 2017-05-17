@@ -62,6 +62,16 @@ public class UrlAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     }
+    private void shareIt() {
+        //sharing implementation here
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
+        String sAux = "\nLet me recommend you this application\n\n";
+        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
+        i.putExtra(Intent.EXTRA_TEXT, sAux);
+        ctx.startActivity(Intent.createChooser(i, "choose one"));
+    }
 
     @Override
     public int getItemCount() {
