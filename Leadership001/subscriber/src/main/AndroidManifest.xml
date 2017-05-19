@@ -75,9 +75,11 @@
         <activity android:name="com.oneconnect.leadership.library.video.VideoPlayerActivity"
             android:label="@string/title_activity_video_player"
             android:parentActivityName=".SubscriberMainActivity"/>
+
         <activity android:name="com.oneconnect.leadership.library.activities.PhotoActivity"
             android:label="@string/title_activity_main"
             android:parentActivityName=".SubscriberMainActivity"/>
+
 
 
     </application>

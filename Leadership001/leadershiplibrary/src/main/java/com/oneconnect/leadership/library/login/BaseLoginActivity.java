@@ -69,7 +69,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setIsSmartLockEnabled(false)   //todo remove on release
-                        .setTheme(R.style.GreenTheme)
+                        .setTheme(R.style.RedTheme)
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 googleIdp,

@@ -33,6 +33,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.activities.DailyThoughtActivity;
@@ -78,6 +82,7 @@ import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
 import com.oneconnect.leadership.library.lists.VideoListFragment;
 import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
+import com.oneconnect.leadership.library.login.BaseLoginActivity;
 import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.subscriber.services.SubscriberMessagingService;
@@ -129,6 +134,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         ctx = getApplicationContext();
 
         page = getIntent().getStringExtra("page");
+
 
         usernametxt = (TextView) findViewById(R.id.usernametxt);
         /*if (SharedPrefUtil.getUser(ctx).getFullName() != null) {
@@ -380,6 +386,14 @@ public class SubscriberMainActivity extends AppCompatActivity
                 }
                 if (item.getItemId() == R.id.nav_calender_events) {
                     mPager.setCurrentItem(7, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_sign_out) {
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
+                    startActivity(intent);
+                    finish();
+                    /*logoff();*/
                     return true;
                 }
                 return false;
@@ -642,7 +656,6 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setType(ResponseBag.PODCASTS);
         setFragment();
         presenter.getAllPodcasts();
-       // presenter.getPodcasts(user.getCompanyID());
     }
 
     @Override
@@ -653,7 +666,6 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setType(ResponseBag.VIDEOS);
         setFragment();
         presenter.getAllVideos();
-       // presenter.getVideos(user.getCompanyID());
     }
 
     @Override
@@ -684,7 +696,6 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
         setFragment();
         presenter.getAllWeeklyMessages();
-        //presenter.getWeeklyMessages(user.getCompanyID());
     }
 
     @Override
@@ -949,9 +960,32 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
         } else if (id == R.id.nav_weekly_message) {
             mPager.setCurrentItem(2, true);
         }
+        /*else if (id == R.id.nav_sign_out) {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
+            startActivity(intent);
+            finish();
+        }
+*/
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    public void logoff() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        onLoggedOut();
+                    }
+                });
+    }
+
+    private void onLoggedOut() {
+        finish();
     }
 
     private FCMData fcmData;

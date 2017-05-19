@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MediaController;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -120,6 +121,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     ArrayList<String> downloadedList = new ArrayList<>();
     private UserDTO user;
     private Context ctx;
+    MediaController mediaController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -413,7 +415,9 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
         adapter = new VideosAdapter(list, ctx, new VideosAdapter.VideosAdapterListener() {
             @Override
             public void onPlayClicked(String path) {
-                playVideo(path);
+                mediaController = new MediaController(ctx);
+                 mediaController.setAnchorView(recyclerView);
+               // playVideo(path);
             }
 
             @Override

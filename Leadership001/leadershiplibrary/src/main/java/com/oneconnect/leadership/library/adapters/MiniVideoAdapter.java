@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -49,6 +50,8 @@ public class MiniVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return new MiniVideoViewHolder(v);
     }
 
+    boolean isPlaying;
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final VideoDTO v = mList.get(position);
@@ -56,12 +59,12 @@ public class MiniVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         int i = v.getStorageName().lastIndexOf("/");
         vvh.vidFileNametxt.setText(v.getStorageName().substring(i + 1));
         try {
-            mediaController = new MediaController(ctx);
-            mediaController.setAnchorView(vvh.videoVideoView);
+           // mediaController = new MediaController(ctx);
+           // mediaController.setAnchorView(vvh.videoVideoView);
             Uri video = Uri.parse(v.getUrl());
             vvh.videoVideoView.setMediaController(mediaController);
             vvh.videoVideoView.setVideoURI(video);
-            vvh.videoVideoView.seekTo(100);
+            vvh.videoVideoView.seekTo(300);
         } catch (Exception e) {
             Log.e(LOG,"Video something went wrong: " + e.getMessage());
         }
@@ -70,6 +73,44 @@ public class MiniVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         vvh.videoVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                /*mp.getCurrentPosition();*/
+            }
+        });
+
+        vvh.videoVideoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPlaying) {
+                    vvh.pausebtn.setVisibility(View.VISIBLE);
+                    vvh.playbtn.setVisibility(View.GONE);
+                } else if (!isPlaying) {
+                    vvh.pausebtn.setVisibility(View.GONE);
+                    vvh.playbtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+       /* if (isPlaying == true) {
+            vvh.pasuebtn.setVisibility(View.VISIBLE);
+        }*/
+
+        vvh.playbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPlaying = true;
+                vvh.videoVideoView.start();
+                vvh.playbtn.setVisibility(View.GONE);
+                vvh.pausebtn.setVisibility(View.VISIBLE);
+            }
+        });
+
+        vvh.pausebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPlaying = false;
+                vvh.videoVideoView.pause();
+                vvh.pausebtn.setVisibility(View.GONE);
+                vvh.playbtn.setVisibility(View.VISIBLE);
 
             }
         });
@@ -109,9 +150,13 @@ public class MiniVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class MiniVideoViewHolder extends RecyclerView.ViewHolder {
         protected VideoView videoVideoView;
         protected TextView vidFileNametxt;
+        protected ImageView playbtn, pausebtn;
 
         public MiniVideoViewHolder(View itemView) {
             super(itemView);
+            pausebtn = (ImageView) itemView.findViewById(R.id.pausebtn);
+            pausebtn.setVisibility(View.GONE);
+            playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
             videoVideoView = (VideoView) itemView.findViewById(R.id.videoVideoView);
             vidFileNametxt = (TextView) itemView.findViewById(R.id.vidFileNametxt);
         }

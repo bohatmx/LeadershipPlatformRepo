@@ -40,7 +40,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/fileName"
+            android:layout_below="@+id/bookIcon"
             android:padding="@dimen/mon_margin">
 
             <Button

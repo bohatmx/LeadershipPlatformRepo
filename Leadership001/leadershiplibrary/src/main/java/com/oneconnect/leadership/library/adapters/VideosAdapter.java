@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -58,6 +60,9 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     }
 
+    boolean isPlaying = false;
+    Runnable onEverySecond;
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
@@ -66,29 +71,95 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         int i = v.getStorageName().lastIndexOf("/");
         vvh.fileName.setText(v.getStorageName().substring(i + 1));
         try {
-            mediaController = new MediaController(ctx);
-            mediaController.setAnchorView(vvh.videoView);
+           // mediaController = new MediaController(ctx);
+           // mediaController.setAnchorView(vvh.videoView);
             Uri video = Uri.parse(v.getUrl());
-            vvh.videoView.setMediaController(mediaController);
+          //  vvh.videoView.setMediaController(mediaController);
             vvh.videoView.setVideoURI(video);
-            vvh.videoView.seekTo(100);
+            vvh.videoView.seekTo(300);
         } catch (Exception e) {
             Log.e(LOG,"Video something went wrong: " + e.getMessage());
         }
 
         vvh.videoView.requestFocus();
+
+         /*onEverySecond = new Runnable() {
+            @Override
+            public void run() {
+                if (vvh.videoSeekBar != null) {
+                    vvh.videoSeekBar.setProgress(vvh.videoView.getCurrentPosition());
+                }
+                if (vvh.videoView.isPlaying()) {
+                      vvh.videoSeekBar.postDelayed(onEverySecond, 1000);
+                }
+            }
+        };*/
         vvh.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                vvh.videoSeekBar.setMax(vvh.videoView.getDuration());
+               // vvh.videoSeekBar.postDelayed(onEverySecond, 1000);
 
             }
         });
 
-        vvh.btnPlay.setOnClickListener(new View.OnClickListener() {
+        vvh.videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPlaying) {
+                    vvh.pausebtn.setVisibility(View.VISIBLE);
+                    vvh.playbtn.setVisibility(View.GONE);
+                } else if (!isPlaying) {
+                    vvh.pausebtn.setVisibility(View.GONE);
+                    vvh.playbtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        vvh.videoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                vvh.videoView.seekTo(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+       /* vvh.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 vvh.videoView.start();
                 //listener.onPlayClicked(s);
+            }
+        });*/
+
+        vvh.playbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPlaying = true;
+                vvh.videoView.start();
+                vvh.playbtn.setVisibility(View.GONE);
+                vvh.pausebtn.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        vvh.pausebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPlaying = false;
+                vvh.videoView.pause();
+                vvh.pausebtn.setVisibility(View.GONE);
+                vvh.playbtn.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -102,6 +173,21 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     }
 
+    VideosViewHolder vvh;
+
+
+    /*private Runnable onEverySecond = new Runnable() {
+        @Override
+        public void run() {
+            if (vvh.videoSeekBar != null) {
+                vvh.videoSeekBar.setProgress(vvh.videoView.getCurrentPosition());
+            }
+            if (vvh.videoView.isPlaying()) {
+                vvh.videoSeekBar.postDelayed(onEverySecond, 1000);
+            }
+        }
+    };*/
+
     private void shareIt() {
         //sharing implementation here
         Intent i = new Intent(Intent.ACTION_SEND);
@@ -113,6 +199,8 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ctx.startActivity(Intent.createChooser(i, "choose one"));
     }
 
+
+
     @Override
     public int getItemCount() {
         return mList == null ? 0 : mList.size();
@@ -120,19 +208,31 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
     MediaController mediaController;
+     /*VideoView videoView;
+    SeekBar videoSeekBar;*/
     public class VideosViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image, shareicon;
+        protected ImageView image, shareicon, playbtn, pausebtn;
         protected Button btnPlay;
-        protected VideoView videoView;
+         protected VideoView videoView;
+         protected SeekBar videoSeekBar;
+
 
         public VideosViewHolder(View itemView) {
             super(itemView);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             image = (ImageView) itemView.findViewById(R.id.image);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+            btnPlay.setVisibility(View.GONE);
             videoView = (VideoView) itemView.findViewById(R.id.videoView);
             shareicon = (ImageView) itemView.findViewById(R.id.shareicon);
+            playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
+            pausebtn = (ImageView) itemView.findViewById(R.id.pausebtn);
+            pausebtn.setVisibility(View.GONE);
+            playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
+
+            videoSeekBar = (SeekBar) itemView.findViewById(R.id.videoSeekBar);
+            videoSeekBar.setVisibility(View.GONE);
         }
     }
     static final String LOG = VideosAdapter.class.getSimpleName();
