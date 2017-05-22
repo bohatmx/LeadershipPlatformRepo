@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.api;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -8,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -15,7 +17,10 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v13.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,7 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oneconnect.leadership.library.activities.eBookWebActivity;
+
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -50,7 +55,7 @@ import static android.content.Context.DOWNLOAD_SERVICE;
  */
 
 @SuppressWarnings("VisibleForTests")
-public class FirebaseStorageAPI {
+public class FirebaseStorageAPI extends Activity {
 
     private static final String TAG = FirebaseStorageAPI.class.getSimpleName();
 
@@ -58,12 +63,14 @@ public class FirebaseStorageAPI {
     private DataAPI dataAPI;
     private  Context ctx;
     private String path;
+    private  String bookUrl;
+    private String fileName;
     ProgressDialog dialog;
 
     public static final String STORAGE_URL = "gs://leadershipplatform-158316.appspot.com",
             PHOTOS = "photos/", VIDEOS = "videos/", THUMBNAILS = "thumbnails/", PODCASTS = "podcasts/",
             EBOOKS = "ebooks/";
-
+    public static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1;
 
     public FirebaseStorageAPI() {
         dataAPI = new DataAPI();
@@ -321,7 +328,60 @@ public class FirebaseStorageAPI {
 
     public void downloadEbook(String bookUrl, final String fileName, String path, final Context ctx) {
         this.ctx = ctx;
+        this.bookUrl = bookUrl;
+        this.fileName = fileName;
         this.path = path.substring(path.indexOf("//")) + ".pdf";
+        checkWriteExternalStoragePermission();
+     }
+
+    BroadcastReceiver onComplete=new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent intent) {
+            if(dialog != null && dialog.isShowing()){
+                dialog.dismiss();
+            }
+            readEbook();
+        }
+    };
+
+    protected void readEbook() {
+        Log.w("IR", "TRYING TO RENDER: " + path);
+        File file = new File(path);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        ctx.startActivity(intent);
+    }
+
+    public void checkWriteExternalStoragePermission() {
+        ContextCompat.checkSelfPermission(ctx,      Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) ctx,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+        }else{
+            startDownloadEbook();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+
+            case MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startDownloadEbook();
+                } else {
+                    Toast.makeText(ctx, "Permission Denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    private void startDownloadEbook(){
         File bookName = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName + ".pdf");;
 
         if(!bookName.exists()){
@@ -351,27 +411,6 @@ public class FirebaseStorageAPI {
         }else{
             readEbook();
         }
-     }
-
-
-
-    BroadcastReceiver onComplete=new BroadcastReceiver() {
-        public void onReceive(Context ctxt, Intent intent) {
-            if(dialog != null && dialog.isShowing()){
-                dialog.dismiss();
-            }
-            readEbook();
-        }
-    };
-
-
-    protected void readEbook() {
-        Log.w("IR", "TRYING TO RENDER: " + path);
-        File file = new File(path);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        ctx.startActivity(intent);
     }
 
     public void uploadPodcast(final PodcastDTO podcast,
