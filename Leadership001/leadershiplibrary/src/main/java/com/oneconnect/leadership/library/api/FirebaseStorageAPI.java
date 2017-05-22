@@ -1,8 +1,18 @@
 package com.oneconnect.leadership.library.api;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -17,6 +27,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.oneconnect.leadership.library.activities.eBookWebActivity;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -31,6 +42,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
+
 
 /**
  * Created by josephmokenela on 10/14/16.
@@ -43,6 +56,10 @@ public class FirebaseStorageAPI {
 
     private StorageReference storageReference;
     private DataAPI dataAPI;
+    private  Context ctx;
+    private String path;
+    ProgressDialog dialog;
+
     public static final String STORAGE_URL = "gs://leadershipplatform-158316.appspot.com",
             PHOTOS = "photos/", VIDEOS = "videos/", THUMBNAILS = "thumbnails/", PODCASTS = "podcasts/",
             EBOOKS = "ebooks/";
@@ -300,6 +317,61 @@ public class FirebaseStorageAPI {
                     .concat(eBook.getTitle())));
             listener.onError("Unable to upload the eBook file");
         }
+    }
+
+    public void downloadEbook(String bookUrl, final String fileName, String path, final Context ctx) {
+        this.ctx = ctx;
+        this.path = path.substring(path.indexOf("//")) + ".pdf";
+        File bookName = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName + ".pdf");;
+
+        if(!bookName.exists()){
+            DownloadManager.Request r = new DownloadManager.Request(Uri.parse(bookUrl));
+
+            // This put the download in the same Download dir the browser uses
+            r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName + ".pdf");
+            //r.setDestinationInExternalPublicDir(Environment.getExternalStorageDirectory().getAbsolutePath() + "eBooks", "Christian.pdf");
+
+            // When downloading music and videos they will be listed in the player
+            // (Seems to be available since Honeycomb only)
+            r.allowScanningByMediaScanner();
+
+            // Notify user when download is completed
+            // (Seems to be available since Honeycomb only)
+            r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+            // Start download
+            dialog = new ProgressDialog(ctx);
+            //set message of the dialog
+            dialog.setMessage("Loading...");
+            //show dialog
+            dialog.show();
+            DownloadManager dm = (DownloadManager) ctx.getSystemService(DOWNLOAD_SERVICE);
+            ctx.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            dm.enqueue(r);
+        }else{
+            readEbook();
+        }
+     }
+
+
+
+    BroadcastReceiver onComplete=new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent intent) {
+            if(dialog != null && dialog.isShowing()){
+                dialog.dismiss();
+            }
+            readEbook();
+        }
+    };
+
+
+    protected void readEbook() {
+        Log.w("IR", "TRYING TO RENDER: " + path);
+        File file = new File(path);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        ctx.startActivity(intent);
     }
 
     public void uploadPodcast(final PodcastDTO podcast,
