@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.subscriber;
 
+import android.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -87,6 +89,7 @@ import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.subscriber.services.SubscriberMessagingService;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -127,6 +130,10 @@ public class SubscriberMainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
         Log.d(TAG, "onCreate: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         setContentView(R.layout.activity_subscriber_main);
          toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -143,12 +150,6 @@ public class SubscriberMainActivity extends AppCompatActivity
         mPager = (ViewPager) findViewById(com.oneconnect.leadership.library.R.id.viewpager);
         PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip.setVisibility(View.VISIBLE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
-
 
         setup();
 
@@ -232,7 +233,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setUpViewPager();
-    }
+        }
 
     private int type;
 

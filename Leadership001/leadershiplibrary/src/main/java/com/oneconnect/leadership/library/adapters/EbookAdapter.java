@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.WebViewActivity;
+import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 
@@ -52,7 +53,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         final EBookDTO v = mList.get(position);
         final EbookViewHolder vvh = (EbookViewHolder) holder;
-        String displayName = v.getStorageName().split("\\.", 2)[0];
+        final String displayName = v.getStorageName().split("\\.", 2)[0];
         int i = displayName.lastIndexOf("/");
         //
 
@@ -62,19 +63,10 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    Intent intent = new Intent(ctx, WebViewActivity.class);
-                    intent.putExtra("links", bookUrl/*mList.get(position).getUrls()*/);
-                    ctx.startActivity(intent);
-                //listener.onReadClicked(bookUrl);
-                //File f = new File(bookUrl);
-                //if (f.exists()) {
-                    /*Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(bookUrl), "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                    ctx.startActivity(intent);*/
-              //  }
+                String path = displayName;
+                FirebaseStorageAPI fbs = new FirebaseStorageAPI();
+                int i = displayName.lastIndexOf("/");
+                fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);
             }
         });
 
@@ -110,21 +102,12 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ctx.startActivity(Intent.createChooser(i, "choose one"));
     }
 
-    private void readEbook(String path) {
-        File f = new File(path);
-       if (f.exists()) {
-            //Intent intent = new Intent(Intent.ACTION_VIEW);
-            //intent.setDataAndType(Uri.fromFile(f), "application/pdf");
-           // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-           // ctx.startActivity(intent);
-
-
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/"+ path);
-        Intent target = new Intent(Intent.ACTION_VIEW);
-        target.setDataAndType(Uri.fromFile(file),"application/pdf");
-        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-        Intent intent = Intent.createChooser(target, "Open File");
+    private void readEbook(File path) {
+       if (path.exists()) {
+           Intent target = new Intent(Intent.ACTION_VIEW);
+           target.setDataAndType(Uri.fromFile(path),"application/pdf");
+           target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+           Intent intent = Intent.createChooser(target, "Open File");
         try {
             ctx.startActivity(intent);
         } catch (ActivityNotFoundException e) {

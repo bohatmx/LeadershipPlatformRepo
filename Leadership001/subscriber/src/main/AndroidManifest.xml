@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.oneconnect.leadership.subscriber">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <application
         android:name=".SubscriberApp"
         android:allowBackup="true"
@@ -63,6 +69,10 @@
         <activity android:name="com.oneconnect.leadership.library.activities.PodcastActivity"
             android:label="@string/title_activity_podcast"
             android:parentActivityName=".SubscriberMainActivity"/>
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.eBookWebActivity"
+            android:label="@string/ebook_web_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name="com.oneconnect.leadership.library.activities.WebViewActivity"
             android:label="@string/title_activity_web_view"
