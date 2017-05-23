@@ -881,12 +881,12 @@ public class SubscriberMainActivity extends AppCompatActivity
 static final String LOG = SubscriberMainActivity.class.getSimpleName();
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+       /* DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }
+        } */
     }
 
     @Override
@@ -895,7 +895,7 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
         getMenuInflater().inflate(R.menu.subscriber_main, menu);
         return true;
     }
-
+    static boolean logOff;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -904,10 +904,14 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.cancel_action) {
+            SharedPrefUtil.clearProfile(ctx);
+            Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
+            startActivity(intent);
+            logOff = true;
+            finish();
             return true;
         }
-
         if (id == R.id.action_media) {
             Intent intent = new Intent(SubscriberMainActivity.this, MediaListActivity.class);
             startActivity(intent);

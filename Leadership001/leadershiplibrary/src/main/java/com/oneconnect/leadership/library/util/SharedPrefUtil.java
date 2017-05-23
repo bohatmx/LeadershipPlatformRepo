@@ -13,6 +13,8 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
+import static com.google.android.gms.common.Scopes.PROFILE;
+
 /**
  * Created by aubreymalabie on 3/16/17.
  */
@@ -27,6 +29,10 @@ public class SharedPrefUtil {
         ed.putString("token", token);
         ed.commit();
         Log.d(TAG, "saveCloudMsgToken " + token);
+    }
+    public static void clearProfile(Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        sp.edit().remove(PROFILE).commit();
     }
 
     public static String getCloudMsgToken(Context ctx) {

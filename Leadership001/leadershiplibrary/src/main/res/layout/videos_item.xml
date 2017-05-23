@@ -47,7 +47,7 @@
             android:textStyle="bold"
             android:textSize="15sp"
             android:layout_marginRight="@dimen/mon_margin"
-            android:layout_below="@+id/videoSeekBar"
+            android:layout_below="@+id/videoView"
             android:text="Filename inserted here" />
 
         <RelativeLayout

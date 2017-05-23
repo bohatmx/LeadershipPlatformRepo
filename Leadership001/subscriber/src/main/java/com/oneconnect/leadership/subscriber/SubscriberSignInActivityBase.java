@@ -45,6 +45,7 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
                 Toast.LENGTH_LONG,true).show();
         Intent m = new Intent(this, SubscriberMainActivity/*MediaListActivity*/.class);
         startActivity(m);
+        finish();
     }
 
     @Override

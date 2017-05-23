@@ -28,7 +28,11 @@ import android.view.WindowManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.services.AdminMessagingService;
+import com.oneconnect.leadership.library.cache.UserCache;
 import com.oneconnect.leadership.library.data.FCMData;
+import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
 public class AdminMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -90,17 +94,23 @@ public class AdminMainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.admin_main, menu);
         return true;
-    }
 
+    }
+    static boolean logOff;
+    Context ctx = getApplicationContext();
+    //activity = this;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up btnUpload, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.cancel_action) {
+            SharedPrefUtil.clearProfile(ctx);
+            Intent intent = new Intent(AdminMainActivity.this, AdminSignInActivity.class);
+            startActivity(intent);
+            logOff = true;
+            finish();
             return true;
         }
 

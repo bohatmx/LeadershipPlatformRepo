@@ -18,16 +18,17 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/video" />
+
         <TextView
             android:id="@+id/fileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textColor="@color/grey_500"
-            android:textSize="12sp"
-            android:layout_marginRight="@dimen/mon_margin"
             android:layout_below="@id/image"
-            android:text="Filename inserted here" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/mon_margin"
+            android:text="Filename inserted here"
+            android:textColor="@color/grey_500"
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,14 +44,15 @@
                 android:layout_alignParentRight="true"
                 android:text="Upload Video"
                 android:textColor="@color/pink_600" />
+
             <Button
                 android:id="@+id/btnPlay"
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/mon_wide"
                 android:layout_toLeftOf="@id/btnUpload"
                 android:text="Play Video"
-                android:layout_marginRight="@dimen/mon_wide"
                 android:textColor="@color/blue_500" />
 
 

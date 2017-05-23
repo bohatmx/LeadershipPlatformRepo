@@ -52,6 +52,7 @@ public class AdminSignInActivity extends BaseLoginActivity {
                 Toast.LENGTH_LONG, true).show();
         Intent m = new Intent(this, CrudActivity.class);
         startActivity(m);
+        finish();
     }
 
     @Override
