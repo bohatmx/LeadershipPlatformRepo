@@ -2,34 +2,27 @@ package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Handler;
-import android.provider.MediaStore;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.data.DailyThoughtDTO;
-import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.VideoDTO;
-import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -163,10 +156,12 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
-        vvh.shareicon.setOnClickListener(new View.OnClickListener() {
+        vvh.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareIt();
+                showPopupMenu(v);
+
+
             }
         });
 
@@ -187,6 +182,37 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         }
     };*/
+    private void showPopupMenu(View view) {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(ctx, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_video, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.show();
+    }
+
+    /**
+     * Click listener for popup menu items
+     */
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        public MyMenuItemClickListener() {
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+            if (i == R.id.action_share) {
+                shareIt();
+                return true;
+            } else if (i == R.id.action_play_next) {
+                Toast.makeText(ctx, "Play next", Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+            }
+            return false;
+        }
+    }
 
     private void shareIt() {
         //sharing implementation here
@@ -211,8 +237,8 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
      /*VideoView videoView;
     SeekBar videoSeekBar;*/
     public class VideosViewHolder extends RecyclerView.ViewHolder {
-        protected TextView fileName;
-        protected ImageView image, shareicon, playbtn, pausebtn;
+        protected TextView fileName,count;
+        protected ImageView image, overflow, playbtn, pausebtn;
         protected Button btnPlay;
          protected VideoView videoView;
          protected SeekBar videoSeekBar;
@@ -222,10 +248,11 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             image = (ImageView) itemView.findViewById(R.id.image);
-            btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
-            btnPlay.setVisibility(View.GONE);
+            //btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+            //btnPlay.setVisibility(View.GONE);
             videoView = (VideoView) itemView.findViewById(R.id.videoView);
-            shareicon = (ImageView) itemView.findViewById(R.id.shareicon);
+            overflow = (ImageView) itemView.findViewById(R.id.overflow);
+            count = (TextView) itemView.findViewById(R.id.fileName);
             playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
             pausebtn = (ImageView) itemView.findViewById(R.id.pausebtn);
             pausebtn.setVisibility(View.GONE);

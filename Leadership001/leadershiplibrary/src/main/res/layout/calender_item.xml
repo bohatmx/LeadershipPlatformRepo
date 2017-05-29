@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/mon_padding">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/motherLayout">
+
+        <ImageView
+            android:id="@+id/headerimg"
+            android:src="@drawable/cal"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"/>
+
+
+        <TextView
+            android:padding="@dimen/appbar_padding_top"
+            android:id="@+id/titletxt"
+            android:layout_below="@+id/headerimg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_900"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="Title"/>
+
+
+        <TextView
+            android:padding="@dimen/appbar_padding_top"
+            android:id="@+id/descriptiontxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blue_900"
+            android:text="Description"
+            android:textSize="10dp"
+            android:layout_below="@+id/titletxt"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/childLayout"
+            android:padding="@dimen/appbar_padding_top"
+            android:layout_below="@+id/descriptiontxt">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+
+                    android:id="@+id/startLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="Start: "/>
+
+                <TextView
+                    android:layout_below="@+id/startLabel"
+                    android:id="@+id/startDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textColor="@color/blue_900"
+                    android:text="Thursday 20 march 1945"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/endLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="End: "/>
+
+                <TextView
+
+                    android:layout_below="@+id/endLabel"
+                    android:id="@+id/endDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textColor="@color/blue_900"
+                    android:text="Thursday 20 march 1945"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <ImageView
+            android:padding="@dimen/appbar_padding_top"
+            android:id="@+id/shareevent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/headerimg"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_dots" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

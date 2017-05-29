@@ -13,14 +13,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.WebViewActivity;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nkululeko on 2017/04/19.
@@ -57,6 +62,23 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         int i = displayName.lastIndexOf("/");
         //
 
+      /*  if (v.getPhotos() != null) {
+          //  EBookDTO dtd = mList.get(position);
+            List<PhotoDTO> photoList = new ArrayList<>();
+            Map map = dtd.getPhotos();
+            PhotoDTO pDTO;
+            for (Object value: map.values()) {
+                pDTO = (PhotoDTO) value;
+                photoList.add(pDTO);
+                if (pDTO.getUrl() != null) {
+                    Glide.with(ctx)
+                            .load(pDTO.getUrl())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(vvh.bookIcon);
+                }
+
+            }
+         } */
         //
         vvh.fileName.setText(displayName.substring(i + 1));
         final String bookUrl = v.getUrl();

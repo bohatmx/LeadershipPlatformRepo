@@ -2,12 +2,16 @@ package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
@@ -36,7 +40,7 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.calender_item, parent, false);
         return new CalendarEventViewHolder(v);
     }
 
@@ -54,11 +58,41 @@ public class CalendarEventAdapter extends RecyclerView.Adapter<RecyclerView.View
         cevh.shareevent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareIt();
+                showPopupMenu(v);
             }
         });
     }
+    private void showPopupMenu(View view) {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(ctx, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_calender, popup.getMenu());
+        popup.setOnMenuItemClickListener(new CalendarEventAdapter.MyMenuItemClickListener());
+        popup.show();
+    }
 
+    /**
+     * Click listener for popup menu items
+     */
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        public MyMenuItemClickListener() {
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+            if (i == R.id.share) {
+                shareIt();
+                return true;
+            } else if (i == R.id.calender) {
+                Toast.makeText(ctx, "calender", Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+            }
+            return false;
+        }
+    }
     private void shareIt() {
         //sharing implementation here
         Intent i = new Intent(Intent.ACTION_SEND);

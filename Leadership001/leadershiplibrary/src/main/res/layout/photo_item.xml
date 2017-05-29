@@ -12,8 +12,9 @@
         <ImageView
             android:id="@+id/photoView"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="160dp"
             android:src="@drawable/bayscape"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitXY"/>
 
         <TextView
@@ -24,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/accent_teal"
             android:textStyle="bold"
-            android:text="the caption text goes here"/>
+            android:text="The title"/>
 
         <TextView
             android:layout_below="@+id/captiontxt"

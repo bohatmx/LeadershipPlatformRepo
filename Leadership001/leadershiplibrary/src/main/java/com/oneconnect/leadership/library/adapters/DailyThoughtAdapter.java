@@ -8,9 +8,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -103,7 +107,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareIt();
+                showPopupMenu(v);
             }
         });
 
@@ -337,7 +341,37 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
     }
+    private void showPopupMenu(View view) {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(ctx, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_dailythought, popup.getMenu());
+        popup.setOnMenuItemClickListener(new DailyThoughtAdapter.MyMenuItemClickListener());
+        popup.show();
+    }
 
+    /**
+     * Click listener for popup menu items
+     */
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        public MyMenuItemClickListener() {
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+            if (i == R.id.share) {
+                shareIt();
+                return true;
+            } else if (i == R.id.calender) {
+                Toast.makeText(ctx, "calender", Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+            }
+            return false;
+        }
+    }
 
     private void shareIt() {
         //sharing implementation here

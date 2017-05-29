@@ -101,5 +101,12 @@
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="title_activity_video_player">VideoPlayerActivity</string>
     <string name="title_activity_main">MainActivity</string>
-    
+
+
+    <!--VideoMenu-->
+    <string name="share">Share</string>
+    <string name="action_play_next">Play Next</string>
+    <string name="action_calender">Calender</string>
+    <string name="adding_calender_event_in_android">Add Calender Event</string>
+
 </resources>

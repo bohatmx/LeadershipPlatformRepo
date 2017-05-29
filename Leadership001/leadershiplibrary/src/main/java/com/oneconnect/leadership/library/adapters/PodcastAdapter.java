@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -161,7 +164,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.headerpic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareIt();
+                showPopupMenu(v);
             }
         });
 
@@ -214,6 +217,38 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
     }
+    private void showPopupMenu(View view) {
+        // inflate menu
+        PopupMenu popup = new PopupMenu(ctx, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_dailythought, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PodcastAdapter.MyMenuItemClickListener());
+        popup.show();
+    }
+
+    /**
+     * Click listener for popup menu items
+     */
+    class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        public MyMenuItemClickListener() {
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            int i = menuItem.getItemId();
+            if (i == R.id.share) {
+                shareIt();
+                return true;
+            } else if (i == R.id.calender) {
+                Toast.makeText(ctx, "calender", Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+            }
+            return false;
+        }
+    }
+
     private void shareIt() {
         //sharing implementation here
         Intent i = new Intent(Intent.ACTION_SEND);
