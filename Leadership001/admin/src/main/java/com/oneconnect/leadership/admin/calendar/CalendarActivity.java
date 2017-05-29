@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -61,6 +62,7 @@ public class CalendarActivity extends AppCompatActivity implements UserCacheCont
     private List<UserDTO> users, attendees = new ArrayList<>();
     private Calendar calendar;
     private TextView txtTitle, txtDate, txtStartDate, txtEndDate, txtStartTime, txtEndTime, txtAttendeeCount;
+
 
     private View startDateLayout, endDateLayout, startTimeLayout, endTimeLayout;
     private FloatingActionButton fab;

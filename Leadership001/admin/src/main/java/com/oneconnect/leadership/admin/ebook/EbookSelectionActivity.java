@@ -714,6 +714,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     }
 
     @Override
+    public void onEbookUpdated(String key) {
+
+    }
+
+    @Override
     public void onEbookUploaded(String key) {
 
     }

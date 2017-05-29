@@ -13,9 +13,10 @@ import java.util.HashMap;
 
 public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBookDTO>{
     private String eBookID,  description, url, stringDate;
+
     private Long date;
     private Integer numberOfPages;
-    private String stringDateUpdated, html, filePath, storageName;
+    private String stringDateUpdated, html, filePath, storageName, photoUrl;
     private boolean active;
     private Long dateUpdated, ebookSize;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, podcastID, photoID;
@@ -155,7 +156,6 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
         this.dateUpdated = dateUpdated;
     }
 
-
     public String geteBookID() {
         return eBookID;
     }
@@ -243,5 +243,11 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
         this.ebookSize = ebookSize;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
 
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }

@@ -25,6 +25,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -276,6 +280,8 @@ public class FirebaseStorageAPI extends Activity {
             listener.onError("Unable to upload the video file");
         }
     }
+
+
 
     public void uploadEbook(final EBookDTO eBook,
                             final StorageListener listener) {

@@ -2,6 +2,7 @@ package com.oneconnect.leadership.admin.ebook;
 
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 
 /**
  * Created by Nkululeko on 2017/04/12.
@@ -34,5 +35,10 @@ public class EbookUploadPresenter implements EbookUploadContract.Presenter {
                 view.onError(message);
             }
         });
+    }
+
+    @Override
+    public void updateEbook(EBookDTO eBook) {
+
     }
 }

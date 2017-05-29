@@ -22,7 +22,7 @@
             <item
                 android:id="@+id/nav_ebooks"
                 android:icon="@drawable/ic_beacon"
-                android:title="E Books" />
+                android:title="Books" />
             <item
                 android:id="@+id/nav_videos"
                 android:icon="@drawable/ic_videocam"

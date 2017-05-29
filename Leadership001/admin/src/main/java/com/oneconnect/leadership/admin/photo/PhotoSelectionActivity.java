@@ -48,6 +48,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     private RecyclerView recyclerView;
     private int type;
     private PhotoUploadPresenter presenter;
+
     private EbookUploadPresenter eBookpresenter;
     private Toolbar toolbar;
     private DailyThoughtDTO dailyThought;
@@ -308,7 +309,13 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             case ResponseBag.EBOOKS:
                 p.seteBookID(eBook.geteBookID());
                 p.setTitle(eBook.getStorageName());
+                eBook.setPhotoUrl(p.getUrl());
+                eBook.setPhotoID(p.getPhotoID());
                 break;
+        }
+        if (type == ResponseBag.EBOOKS) {
+            eBookpresenter.uploadEbook(eBook);
+            return;
         }
         //openProgressSheet();
         presenter.uploadPhoto(p);
@@ -355,6 +362,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     @Override
     public void onPhotoUploaded(String key) {
+
+    }
+
+    @Override
+    public void onEbookUpdated(String key) {
 
     }
 
