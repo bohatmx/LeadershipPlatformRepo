@@ -32,9 +32,6 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
 
-/*
-    private List<VideoDTO> videoList;
-    private List<PhotoDTO> photoList;*/
 
 
     public HashMap<String, RatingDTO> getRatings() {

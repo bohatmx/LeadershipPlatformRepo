@@ -119,11 +119,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     public void getWeeklyMasterClasses() {
         Log.d(LOG, "************** getWeeklyMasterClasses: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllWeeklyMasterClasses();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+ //       } else {
+  //          Log.d(LOG, "user is null");
+   //     }
     }
 
     private void getCachedWeeklyMasterClasses() {

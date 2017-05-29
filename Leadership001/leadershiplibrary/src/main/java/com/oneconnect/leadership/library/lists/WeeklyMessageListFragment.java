@@ -137,11 +137,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     private void getWeeklyMessages() {
         Log.d(LOG, "************** getWeeklyMessages: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+      //  if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllWeeklyMessages();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+      //  } else {
+      //      Log.d(LOG, "user is null");
+      //  }
     }
 
 

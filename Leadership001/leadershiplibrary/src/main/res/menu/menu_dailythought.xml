@@ -6,8 +6,4 @@
         android:orderInCategory="100"
         android:title="@string/share" />
 
-    <item
-        android:id="@+id/calender"
-        android:orderInCategory="101"
-        android:title="@string/action_calender" />
 </menu>

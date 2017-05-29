@@ -115,6 +115,14 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
         this.dailyThoughtID = dailyThoughtID;
     }
 
+    public String getPhotoID() {
+        return photoID;
+    }
+
+    public void setPhotoID(String photoID) {
+        this.photoID = photoID;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -235,11 +243,5 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
         this.ebookSize = ebookSize;
     }
 
-    public String getPhotoID() {
-        return photoID;
-    }
 
-    public void setPhotoID(String photoID) {
-        this.photoID = photoID;
-    }
 }

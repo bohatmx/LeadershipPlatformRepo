@@ -14,7 +14,7 @@
             android:src="@drawable/cal"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="200dp"
             android:scaleType="fitXY"/>
 
 
@@ -43,7 +43,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/childLayout"
             android:padding="@dimen/appbar_padding_top"
@@ -90,7 +90,6 @@
                     android:text="End: "/>
 
                 <TextView
-
                     android:layout_below="@+id/endLabel"
                     android:id="@+id/endDate"
                     android:layout_width="wrap_content"

@@ -8,9 +8,28 @@
     tools:context="com.oneconnect.leadership.admin.ebook.EbookSelectionActivity"
     tools:showIn="@layout/activity_ebook_selection">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <RelativeLayout
+        android:id="@+id/viewLay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/bookViewLay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+                layout="@layout/book_view"
+                />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@+id/bookViewLay"
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

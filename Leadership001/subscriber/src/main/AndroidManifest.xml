@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth"/>
 
     <application
         android:name=".SubscriberApp"
@@ -25,7 +25,8 @@
         <activity
             android:name=".SubscriberSignInActivityBase"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,58 +41,52 @@
             android:name=".SubscriberMainActivity"
             android:label="@string/title_activity_subscriber_main"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
-
-        <activity android:name="com.oneconnect.leadership.library.lists.MediaListActivity"
-            android:parentActivityName=".SubscriberMainActivity"
-            android:label="@string/title_activity_media_list"/>
-
-        <activity android:name="com.oneconnect.leadership.library.activities.DailyThoughtActivity"
-        android:label="@string/title_activity_daily_thought"
-        android:parentActivityName=".SubscriberMainActivity"/>
-
-        <activity android:name="com.oneconnect.leadership.library.activities.MasterActivity"
-            android:label="@string/title_activity_weekly_classes"
-            android:parentActivityName=".SubscriberMainActivity"/>
-
-        <activity android:name="com.oneconnect.leadership.library.activities.eBookActivity"
-            android:label="@string/title_activity_e_book"
-            android:parentActivityName=".SubscriberMainActivity"/>
-
-        <activity android:name="com.oneconnect.leadership.library.activities.VideoActivity"
-            android:label="@string/title_activity_video"
-            android:parentActivityName=".SubscriberMainActivity"/>
-
-        <activity android:name="com.oneconnect.leadership.library.activities.PodcastActivity"
-            android:label="@string/title_activity_podcast"
-            android:parentActivityName=".SubscriberMainActivity"/>
         <activity
-            android:name="com.oneconnect.leadership.library.activities.eBookWebActivity"
-            android:label="@string/ebook_web_activity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name="com.oneconnect.leadership.library.activities.WebViewActivity"
+            android:name="com.oneconnect.leadership.library.lists.MediaListActivity"
+            android:label="@string/title_activity_media_list"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.DailyThoughtActivity"
+            android:label="@string/title_activity_daily_thought"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.MasterActivity"
+            android:label="@string/title_activity_weekly_classes"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.eBookActivity"
+            android:label="@string/title_activity_e_book"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.VideoActivity"
+            android:label="@string/title_activity_video"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.PodcastActivity"
+            android:label="@string/title_activity_podcast"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.WebViewActivity"
             android:label="@string/title_activity_web_view"
-            android:parentActivityName=".SubscriberMainActivity"/>
-
-        <activity android:name="com.oneconnect.leadership.library.video.LeExoPlayerActivity"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.video.LeExoPlayerActivity"
             android:label="@string/title_activity_le_exo_player"
-            android:parentActivityName=".SubscriberMainActivity"/>
-
-        <activity android:name="com.oneconnect.leadership.library.video.VideoPlayerActivity"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.video.VideoPlayerActivity"
             android:label="@string/title_activity_video_player"
-            android:parentActivityName=".SubscriberMainActivity"/>
-
-        <activity android:name="com.oneconnect.leadership.library.activities.PhotoActivity"
+            android:parentActivityName=".SubscriberMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.PhotoActivity"
             android:label="@string/title_activity_main"
-            android:parentActivityName=".SubscriberMainActivity"/>
+            android:parentActivityName=".SubscriberMainActivity" />
 
-
-
+        <meta-data
+            tools:replace="android:value"
+            android:name="io.fabric.ApiKey"
+            android:value="bf8084862d623f44e2edfdf76bc8e2be5ba185a8" />
     </application>
 
 </manifest>

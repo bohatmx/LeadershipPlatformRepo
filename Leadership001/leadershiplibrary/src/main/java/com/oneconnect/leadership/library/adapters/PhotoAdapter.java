@@ -62,6 +62,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 shareIt();
             }
         });
+
+        pvh.shareTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareIt();
+            }
+        });
     }
     private void shareIt() {
         //sharing implementation here
@@ -82,8 +89,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
     public class PhotoViewHolder extends RecyclerView.ViewHolder {
-        protected TextView captiontxt, txtDate;
-        protected ImageView photoView, iconshare;
+        protected TextView captiontxt, txtDate, shareTxt, likeCountTxt;
+        protected ImageView photoView, iconshare, likeIMG;
 
         public PhotoViewHolder(View itemView) {
             super(itemView);
@@ -92,7 +99,14 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtDate.setVisibility(View.GONE);
             photoView = (ImageView) itemView.findViewById(R.id.photoView);
-            iconshare = (ImageView) itemView.findViewById(R.id.iconshare);
+            iconshare = (ImageView) itemView.findViewById(R.id.shareIcon);
+            shareTxt = (TextView) itemView.findViewById(R.id.shareTxt);
+           /* likeIMG = (ImageView) itemView.findViewById(R.id.likeIMG);
+            likeIMG.setVisibility(View.GONE);
+            likeCountTxt = (TextView) itemView.findViewById(R.id.likeCountTxt);
+            likeCountTxt.setVisibility(View.GONE);*/
+
+
         }
     }
 }

@@ -205,10 +205,6 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             if (i == R.id.action_share) {
                 shareIt();
                 return true;
-            } else if (i == R.id.action_play_next) {
-                Toast.makeText(ctx, "Play next", Toast.LENGTH_SHORT).show();
-                return true;
-            } else {
             }
             return false;
         }

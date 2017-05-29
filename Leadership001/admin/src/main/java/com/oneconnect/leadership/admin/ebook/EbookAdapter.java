@@ -13,9 +13,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
+import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
 import java.util.List;
+
+import static android.R.attr.type;
 
 /**
  * Created by Nkululeko on 2017/04/12.
@@ -26,10 +33,12 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     private List<String> paths;
     private Context context;
     private EbookAdapterListener listener;
+    EBookDTO eBook;
 
     public interface EbookAdapterListener {
         void onUploadEbook(String path);
         void onReadEbook(String path);
+        void onPhotoUpload(BaseDTO base/*String path*/);
     }
 
     public EbookAdapter(List<String> paths, Context context, EbookAdapterListener listener) {
@@ -46,13 +55,55 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     }
 
     @Override
-    public void onBindViewHolder(EbookViewHolder holder, int position) {
+    public void onBindViewHolder(final EbookViewHolder holder, int position) {
+
         final String path = paths.get(position);
         File file = new File(path);
         Log.w("EbookAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
         int i = path.lastIndexOf("/");
         holder.txtFileName.setText(path.substring(i + 1));
-        holder.btnUpload.setOnClickListener(new View.OnClickListener() {
+
+        holder.uploadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onUploadEbook(path);
+            }
+        });
+
+        holder.readIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onReadEbook(path);
+            }
+        });
+
+        holder.imageUploadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*Intent intent = new Intent(context, PhotoSelectionActivity.class);
+                context.startActivity(intent);*/
+                //listener.onPhotoUpload(path);
+                Util.flashOnce(holder.imageUploadIcon, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        /*Intent intent = new Intent(context, PhotoSelectionActivity.class);
+                        intent.putExtra("type", type);
+                        switch (type) {
+                            case ResponseBag.EBOOKS:
+                                eBook = (EBookDTO) base;
+                                intent.putExtra("ebook", eBook);
+                                break;
+                        }
+                        context.startActivity(intent);*/
+                        //startPhotoGallerySelection(path);
+                        listener.onPhotoUpload(eBook);
+                    }
+                });
+
+            }
+        });
+
+       /* holder.btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onUploadEbook(path);
@@ -63,7 +114,21 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
             public void onClick(View v) {
                 listener.onReadEbook(path);
             }
-        });
+        });*/
+    }
+
+    BaseDTO base;
+
+    private void startPhotoGallerySelection(BaseDTO base){
+        Intent intent = new Intent(context, PhotoSelectionActivity.class);
+        intent.putExtra("type", type);
+        switch (type) {
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) base;
+                intent.putExtra("ebook", eBook);
+                break;
+        }
+        context.startActivity(intent);
     }
 
 
@@ -75,12 +140,18 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtFileName;
         protected Button btnUpload, btnPlay;
+        protected ImageView uploadIcon, readIcon, bookIcon, imageUploadIcon;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
             txtFileName = (TextView) itemView.findViewById(R.id.fileName);
-            btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
-            btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+            uploadIcon = (ImageView) itemView.findViewById(R.id.uploadIcon);
+            readIcon = (ImageView) itemView.findViewById(R.id.readIcon);
+            bookIcon = (ImageView) itemView.findViewById(R.id.bookIcon);
+            imageUploadIcon = (ImageView) itemView.findViewById(R.id.imageUploadIcon);
+            imageUploadIcon.setVisibility(View.GONE);
+            //btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
+            //btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
         }
 
     }

@@ -141,11 +141,11 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
 
     public void getPhotos() {
         Log.d(LOG, "************** getPhotos: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+    //    if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllPhotos();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+   //     } else {
+    //        Log.d(LOG, "user is null");
+     //   }
     }
 
     @Override

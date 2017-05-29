@@ -132,11 +132,11 @@ public class CalendarEventListFragment extends Fragment implements PageFragment,
 
     public void getCalendarEvents() {
         Log.d(LOG, "************** getCalendarEvents: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+       // if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllCalendarEvents();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+       // } else {
+       //     Log.d(LOG, "user is null");
+       // }
     }
 
 

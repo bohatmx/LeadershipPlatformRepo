@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.ebook.EbookAdapter;
+import com.oneconnect.leadership.admin.ebook.EbookUploadContract;
 import com.oneconnect.leadership.admin.ebook.EbookUploadPresenter;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -41,15 +42,17 @@ import java.util.TreeSet;
 
 import es.dmoral.toasty.Toasty;
 
-public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View{
+public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View{
 
 
     private RecyclerView recyclerView;
     private int type;
     private PhotoUploadPresenter presenter;
+    private EbookUploadPresenter eBookpresenter;
     private Toolbar toolbar;
     private DailyThoughtDTO dailyThought;
     private WeeklyMessageDTO weeklyMessage;
+    private EBookDTO eBook;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private Snackbar snackbar;
     public static final int PHOTO_REQUEST = 100000;
@@ -63,8 +66,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         getSupportActionBar().setTitle("Photo Selection & Upload");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new PhotoUploadPresenter(this);
+        //remove if it doesnt work
+        eBookpresenter = new EbookUploadPresenter(this);
 
-        type = getIntent().getIntExtra("type", 0);
+        type = getIntent().getIntExtra("type", 0/*type*/);
+
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
@@ -78,6 +84,16 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
                 getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
                 break;
+            //testing
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
+                getSupportActionBar().setSubtitle(eBook.getStorageName());
+                break;
+        }
+        if (getIntent().getSerializableExtra("eBook") != null) {
+            type = 3;
+            eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
+            getSupportActionBar().setSubtitle(eBook.getStorageName());
         }
 
 
@@ -99,7 +115,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
 
 
-    public void walkdir(File dir) {
+    /*public void walkdir(File dir) {
         String pdfPattern = ".jpg";
 
         File listFile[] = dir.listFiles();
@@ -143,7 +159,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 }
             }
         }
-    }
+    }*/
 
     public ArrayList<String> getFilePaths()
     {
@@ -268,7 +284,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         File file = new File(path);
         p.setImageSize(file.length());
         p.setBytes(file.length());
-        p.setCaption("Leadership & Motivation");
+        if (file.getName() != null) {
+            p.setCaption(file.getName());
+        } else {
+            p.setCaption("Leadership & Motivation");
+        }
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 p.setDailyThoughtID(dailyThought.getDailyThoughtID());
@@ -284,6 +304,10 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
                 p.setTitle(weeklyMessage.getTitle());
                 //p.setDescription(weeklyMessage.getTitle());
+                break;
+            case ResponseBag.EBOOKS:
+                p.seteBookID(eBook.geteBookID());
+                p.setTitle(eBook.getStorageName());
                 break;
         }
         //openProgressSheet();
@@ -331,6 +355,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     @Override
     public void onPhotoUploaded(String key) {
+
+    }
+
+    @Override
+    public void onEbookUploaded(String key) {
 
     }
 

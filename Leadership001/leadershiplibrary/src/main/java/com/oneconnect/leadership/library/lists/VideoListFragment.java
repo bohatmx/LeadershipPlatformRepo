@@ -157,11 +157,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     private void getVideos() {
         Log.d(LOG, "************** getVideos: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+      //  if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllVideos();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+     //   } else {
+      //      Log.d(LOG, "user is null");
+      //  }
     }
 
     private void playVideo(String path) {

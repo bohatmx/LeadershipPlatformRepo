@@ -12,7 +12,7 @@
         <ImageView
             android:id="@+id/photoView"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="200dp"
             android:src="@drawable/bayscape"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitXY"/>
@@ -35,13 +35,16 @@
             android:layout_height="wrap_content"
             android:text="Monday, 10 April 2015 11:19:15"/>
 
-        <ImageView
-            android:id="@+id/iconshare"
+        <LinearLayout
             android:layout_below="@+id/txtDate"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_toRightOf="@+id/txtDate"
-            android:src="@drawable/share" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+
+                layout="@layout/like_share"/>
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 

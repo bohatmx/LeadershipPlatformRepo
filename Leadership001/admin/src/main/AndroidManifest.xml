@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.oneconnect.leadership.admin">
+    package="com.oneconnect.leadership.admin"> <!--  -->
+    <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth" />
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
 
@@ -10,6 +11,8 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
 <a href="openFile:/work/REPOS/REPOS-2016/LeadershipPlatformRepo/Leadership001/admin/build.gradle">Open File</a><br><a href="open.dependency.in.project.structure">Show in Project Structure dialog</a>
     -->
     <!-- <uses-permission android:name="android.permission.WRITE_CALENDAR"/> -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".AdminApp"
         android:allowBackup="true"
@@ -114,7 +117,19 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:name=".photo.PhotoSelectionActivity"
             android:label="@string/title_activity_photo_selection"
             android:parentActivityName=".crud.CrudActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="8419153fba562e57532d0502ff0e71266daa9d2b"
+            tools:replace="android:value" />
+
+        <activity
+            android:name=".ebook.EbookListActivity"
+            android:label="@string/title_activity_ebook_list"
+            android:parentActivityName=".crud.CrudActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

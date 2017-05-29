@@ -34,8 +34,12 @@ import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+//import com.crashlytics.android.Crashlytics;
+import com.facebook.stetho.dumpapp.plugins.CrashDumperPlugin;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
@@ -102,6 +106,7 @@ public class CrudActivity extends AppCompatActivity
     private ProgressDialog progressDialog;
     private DatePickerDialog datePickerDialog;
     private WeeklyMessageDTO weeklyMessage;
+    private EBookDTO ebook;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private PodcastDTO podcast;
 
@@ -546,7 +551,12 @@ public class CrudActivity extends AppCompatActivity
                 startActivity(intent3);
                 break;
 
-
+            case R.id.nav_sign_out:
+                FirebaseAuth.getInstance().signOut();
+                Intent intent4 = new Intent(CrudActivity.this, AdminSignInActivity.class);
+                startActivity(intent4);
+                finish();
+                break;
 
         }
 
@@ -1060,6 +1070,10 @@ public class CrudActivity extends AppCompatActivity
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) base;
                 intent.putExtra("weeklyMessage", weeklyMessage);
+                break;
+            case ResponseBag.EBOOKS:
+                ebook = (EBookDTO) base;
+                intent.putExtra("eBook", ebook);
                 break;
         }
         startActivity(intent);

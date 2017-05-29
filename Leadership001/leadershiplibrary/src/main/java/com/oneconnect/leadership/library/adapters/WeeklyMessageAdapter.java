@@ -333,10 +333,6 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (i == R.id.share) {
                 shareIt();
                 return true;
-            } else if (i == R.id.calender) {
-                Toast.makeText(ctx, "calender", Toast.LENGTH_SHORT).show();
-                return true;
-            } else {
             }
             return false;
         }

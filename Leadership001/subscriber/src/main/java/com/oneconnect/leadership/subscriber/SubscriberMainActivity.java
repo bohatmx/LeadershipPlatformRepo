@@ -95,12 +95,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class SubscriberMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener,
         MasterListFragment.WeeklyMasterClassListener, WeeklyMessageListFragment.WeeklyMessageListener,
-        CalendarEventListFragment.CalendarEventListener
-        /*DailyThoughtAdapter.DailyThoughtAdapterlistener, WeeklyMessageAdapter.WeeklyMessageAdapterListener*/,
+        CalendarEventListFragment.CalendarEventListener,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
         PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener{
 
@@ -214,10 +214,6 @@ public class SubscriberMainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
-      //  dailyThoughtListFragment = (DailyThoughtListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
-
-
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -390,7 +386,6 @@ public class SubscriberMainActivity extends AppCompatActivity
                     Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
                     startActivity(intent);
                     finish();
-                    /*logoff();*/
                     return true;
                 }
                 return false;
@@ -892,19 +887,22 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.subscriber_main, menu);
+      //  getMenuInflater().inflate(R.menu.subscriber_main, menu);
         return true;
     }
+
     static boolean logOff;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+
+      //  int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.cancel_action) {
+  /*      if (id == R.id.cancel_action) {
             SharedPrefUtil.clearProfile(ctx);
             Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
             startActivity(intent);
@@ -923,7 +921,7 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
             startActivity(intent);
             return true;
         }
-
+*/
 
 
         return super.onOptionsItemSelected(item);
@@ -1028,6 +1026,9 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
                     }
                 }).show();
     }
+
+
+
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final String TAG = SubscriberMainActivity.class.getSimpleName();

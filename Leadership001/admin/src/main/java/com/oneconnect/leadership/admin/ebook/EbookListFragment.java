@@ -1,13 +1,14 @@
-package com.oneconnect.leadership.library.lists;
+package com.oneconnect.leadership.admin.ebook;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,21 +17,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.youtube.player.internal.e;
-import com.google.firebase.crash.FirebaseCrash;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
-import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
-import com.oneconnect.leadership.library.adapters.EbookAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
-import com.oneconnect.leadership.library.cache.DailyThoughtCache;
 import com.oneconnect.leadership.library.cache.EbookCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
@@ -38,18 +30,21 @@ import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
-import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
+import com.oneconnect.leadership.admin.ebook.EbookListFragment;
+import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import org.joda.time.DateTime;
@@ -65,42 +60,33 @@ import java.util.regex.Pattern;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link EBookListener} interface
+ * {@link EbookListFragment} interface
  * to handle interaction events.
- * Use the {@link EBookListFragment#newInstance} factory method to
+ * Use the {@link EbookListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EBookListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
+public class EbookListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
     private EBookListener mListener;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
-    private ResponseBag  bag;
-    public static final String TAG = EBookListFragment.class.getSimpleName();
+    private ResponseBag bag;
+    public static final String TAG = EbookListFragment.class.getSimpleName();
     private List<EBookDTO> eBooks = new ArrayList<>();
     private View view;
     private RecyclerView recyclerView;
     private Context ctx;
-    private  EbookAdapter ebookAdapter;
     private EBookDTO eBook;
     private int type;
     private UserDTO user;
 
-    public EBookListFragment() {
-
+    public EbookListFragment() {
+        // Required empty public constructor
     }
 
-    public void setEBook(EBookDTO ebook) {
-        Log.d(LOG, "### setEBook");
-        this.eBook = ebook;
-        ebook.getTitle();
-        getCachedEBooks();
-    }
-
-
-    public static EBookListFragment newInstance(HashMap<String, EBookDTO> list) {
-        EBookListFragment fragment = new EBookListFragment();
+    public static EbookListFragment newInstance(HashMap<String, EBookDTO> list) {
+        EbookListFragment fragment = new EbookListFragment();
         Bundle args = new Bundle();
         ResponseBag bag = new ResponseBag();
         bag.seteBooks(new ArrayList<EBookDTO>());
@@ -133,11 +119,12 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: #################");
-        view =  inflater.inflate(R.layout.fragment_ebook_list, container, false);
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_ebook_list, container, false);
+
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
-        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView)view.findViewById(com.oneconnect.leadership.library.R.id.recyclerView);
         /*LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);*/
         recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
@@ -150,76 +137,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         return view;
     }
 
-    private void getCachedEBooks() {
-        EbookCache.getEbooks(ctx, new EbookCache.ReadListener() {
-            @Override
-            public void onDataRead(List<EBookDTO> ebooks) {
-                Log.d(LOG, "onDataRead: EBooks: " + ebooks);
-            }
-
-            @Override
-            public void onError(String message) {
-                getCachedEBooks();
-            }
-        });
-
-        File dir = Environment.getExternalStorageDirectory();
-        File myDir = new File(dir, "leadership");
-        if (!myDir.exists()) {
-            myDir.mkdir();
-        }
-        File[] files = myDir.listFiles();
-        filePathList = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-               // if (file.getName().contains(eBook.getTitle())) {
-                    if (file.getName().contains(".pdf")) {
-                        filePathList.add(file.getAbsolutePath());
-                    }
-             //   }
-            }
-        }
-
-        if (filePathList.isEmpty()) {
-            Log.d(LOG, "getCachedEBooks: filePathList is empty");
-        } else {
-            fileContainerList.clear();
-            for (String d : filePathList) {
-                fileContainerList.add(new FileContainer(d));
-            }
-            Collections.sort(fileContainerList);
-            filePathList.clear();
-            for (FileContainer f : fileContainerList) {
-                filePathList.add(f.fileName);
-            }
-            setList();
-        }
-    }
-
-
-    private void setList() {
-        adapter = new EbookAdapter(eBooks, ctx, new EbookAdapter.EbookAdapterListener() {
-            @Override
-            public void onReadClicked(String path) {
-
-                File file = new File(filePathList.get(0));
-                Log.e(LOG, "pdf file: " + file.getAbsolutePath() + " length: " + file.length());
-                if (file.exists()) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    ctx.startActivity(intent);
-                } else {
-                    Log.d(LOG, "Statement is still downloading");
-                }
-                LinearLayoutManager lm = new LinearLayoutManager(getActivity(),
-                        LinearLayoutManager.VERTICAL,false);
-                recyclerView.setLayoutManager(lm);
-                recyclerView.setAdapter(ebookAdapter);
-            }
-        });
-    }
-
+    List<String> filePathList = new ArrayList<>();
     List<FileContainer> fileContainerList = new ArrayList<>();
 
     class FileContainer implements Comparable<FileContainer> {
@@ -261,18 +179,128 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         }
     }
 
+    private void getCachedEBooks() {
+        EbookCache.getEbooks(ctx, new EbookCache.ReadListener() {
+            @Override
+            public void onDataRead(List<EBookDTO> ebooks) {
+                Log.d(LOG, "onDataRead: EBooks: " + ebooks);
+            }
+
+            @Override
+            public void onError(String message) {
+                getCachedEBooks();
+            }
+        });
+
+        File dir = Environment.getExternalStorageDirectory();
+        File myDir = new File(dir, "leadership");
+        if (!myDir.exists()) {
+            myDir.mkdir();
+        }
+        File[] files = myDir.listFiles();
+        filePathList = new ArrayList<>();
+        if (files != null) {
+            for (File file : files) {
+                // if (file.getName().contains(eBook.getTitle())) {
+                if (file.getName().contains(".pdf")) {
+                    filePathList.add(file.getAbsolutePath());
+                }
+                //   }
+            }
+        }
+
+        if (filePathList.isEmpty()) {
+            Log.d(LOG, "getCachedEBooks: filePathList is empty");
+        } else {
+            fileContainerList.clear();
+            for (String d : filePathList) {
+                fileContainerList.add(new EbookListFragment.FileContainer(d));
+            }
+            Collections.sort(fileContainerList);
+            filePathList.clear();
+            for (EbookListFragment.FileContainer f : fileContainerList) {
+                filePathList.add(f.fileName);
+            }
+            setList();
+        }
+    }
+
     private void getEBooks() {
         Log.d(LOG, "************** getEBooks: " );
-     //   if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllEBooks();
-     //   } else {
-     //       Log.d(LOG, "user is null");
-      //  }
+        } else {
+            Log.d(LOG, "user is null");
+        }
 
     }
 
-    EbookAdapter adapter;
-    static final String LOG = EBookListFragment.class.getSimpleName();
+    AdminEbookAdapter adapter;
+
+    private void setList() {
+        adapter = new AdminEbookAdapter(eBooks, ctx, new AdminEbookAdapter.EbookAdapterListener() {
+            @Override
+            public void onReadClicked(String path) {
+
+                File file = new File(filePathList.get(0));
+                Log.e(LOG, "pdf file: " + file.getAbsolutePath() + " length: " + file.length());
+                if (file.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    ctx.startActivity(intent);
+                } else {
+                    Log.d(LOG, "Statement is still downloading");
+                }
+
+
+            }
+
+            @Override
+            public void onAttachPhoto(EBookDTO ebook) {
+                pickGalleryOrCamera(ebook);
+            }
+
+           /* @Override
+            public void onAttachPhoto(BaseDTO base) {
+                pickGalleryOrCamera(base);
+            }*/
+        });
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void pickGalleryOrCamera(final BaseDTO base) {
+        AlertDialog.Builder b = new AlertDialog.Builder(ctx);
+        b.setTitle("Select Images")
+                .setMessage("Please select the source of the photos")
+                .setPositiveButton("Use Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // startCamera(base);
+                    }
+                }).setNegativeButton("Use Gallery", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                // startActivityForResult(intent, RESULT_LOAD_IMG);
+                startPhotoGallerySelection(base);
+
+            }
+        }).show();
+    }
+
+    private void startPhotoGallerySelection(BaseDTO base){
+        Intent intent = new Intent(ctx, PhotoSelectionActivity.class);
+        intent.putExtra("type", 0/*type*/);
+        switch (type) {
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) base;
+                intent.putExtra("eBook", eBook);
+                break;
+        }
+        startActivity(intent);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -291,16 +319,14 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         mListener = null;
     }
 
-    String pageTitle;
-
     @Override
     public String getTitle() {
-        return pageTitle;
+        return null;
     }
 
     @Override
     public void setPageTitle(String pageTitle) {
-        this.pageTitle = pageTitle;
+
     }
 
     @Override
@@ -320,7 +346,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onPhotoCaptureRequested(BaseDTO entity) {
-
+        pickGalleryOrCamera(entity);
     }
 
     @Override
@@ -405,27 +431,6 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onCacheEbooks(List<EBookDTO> list) {
-
-        Log.i(LOG, "onCacheEbooks " + list.size());
-
-        File dir = Environment.getExternalStorageDirectory();
-        File myDir = new File(dir, "leadership");
-        if (!myDir.exists()) {
-            myDir.mkdir();
-        }
-        File[] files = myDir.listFiles();
-        filePathList = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                if (file.getName().contains(eBook.getTitle())) {
-                    if (file.getName().contains("statement.pdf")) {
-                        filePathList.add(file.getAbsolutePath());
-                    }
-                }
-            }
-
-        }
-
 
     }
 
@@ -524,19 +529,16 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     }
 
-    List<String> filePathList = new ArrayList<>();
-
-
     @Override
-    public void onAllEBooks(final List<EBookDTO> list) {
+    public void onAllEBooks(List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
         this.eBooks = list;
 //        Collections.sort(list);
-        adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
+        adapter = new AdminEbookAdapter(list, ctx, new AdminEbookAdapter.EbookAdapterListener() {
             @Override
             public void onReadClicked(String path) {
-          //      File f = new File(path);
-            //    if (f.exists()) {
+                //      File f = new File(path);
+                //    if (f.exists()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.parse(path), "application/pdf");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -546,15 +548,23 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                 } catch(ActivityNotFoundException e) {
                     Log.e(LOG, "Failed to open pdf");
                 }
-               // startActivity(intent);
-              //  }
+                // startActivity(intent);
+                //  }
                 //readEbook(path);
 
 
             }
+
+            @Override
+            public void onAttachPhoto(EBookDTO ebook) {
+                pickGalleryOrCamera(ebook);
+            }
+
+
         });
         recyclerView.setAdapter(adapter);
     }
+
 
     @Override
     public void onAllPhotos(List<PhotoDTO> list) {
@@ -564,19 +574,6 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     @Override
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
 
-    }
-
-    private void readEbook(String path) {
-    Log.d(LOG, "Path for reading Ebook: " + path);
-        File f = new File(path);
-        if (f.exists()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(f), "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        } {
-            Log.d(LOG, "File doesn't exist, try something else");
-        }
     }
 
     @Override
@@ -591,26 +588,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onEbooks(List<EBookDTO> list) {
-        Log.i(LOG, "onEbooks: " + list.size());
-        this.eBooks = list;
-        Collections.sort(list);
-        adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
-            @Override
-            public void onReadClicked(String path) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(path), "application/pdf");
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-               // Intent newIntent = Intent.createChooser(intent, "Choose an Application");
-                try {
-                    ctx.startActivity(intent);
-                } catch(ActivityNotFoundException e) {
-                    Log.e(LOG, "Failed to open pdf");
-                }
-                //readEbook(path);
-            }
-        });
-        recyclerView.setAdapter(adapter);
+
     }
 
     @Override
@@ -672,18 +650,9 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     public void onError(String message) {
 
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface EBookListener {
         void onEBookTapped(EBookDTO eBook);
     }
+
+    static final String LOG = EbookListFragment.class.getSimpleName();
 }

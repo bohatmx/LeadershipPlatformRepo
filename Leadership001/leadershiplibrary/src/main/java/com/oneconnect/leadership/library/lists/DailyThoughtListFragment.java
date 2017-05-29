@@ -135,11 +135,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     public void getDailyThoughts() {
         Log.d(LOG, "************** getDailyThoughts: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllDailyThoughts();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+  //      } else {
+   //         Log.d(LOG, "user is null");
+    //    }
     }
 
     private void getCachedDailyThoughts() {

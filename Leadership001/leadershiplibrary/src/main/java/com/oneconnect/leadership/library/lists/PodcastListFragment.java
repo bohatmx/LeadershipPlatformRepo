@@ -129,11 +129,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     public void getPodcasts() {
         Log.d(LOG, "************** getPodcasts: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+     //   if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllPodcasts();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+    //    } else {
+    //        Log.d(LOG, "user is null");
+    //    }
     }
 
     private void getCachedPodcasts() {

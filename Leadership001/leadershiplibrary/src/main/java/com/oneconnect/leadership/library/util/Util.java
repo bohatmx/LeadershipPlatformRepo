@@ -1,5 +1,7 @@
 package com.oneconnect.leadership.library.util;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -7,6 +9,8 @@ import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.ocg.backend.endpointAPI.model.FCMUserDTO;
@@ -239,5 +243,46 @@ public class Util {
         return currentDuration * 1000;
     }
 
+    public interface UtilAnimationListener {
+        public void onAnimationEnded();
+    }
+
+
+    public static void flashOnce(View view, long duration, final UtilAnimationListener listener) {
+        try {
+            ObjectAnimator an = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+            an.setRepeatMode(ObjectAnimator.REVERSE);
+            an.setDuration(duration);
+            an.setInterpolator(new AccelerateDecelerateInterpolator());
+            an.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (listener != null)
+                        listener.onAnimationEnded();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            an.start();
+        } catch (Exception e) {
+            if (listener != null) {
+                listener.onAnimationEnded();
+            }
+        }
+
+    }
 
 }

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:layout_toRightOf="@+id/bookIcon"
+            android:layout_below="@+id/bookIcon"
             android:id="@+id/fileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -18,10 +18,10 @@
             android:textColor="@color/blue_500"
             android:textSize="12sp"
             android:layout_marginRight="@dimen/mon_margin"
-            android:layout_below="@id/image"
             android:text="Filename inserted here" />
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/iconshar"
             android:layout_below="@+id/image"
             android:layout_toRightOf="@+id/fileName"
@@ -40,10 +40,36 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/bookIcon"
+            android:layout_below="@+id/fileName"
             android:padding="@dimen/mon_margin">
 
+            <ImageView
+                android:id="@+id/uploadIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_cloud_upload"
+                android:tint="@color/pink_600"/>
+
+            <ImageView
+                android:tint="@color/pink_600"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/readIcon"
+                android:layout_toLeftOf="@+id/uploadIcon"
+                android:src="@drawable/open_book"
+                android:layout_marginRight="@dimen/mon_wide"/>
+
+            <ImageView
+                android:layout_marginRight="@dimen/mon_wide"
+                android:layout_toLeftOf="@+id/readIcon"
+                android:id="@+id/imageUploadIcon"
+                android:tint="@color/pink_600"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_photo_black_24dp"/>
             <Button
+                android:visibility="gone"
                 android:id="@+id/btnUpload"
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
@@ -52,6 +78,7 @@
                 android:text="Upload Book"
                 android:textColor="@color/pink_600" />
             <Button
+                android:visibility="gone"
                 android:id="@+id/btnPlay"
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
