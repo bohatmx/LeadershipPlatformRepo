@@ -924,6 +924,25 @@ public class DataAPI {
             });
 
         }
+
+        if (video.geteBookID() != null) {
+            DatabaseReference ref = db.getReference(EBOOKS)
+                    .child(video.geteBookID()).child(VIDEOS);
+            log("addVideoToEntity", ref);
+            ref.push().setValue(video, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: video added to eBook: ".concat(video.geteBookID()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
     }
 
     public void addPhotoToEntity(final PhotoDTO photo, final DataListener listener) {
@@ -1005,6 +1024,25 @@ public class DataAPI {
             });
 
         }
+
+        if (photo.geteBookID() != null) {
+            DatabaseReference ref = db.getReference(EBOOKS)
+                    .child(photo.geteBookID()).child(PHOTOS);
+            log("addPhotoToEntity", ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to Ebook: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
     }
 
     public void addEBookToEntity(final EBookDTO ebook, final DataListener listener) {
@@ -1059,6 +1097,25 @@ public class DataAPI {
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
                         Log.i(TAG, "onComplete: ebook added to MasterClass: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+
+        if (ebook.getPhotoID() != null) {
+            DatabaseReference ref = db.getReference(PHOTOS)
+                    .child(ebook.getPhotoID()).child(EBOOKS);
+            log("addEBookToEntity", ref);
+            ref.push().setValue(ebook, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: ebook added to Photo: ".concat(databaseReference.getKey()));
                         listener.onResponse(databaseReference.getKey());
 
                     } else {

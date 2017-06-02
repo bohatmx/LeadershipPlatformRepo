@@ -551,10 +551,16 @@ public class CrudActivity extends AppCompatActivity
                 startActivity(intent3);
                 break;
 
+            case R.id.nav_calender:
+                type = ResponseBag.CALENDAR_EVENTS;
+                Intent intent4 = new Intent(CrudActivity.this, CalendarActivity.class);
+                startActivity(intent4);
+                break;
+
             case R.id.nav_sign_out:
                 FirebaseAuth.getInstance().signOut();
-                Intent intent4 = new Intent(CrudActivity.this, AdminSignInActivity.class);
-                startActivity(intent4);
+                Intent intent5 = new Intent(CrudActivity.this, AdminSignInActivity.class);
+                startActivity(intent5);
                 finish();
                 break;
 

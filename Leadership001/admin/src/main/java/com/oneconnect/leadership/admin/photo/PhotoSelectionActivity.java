@@ -385,7 +385,5 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     }
 
-
-
     static final String LOG = PhotoSelectionActivity.class.getSimpleName();
 }
