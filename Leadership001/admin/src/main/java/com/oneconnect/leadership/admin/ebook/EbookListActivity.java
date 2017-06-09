@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -23,8 +24,10 @@ import android.view.WindowManager;
 
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
+import com.oneconnect.leadership.library.activities.PhotoActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.api.ListAPI;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.EbookCache;
@@ -47,6 +50,7 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
+import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import org.joda.time.DateTime;
@@ -55,16 +59,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class EbookListActivity extends AppCompatActivity implements SubscriberContract.View, CacheContract.View,
-        BasicEntityAdapter.EntityListener{
+        BasicEntityAdapter.EntityListener, PhotoListFragment.PhotoListener{
 
     Toolbar toolbar;
     Context ctx;
     private EbookListFragment ebookListFragment;
-    private EBookDTO eBook;
+    static public EBookDTO eBook;
     private int type;
     private DailyThoughtDTO dailyThought;
     private WeeklyMessageDTO weeklyMessage;
@@ -129,6 +134,14 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
     }
 
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this/*ctx*/);
         b.setTitle("Select Images")
@@ -136,19 +149,24 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
                 .setPositiveButton("Use Gallery", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(EbookListActivity.this, PhotoSelectionActivity.class);
-                        eBook = (EBookDTO) base;
-                        intent.putExtra("eBook", eBook);
-                        intent.putExtra("type", ResponseBag.EBOOKS/*3*//*type*/);
+                   //    Intent intent = new Intent(EbookListActivity.this, PhotoSelectionActivity.class);
+                   //     eBook = (EBookDTO) base;
+                   //     intent.putExtra("eBook", eBook);
+                   //     intent.putExtra("type", ResponseBag.EBOOKS/*3*//*type*/);
                         /*switch (type) {
                             case ResponseBag.EBOOKS:
                                 // eBook = (EBookDTO) base;
                                 intent.putExtra("eBook", base*//*eBook*//*);
                                 break;
                         }*/
-                        startActivity(intent);
+                   //     startActivity(intent);
                         //startPhotoGallerySelection(base);
                         // startCamera(base);
+
+                        Intent intent = new Intent(EbookListActivity.this, PhotoActivity.class);
+                        eBook = (EBookDTO) base;
+                        intent.putExtra("eBook", eBook);
+                        startActivity(intent);
                     }
                 }).show();
     }
@@ -167,6 +185,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
     List<String> filePathList = new ArrayList<>();
     List<FileContainer> fileContainerList = new ArrayList<>();
+
+    @Override
+    public void onPhotoTapped(PhotoDTO photo) {
+
+    }
 
     class FileContainer implements Comparable<FileContainer> {
         String fileName;

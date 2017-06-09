@@ -19,6 +19,7 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
     private String stringDateUpdated, html, filePath, storageName, photoUrl;
     private boolean active;
     private Long dateUpdated, ebookSize;
+    private String coverUrl;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, podcastID, photoID;
     private HashMap<String,UrlDTO> urls;
     private HashMap<String, PhotoDTO> photos;
@@ -249,5 +250,13 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }

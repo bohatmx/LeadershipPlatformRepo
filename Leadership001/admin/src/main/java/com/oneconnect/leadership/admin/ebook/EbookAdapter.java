@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.data.BaseDTO;
@@ -41,10 +43,11 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         void onPhotoUpload(BaseDTO base/*String path*/);
     }
 
-    public EbookAdapter(List<String> paths, Context context, EbookAdapterListener listener) {
+    public EbookAdapter(List<String> paths, Context context, EBookDTO book, EbookAdapterListener listener) {
         this.paths = paths;
         this.context = context;
         this.listener = listener;
+        this.eBook = book;
     }
 
     @Override

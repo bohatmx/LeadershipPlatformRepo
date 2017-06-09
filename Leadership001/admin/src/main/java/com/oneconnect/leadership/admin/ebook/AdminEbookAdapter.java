@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
@@ -64,6 +66,14 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         //
         vvh.fileName.setText(displayName.substring(i + 1));
         final String bookUrl = v.getUrl();
+        if(v != null){
+            if(v.getCoverUrl() != null){
+                Glide.with(ctx)
+                        .load(v.getCoverUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(vvh.bookIcon);
+            }
+        }
         /*vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

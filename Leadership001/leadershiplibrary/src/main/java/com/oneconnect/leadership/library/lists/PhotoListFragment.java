@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PhotoActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.PhotoAdapter;
+import com.oneconnect.leadership.library.api.DataAPI;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.PhotoCache;
@@ -43,6 +45,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.R.id.list;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -62,9 +66,13 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
     private List<PhotoDTO> photos;
     private View view;
     private RecyclerView recyclerView;
+    static private EBookDTO eBookDTO;
     Context ctx;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
+    static boolean isCoverPhoto = false;
+    static boolean firstRun = true;
+    static private DataAPI dataAPI;
 
     public static PhotoListFragment newInstance(HashMap<String, PhotoDTO> list) {
         PhotoListFragment fragment = new PhotoListFragment();
@@ -76,6 +84,24 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
         }
         args.putSerializable("bag", bag);
         fragment.setArguments(args);
+        firstRun = false;
+        return fragment;
+    }
+
+    public static PhotoListFragment newInstance(List<PhotoDTO> list, EBookDTO book) {
+        eBookDTO = book;
+        dataAPI = new DataAPI();
+        PhotoListFragment fragment = new PhotoListFragment();
+        Bundle args = new Bundle();
+        ResponseBag bag = new ResponseBag();
+        bag.setPhotos(new ArrayList<PhotoDTO>());
+        for (PhotoDTO p: list) {
+            bag.getPhotos().add(p);
+        }
+        args.putSerializable("bag", bag);
+        fragment.setArguments(args);
+        isCoverPhoto = true;
+        firstRun = false;
         return fragment;
     }
 
@@ -98,6 +124,9 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
 
             user = SharedPrefUtil.getUser(ctx);
             type = SharedPrefUtil.getFragmentType(ctx);
+        }else if(firstRun){
+            isCoverPhoto = true;
+            eBookDTO = PhotoActivity.eBook;
         }
     }
 
@@ -116,8 +145,6 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
         recyclerView.setLayoutManager(lm);
 
         /*recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));*/
-
-
 
         getCachedPhotos();
         getPhotos();
@@ -388,7 +415,7 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
         Log.i(LOG, "onAllPhotos: " + list.size());
         this.photos = list;
         Collections.sort(list);
-        adapter = new PhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+        adapter = new PhotoAdapter(list, ctx, isCoverPhoto, eBookDTO, new PhotoAdapter.PhotoAdapterlistener() {
             @Override
             public void onPhotoClicked(PhotoDTO photo) {
 

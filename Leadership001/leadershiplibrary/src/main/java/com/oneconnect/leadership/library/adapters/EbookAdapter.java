@@ -56,9 +56,9 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        final EBookDTO v = mList.get(position);
+        final EBookDTO eBook = mList.get(position);
         final EbookViewHolder vvh = (EbookViewHolder) holder;
-        final String displayName = v.getStorageName().split("\\.", 2)[0];
+        final String displayName = eBook.getStorageName().split("\\.", 2)[0];
         int i = displayName.lastIndexOf("/");
         //
 
@@ -80,8 +80,9 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
          } */
         //
+
         vvh.fileName.setText(displayName.substring(i + 1));
-        final String bookUrl = v.getUrl();
+        final String bookUrl = eBook.getUrl();
         vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +92,15 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);
             }
         });
+
+        if(eBook != null){
+            if(eBook.getCoverUrl() != null){
+                Glide.with(ctx)
+                        .load(eBook.getCoverUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(vvh.bookIcon);
+            }
+        }
 
         vvh.iconshar.setOnClickListener(new View.OnClickListener() {
             @Override

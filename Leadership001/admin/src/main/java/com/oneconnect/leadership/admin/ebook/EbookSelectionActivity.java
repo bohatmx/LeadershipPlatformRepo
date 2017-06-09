@@ -116,7 +116,6 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
         }
-
         setup();
        // getEbooksOnDevice();
         walkdir(Environment.getExternalStorageDirectory());
@@ -153,7 +152,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                         Log.d(LOG, "FileName: " + listFile[i].getName());
 
                         //
-                        EbookAdapter adapter = new EbookAdapter(filePathList, this, new EbookAdapter.EbookAdapterListener() {
+                        EbookAdapter adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
                             @Override
                             public void onUploadEbook(String path) {
                                 confirmUpload(path);
@@ -231,7 +230,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             for (FileContainer f : fileContainerList) {
                 filePathList.add(f.fileName);
             }
-            EbookAdapter adapter = new EbookAdapter(filePathList, this, new EbookAdapter.EbookAdapterListener() {
+            EbookAdapter adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
                 @Override
                 public void onUploadEbook(String path) {
                     confirmUpload(path);
