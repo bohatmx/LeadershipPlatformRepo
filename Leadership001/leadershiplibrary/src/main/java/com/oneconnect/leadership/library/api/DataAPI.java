@@ -1,5 +1,8 @@
 package com.oneconnect.leadership.library.api;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -797,6 +800,27 @@ public class DataAPI {
 
 
                 } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void updateEBook(final String eBookID, final String  url, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(EBOOKS)
+                .child(eBookID)
+                .child("coverUrl");
+
+        log("updateEBook", ref);
+        ref.setValue(url, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: eBook updated with: "
+                            + url);
+                    listener.onResponse(responseRef.getKey());
+               } else {
                     if (listener != null)
                         listener.onError(databaseError.getMessage());
                 }

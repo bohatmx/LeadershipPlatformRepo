@@ -6,7 +6,6 @@
     <string name="player_error">Error initializing YouTube player: %s</string>
     <string name="seek_to">Jump To</string>
     <string name="seek_to_hint">Seconds</string>
-    <string name="ebook_web_activity">eBook WebView</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">LoginActivity</string>
@@ -29,15 +28,15 @@
     <string name="action_photo">Photo</string>
     <string name="title_activity_le_exo_player">LeExoPlayerActivity</string>
 
-    <string name="video">Videos</string>
+    <string name="video">Video</string>
 
-    <string name="audio">Podcasts</string>
+    <string name="audio">Audio</string>
 
-    <string name="daily_thought">Daily Thoughts</string>
+    <string name="daily_thought">Daily Thought</string>
 
-    <string name="weeky_master_class">Weekly Masterclasss</string>
+    <string name="weeky_master_class">Weekly Masterclass</string>
 
-    <string name="weekly_message">Weekly Messages</string>
+    <string name="weekly_message">Weekly Message</string>
 
     <string name="photo">Photos</string>
 
@@ -46,7 +45,7 @@
     <string name="ebooks">Ebooks</string>
 
     <string name="calendar_events">Calendar Events</string>
-
+    
     <string name="Photographs">Photographs</string>
 
     <string name="text">Text</string>
@@ -99,6 +98,7 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="title_activity_e_book">eBookActivity</string>
     <string name="title_activity_weekly_classes">WeeklyMasterClasses</string>
+    <string name="ebook_web_activity">Book</string>
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="title_activity_video_player">VideoPlayerActivity</string>
     <string name="title_activity_main">MainActivity</string>

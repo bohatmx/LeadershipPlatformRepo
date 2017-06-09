@@ -3,6 +3,7 @@ package com.oneconnect.leadership.admin;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,8 +32,10 @@ public class AdminSignInActivity extends BaseLoginActivity {
         getSupportActionBar().setTitle(R.string.platform_signin);
         type = UserDTO.COMPANY_STAFF;
         check();
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
     }
     private void proceed() {
         if (firebaseAuth.getCurrentUser() == null) {

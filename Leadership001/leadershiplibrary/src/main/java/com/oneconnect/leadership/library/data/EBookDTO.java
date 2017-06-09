@@ -19,6 +19,7 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
     private String stringDateUpdated, html, filePath, storageName, photoUrl;
     private boolean active;
     private Long dateUpdated, ebookSize;
+    private String coverUrl;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID, podcastID, photoID;
     private HashMap<String,UrlDTO> urls;
     private HashMap<String, PhotoDTO> photos;
@@ -26,10 +27,6 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
     private HashMap<String,PodcastDTO> podcasts;
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
-    private PhotoDTO photo;
-    private VideoDTO video;
-    private PodcastDTO podcast;
-    private UrlDTO bookUrl;
 
     public HashMap<String, RatingDTO> getRatings() {
         return ratings;
@@ -255,35 +252,11 @@ public class EBookDTO  extends BaseDTO implements  Serializable, Comparable<EBoo
         this.photoUrl = photoUrl;
     }
 
-    public PhotoDTO getPhoto() {
-        return photo;
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
-    public void setPhoto(PhotoDTO photo) {
-        this.photo = photo;
-    }
-
-    public VideoDTO getVideo() {
-        return video;
-    }
-
-    public void setVideo(VideoDTO video) {
-        this.video = video;
-    }
-
-    public PodcastDTO getPodcast() {
-        return podcast;
-    }
-
-    public void setPodcast(PodcastDTO podcast) {
-        this.podcast = podcast;
-    }
-
-    public UrlDTO getBookUrl() {
-        return bookUrl;
-    }
-
-    public void setBookUrl(UrlDTO bookUrl) {
-        this.bookUrl = bookUrl;
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }
