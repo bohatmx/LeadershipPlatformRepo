@@ -39,6 +39,7 @@ import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
+import com.oneconnect.leadership.library.util.Util;
 import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 import com.oneconnect.leadership.library.video.VideoPlayerActivity;
 
@@ -127,13 +128,17 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     DailyThoughtDTO dtd = mList.get(position);
                     List<VideoDTO> videoList = new ArrayList<>();
                     Map map = dtd.getVideos();
-                    VideoDTO vDTO;
+                    VideoDTO vDTO = new VideoDTO();
                     for (Object value : map.values()) {
                         vDTO = (VideoDTO) value;
                         videoList.add(vDTO);
                     }
 
-                    miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
+                    /*Intent intent = new Intent(ctx, LeExoPlayerActivity.class);
+                    intent.putExtra("video", vDTO);
+                    ctx.startActivity(intent);*/
+
+                   miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
                         @Override
                         public void onStart() {
 
@@ -298,6 +303,24 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
+        dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(dvh.txtTitle, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (dvh.bottomLayout.getVisibility() == View.GONE){
+                        dvh.bottomLayout.setVisibility(View.VISIBLE);
+                        } else {
+                         dvh.bottomLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
+
+
+
         if (dt.getUrls() != null) {
             dvh.txtLinks.setText("" + dt.getUrls().size());
             dvh.iconUpdate.setOnClickListener(new View.OnClickListener() {
@@ -412,6 +435,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             //iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
+            bottomLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);
             deleteLayout.setVisibility(View.GONE);
@@ -423,6 +447,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
             videoFileName.setVisibility(View.GONE);*/
+
+
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);
             pauseIMG = (ImageView)itemView.findViewById(R.id.pauseIMG);
             stopIMG = (ImageView) itemView.findViewById(R.id.stopIMG);

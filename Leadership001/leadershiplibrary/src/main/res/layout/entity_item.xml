@@ -89,9 +89,7 @@
                     android:id="@+id/txtEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/iconCalendar"
                     android:text="0"
-                    android:layout_marginRight="@dimen/mon_margin"
                     android:textColor="@color/pink_600"
                     android:textSize="20sp"
                     android:textStyle="bold" />

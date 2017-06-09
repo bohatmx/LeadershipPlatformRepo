@@ -20,6 +20,7 @@ import android.view.View;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UserDTO;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import io.reactivex.internal.schedulers.SchedulerPoolFactory;
+
 public class PodcastSelectionActivity extends AppCompatActivity implements PodcastUploadContract.View{
 
     private RecyclerView recyclerView;
@@ -41,6 +44,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     private Toolbar toolbar;
     private DailyThoughtDTO dailyThought;
     private WeeklyMessageDTO weeklyMessage;
+    private EBookDTO eBook;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private int type;
     private Snackbar snackbar;
@@ -70,6 +74,10 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
                 getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                break;
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
+                getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
         }
 
@@ -179,6 +187,11 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                 v.setSubjectTitle(weeklyMessage.getTitle());
                 v.setSubtitle(weeklyMessage.getTitle());
                 break;
+            case ResponseBag.EBOOKS:
+                v.seteBookID(eBook.geteBookID());
+                v.setTitle(eBook.getTitle());
+                //v.setSubtitle(eBook.);
+                break;
         }
         openProgressSheet();
         presenter.uploadPodcast(v);
@@ -210,8 +223,8 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
+                startActivity(intent);
             }
         });
     }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -134,37 +135,48 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                pvh.playIMG.setVisibility(View.GONE);
-                pvh.pauseIMG.setVisibility(View.VISIBLE);
-                pvh.stopIMG.setVisibility(View.VISIBLE);
-                try {
-                    mediaPlayer.setDataSource(podcastURL);
-                } catch (IllegalArgumentException e) {
-                    Log.e(LOG, "You might not set the URI correctly!");
-                } catch (SecurityException e) {
-                    Log.e(LOG, "You might not set the URI correctly!");
-                } catch (IllegalStateException e) {
-                    Log.e(LOG, "You might not set the URI correctly!");
-                } catch (IOException e) {
-                    Log.e(LOG, e.getMessage());
-                }
-                try {
-                    mediaPlayer.prepare();
-                } catch (IllegalStateException e) {
-                    Log.e(LOG, "You might not set the URI correctly!");
-                } catch (IOException e) {
-                    Log.e(LOG, "You might not set the URI correctly!");
-                }
-                mediaPlayer.start();
+                Util.flashOnce(pvh.playIMG, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        pvh.playIMG.setVisibility(View.GONE);
+                        pvh.pauseIMG.setVisibility(View.VISIBLE);
+                        pvh.stopIMG.setVisibility(View.VISIBLE);
+                        try {
+                            mediaPlayer.setDataSource(podcastURL);
+                        } catch (IllegalArgumentException e) {
+                            Log.e(LOG, "You might not set the URI correctly!");
+                        } catch (SecurityException e) {
+                            Log.e(LOG, "You might not set the URI correctly!");
+                        } catch (IllegalStateException e) {
+                            Log.e(LOG, "You might not set the URI correctly!");
+                        } catch (IOException e) {
+                            Log.e(LOG, e.getMessage());
+                        }
+                        try {
+                            mediaPlayer.prepare();
+                        } catch (IllegalStateException e) {
+                            Log.e(LOG, "You might not set the URI correctly!");
+                        } catch (IOException e) {
+                            Log.e(LOG, "You might not set the URI correctly!");
+                        }
+                        mediaPlayer.start();
+                    }
+                });
             }
         });
 
         pvh.headerpic.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                showPopupMenu(v);
+            public void onClick(final View v) {
+                Util.flashOnce(seekBar, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        showPopupMenu(v);
+                    }
+                });
+
             }
         });
 
@@ -200,20 +212,30 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer.pause();
-                pvh.pauseIMG.setVisibility(View.GONE);
-                pvh.playIMG.setVisibility(View.VISIBLE);
-                pvh.stopIMG.setVisibility(View.VISIBLE);
+                Util.flashOnce(pvh.pauseIMG, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mediaPlayer.pause();
+                        pvh.pauseIMG.setVisibility(View.GONE);
+                        pvh.playIMG.setVisibility(View.VISIBLE);
+                        pvh.stopIMG.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         });
 
         pvh.stopIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer.stop();
-                pvh.playIMG.setVisibility(View.VISIBLE);
-                pvh.pauseIMG.setVisibility(View.GONE);
-                pvh.stopIMG.setVisibility(View.GONE);
+                Util.flashOnce(pvh.stopIMG, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mediaPlayer.stop();
+                        pvh.playIMG.setVisibility(View.VISIBLE);
+                        pvh.pauseIMG.setVisibility(View.GONE);
+                        pvh.stopIMG.setVisibility(View.GONE);
+                    }
+                });
             }
         });
     }
@@ -238,7 +260,12 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public boolean onMenuItemClick(MenuItem menuItem) {
             int i = menuItem.getItemId();
             if (i == R.id.share) {
-                shareIt();
+                Util.flashOnce(seekBar, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        shareIt();
+                    }
+                });
                 return true;
             }
             return false;
@@ -289,6 +316,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected TextView fileName;
         protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic;
         protected Button btnPlay, btnUpload;
+        protected RelativeLayout uploadLayout;
 
         public PodcastsViewHolder(View itemView) {
             super(itemView);
@@ -310,14 +338,17 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             stopIMG = (ImageView) itemView.findViewById(R.id.stopIMG);
             stopIMG.setVisibility(View.GONE);
 
-            initTimetxt = (TextView) itemView.findViewById(R.id.initialTime);
-            initTimetxt.setVisibility(View.GONE);
-            finalTimetxt = (TextView) itemView.findViewById(R.id.finalTime);
-            finalTimetxt.setVisibility(View.GONE);
+            //initTimetxt = (TextView) itemView.findViewById(R.id.initialTime);
+           // initTimetxt.setVisibility(View.GONE);
+           // finalTimetxt = (TextView) itemView.findViewById(R.id.finalTime);
+           // finalTimetxt.setVisibility(View.GONE);
 
             /*mediaPlayer = new MediaPlayer();*/
             //mediaController = new MediaController(ctx);
             //mediaController.setAnchorView(image);
+
+            uploadLayout = (RelativeLayout) itemView.findViewById(R.id.uploadLayout);
+            uploadLayout.setVisibility(View.GONE);
         }
     }
 

@@ -46,6 +46,7 @@ import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -216,6 +217,36 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                         LinearLayoutManager.VERTICAL,false);
                 recyclerView.setLayoutManager(lm);
                 recyclerView.setAdapter(ebookAdapter);
+            }
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
             }
         });
     }
@@ -552,6 +583,36 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
 
             }
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -608,6 +669,36 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                     Log.e(LOG, "Failed to open pdf");
                 }
                 //readEbook(path);
+            }
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -672,17 +763,6 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     public void onError(String message) {
 
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface EBookListener {
         void onEBookTapped(EBookDTO eBook);
     }

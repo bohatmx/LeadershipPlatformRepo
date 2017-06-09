@@ -89,7 +89,7 @@ public class WeeklyMessageEditor extends BaseBottomSheet
         btnDate = (Button) view.findViewById(R.id.btnDate);
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
-
+        editSubtitle.setHint("Enter message");
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

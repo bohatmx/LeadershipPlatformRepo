@@ -19,11 +19,12 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ssssssss ######################");
+        Log.d(TAG, "onCreate: subscriber ######################");
         setContentView(R.layout.activity_subscriber_sign_in);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         type = UserDTO.SUBSCRIBER;
+
         if (firebaseAuth.getCurrentUser() == null) {
             startLogin();
         } else {
@@ -45,6 +46,8 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
         Intent m = new Intent(this, SubscriberMainActivity.class);
         startActivity(m);
         finish();
+
+
         /*if (isAlreadySignedIn) {
             Intent intent = new Intent(this, SubscriberMainActivity.class);
             startActivity(intent);

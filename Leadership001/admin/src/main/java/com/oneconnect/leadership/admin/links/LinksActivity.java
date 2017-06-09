@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UrlDTO;
@@ -42,6 +43,7 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
     private WebView webView;
     private DailyThoughtDTO dailyThought;
     private PodcastDTO podcast;
+    private EBookDTO eBook;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private WeeklyMessageDTO weeklyMessage;
     private Toolbar toolbar;
@@ -93,6 +95,12 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
                         .getSerializableExtra("podcast");
                 getSupportActionBar().setSubtitle(podcast.getTitle());
                 Log.d(TAG, "onCreate: ".concat(GSON.toJson(podcast)));
+                break;
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) getIntent()
+                        .getSerializableExtra("eBook");
+                getSupportActionBar().setSubtitle(eBook.getStorageName());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(eBook)));
                 break;
         }
 

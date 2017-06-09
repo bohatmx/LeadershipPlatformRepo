@@ -68,6 +68,10 @@
         <activity
             android:name=".activities.PhotoActivity"
             android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".video.VideoListActivity"
+            android:label="@string/title_activity_video_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

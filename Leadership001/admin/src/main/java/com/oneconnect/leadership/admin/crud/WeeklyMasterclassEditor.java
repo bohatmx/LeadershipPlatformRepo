@@ -88,7 +88,7 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
         btnSend = (Button) view.findViewById(R.id.btn);
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
-
+        editSubtitle.setHint("Enter class message");
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

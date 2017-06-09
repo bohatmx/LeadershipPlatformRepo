@@ -3,25 +3,46 @@ package com.oneconnect.leadership.admin.ebook;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
+import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.MiniPodcastAdapter;
+import com.oneconnect.leadership.library.adapters.MiniVideoAdapter;
+import com.oneconnect.leadership.library.adapters.PhotoAdapter;
+import com.oneconnect.leadership.library.adapters.PodcastAdapter;
+import com.oneconnect.leadership.library.adapters.UrlAdapter;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.UrlDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static android.R.attr.type;
 
@@ -34,10 +55,20 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<EBookDTO> mList;
     private Context ctx;
     private EbookAdapterListener listener;
+    MiniPhotoAdapter miniPhotoAdapter;
+    MiniPodcastAdapter miniPodcastAdapter;
+    MiniVideoAdapter miniVideoAdapter;
+    UrlAdapter urlAdapter;
 
     public interface EbookAdapterListener {
         void onReadClicked(String path);
         void onAttachPhoto(EBookDTO ebook);
+        void onThoughtClicked(int position);
+        void onPhotoRequired(BaseDTO entity);
+        void onVideoRequired(BaseDTO entity);
+        void onPodcastRequired(BaseDTO entity);
+        void onUrlRequired(BaseDTO entity);
+        void onPhotosRequired(List<PhotoDTO> list);
     }
 
     public AdminEbookAdapter(List<EBookDTO> mList, Context ctx, EbookAdapterListener listener) {
@@ -52,6 +83,9 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return new EbookViewHolder(v);
     }
 
+    private MediaPlayer mediaPlayer;
+    String url;
+
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
@@ -60,11 +94,47 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final String displayName = v.getStorageName().split("\\.", 2)[0];
         int i = displayName.lastIndexOf("/");
         //
+        vvh.iconCamera.setImageDrawable(ctx.getDrawable(com.oneconnect.leadership.library.R.drawable.ic_photo_black_24dp));
+        vvh.iconUpdate.setImageDrawable(ctx.getDrawable(com.oneconnect.leadership.library.R.drawable.ic_link_black_24dp));
 
-        //
+        vvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(vvh.iconCamera, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        listener.onAttachPhoto(v);
+                    }
+                });
+            }
+        });
+
+        vvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPodcastRequired(v/*v.getPodcast()*/);
+            }
+        });
+
+        vvh.iconVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onVideoRequired(v);
+            }
+        });
+
+        vvh.iconUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onUrlRequired(v);
+            }
+        });
+
         vvh.fileName.setText(displayName.substring(i + 1));
         final String bookUrl = v.getUrl();
-        /*vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
+
+
+        vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String path = displayName;
@@ -72,7 +142,11 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 int i = displayName.lastIndexOf("/");
                 fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);
             }
-        });*/
+        });
+
+        //
+        vvh.fileName.setText(displayName.substring(i + 1));
+        final String url = v.getUrl();
 
         vvh.iconshar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,15 +162,6 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onAnimationEnded() {
                         listener.onAttachPhoto(v);
-                       /* Intent intent = new Intent(ctx, PhotoSelectionActivity.class);
-                        intent.putExtra("type", type);
-                        switch (type) {
-                            case ResponseBag.EBOOKS:
-                                eBook = (EBookDTO) base;
-                                intent.putExtra("ebook", eBook);
-                                break;
-                        }
-                        ctx.startActivity(intent);*/
                     }
                 });
             }
@@ -144,6 +209,12 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         protected TextView fileName;
         protected ImageView image, bookIcon, iconshar, imageUploadIcon, uploadIcon, readIcon;
         protected Button btnPlay, btnUpload;
+        protected TextView captiontxt, urlTxt;
+        protected RelativeLayout podcastAdapterLayout, videoAdapterLayout,
+                photoAdapterLayout, urlAdapterLayout;
+        protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
+        protected ImageView iconUpdate, iconMicrophone, iconVideo, iconCamera, photoView,
+                playIMG, pauseIMG, stopIMG;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
@@ -159,6 +230,61 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             uploadIcon.setVisibility(View.GONE);
             readIcon = (ImageView) itemView.findViewById(R.id.readIcon);
             readIcon.setVisibility(View.GONE);
+
+            iconMicrophone = (ImageView) itemView.findViewById(com.oneconnect.leadership.library.R.id.iconMicrophone);
+
+            iconVideo = (ImageView) itemView.findViewById(com.oneconnect.leadership.library.R.id.iconVideo);
+
+            iconCamera = (ImageView) itemView.findViewById(com.oneconnect.leadership.library.R.id.iconCamera);
+
+            iconUpdate = (ImageView) itemView.findViewById(com.oneconnect.leadership.library.R.id.iconUpdate);
+
+            imageRecyclerView = (RecyclerView) itemView.findViewById(com.oneconnect.leadership.library.R.id.imageRecyclerView);
+            imageRecyclerView.setVisibility(View.GONE);
+            LinearLayoutManager llm = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+            imageRecyclerView.setLayoutManager(llm);
+            imageRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
+            imageRecyclerView.setHasFixedSize(true);
+            //
+
+            videoRecyclerView = (RecyclerView) itemView.findViewById(com.oneconnect.leadership.library.R.id.videoRecyclerView);
+            videoRecyclerView.setVisibility(View.GONE);
+            LinearLayoutManager llm2 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+            videoRecyclerView.setLayoutManager(llm2);
+            videoRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
+            videoRecyclerView.setHasFixedSize(true);
+
+            urlRecyclerView = (RecyclerView) itemView.findViewById(com.oneconnect.leadership.library.R.id.urlRecyclerView);
+            urlRecyclerView.setVisibility(View.GONE);
+            LinearLayoutManager llm3 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+            urlRecyclerView.setLayoutManager(llm3);
+            urlRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
+            urlRecyclerView.setHasFixedSize(true);
+
+            podcastRecyclerView = (RecyclerView) itemView.findViewById(com.oneconnect.leadership.library.R.id.podcastRecyclerView);
+            podcastRecyclerView.setVisibility(View.GONE);
+            LinearLayoutManager llm4 = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+            podcastRecyclerView.setLayoutManager(llm4);
+            podcastRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
+            podcastRecyclerView.setHasFixedSize(true);
+            // layouts
+            podcastAdapterLayout = (RelativeLayout) itemView.findViewById(com.oneconnect.leadership.library.R.id.podcastAdapterLayout);
+            //
+
+            //
+            videoAdapterLayout = (RelativeLayout) itemView.findViewById(com.oneconnect.leadership.library.R.id.videoAdapterLayout);
+            //
+
+            //
+            photoAdapterLayout = (RelativeLayout) itemView.findViewById(com.oneconnect.leadership.library.R.id.photoAdapterLayout);
+            photoView = (ImageView) itemView.findViewById(com.oneconnect.leadership.library.R.id.photoView);
+            captiontxt = (TextView) itemView.findViewById(com.oneconnect.leadership.library.R.id.captiontxt);
+            //
+
+            urlAdapterLayout = (RelativeLayout) itemView.findViewById(com.oneconnect.leadership.library.R.id.urlAdapterLayout);
+            urlTxt = (TextView) itemView.findViewById(com.oneconnect.leadership.library.R.id.urlTxt);
         }
+
     }
+    static final String LOG = AdminEbookAdapter.class.getSimpleName();
 }

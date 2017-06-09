@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,12 +24,16 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.admin.links.LinksActivity;
 import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.EbookCache;
+import com.oneconnect.leadership.library.camera.CameraActivity;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -42,11 +48,13 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
+import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import org.joda.time.DateTime;
@@ -58,6 +66,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.oneconnect.leadership.admin.crud.CrudActivity.REQUEST_LINKS;
+
 public class EbookListActivity extends AppCompatActivity implements SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
@@ -65,7 +75,9 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     Context ctx;
     private EbookListFragment ebookListFragment;
     private EBookDTO eBook;
+    private PodcastDTO podcast;
     private int type;
+    ResponseBag bag;
     private DailyThoughtDTO dailyThought;
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -73,6 +85,7 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     private RecyclerView recyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
+    EntityListFragment entityListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +140,24 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
       //  ebookListFragment = (EbookListFragment) getSupportFragmentManager().findFragmentById(R.id.ebookFragment);
        // eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
 
+
     }
+
+    private void setFragment() {
+        Log.w(LOG, "setFragment: starting new fragment");
+        SharedPrefUtil.saveFragmentType(bag.getType(), this);
+        type = bag.getType();
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+        entityListFragment = EntityListFragment.newInstance(bag);
+        //   entityListFragment.setListener(this);
+
+        ft.replace(R.id.frame, entityListFragment);
+        ft.commit();
+    }
+
 
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this/*ctx*/);
@@ -287,6 +317,91 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
             @Override
             public void onAttachPhoto(EBookDTO ebook) {
                 startPhotoGallerySelection(ebook);
+            }
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(BaseDTO entity) {
+
+            }
+
+            @Override
+            public void onVideoRequired(BaseDTO entity) {
+                startVideoSelection(entity);
+            }
+
+            private void startVideoSelection(BaseDTO base) {
+                Intent m = new Intent(ctx, VideoSelectionActivity.class);
+                m.putExtra("type", type);
+                switch (type) {
+                    case ResponseBag.DAILY_THOUGHTS:
+                        dailyThought = (DailyThoughtDTO) base;
+                        m.putExtra("dailyThought", dailyThought);
+                        break;
+                    case ResponseBag.WEEKLY_MASTERCLASS:
+                        weeklyMasterClass = (WeeklyMasterClassDTO) base;
+                        m.putExtra("weeklyMasterClass", weeklyMasterClass);
+                        break;
+                    case ResponseBag.WEEKLY_MESSAGE:
+                        weeklyMessage = (WeeklyMessageDTO) base;
+                        m.putExtra("weeklyMessage", weeklyMessage);
+                        break;
+                    case ResponseBag.EBOOKS:
+                        eBook = (EBookDTO) base;
+                        m.putExtra("eBook", eBook);
+                        break;
+                }
+
+                startActivity(m);
+            }
+
+            @Override
+            public void onPodcastRequired(BaseDTO entity) {
+                 startPodcastSelection(entity);
+            }
+
+            @Override
+            public void onUrlRequired(BaseDTO entity) {
+                Intent m = null;
+                switch (type) {
+                    case ResponseBag.WEEKLY_MASTERCLASS:
+                        weeklyMasterClass = (WeeklyMasterClassDTO) entity;
+                        m = new Intent(EbookListActivity.this, LinksActivity.class);
+                        m.putExtra("weeklyMasterClass", weeklyMasterClass);
+                        break;
+                    case ResponseBag.WEEKLY_MESSAGE:
+                        weeklyMessage = (WeeklyMessageDTO) entity;
+                        m = new Intent(EbookListActivity.this, LinksActivity.class);
+                        m.putExtra("weeklyMessage", weeklyMessage);
+                        break;
+                    case ResponseBag.DAILY_THOUGHTS:
+                        dailyThought = (DailyThoughtDTO) entity;
+                        m = new Intent(EbookListActivity.this, LinksActivity.class);
+                        m.putExtra("dailyThought", dailyThought);
+                        break;
+                    case ResponseBag.PODCASTS:
+                        podcast = (PodcastDTO) entity;
+                        m = new Intent(EbookListActivity.this, LinksActivity.class);
+                        m.putExtra("podcast", podcast);
+                        break;
+
+                    case ResponseBag.EBOOKS:
+                        eBook = (EBookDTO) entity;
+                        m = new Intent(ctx, LinksActivity.class);
+                        m.putExtra("eBook", eBook);
+                        break;
+                }
+                m.putExtra("type", type);
+                startActivityForResult(m, REQUEST_LINKS);
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
             }
 
            /* @Override
@@ -497,7 +612,29 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     public void onAllVideos(List<VideoDTO> list) {
 
     }
-
+    private void startPodcastSelection(BaseDTO base){
+        Intent intent = new Intent(this, PodcastSelectionActivity.class);
+        intent.putExtra("type", type);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) base;
+                intent.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                weeklyMasterClass = (WeeklyMasterClassDTO) base;
+                intent.putExtra("weeklyMasterClass", weeklyMasterClass);
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                weeklyMessage = (WeeklyMessageDTO) base;
+                intent.putExtra("weeklyMessage", weeklyMessage);
+                break;
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) base;
+                intent.putExtra("eBook", eBook);
+                break;
+        }
+        startActivity(intent);
+    }
     @Override
     public void onAllEBooks(List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
@@ -527,6 +664,61 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
             @Override
             public void onAttachPhoto(EBookDTO ebook) {
                 pickGalleryOrCamera(ebook);
+            }
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(BaseDTO entity) {
+
+            }
+
+            @Override
+            public void onVideoRequired(BaseDTO entity) {
+                startVideo(entity);
+            }
+
+            private void startVideo(BaseDTO entity) {
+                Intent m = new Intent(ctx, CameraActivity.class);
+                m.putExtra("type", CameraActivity.VIDEO_REQUEST);
+                switch (type) {
+                    case ResponseBag.DAILY_THOUGHTS:
+                        dailyThought = (DailyThoughtDTO) entity;
+                        m.putExtra("dailyThought", dailyThought);
+                        break;
+                    case ResponseBag.WEEKLY_MASTERCLASS:
+                        weeklyMasterClass = (WeeklyMasterClassDTO) entity;
+                        m.putExtra("weeklyMasterClass", weeklyMasterClass);
+                        break;
+                    case ResponseBag.WEEKLY_MESSAGE:
+                        weeklyMessage = (WeeklyMessageDTO) entity;
+                        m.putExtra("weeklyMessage", weeklyMessage);
+                        break;
+                    case ResponseBag.EBOOKS:
+                        eBook = (EBookDTO) entity;
+                        m.putExtra("eBook", eBook);
+                        break;
+                }
+
+                startActivityForResult(m, CameraActivity.VIDEO_REQUEST);
+            }
+
+            @Override
+            public void onPodcastRequired(BaseDTO entity) {
+                startPodcastSelection(entity);
+            }
+
+            @Override
+            public void onUrlRequired(BaseDTO entity) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
             }
 
            /* @Override

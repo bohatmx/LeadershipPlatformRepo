@@ -41,7 +41,7 @@
                     android:id="@+id/editSubtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter subtitle"
+                    android:hint="Enter thought"
                     android:inputType="textCapSentences"
                     android:textSize="16sp" />
 

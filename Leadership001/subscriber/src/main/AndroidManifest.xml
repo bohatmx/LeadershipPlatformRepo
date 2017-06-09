@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.oneconnect.leadership.subscriber">
 
+    <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth"/>
 
     <application
         android:name=".SubscriberApp"
@@ -25,13 +26,13 @@
         <activity
             android:name=".SubscriberSignInActivityBase"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true">
-            <intent-filter>
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".NotifHandlerActivity"
@@ -40,8 +41,7 @@
         <activity
             android:name=".SubscriberMainActivity"
             android:label="@string/title_activity_subscriber_main"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name="com.oneconnect.leadership.library.lists.MediaListActivity"
             android:label="@string/title_activity_media_list"
@@ -84,9 +84,24 @@
             android:parentActivityName=".SubscriberMainActivity" />
 
         <meta-data
-            tools:replace="android:value"
             android:name="io.fabric.ApiKey"
-            android:value="bf8084862d623f44e2edfdf76bc8e2be5ba185a8" />
+            android:value="bf8084862d623f44e2edfdf76bc8e2be5ba185a8"
+            tools:replace="android:value" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".SplashScreenActivity"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

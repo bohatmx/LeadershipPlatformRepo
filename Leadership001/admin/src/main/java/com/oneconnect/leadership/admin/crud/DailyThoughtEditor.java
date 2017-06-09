@@ -99,6 +99,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         });
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
+        editSubtitle.setHint("Enter thought");
         btnDate = (Button) view.findViewById(R.id.btnDate);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override

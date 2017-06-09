@@ -31,11 +31,11 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+        <!--    <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity"
@@ -119,6 +119,12 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:parentActivityName=".crud.CrudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name="com.oneconnect.leadership.library.audio.AudioRecordTest"
+            android:label="@string/title_activity_record"
+            android:parentActivityName=".crud.CrudActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="8419153fba562e57532d0502ff0e71266daa9d2b"
@@ -130,6 +136,16 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:parentActivityName=".crud.CrudActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".SplashScreenActivity"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

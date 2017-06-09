@@ -30,6 +30,7 @@ import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,10 +80,31 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         wmvh.iconCamera.setImageDrawable(ctx.getDrawable(R.drawable.ic_photo_black_24dp));
         wmvh.iconUpdate.setImageDrawable(ctx.getDrawable(R.drawable.ic_link_black_24dp));
 
-        wmvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+
+        wmvh.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopupMenu(v);
+                Util.flashOnce(wmvh.txtTitle, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (wmvh.bottomLayout.getVisibility() == View.GONE){
+                            wmvh.bottomLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            wmvh.bottomLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
+        wmvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                Util.flashOnce(wmvh.iconCalendar, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        showPopupMenu(v);
+                    }
+                });
             }
         });
 
@@ -91,48 +113,55 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             wmvh.iconVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (wmvh.videoAdapterLayout.getVisibility() == View.GONE){
-                        wmvh.videoAdapterLayout.setVisibility(View.VISIBLE);
-                        wmvh.videoRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        wmvh.videoAdapterLayout.setVisibility(View.GONE);
-                        wmvh.videoRecyclerView.setVisibility(View.GONE);
-                    }
-
-                    WeeklyMessageDTO dtd = mList.get(position);
-                    List<VideoDTO> videoList = new ArrayList<>();
-                    Map map = dtd.getVideos();
-                    VideoDTO vDTO;
-                    for (Object value : map.values()) {
-                        vDTO = (VideoDTO) value;
-                        videoList.add(vDTO);
-                    }
-
-                    miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
+                    Util.flashOnce(wmvh.iconVideo, 300, new Util.UtilAnimationListener() {
                         @Override
-                        public void onStart() {
+                        public void onAnimationEnded() {
+                            if (wmvh.videoAdapterLayout.getVisibility() == View.GONE){
+                                wmvh.videoAdapterLayout.setVisibility(View.VISIBLE);
+                                wmvh.videoRecyclerView.setVisibility(View.VISIBLE);
+                            } else {
+                                wmvh.videoAdapterLayout.setVisibility(View.GONE);
+                                wmvh.videoRecyclerView.setVisibility(View.GONE);
+                            }
 
-                        }
+                            WeeklyMessageDTO dtd = mList.get(position);
+                            List<VideoDTO> videoList = new ArrayList<>();
+                            Map map = dtd.getVideos();
+                            VideoDTO vDTO;
+                            for (Object value : map.values()) {
+                                vDTO = (VideoDTO) value;
+                                videoList.add(vDTO);
+                            }
+                            miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
+                                @Override
+                                public void onStart() {
 
-                        @Override
-                        public void onPause() {
+                                }
 
-                        }
+                                @Override
+                                public void onPause() {
 
-                        @Override
-                        public void onStop() {
+                                }
 
+                                @Override
+                                public void onStop() {
+
+                                }
+                            });
+
+                            wmvh.videoRecyclerView.setAdapter(miniVideoAdapter);
+                            wmvh.btnPlay.setVisibility(View.GONE);
+
+                            wmvh.btnPlay.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                }
+                            });
                         }
                     });
 
-                    wmvh.videoRecyclerView.setAdapter(miniVideoAdapter);
-                    wmvh.btnPlay.setVisibility(View.GONE);
 
-                    wmvh.btnPlay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    });
+
                 }
             });
         }
@@ -141,40 +170,44 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             wmvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    if (wmvh.photoAdapterLayout.getVisibility() == View.GONE){
-                        wmvh.photoAdapterLayout.setVisibility(View.VISIBLE);
-                        wmvh.imageRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        wmvh.photoAdapterLayout.setVisibility(View.GONE);
-                        wmvh.imageRecyclerView.setVisibility(View.GONE);
-                    }
-
-                    WeeklyMessageDTO dtd = mList.get(position);
-                    List<PhotoDTO> urlList = new ArrayList<>();
-
-                    Map map = dtd.getPhotos();
-                    PhotoDTO vDTO;
-                    String photoUrl;
-                    for (Object value : map.values()) {
-                        vDTO = (PhotoDTO) value;
-                        photoUrl = vDTO.getUrl();
-                        urlList.add(vDTO);
-
-                        Glide.with(ctx)
-                                .load(photoUrl)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(wmvh.photoView);
-                        wmvh.captiontxt.setText(vDTO.getCaption());
-                    }
-
-                    miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    Util.flashOnce(wmvh.iconCamera, 300, new Util.UtilAnimationListener() {
                         @Override
-                        public void onPhotoClicked(PhotoDTO photo) {
+                        public void onAnimationEnded() {
+                            if (wmvh.photoAdapterLayout.getVisibility() == View.GONE){
+                                wmvh.photoAdapterLayout.setVisibility(View.VISIBLE);
+                                wmvh.imageRecyclerView.setVisibility(View.VISIBLE);
+                            } else {
+                                wmvh.photoAdapterLayout.setVisibility(View.GONE);
+                                wmvh.imageRecyclerView.setVisibility(View.GONE);
+                            }
 
+                            WeeklyMessageDTO dtd = mList.get(position);
+                            List<PhotoDTO> urlList = new ArrayList<>();
+
+                            Map map = dtd.getPhotos();
+                            PhotoDTO vDTO;
+                            String photoUrl;
+                            for (Object value : map.values()) {
+                                vDTO = (PhotoDTO) value;
+                                photoUrl = vDTO.getUrl();
+                                urlList.add(vDTO);
+
+                                Glide.with(ctx)
+                                        .load(photoUrl)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(wmvh.photoView);
+                                wmvh.captiontxt.setText(vDTO.getCaption());
+                            }
+
+                            miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                                @Override
+                                public void onPhotoClicked(PhotoDTO photo) {
+
+                                }
+                            });
+                            wmvh.imageRecyclerView.setAdapter(miniPhotoAdapter);
                         }
                     });
-                    wmvh.imageRecyclerView.setAdapter(miniPhotoAdapter);
 
                 }
             });
@@ -185,89 +218,104 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             wmvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (wmvh.podcastAdapterLayout.getVisibility() == View.GONE){
-                        wmvh.podcastAdapterLayout.setVisibility(View.VISIBLE);
-                        wmvh.podcastRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        wmvh.podcastAdapterLayout.setVisibility(View.GONE);
-                        wmvh.podcastRecyclerView.setVisibility(View.GONE);
-                    }
-                    WeeklyMessageDTO dtd = mList.get(position);
-                    List<PodcastDTO> podcastList = new ArrayList<>();
-                    Map map = dtd.getPodcasts();
-                    PodcastDTO vDTO;
-                    for (Object value : map.values()) {
-                        vDTO = (PodcastDTO) value;
-                        url = vDTO.getUrl();
-                        podcastList.add(vDTO);
-                        //
-                        int i = vDTO.getStorageName().lastIndexOf("/");
-                        wmvh.podcastfileName.setText(vDTO.getStorageName().substring(i + 1));
-                        //
-                        wmvh.playIMG.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaPlayer = new MediaPlayer();
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                wmvh.playIMG.setVisibility(View.GONE);
-                                wmvh.pauseIMG.setVisibility(View.VISIBLE);
-                                wmvh.stopIMG.setVisibility(View.VISIBLE);
-                                try {
-                                    mediaPlayer.setDataSource(url);
-                                } catch (IllegalArgumentException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (SecurityException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (IllegalStateException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (IOException e) {
-                                    Log.e(LOG, e.getMessage());
-                                }
-                                try {
-                                    mediaPlayer.prepare();
-                                } catch (IllegalStateException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (IOException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                }
-                                mediaPlayer.start();
-                            }
-                        });
-
-                        wmvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaPlayer.pause();
-                                wmvh.pauseIMG.setVisibility(View.GONE);
-                                wmvh.playIMG.setVisibility(View.VISIBLE);
-                                wmvh.stopIMG.setVisibility(View.VISIBLE);
-                            }
-                        });
-
-                        wmvh.stopIMG.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaPlayer.stop();
-                                wmvh.playIMG.setVisibility(View.VISIBLE);
-                                wmvh.pauseIMG.setVisibility(View.GONE);
-                                wmvh.stopIMG.setVisibility(View.GONE);
-                            }
-                        });
-                    }
-
-
-                    miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
+                    Util.flashOnce(wmvh.iconMicrophone, 300, new Util.UtilAnimationListener() {
                         @Override
-                        public void onPlayClicked(int position) {
+                        public void onAnimationEnded() {
+                            if (wmvh.podcastAdapterLayout.getVisibility() == View.GONE){
+                                wmvh.podcastAdapterLayout.setVisibility(View.VISIBLE);
+                                wmvh.podcastRecyclerView.setVisibility(View.VISIBLE);
+                            } else {
+                                wmvh.podcastAdapterLayout.setVisibility(View.GONE);
+                                wmvh.podcastRecyclerView.setVisibility(View.GONE);
+                            }
+                            WeeklyMessageDTO dtd = mList.get(position);
+                            List<PodcastDTO> podcastList = new ArrayList<>();
+                            Map map = dtd.getPodcasts();
+                            PodcastDTO vDTO;
+                            for (Object value : map.values()) {
+                                vDTO = (PodcastDTO) value;
+                                url = vDTO.getUrl();
+                                podcastList.add(vDTO);
+                                //
+                                int i = vDTO.getStorageName().lastIndexOf("/");
+                                wmvh.podcastfileName.setText(vDTO.getStorageName().substring(i + 1));
+                                //
+                                wmvh.playIMG.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mediaPlayer = new MediaPlayer();
+                                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                        wmvh.playIMG.setVisibility(View.GONE);
+                                        wmvh.pauseIMG.setVisibility(View.VISIBLE);
+                                        wmvh.stopIMG.setVisibility(View.VISIBLE);
+                                        try {
+                                            mediaPlayer.setDataSource(url);
+                                        } catch (IllegalArgumentException e) {
+                                            Log.e(LOG, "You might not set the URI correctly!");
+                                        } catch (SecurityException e) {
+                                            Log.e(LOG, "You might not set the URI correctly!");
+                                        } catch (IllegalStateException e) {
+                                            Log.e(LOG, "You might not set the URI correctly!");
+                                        } catch (IOException e) {
+                                            Log.e(LOG, e.getMessage());
+                                        }
+                                        try {
+                                            mediaPlayer.prepare();
+                                        } catch (IllegalStateException e) {
+                                            Log.e(LOG, "You might not set the URI correctly!");
+                                        } catch (IOException e) {
+                                            Log.e(LOG, "You might not set the URI correctly!");
+                                        }
+                                        mediaPlayer.start();
+                                    }
+                                });
 
-                        }
+                                wmvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Util.flashOnce(wmvh.pauseIMG, 300, new Util.UtilAnimationListener() {
+                                            @Override
+                                            public void onAnimationEnded() {
+                                                mediaPlayer.pause();
+                                                wmvh.pauseIMG.setVisibility(View.GONE);
+                                                wmvh.playIMG.setVisibility(View.VISIBLE);
+                                                wmvh.stopIMG.setVisibility(View.VISIBLE);
+                                            }
+                                        });
+                                    }
+                                });
 
-                        @Override
-                        public void onPodcastRequired(PodcastDTO podcast) {
+                                wmvh.stopIMG.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Util.flashOnce(wmvh.stopIMG, 300, new Util.UtilAnimationListener() {
+                                            @Override
+                                            public void onAnimationEnded() {
+                                                mediaPlayer.stop();
+                                                wmvh.playIMG.setVisibility(View.VISIBLE);
+                                                wmvh.pauseIMG.setVisibility(View.GONE);
+                                                wmvh.stopIMG.setVisibility(View.GONE);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
 
+
+                            miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
+                                @Override
+                                public void onPlayClicked(int position) {
+
+                                }
+
+                                @Override
+                                public void onPodcastRequired(PodcastDTO podcast) {
+
+                                }
+                            });
+                            wmvh.podcastRecyclerView.setAdapter(miniPodcastAdapter);
                         }
                     });
-                    wmvh.podcastRecyclerView.setAdapter(miniPodcastAdapter);
                 }
             });
         }
@@ -276,34 +324,39 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             wmvh.iconUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (wmvh.urlAdapterLayout.getVisibility() == View.GONE){
-                        wmvh.urlAdapterLayout.setVisibility(View.VISIBLE);
-                        wmvh.urlRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        wmvh.urlAdapterLayout.setVisibility(View.GONE);
-                        wmvh.urlRecyclerView.setVisibility(View.GONE);
-                    }
-
-                    WeeklyMessageDTO dtd = mList.get(position);
-                    Map map = dtd.getUrls();
-                    UrlDTO vDTO;
-                    final List<UrlDTO> urlList = new ArrayList<>();
-                    String url;
-                    for (Object value : map.values()) {
-                        vDTO = (UrlDTO) value;
-                        url = vDTO.getUrl();
-                        wmvh.urlTxt.setText(url);
-                        urlList.add(vDTO);
-                    }
-
-
-                    urlAdapter = new UrlAdapter(urlList, ctx, new UrlAdapter.UrlAdapterListener() {
+                    Util.flashOnce(wmvh.iconUpdate, 300, new Util.UtilAnimationListener() {
                         @Override
-                        public void onUrlClicked(final String url) {
+                        public void onAnimationEnded() {
+                            if (wmvh.urlAdapterLayout.getVisibility() == View.GONE){
+                                wmvh.urlAdapterLayout.setVisibility(View.VISIBLE);
+                                wmvh.urlRecyclerView.setVisibility(View.VISIBLE);
+                            } else {
+                                wmvh.urlAdapterLayout.setVisibility(View.GONE);
+                                wmvh.urlRecyclerView.setVisibility(View.GONE);
+                            }
+
+                            WeeklyMessageDTO dtd = mList.get(position);
+                            Map map = dtd.getUrls();
+                            UrlDTO vDTO;
+                            final List<UrlDTO> urlList = new ArrayList<>();
+                            String url;
+                            for (Object value : map.values()) {
+                                vDTO = (UrlDTO) value;
+                                url = vDTO.getUrl();
+                                wmvh.urlTxt.setText(url);
+                                urlList.add(vDTO);
+                            }
+
+
+                            urlAdapter = new UrlAdapter(urlList, ctx, new UrlAdapter.UrlAdapterListener() {
+                                @Override
+                                public void onUrlClicked(final String url) {
+                                }
+                            });
+
+                            wmvh.urlRecyclerView.setAdapter(urlAdapter);
                         }
                     });
-
-                    wmvh.urlRecyclerView.setAdapter(urlAdapter);
                 }
             });
         }
@@ -374,6 +427,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             //iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
+            bottomLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);
             deleteLayout.setVisibility(View.GONE);

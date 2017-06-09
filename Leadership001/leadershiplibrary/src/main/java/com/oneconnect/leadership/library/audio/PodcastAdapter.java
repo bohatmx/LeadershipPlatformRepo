@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.audio;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,6 +67,14 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
                 listener.onPlayAudioTapped(path);
             }
         });
+
+       /* holder.btnRec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context,AudioRecordTest.class);
+                context.startActivity(i);
+            }
+        });*/
     }
 
     @Override
@@ -76,7 +85,7 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
     public class PodcastViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtFileName, initialTime, finalTime;
         protected ImageView image;
-        protected Button btnUpload, btnPlay;
+        protected Button btnUpload, btnPlay, btnRec;
         protected RelativeLayout controlLayout;
 
         public PodcastViewHolder(View itemView) {
@@ -86,11 +95,12 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             controlLayout = (RelativeLayout) itemView.findViewById(R.id.controlLayout);
-            controlLayout.setVisibility(View.GONE);
-            initialTime = (TextView) itemView.findViewById(R.id.initialTime);
-            initialTime.setVisibility(View.GONE);
-            finalTime = (TextView) itemView.findViewById(R.id.finalTime);
-            finalTime.setVisibility(View.GONE);
+           // controlLayout.setVisibility(View.GONE);
+          // btnRec = (Button) itemView.findViewById(R.id.btnRec);
+            //initialTime = (TextView) itemView.findViewById(R.id.initialTime);
+            //initialTime.setVisibility(View.GONE);
+            //finalTime = (TextView) itemView.findViewById(R.id.finalTime);
+           // finalTime.setVisibility(View.GONE);
         }
 
     }

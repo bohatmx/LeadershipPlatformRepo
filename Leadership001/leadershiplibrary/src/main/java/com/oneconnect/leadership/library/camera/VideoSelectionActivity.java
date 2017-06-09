@@ -20,6 +20,7 @@ import android.view.View;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -43,6 +44,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     private Toolbar toolbar;
     private DailyThoughtDTO dailyThought;
     private WeeklyMessageDTO weeklyMessage;
+    private EBookDTO eBook;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private int type;
     private Snackbar snackbar;
@@ -72,6 +74,10 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
                 getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                break;
+            case ResponseBag.EBOOKS:
+                eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
+                getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
         }
 
