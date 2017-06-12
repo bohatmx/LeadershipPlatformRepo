@@ -1,11 +1,15 @@
 package com.oneconnect.leadership.library.audio;
 
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -223,8 +227,14 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
-                startActivity(intent);
+                //Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
+                //startActivity(intent);
+                File dir = Environment.getExternalStorageDirectory();
+                File myDir = new File(dir, "leadership");
+                if (!myDir.exists()) {
+                    myDir.mkdir();
+                }
+                recordAudio(myDir.toString());
             }
         });
     }
@@ -238,6 +248,42 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             this.duration = duration;
             this.path = path;
         }
+    }
+
+    public void recordAudio(String fileName) {
+        final MediaRecorder recorder = new MediaRecorder();
+        ContentValues values = new ContentValues(3);
+        values.put(MediaStore.MediaColumns.TITLE, "leaderShip Podcast1");
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+        File podName = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "lsPodcast1");
+        recorder.setOutputFile(podName.toString());
+        try {
+            recorder.prepare();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        final ProgressDialog mProgressDialog = new ProgressDialog(PodcastSelectionActivity.this);
+        mProgressDialog.setTitle("Recording Audio...."/*R.string.lbl_recording*/);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setButton("Stop recording", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mProgressDialog.dismiss();
+                recorder.stop();
+                recorder.release();
+            }
+        });
+
+        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+            public void onCancel(DialogInterface p1) {
+                recorder.stop();
+                recorder.release();
+            }
+        });
+        recorder.start();
+        mProgressDialog.show();
     }
 
     @Override

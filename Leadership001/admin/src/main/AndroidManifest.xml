@@ -5,6 +5,7 @@
     <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth" />
 
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!--
 Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0

@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Environment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -22,12 +23,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by aubreymalabie on 3/16/17.
@@ -283,6 +287,39 @@ public class Util {
             }
         }
 
+    }
+
+    static public long getMiliseconds(String date){
+        long milliseconds = (long) 0.00;
+        try{
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMMM yyyy");
+            Date date1 = dateFormat.parse(date);
+            milliseconds = date1.getTime();
+        }catch (ParseException pe){
+            Log.d(String.valueOf(pe),"checkkkkkkkkk");
+        }
+
+        return milliseconds;
+    }
+
+    static public String getFormattedDate(long smsTimeInMilis) {
+        Calendar smsTime = Calendar.getInstance();
+        smsTime.setTimeInMillis(smsTimeInMilis);
+
+        Calendar now = Calendar.getInstance();
+
+        final String timeFormatString = "h:mm aa";
+        final String dateTimeFormatString = "dd-MM-yyyy HH:mm";
+
+        if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE) ) {
+            return "Today " + DateFormat.format(timeFormatString, smsTime);
+        } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
+            return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
+        } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
+            return DateFormat.format(dateTimeFormatString, smsTime).toString();
+        } else {
+            return DateFormat.format("dd-MM-yyyy HH:mm", smsTime).toString();
+        }
     }
 
 }
