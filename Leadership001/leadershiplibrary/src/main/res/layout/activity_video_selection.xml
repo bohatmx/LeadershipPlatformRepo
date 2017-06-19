@@ -23,13 +23,4 @@
 
     <include layout="@layout/content_video_selection" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_refresh_white"
-        app:layout_anchor="@id/appBar"
-        app:layout_anchorGravity="bottom|center"
-        android:layout_margin="@dimen/fab_margin" />
-
 </android.support.design.widget.CoordinatorLayout>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -90,6 +92,24 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 FirebaseStorageAPI fbs = new FirebaseStorageAPI();
                 int i = displayName.lastIndexOf("/");
                 fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);
+
+            }
+        });
+
+        vvh.fileName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(vvh.fileName, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (vvh.bottomLayout.getVisibility() == View.GONE) {
+                            vvh.bottomLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            vvh.bottomLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
             }
         });
 
@@ -108,20 +128,6 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 shareIt();
             }
         });
-        /*vvh.btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //listener.onReadClicked(book);
-                *//*readEbook(bookUrl);*//*
-                File f = new File(bookUrl);
-                if (f.exists()) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.fromFile(f), "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    ctx.startActivity(intent);
-                }
-            }
-        });*/
     }
     private void shareIt() {
         //sharing implementation here
@@ -160,6 +166,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         protected TextView fileName;
         protected ImageView image, bookIcon, iconshar, uploadIcon, readIcon, imageUploadIcon;
         protected Button btnPlay, btnUpload;
+        protected RelativeLayout bottomLayout;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
@@ -175,6 +182,8 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             uploadIcon = (ImageView) itemView.findViewById(R.id.uploadIcon);
             uploadIcon.setVisibility(View.GONE);
             readIcon = (ImageView) itemView.findViewById(R.id.readIcon);
+            bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
+            bottomLayout.setVisibility(View.GONE);
         }
     }
 }

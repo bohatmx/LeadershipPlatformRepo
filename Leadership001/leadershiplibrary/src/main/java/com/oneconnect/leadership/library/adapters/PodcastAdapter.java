@@ -143,6 +143,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         pvh.playIMG.setVisibility(View.GONE);
                         pvh.pauseIMG.setVisibility(View.VISIBLE);
                         pvh.stopIMG.setVisibility(View.VISIBLE);
+
                         try {
                             mediaPlayer.setDataSource(podcastURL);
                         } catch (IllegalArgumentException e) {
@@ -164,6 +165,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         mediaPlayer.start();
                     }
                 });
+
             }
         });
 
@@ -177,6 +179,22 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 });
 
+            }
+        });
+
+        pvh.fileName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (pvh.bottomLayout.getVisibility() == View.GONE) {
+                            pvh.bottomLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            pvh.bottomLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
         });
 
@@ -316,13 +334,13 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected TextView fileName;
         protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic;
         protected Button btnPlay, btnUpload;
-        protected RelativeLayout uploadLayout;
+        protected RelativeLayout uploadLayout, bottomLayout;
 
         public PodcastsViewHolder(View itemView) {
             super(itemView);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             image = (ImageView) itemView.findViewById(R.id.image);
-            image.setVisibility(View.GONE);
+           // image.setVisibility(View.GONE);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             btnPlay.setVisibility(View.GONE);
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
@@ -346,6 +364,9 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             /*mediaPlayer = new MediaPlayer();*/
             //mediaController = new MediaController(ctx);
             //mediaController.setAnchorView(image);
+
+            bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
+            bottomLayout.setVisibility(View.GONE);
 
             uploadLayout = (RelativeLayout) itemView.findViewById(R.id.uploadLayout);
             uploadLayout.setVisibility(View.GONE);

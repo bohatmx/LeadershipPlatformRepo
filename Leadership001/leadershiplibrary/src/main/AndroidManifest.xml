@@ -70,9 +70,9 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".video.VideoListActivity"
-            android:label="@string/title_activity_video_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".audio.PodcastSelectionActivity"
+            android:label="@string/title_activity_podcast_selection"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

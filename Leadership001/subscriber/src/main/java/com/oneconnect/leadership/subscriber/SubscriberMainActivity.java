@@ -28,6 +28,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -146,8 +147,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         mPager = (ViewPager) findViewById(com.oneconnect.leadership.library.R.id.viewpager);
         PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip.setVisibility(View.VISIBLE);
-
-        setup();
+         setup();
 
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);

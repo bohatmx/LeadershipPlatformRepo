@@ -219,35 +219,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                 recyclerView.setAdapter(ebookAdapter);
             }
 
-            @Override
-            public void onThoughtClicked(int position) {
 
-            }
-
-            @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
-            }
-
-            @Override
-            public void onVideoRequired(VideoDTO video) {
-
-            }
-
-            @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-
-            }
         });
     }
 
@@ -584,35 +556,8 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
             }
 
-            @Override
-            public void onThoughtClicked(int position) {
 
-            }
 
-            @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
-            }
-
-            @Override
-            public void onVideoRequired(VideoDTO video) {
-
-            }
-
-            @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-
-            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -671,35 +616,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                 //readEbook(path);
             }
 
-            @Override
-            public void onThoughtClicked(int position) {
 
-            }
-
-            @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
-            }
-
-            @Override
-            public void onVideoRequired(VideoDTO video) {
-
-            }
-
-            @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-
-            }
         });
         recyclerView.setAdapter(adapter);
     }

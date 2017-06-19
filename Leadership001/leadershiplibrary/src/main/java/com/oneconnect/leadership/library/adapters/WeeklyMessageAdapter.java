@@ -73,7 +73,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         final WeeklyMessageDTO wm = mList.get(position);
         final WeeklyMessageViewHolder wmvh = (WeeklyMessageViewHolder) holder;
-        wmvh.txtEvents.setText("" + (position + 1));
+      //  wmvh.txtEvents.setText("" + (position + 1));
         wmvh.txtTitle.setText(wm.getTitle());
         wmvh.txtSubtitle.setText(wm.getSubtitle());
         wmvh.txtDate.setText(wm.getStringDateScheduled());
@@ -420,7 +420,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public WeeklyMessageViewHolder(View itemView) {
             super(itemView);
-            txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
+            //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);

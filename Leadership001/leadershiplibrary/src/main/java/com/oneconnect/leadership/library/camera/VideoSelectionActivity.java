@@ -16,18 +16,22 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 
 import java.io.File;
@@ -45,11 +49,14 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     private DailyThoughtDTO dailyThought;
     private WeeklyMessageDTO weeklyMessage;
     private EBookDTO eBook;
+    private PodcastDTO podcast;
+    private UrlDTO url;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private int type;
     private Snackbar snackbar;
     private VideoUploadPresenter presenter;
     public static final String TAG = VideoSelectionActivity.class.getSimpleName();
+    ImageView image1, image2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,29 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                 eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
                 getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
+            case ResponseBag.PODCASTS:
+                podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
+                getSupportActionBar().setSubtitle(podcast.getStorageName());
+                break;
+            case ResponseBag.URLS:
+                url = (UrlDTO) getIntent().getSerializableExtra("url");
+                getSupportActionBar().setSubtitle(url.getTitle());
+                break;
+        }
+        if (getIntent().getSerializableExtra("eBook") != null) {
+            type = ResponseBag.EBOOKS;
+            eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
+            getSupportActionBar().setSubtitle(eBook.getStorageName());
+        }
+        if (getIntent().getSerializableExtra("podcast") != null) {
+            type = ResponseBag.PODCASTS;
+            podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
+            getSupportActionBar().setSubtitle(podcast.getStorageName());
+        }
+        if (getIntent().getSerializableExtra("url") != null) {
+            type = ResponseBag.URLS;
+            url = (UrlDTO) getIntent().getSerializableExtra("url");
+            getSupportActionBar().setSubtitle(url.getTitle());
         }
 
         setup();
@@ -88,14 +118,22 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     private void setup() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        image1 = (ImageView) findViewById(R.id.image1);
+        image2 = (ImageView) findViewById(R.id.image2);
+        image2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                Util.flashOnce(image2, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(VideoSelectionActivity.this, VideoListActivity.class);
+                        startActivity(intent);
+                    }
+                });
             }
         });
+
+
     }
 
     public void getVideosOnDevice() {
@@ -202,6 +240,15 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                 v.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
                 v.setDescription(weeklyMessage.getTitle());
                 v.setCaption(weeklyMessage.getTitle());
+                break;
+            case ResponseBag.EBOOKS:
+                v.seteBook(eBook);
+                break;
+            case ResponseBag.PODCASTS:
+                v.setPodcast(podcast);
+                break;
+            case ResponseBag.URLS:
+                v.setUrlDTO(url);
                 break;
         }
         openProgressSheet();

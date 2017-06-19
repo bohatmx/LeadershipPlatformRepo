@@ -27,6 +27,11 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
     private HashMap<String, VideoDTO> videos;
     private HashMap<String,EBookDTO> ebooks;
     private HashMap<String,UrlDTO> urls;
+    //
+    //
+    private EBookDTO eBook;
+    private VideoDTO video;
+    private UrlDTO urlDTO;
 
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
@@ -326,5 +331,29 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
 
     public void setCaption(String caption) {
         this.caption = caption;
+    }
+
+    public EBookDTO geteBook() {
+        return eBook;
+    }
+
+    public void seteBook(EBookDTO eBook) {
+        this.eBook = eBook;
+    }
+
+    public VideoDTO getVideo() {
+        return video;
+    }
+
+    public void setVideo(VideoDTO video) {
+        this.video = video;
+    }
+
+    public UrlDTO getUrlDTO() {
+        return urlDTO;
+    }
+
+    public void setUrlDTO(UrlDTO urlDTO) {
+        this.urlDTO = urlDTO;
     }
 }

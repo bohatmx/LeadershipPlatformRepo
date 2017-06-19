@@ -355,12 +355,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
 
         h.calLayout.setVisibility(View.VISIBLE);
-        if (p.getCalendarEvents() == null) {
+       /* if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
             h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
             h.txtEvents.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     private void setPodcast(EntityViewHolder h, int position, PodcastDTO p) {
@@ -394,12 +394,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
 
         h.calLayout.setVisibility(View.VISIBLE);
-        if (p.getCalendarEvents() == null) {
+        /*if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
             h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
             h.txtEvents.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -436,12 +436,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
 
-        if (p.getCalendarEvents() == null) {
+        /*if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
             h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
             h.txtEvents.setVisibility(View.VISIBLE);
-        }
+        }*/
 
     }
 
@@ -476,12 +476,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.videosLayout.setVisibility(View.VISIBLE);
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
-        if (p.getCalendarEvents() == null) {
+       /* if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
             h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
             h.txtEvents.setVisibility(View.VISIBLE);
-        }
+        }*/
 
     }
 
@@ -512,12 +512,12 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
 
-        if (p.getCalendarEvents() == null) {
+        /*if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
             h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
             h.txtEvents.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     private void animateIn(View view, final BaseDTO entity) {
@@ -614,7 +614,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             txtPhotos = (TextView) itemView.findViewById(R.id.txtCamera);
             txtVideos = (TextView) itemView.findViewById(R.id.txtVideo);
             txtPodcasts = (TextView) itemView.findViewById(R.id.txtMicrophone);
-            txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
+           // txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
 
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);

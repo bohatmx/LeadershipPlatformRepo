@@ -19,6 +19,7 @@
     <string name="leader_welcome">Welcome! We need Leaders everywhere ...</string>
     <string name="platform_welcome">Leadership Platform Welcome</string>
     <string name="title_activity_le_you_tube">LeYouTubeActivity</string>
+    <string name="title_activity_podcast_selection">PodcastSelectionActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -28,23 +29,23 @@
     <string name="action_photo">Photo</string>
     <string name="title_activity_le_exo_player">LeExoPlayerActivity</string>
 
-    <string name="video">Video</string>
+    <string name="video">VIDEOS</string>
 
     <string name="audio">Audio</string>
 
-    <string name="daily_thought">Daily Thought</string>
+    <string name="daily_thought">DAILY THOUGHTS</string>
 
-    <string name="weeky_master_class">Weekly Masterclass</string>
+    <string name="weeky_master_class">WEEKLY MASTERCLASS</string>
 
-    <string name="weekly_message">Weekly Message</string>
+    <string name="weekly_message">WEEKLY MESSAGES</string>
 
-    <string name="photo">Photos</string>
+    <string name="photo">PHOTOS</string>
 
-    <string name="podcast">Podcasts</string>
+    <string name="podcast">PODCASTS</string>
 
-    <string name="ebooks">Ebooks</string>
+    <string name="ebooks">EBOOKS</string>
 
-    <string name="calendar_events">Calendar Events</string>
+    <string name="calendar_events">CALENDER EVENTS</string>
     
     <string name="Photographs">Photographs</string>
 
@@ -102,6 +103,7 @@
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="title_activity_video_player">VideoPlayerActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity__podcast_list">Podcasts Attachments</string>
 
 
     <!--VideoMenu-->

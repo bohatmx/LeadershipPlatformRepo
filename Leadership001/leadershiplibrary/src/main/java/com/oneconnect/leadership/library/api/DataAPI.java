@@ -1330,6 +1330,13 @@ public class DataAPI {
                 ref = db.getReference(PODCASTS)
                         .child(id).child(URLS);
                 break;
+            //
+            case ResponseBag.EBOOKS:
+                ref = db.getReference(EBOOKS).child(id).child(URLS);
+                break;
+            case ResponseBag.VIDEOS:
+                ref = db.getReference(VIDEOS).child(id).child(URLS);
+                break;
             default:
                 ref = db.getReference(URLS);
                 return;

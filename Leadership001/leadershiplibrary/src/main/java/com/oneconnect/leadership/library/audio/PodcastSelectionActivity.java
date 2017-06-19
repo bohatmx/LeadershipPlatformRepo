@@ -1,15 +1,11 @@
 package com.oneconnect.leadership.library.audio;
 
-import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
@@ -27,11 +24,14 @@ import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -50,10 +50,14 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     private WeeklyMessageDTO weeklyMessage;
     private EBookDTO eBook;
     private WeeklyMasterClassDTO weeklyMasterClass;
+    private VideoDTO video;
+    private PodcastDTO podcast;
+    private UrlDTO url;
     private int type;
     private Snackbar snackbar;
     private PodcastUploadPresenter presenter;
     public static final String TAG = PodcastSelectionActivity.class.getSimpleName();
+    ImageView image1, image2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +87,35 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                 eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
                 getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
+            case ResponseBag.VIDEOS:
+                video = (VideoDTO) getIntent().getSerializableExtra("video");
+                getSupportActionBar().setSubtitle(video.getStorageName());
+                break;
+            case ResponseBag.PODCASTS:
+                podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
+                getSupportActionBar().setSubtitle(podcast.getStorageName());
+                break;
+            case ResponseBag.URLS:
+                url = (UrlDTO) getIntent().getSerializableExtra("url");
+                getSupportActionBar().setSubtitle(url.getTitle());
+                break;
         }
+        if (getIntent().getSerializableExtra("eBook") != null) {
+            type = ResponseBag.EBOOKS;
+            eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
+            getSupportActionBar().setSubtitle(eBook.getStorageName());
+        }
+        if (getIntent().getSerializableExtra("video") != null) {
+            type = ResponseBag.VIDEOS;
+            video = (VideoDTO) getIntent().getSerializableExtra("video");
+            getSupportActionBar().setSubtitle(video.getStorageName());
+        }
+        if (getIntent().getSerializableExtra("url") != null) {
+            type = ResponseBag.URLS;
+            url = (UrlDTO) getIntent().getSerializableExtra("url");
+            getSupportActionBar().setSubtitle(url.getTitle());
+        }
+
 
         setup();
         getPodcastsOnDevice();
@@ -192,9 +224,13 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                 v.setSubtitle(weeklyMessage.getTitle());
                 break;
             case ResponseBag.EBOOKS:
-                v.seteBookID(eBook.geteBookID());
-                v.setTitle(eBook.getTitle());
-                //v.setSubtitle(eBook.);
+                v.seteBook(eBook);
+                break;
+            case ResponseBag.VIDEOS:
+                v.setVideo(video);
+                break;
+            case ResponseBag.URLS:
+                v.setUrlDTO(url);
                 break;
         }
         openProgressSheet();
@@ -223,18 +259,30 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     private void setup() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        image1 = (ImageView) findViewById(R.id.image1);
+       /* image1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
-                //startActivity(intent);
-                File dir = Environment.getExternalStorageDirectory();
-                File myDir = new File(dir, "leadership");
-                if (!myDir.exists()) {
-                    myDir.mkdir();
-                }
-                recordAudio(myDir.toString());
+            public void onClick(View v) {
+                Util.flashOnce(image1, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(PodcastSelectionActivity.this, PodcastListActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+        }); */
+        image2 = (ImageView) findViewById(R.id.image2);
+        image2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(image2, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(PodcastSelectionActivity.this, PodcastListActivity.class);
+                        startActivity(intent);
+                    }
+                });
             }
         });
     }
@@ -248,42 +296,6 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             this.duration = duration;
             this.path = path;
         }
-    }
-
-    public void recordAudio(String fileName) {
-        final MediaRecorder recorder = new MediaRecorder();
-        ContentValues values = new ContentValues(3);
-        values.put(MediaStore.MediaColumns.TITLE, "leaderShip Podcast1");
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-        File podName = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "lsPodcast1");
-        recorder.setOutputFile(podName.toString());
-        try {
-            recorder.prepare();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        final ProgressDialog mProgressDialog = new ProgressDialog(PodcastSelectionActivity.this);
-        mProgressDialog.setTitle("Recording Audio...."/*R.string.lbl_recording*/);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setButton("Stop recording", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                mProgressDialog.dismiss();
-                recorder.stop();
-                recorder.release();
-            }
-        });
-
-        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
-            public void onCancel(DialogInterface p1) {
-                recorder.stop();
-                recorder.release();
-            }
-        });
-        recorder.start();
-        mProgressDialog.show();
     }
 
     @Override

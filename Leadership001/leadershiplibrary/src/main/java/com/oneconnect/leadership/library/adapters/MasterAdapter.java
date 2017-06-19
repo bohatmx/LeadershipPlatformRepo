@@ -76,7 +76,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final WeeklyMasterClassDTO dt = mList.get(position);
         final MasterViewHolder dvh = (MasterViewHolder) holder;
-        dvh.txtEvents.setText("" + (position + 1));
+//        dvh.txtEvents.setText("" + (position + 1));
         dvh.txtTitle.setText(dt.getTitle());
         dvh.txtSubtitle.setText(dt.getSubtitle());
         dvh.txtDate.setText(dt.getStringDateScheduled());
@@ -429,7 +429,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public MasterViewHolder(View itemView) {
             super(itemView);
-            txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
+            //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);

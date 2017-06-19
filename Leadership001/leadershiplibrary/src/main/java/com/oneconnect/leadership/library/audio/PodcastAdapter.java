@@ -52,7 +52,7 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
         Log.w("PodcastAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
         /*Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Audio.Thumbnails.MINI_KIND);
         holder.image.setImageBitmap(thumb);*/
-        holder.image.setImageDrawable(context.getDrawable(R.drawable.audios));
+       // holder.image.setImageDrawable(context.getDrawable(R.drawable.audios));
         int i = path.lastIndexOf("/");
         holder.txtFileName.setText(path.substring(i + 1));
         holder.btnUpload.setOnClickListener(new View.OnClickListener() {
@@ -86,11 +86,13 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
         protected TextView txtFileName, initialTime, finalTime;
         protected ImageView image;
         protected Button btnUpload, btnPlay, btnRec;
-        protected RelativeLayout controlLayout;
+        protected RelativeLayout controlLayout, bottomLayout;
 
         public PodcastViewHolder(View itemView) {
             super(itemView);
             txtFileName = (TextView) itemView.findViewById(R.id.fileName);
+            bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
+            bottomLayout.setVisibility(View.GONE);
             image = (ImageView) itemView.findViewById(R.id.image);
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);

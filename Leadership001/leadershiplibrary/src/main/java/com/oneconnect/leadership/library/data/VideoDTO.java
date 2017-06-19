@@ -26,6 +26,15 @@ public class VideoDTO extends BaseDTO implements  Serializable, Comparable<Video
     private String weeklyMasterClassID, weeklyMessageID,
             dailyThoughtID, podcastID, eBookID;
     private HashMap<String, String> urlLinks;
+    //
+    private HashMap<String,UrlDTO> urls;
+    private HashMap<String, PhotoDTO> photos;
+    private HashMap<String,EBookDTO> ebooks;
+    private HashMap<String,PodcastDTO> podcasts;
+    //
+    private PodcastDTO podcast;
+    private EBookDTO eBook;
+    private UrlDTO urlDTO;
 
 
     public VideoDTO() {
@@ -302,4 +311,59 @@ public class VideoDTO extends BaseDTO implements  Serializable, Comparable<Video
         this.companyName = companyName;
     }
 
+    public PodcastDTO getPodcast() {
+        return podcast;
+    }
+
+    public void setPodcast(PodcastDTO podcast) {
+        this.podcast = podcast;
+    }
+
+    public EBookDTO geteBook() {
+        return eBook;
+    }
+
+    public void seteBook(EBookDTO eBook) {
+        this.eBook = eBook;
+    }
+
+    public UrlDTO getUrlDTO() {
+        return urlDTO;
+    }
+
+    public void setUrlDTO(UrlDTO urlDTO) {
+        this.urlDTO = urlDTO;
+    }
+
+    public HashMap<String, UrlDTO> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, UrlDTO> urls) {
+        this.urls = urls;
+    }
+
+    public HashMap<String, PhotoDTO> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(HashMap<String, PhotoDTO> photos) {
+        this.photos = photos;
+    }
+
+    public HashMap<String, EBookDTO> getEbooks() {
+        return ebooks;
+    }
+
+    public void setEbooks(HashMap<String, EBookDTO> ebooks) {
+        this.ebooks = ebooks;
+    }
+
+    public HashMap<String, PodcastDTO> getPodcasts() {
+        return podcasts;
+    }
+
+    public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
+        this.podcasts = podcasts;
+    }
 }

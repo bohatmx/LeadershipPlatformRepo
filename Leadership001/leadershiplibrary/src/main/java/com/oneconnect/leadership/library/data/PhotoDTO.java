@@ -24,6 +24,10 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
     private long bytes;
     private long date, imageSize, dateUploaded;
     private String userID, userName, stringDateUploaded, stringDate;
+    //
+    private PodcastDTO podcast;
+    private UrlDTO urlDTO;
+    private VideoDTO video;
 
     private String weeklyMasterClassID, weeklyMessageID,
             dailyThoughtID, eBookID, podcastID;
@@ -309,5 +313,29 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(caption);
+    }
+
+    public PodcastDTO getPodcast() {
+        return podcast;
+    }
+
+    public void setPodcast(PodcastDTO podcast) {
+        this.podcast = podcast;
+    }
+
+    public UrlDTO getUrlDTO() {
+        return urlDTO;
+    }
+
+    public void setUrlDTO(UrlDTO urlDTO) {
+        this.urlDTO = urlDTO;
+    }
+
+    public VideoDTO getVideo() {
+        return video;
+    }
+
+    public void setVideo(VideoDTO video) {
+        this.video = video;
     }
 }

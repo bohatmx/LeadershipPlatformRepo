@@ -35,20 +35,19 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 //import com.crashlytics.android.Crashlytics;
-import com.facebook.stetho.dumpapp.plugins.CrashDumperPlugin;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
-import com.oneconnect.leadership.admin.photo.PhotoSelectionActivity;
+import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.admin.calendar.CalendarActivity;
 import com.oneconnect.leadership.library.camera.CameraActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
-import com.oneconnect.leadership.admin.ebook.EbookSelectionActivity;
-import com.oneconnect.leadership.admin.links.LinksActivity;
+import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
+import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.PhotoCache;
@@ -445,6 +444,7 @@ public class CrudActivity extends AppCompatActivity
 
         ft.replace(R.id.frame, entityListFragment);
         ft.commit();
+       // ft.commitAllowingStateLoss();
     }
 
     @Override

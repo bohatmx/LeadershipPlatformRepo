@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:checkableBehavior="single">
-        <item android:title="Message">
+    <group android:checkableBehavior="single" >
+        <item android:title="Message"
+            app:itemBackground="@color/absa_red">
             <menu>
                 <item
                     android:id="@+id/nav_daily_thought"
@@ -20,7 +22,8 @@
         </item>
     </group>
 
-    <item android:title="Events">
+    <item android:title="Events"
+        app:itemBackground="@color/absa_red">
         <menu>
             <item
                 android:id="@+id/nav_calender_events"
@@ -29,7 +32,8 @@
         </menu>
     </item>
 
-    <item android:title="Media">
+    <item android:title="Media"
+        app:itemBackground="@color/absa_red">
         <menu>
             <item
                 android:id="@+id/nav_photo"
@@ -46,7 +50,8 @@
         </menu>
     </item>
 
-    <item android:title="Read">
+    <item android:title="Read"
+        app:itemBackground="@color/absa_red">
         <menu>
             <item
                 android:id="@+id/nav_eBooks"
@@ -55,7 +60,8 @@
         </menu>
     </item>
 
-    <item android:title="Sign out">
+    <item android:title="Sign out"
+        app:itemBackground="@color/absa_red">
         <menu>
             <item
                 android:id="@+id/nav_sign_out"
