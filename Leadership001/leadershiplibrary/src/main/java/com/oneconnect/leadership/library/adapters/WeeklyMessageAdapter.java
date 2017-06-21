@@ -76,7 +76,11 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
       //  wmvh.txtEvents.setText("" + (position + 1));
         wmvh.txtTitle.setText(wm.getTitle());
         wmvh.txtSubtitle.setText(wm.getSubtitle());
-        wmvh.txtDate.setText(wm.getStringDateScheduled());
+        StringBuilder sb = new StringBuilder(wm.getStringDateRegistered());
+        sb.deleteCharAt(sb.indexOf(","));
+        long miliSecs = Util.getMiliseconds(sb.toString());
+        String formatedDate = Util.getFormattedDate(miliSecs);
+        wmvh.txtDate.setText(formatedDate);
         wmvh.iconCamera.setImageDrawable(ctx.getDrawable(R.drawable.ic_photo_black_24dp));
         wmvh.iconUpdate.setImageDrawable(ctx.getDrawable(R.drawable.ic_link_black_24dp));
 

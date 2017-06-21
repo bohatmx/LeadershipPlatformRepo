@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -42,6 +43,7 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
 public class AudioRecordTest extends AppCompatActivity implements  PodcastUploadContract.View{
 
@@ -53,7 +55,10 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
     String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     public static final int RequestPermissionCode = 1;
     MediaPlayer mediaPlayer ;
-
+    TextView recordProgress;
+    long miliSecs = 0;
+    Thread t;
+    String timer;
     PodcastUploadPresenter presenter;
 
     @Override
@@ -66,11 +71,13 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         buttonPlayLastRecordAudio = (Button) findViewById(R.id.button3);
         buttonStopPlayingRecording = (Button)findViewById(R.id.button4);
         buttonUpload  = (Button)findViewById(R.id.button5);
+        recordProgress = (TextView) findViewById(R.id.timerText);
 
         buttonStop.setEnabled(false);
         buttonPlayLastRecordAudio.setEnabled(false);
         buttonStopPlayingRecording.setEnabled(false);
         buttonUpload.setEnabled(false);
+        recordProgress.setVisibility(View.GONE);
 
         random = new Random();
 
@@ -83,7 +90,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                 if(checkPermission()) {
 
                     AudioSavePathInDevice =
-                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
+                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/    " +
                                     CreateRandomAudioFileName(5) + "AudioRecording.mp3";
 
                     MediaRecorderReady();
@@ -102,7 +109,9 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                     buttonStart.setEnabled(false);
                     buttonStop.setEnabled(true);
                     buttonUpload.setEnabled(false);
-
+                    recordProgress.setVisibility(View.VISIBLE);
+                    recordProgress.setText("");
+                    setTimerLabel("Recording Audio....");
                     Toast.makeText(AudioRecordTest.this, "Recording started",
                             Toast.LENGTH_LONG).show();
                 } else {
@@ -121,7 +130,8 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                 buttonStart.setEnabled(true);
                 buttonStopPlayingRecording.setEnabled(false);
                 buttonUpload.setEnabled(true);
-
+                t.interrupt();
+                miliSecs = 0;
                 Toast.makeText(AudioRecordTest.this, "Recording Completed",
                         Toast.LENGTH_LONG).show();
             }
@@ -146,6 +156,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                 }
 
                 mediaPlayer.start();
+                //setTimerLabel("Playing Audio....");
                 Toast.makeText(AudioRecordTest.this, "Recording Playing",
                         Toast.LENGTH_LONG).show();
             }
@@ -165,6 +176,8 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                     mediaPlayer.release();
                     MediaRecorderReady();
                 }
+                t.interrupt();
+                miliSecs = 0;
             }
         });
 
@@ -182,6 +195,30 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         });
 
     }
+
+    public  void setTimerLabel(final String label){
+        t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isDaemon()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                miliSecs += 1000;
+                                timer = Util.milliSecondsToTimer(miliSecs);
+                                recordProgress.setText(label + "  " + timer);
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    t.interrupt();
+                }
+            }
+        };
+        t.start();
+     }
 
     public void MediaRecorderReady(){
         mediaRecorder=new MediaRecorder();

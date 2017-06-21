@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,11 @@ import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by aubreymalabie on 3/18/17.
@@ -162,7 +166,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     public void setSelectedDate(Date selectedDate) {
 
-        this.selectedDate  = Util.getDateAtMidnite(selectedDate);
+        //this.selectedDate  = Util.getDateAtMidnite(selectedDate);
         btnDate.setText(sdf.format(this.selectedDate));
         if (dailyThought != null) {
             dailyThought.setDateScheduled(this.selectedDate.getTime());

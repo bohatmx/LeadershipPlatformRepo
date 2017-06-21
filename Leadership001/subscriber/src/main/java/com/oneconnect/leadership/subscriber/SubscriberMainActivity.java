@@ -96,6 +96,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.graphics.Color.RED;
+
 
 public class SubscriberMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -133,8 +135,10 @@ public class SubscriberMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         setContentView(R.layout.activity_subscriber_main);
-         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setLogo(R.drawable.leadership_logo);
         ctx = getApplicationContext();
 
         page = getIntent().getStringExtra("page");
@@ -147,6 +151,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         mPager = (ViewPager) findViewById(com.oneconnect.leadership.library.R.id.viewpager);
         PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip.setVisibility(View.VISIBLE);
+        strip.setTextColor(RED);
          setup();
 
         presenter = new SubscriberPresenter(this);
