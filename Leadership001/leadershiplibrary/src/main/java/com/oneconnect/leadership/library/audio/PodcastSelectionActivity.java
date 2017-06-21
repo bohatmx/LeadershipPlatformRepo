@@ -260,6 +260,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         image1 = (ImageView) findViewById(R.id.image1);
+        fab = (FloatingActionButton) findViewById(R.id.fabIcon);
        /* image1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,6 +273,19 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                 });
             }
         }); */
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(fab, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
         image2 = (ImageView) findViewById(R.id.image2);
         image2.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -99,7 +99,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         final DailyThoughtDTO dt = mList.get(position);
         final DailyViewHolder dvh = (DailyViewHolder) holder;
-        dvh.txtEvents.setText("" + (position + 1));
+        //dvh.txtEvents.setText("" + (position + 1));
         dvh.txtTitle.setText(dt.getTitle());
         dvh.txtSubtitle.setText(dt.getSubtitle());
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
@@ -432,7 +432,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public DailyViewHolder(View itemView) {
             super(itemView);
-            txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
+            //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
