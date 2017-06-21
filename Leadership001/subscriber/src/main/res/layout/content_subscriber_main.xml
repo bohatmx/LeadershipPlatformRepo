@@ -10,8 +10,8 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
-        android:layout_width="368dp"
-        android:layout_height="495dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="8dp">
@@ -22,7 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:paddingBottom="@dimen/mon_padding"
-            android:paddingTop="@dimen/mon_padding" />
+            android:paddingTop="@dimen/mon_padding"
+            android:backgroundTint="@color/blue_gray_100"
+            app:pstsShouldExpand="true"
+            />
     </android.support.v4.view.ViewPager>
     <!--<fragment
         android:layout_width="match_parent"

@@ -79,7 +79,11 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 //        dvh.txtEvents.setText("" + (position + 1));
         dvh.txtTitle.setText(dt.getTitle());
         dvh.txtSubtitle.setText(dt.getSubtitle());
-        dvh.txtDate.setText(dt.getStringDateScheduled());
+        StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
+        sb.deleteCharAt(sb.indexOf(","));
+        long miliSecs = Util.getMiliseconds(sb.toString());
+        String formatedDate = Util.getFormattedDate(miliSecs);
+        dvh.txtDate.setText(formatedDate);
         dvh.iconCamera.setImageDrawable(ctx.getDrawable(R.drawable.ic_photo_black_24dp));
         dvh.iconUpdate.setImageDrawable(ctx.getDrawable(R.drawable.ic_link_black_24dp));
 

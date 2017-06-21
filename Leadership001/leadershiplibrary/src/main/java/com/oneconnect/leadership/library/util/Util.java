@@ -189,7 +189,7 @@ public class Util {
      * Timer Format
      * Hours:Minutes:Seconds
      * */
-    public String milliSecondsToTimer(long milliseconds){
+    static public String milliSecondsToTimer(long milliseconds){
         String finalTimerString = "";
         String secondsString = "";
 
@@ -309,7 +309,7 @@ public class Util {
         Calendar now = Calendar.getInstance();
 
         final String timeFormatString = "h:mm aa";
-        final String dateTimeFormatString = "dd-MM-yyyy HH:mm";
+        final String dateTimeFormatString = "EEE, d MMM yyyy HH:mm";
 
         if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE) ) {
             return "Today " + DateFormat.format(timeFormatString, smsTime);

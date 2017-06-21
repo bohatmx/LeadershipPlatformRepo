@@ -344,7 +344,8 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
             @Override
             public void onAttachPhoto(EBookDTO ebook) {
-                startPhotoGallerySelection(ebook);
+                //startPhotoGallerySelection(ebook);
+                pickGalleryOrCamera(ebook);
             }
 
             @Override
@@ -712,8 +713,8 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
             @Override
             public void onAttachPhoto(EBookDTO ebook) {
-                startPhotoGallerySelection(ebook);
-                // pickGalleryOrCamera(ebook);
+                //startPhotoGallerySelection(ebook);
+                 pickGalleryOrCamera(ebook);
             }
 
             @Override

@@ -6,6 +6,17 @@
 
     <ImageView
         android:layout_centerHorizontal="true"
+        android:background="@color/green_200"
+        android:padding="10dp"
+        android:layout_toLeftOf="@+id/shareIcon"
+        android:src="@drawable/ic_cloud_upload"
+        android:id="@+id/uploadIMG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:layout_centerHorizontal="true"
         android:id="@+id/shareIcon"
         android:padding="@dimen/mon_pad"
         android:layout_toLeftOf="@+id/shareTxt"
