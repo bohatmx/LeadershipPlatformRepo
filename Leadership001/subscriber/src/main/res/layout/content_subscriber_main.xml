@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.oneconnect.leadership.subscriber.SubscriberMainActivity"
     tools:showIn="@layout/app_bar_subscriber_main">
+
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        app:pstsShouldExpand="true"
+        app:pstsTextAllCaps="true"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:pstsDividerColor="@color/green"
+        app:pstsIndicatorColor="@color/red_500"
+        app:pstsUnderlineColor="@color/blue_gray_100"
+        app:pstsTabPaddingLeftRight="14dp"
+        />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
-        <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/pager_title_strip"
-            style="@style/PagerSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:paddingBottom="@dimen/mon_padding"
-            android:paddingTop="@dimen/mon_padding"
-            android:backgroundTint="@color/blue_gray_100"
-            app:pstsShouldExpand="true"
-            />
-    </android.support.v4.view.ViewPager>
+        >
+       </android.support.v4.view.ViewPager>
     <!--<fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment"
         android:name="com.oneconnect.leadership.library.lists.DailyThoughtListFragment"
         />-->
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
+

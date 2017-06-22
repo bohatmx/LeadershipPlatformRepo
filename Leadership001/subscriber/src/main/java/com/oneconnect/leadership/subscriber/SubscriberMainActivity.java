@@ -36,6 +36,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -129,6 +130,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private SubscriberPresenter presenter;
     private UserDTO user;
     TextView usernametxt;
+    PagerSlidingTabStrip strip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +151,9 @@ public class SubscriberMainActivity extends AppCompatActivity
             usernametxt.setText(SharedPrefUtil.getUser(ctx).getFullName());
         }*/
         mPager = (ViewPager) findViewById(com.oneconnect.leadership.library.R.id.viewpager);
-        PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
+        //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
+        strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
         strip.setVisibility(View.VISIBLE);
         strip.setTextColor(RED);
          setup();
@@ -294,6 +298,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         try {
             adapter = new PagerAdapter(getSupportFragmentManager());
             mPager.setAdapter(adapter);
+            strip.setViewPager(mPager);
             mPager.setPageTransformer(true, new DepthPageTransformer());
             mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override

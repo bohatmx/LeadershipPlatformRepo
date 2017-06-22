@@ -156,7 +156,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                 }
 
                 mediaPlayer.start();
-                //setTimerLabel("Playing Audio....");
+                setTimerLabel("Playing Audio....");
                 Toast.makeText(AudioRecordTest.this, "Recording Playing",
                         Toast.LENGTH_LONG).show();
             }
