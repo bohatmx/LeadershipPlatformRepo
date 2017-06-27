@@ -248,6 +248,11 @@ public class SubscriberDrawerActivity extends AppCompatActivity
     }
 
     @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
     public void onPodcastTapped(PodcastDTO podcast) {
 
     }

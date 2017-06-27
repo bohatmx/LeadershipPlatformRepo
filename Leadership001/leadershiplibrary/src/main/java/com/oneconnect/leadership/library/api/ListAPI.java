@@ -72,7 +72,29 @@ public class ListAPI {
             }
         });
     }
+    public void getNewsArticle(String companyID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.NEWS);
+        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setNews(new ArrayList<NewsDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        NewsDTO u = shot.getValue(NewsDTO.class);
+                        bag.getNews().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
     public void getAllWeeklyMessages(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MESSAGES);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,6 +117,30 @@ public class ListAPI {
             }
         });
     }
+
+    public void getAllNewsArticle(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.NEWS);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setNews(new ArrayList<NewsDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        NewsDTO u = shot.getValue(NewsDTO.class);
+                        bag.getNews().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
 
     public void getAllEBooks(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.EBOOKS);

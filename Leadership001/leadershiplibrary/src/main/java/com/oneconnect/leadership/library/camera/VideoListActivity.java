@@ -285,6 +285,12 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
     private List<VideoDTO> videos = new ArrayList<>();
     AdminVideoAdapter adapter;
 

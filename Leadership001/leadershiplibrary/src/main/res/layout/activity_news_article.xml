@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.oneconnect.leadership.subscriber.SubscriberMainActivity">
+    tools:context="com.oneconnect.leadership.library.activities.NewsArticleActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,17 +15,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#be1d2c"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:contentInsetStartWithNavigation="0dp"
-            />
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_subscriber_main" />
+    <include layout="@layout/content_news_article" />
 
     <android.support.design.widget.FloatingActionButton
-        android:visibility="gone"
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

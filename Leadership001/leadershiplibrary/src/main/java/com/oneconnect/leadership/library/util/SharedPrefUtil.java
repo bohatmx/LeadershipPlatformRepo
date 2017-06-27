@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -83,6 +84,14 @@ public class SharedPrefUtil {
         ed.putString("dailyThought", gson.toJson(dt));
         ed.commit();
         Log.d(TAG, "saveDailyThought: " + dt.getTitle());
+    }
+
+    public static void saveNewsArticle(NewsDTO dt, Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putString("newsArticle", gson.toJson(dt));
+        ed.commit();
+        Log.d(TAG, "saveNewsArticle: " + dt.getTitle());
     }
 
     public static DailyThoughtDTO getDailyThought(Context ctx) {

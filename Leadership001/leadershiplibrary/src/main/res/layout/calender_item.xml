@@ -14,7 +14,7 @@
             android:src="@drawable/cal"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="100dp"
             android:scaleType="fitXY"/>
 
 
@@ -24,7 +24,7 @@
             android:layout_below="@+id/headerimg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue_900"
+            android:textColor="@color/blue_gray_600"
             android:textStyle="bold"
             android:textSize="16dp"
             android:text="Title"/>
@@ -35,7 +35,7 @@
             android:id="@+id/descriptiontxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue_900"
+            android:textColor="@color/blue_gray_600"
             android:text="Description"
             android:textSize="10dp"
             android:layout_below="@+id/titletxt"
@@ -69,8 +69,8 @@
                     android:id="@+id/startDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:textColor="@color/blue_900"
+                    android:textSize="8dp"
+                    android:textColor="@color/blue_gray_600"
                     android:text="Thursday 20 march 1945"/>
 
             </LinearLayout>
@@ -94,8 +94,8 @@
                     android:id="@+id/endDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:textColor="@color/blue_900"
+                    android:textSize="8dp"
+                    android:textColor="@color/blue_gray_600"
                     android:text="Thursday 20 march 1945"/>
 
             </LinearLayout>

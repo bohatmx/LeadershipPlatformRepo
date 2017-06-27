@@ -33,9 +33,9 @@ public class SubscriberContract {
         void getDailyThoughts(String companyID);
         void getAllCompanyDailyThoughts(String companyID);
         void getAllDailyThoughts();
+        void getAllNewsArticle();
         void getAllWeeklyMessages();
         void getAllWeeklyMasterClasses();
-
         void getAllVideos();
         void getAllPodcasts();
         void getAllEBooks();
@@ -67,6 +67,7 @@ public class SubscriberContract {
         void onDailyThoughts(List<DailyThoughtDTO> list);
         void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list);
         void onAllDailyThoughts(List<DailyThoughtDTO> list);
+        void onAllNewsArticle(List<NewsDTO> list);
         void onAllVideos(List<VideoDTO> list);
         void onAllEBooks(List<EBookDTO> list);
         void onAllPhotos(List<PhotoDTO> list);

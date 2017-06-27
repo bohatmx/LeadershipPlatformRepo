@@ -294,6 +294,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }
@@ -499,6 +504,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     @Override
     public void onCalendarTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
 
     }
 

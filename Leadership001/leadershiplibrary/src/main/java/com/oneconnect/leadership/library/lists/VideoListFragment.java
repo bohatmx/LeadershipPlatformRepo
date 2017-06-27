@@ -298,6 +298,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     }
 
     @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
     public void onDataCached() {
 
     }
@@ -404,6 +409,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
 
     }
 

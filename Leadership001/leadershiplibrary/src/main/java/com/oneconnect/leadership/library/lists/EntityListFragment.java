@@ -178,6 +178,11 @@ public class EntityListFragment extends BaseListingFragment {
             public void onCalendarTooltipRequired(int type) {
                mListener.onCalendarTooltipRequired(type);
             }
+
+            @Override
+            public void onNewsArticleRequested(BaseDTO entity) {
+                mListener.onNewsArticleRequested(entity);
+            }
         });
 
         recyclerView.setAdapter(adapter);

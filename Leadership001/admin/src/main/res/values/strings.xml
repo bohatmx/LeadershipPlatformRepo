@@ -16,6 +16,7 @@
     <string name="enter_category_name">Enter Category Name</string>
     <string name="submit_the_category_data">Submit the Category Data</string>
     <string name="enter_title">Enter Title</string>
+    <string name="enter_news">Enter News</string>
     <string name="enter_subtitle">Enter Subtitle</string>
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="title_activity_links">LinksActivity</string>

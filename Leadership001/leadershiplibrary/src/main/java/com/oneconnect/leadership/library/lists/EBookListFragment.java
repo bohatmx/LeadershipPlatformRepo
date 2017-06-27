@@ -392,6 +392,11 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
     public void onDataCached() {
 
     }
@@ -519,6 +524,11 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
 
     }
 

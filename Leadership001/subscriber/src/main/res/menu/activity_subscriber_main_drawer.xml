@@ -3,9 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single" >
-        <item android:title="Message"
-            app:itemBackground="@color/absa_red">
+        <item android:title="Message">
             <menu>
+                <item
+                    android:id="@+id/nav_news_article"
+                    android:icon="@drawable/ic_info"
+                    android:title="News Articles" />
                 <item
                     android:id="@+id/nav_daily_thought"
                     android:icon="@drawable/ic_comment_black_24dp"
@@ -22,8 +25,7 @@
         </item>
     </group>
 
-    <item android:title="Events"
-        app:itemBackground="@color/absa_red">
+    <item android:title="Events">
         <menu>
             <item
                 android:id="@+id/nav_calender_events"
@@ -32,8 +34,7 @@
         </menu>
     </item>
 
-    <item android:title="Media"
-        app:itemBackground="@color/absa_red">
+    <item android:title="Media">
         <menu>
             <item
                 android:id="@+id/nav_photo"
@@ -50,8 +51,7 @@
         </menu>
     </item>
 
-    <item android:title="Read"
-        app:itemBackground="@color/absa_red">
+    <item android:title="Read">
         <menu>
             <item
                 android:id="@+id/nav_eBooks"
@@ -60,8 +60,7 @@
         </menu>
     </item>
 
-    <item android:title="Sign out"
-        app:itemBackground="@color/absa_red">
+    <item android:title="Sign out">
         <menu>
             <item
                 android:id="@+id/nav_sign_out"

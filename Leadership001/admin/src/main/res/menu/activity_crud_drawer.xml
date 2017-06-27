@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_news_article"
+            android:icon="@drawable/ic_info"
+            android:tint="@color/blue_500"
+            android:title="News Articles" />
         <item
             android:id="@+id/nav_daily"
             android:icon="@drawable/ic_create"

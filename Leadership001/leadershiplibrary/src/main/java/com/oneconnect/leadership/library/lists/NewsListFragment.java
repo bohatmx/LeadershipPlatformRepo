@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
-import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.NewsArticleAdapter;
 import com.oneconnect.leadership.library.adapters.PhotoAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
-import com.oneconnect.leadership.library.cache.DailyThoughtCache;
+import com.oneconnect.leadership.library.cache.NewsCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -43,49 +43,48 @@ import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DailyThoughtListFragment} interface
- * to handle interaction events.
- * Use the {@link DailyThoughtListFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by Kurisani on 2017/06/26.
  */
-public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
-        BasicEntityAdapter.EntityListener{
 
+public class NewsListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
+        BasicEntityAdapter.EntityListener {
 
-    private DailyThoughtListener mListener;
+    private NewsArticleListener mListener;
     private RecyclerView recyclerView, photoRecyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
-    private ResponseBag  bag;
+    private ResponseBag bag;
     private EntityListFragment entityListFragment;
+    private int type;
+    private NewsDTO article;
+    private UserDTO user;
 
-    public DailyThoughtListFragment() {
+    private View view;
+    private Context ctx;
+
+    NewsArticleAdapter adapter;
+    private List<NewsDTO> newsArticletList = new ArrayList<>();
+
+    public NewsListFragment() {
         // Required empty public constructor
     }
 
-    public static DailyThoughtListFragment newInstance() {
-        DailyThoughtListFragment fragment = new DailyThoughtListFragment();
+    public static NewsListFragment newInstance() {
+        NewsListFragment fragment = new NewsListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
-
-    private int type;
-    private DailyThoughtDTO dailyThought;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             bag = (ResponseBag) getArguments().getSerializable("bag");
-            dailyThought = (DailyThoughtDTO) getArguments().getSerializable("dailyThought");
+            article = (NewsDTO) getArguments().getSerializable("newsArticle");
             type = getArguments().getInt("type", 0);
 
             presenter = new SubscriberPresenter(this);
@@ -96,18 +95,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         }
     }
 
-    private View view;
-    private Context ctx;
-
-    DailyThoughtAdapter adapter;
-    private List<DailyThoughtDTO> dailyThoughtList = new ArrayList<>();
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
+        view = inflater.inflate(R.layout.fragment_news_article, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
 
@@ -124,34 +116,29 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         photoRecyclerView.setHasFixedSize(true);
 
 
-        getCachedDailyThoughts();
-        getDailyThoughts();
+        getCachedNewsArticle();
+        getNewsArticle();
 
         return view;
     }
 
-    private UserDTO user;
+    public void getNewsArticle() {
+        Log.d(LOG, "************** getNewsArticles: " );
+        presenter.getAllNewsArticle();
 
-    public void getDailyThoughts() {
-        Log.d(LOG, "************** getDailyThoughts: " );
-//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllDailyThoughts();
-  //      } else {
-   //         Log.d(LOG, "user is null");
-    //    }
     }
 
-    private void getCachedDailyThoughts() {
-        DailyThoughtCache.getDailyThoughts(ctx, new DailyThoughtCache.ReadListener() {
+    private void getCachedNewsArticle() {
+        NewsCache.getNews(ctx, new NewsCache.ReadListener() {
             @Override
-            public void onDataRead(List<DailyThoughtDTO> dailyThoughts) {
-                Log.d(LOG, "onDataRead: DailyThoughts: " + dailyThoughts);
+            public void onDataRead(List<NewsDTO> article) {
+                Log.d(LOG, "onDataRead: newsArticle: " + article);
             }
 
             @Override
             public void onError(String message) {
 
-                getCachedDailyThoughts();
+                getCachedNewsArticle();
             }
         });
     }
@@ -159,13 +146,13 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DailyThoughtListener) {
-            mListener = (DailyThoughtListener) context;
+        if (context instanceof NewsArticleListener) {
+            mListener = (NewsArticleListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement DailyThoughtListener");
+                    + " must implement NewsArticleListener");
         }
-       }
+    }
 
     @Override
     public void onDetach() {
@@ -184,7 +171,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         this.pageTitle = pageTitle;
     }
 
-    static final String LOG = DailyThoughtListFragment.class.getSimpleName();
+    static final String LOG = NewsListFragment.class.getSimpleName();
 
     @Override
     public String getTitle() {
@@ -218,101 +205,27 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
-        Log.i(LOG, "onDailyThoughts: " + list.size());
-        this.dailyThoughtList = list;
-        Collections.sort(list);
-        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
-            }
+    }
 
-            @Override
-            public void onPhotoRequired(PhotoDTO photo) {
+    @Override
+    public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
 
-            }
+    }
 
-            @Override
-            public void onVideoRequired(VideoDTO video) {
+    @Override
+    public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
 
-            }
-
-            @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
-            }
-        });
-        recyclerView.setAdapter(adapter);
     }
 
     MiniPhotoAdapter miniPhotoAdapter;
-    @Override
-    public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
-        Log.i(LOG, "onAllCompanyDailyThoughts: " + list.size());
-        this.dailyThoughtList = list;
-        Collections.sort(list);
-        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
-
-            }
-
-            @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
-            }
-
-            @Override
-            public void onVideoRequired(VideoDTO video) {
-
-            }
-
-            @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
-            }
-        });
-        recyclerView.setAdapter(adapter);
-    }
 
     @Override
-    public void onAllDailyThoughts(final List<DailyThoughtDTO> list) {
-        Log.w(LOG, "onAllDailyThoughts: " + list.size());
-        this.dailyThoughtList = list;
+    public void onAllNewsArticle(final List<NewsDTO> list) {
+        Log.w(LOG, "onAllNewsArticle: " + list.size());
+        this.newsArticletList= list;
         Collections.sort(list);
-        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+        adapter = new NewsArticleAdapter(ctx, list, new NewsArticleAdapter.NewsArticleListener() {
             @Override
             public void onThoughtClicked(int position) {
 
@@ -350,11 +263,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             }
         });
         recyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onAllNewsArticle(List<NewsDTO> list) {
-
     }
 
     @Override
@@ -419,7 +327,47 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onNews(List<NewsDTO> list) {
+        Log.i(LOG, "onNews: " + list.size());
+        this.newsArticletList = list;
+        Collections.sort(list);
+        adapter = new NewsArticleAdapter(ctx, list, new NewsArticleAdapter.NewsArticleListener() {
+            @Override
+            public void onThoughtClicked(int position) {
 
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    @Override
+                    public void onPhotoClicked(PhotoDTO photo) {
+
+                    }
+                });
+                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+        });
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -614,8 +562,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
 
-    public interface DailyThoughtListener {
-        void onDailyThoughtTapped(DailyThoughtDTO dailyThought);
+    public interface NewsArticleListener {
+        void onNewsArticleTapped(NewsDTO article);
     }
 
 }

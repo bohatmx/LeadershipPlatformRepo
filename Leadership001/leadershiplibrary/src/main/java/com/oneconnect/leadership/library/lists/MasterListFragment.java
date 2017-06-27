@@ -251,6 +251,12 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void onCalendarTooltipRequired(int type) {
 
     }
+
+    @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
     @Override
     public void onDataCached() {
 
@@ -370,6 +376,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
 
     }
 

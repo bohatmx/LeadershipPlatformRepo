@@ -541,6 +541,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
     }
 
+    @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
     class FileContainer implements Comparable<FileContainer> {
         String fileName;
         Date date;

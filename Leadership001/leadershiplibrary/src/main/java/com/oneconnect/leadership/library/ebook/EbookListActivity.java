@@ -571,6 +571,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
     public void onDataCached() {
 
     }
@@ -677,6 +682,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
 
     }
 

@@ -40,6 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.activities.NewsArticleActivity;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
@@ -108,7 +109,7 @@ public class CrudActivity extends AppCompatActivity
     private EBookDTO ebook;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private PodcastDTO podcast;
-
+    private NewArticleEditor newArticleEditor;
     private DailyThoughtEditor dailyThoughtEditor;
     private WeeklyMessageEditor weeklyMessageEditor;
     private WeeklyMasterclassEditor weeklyMasterclassEditor;
@@ -228,6 +229,9 @@ public class CrudActivity extends AppCompatActivity
                 cal.set(year, month, day);
                 Date d = cal.getTime();
                 switch (sheetType) {
+                    case ResponseBag.NEWS:
+                        newArticleEditor.setSelectedDate(d);
+                        break;
                     case ResponseBag.DAILY_THOUGHTS:
                         dailyThoughtEditor.setSelectedDate(d);
                         break;
@@ -345,6 +349,41 @@ public class CrudActivity extends AppCompatActivity
         dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
 
     }
+
+    private void startNewsArticleBottomSheet(final NewsDTO article, int type) {
+
+        newArticleEditor = NewArticleEditor.newInstance(article, type);
+        newArticleEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                NewsDTO m = (NewsDTO) entity;
+                if (bag.getNews() == null) {
+                    bag.setNews(new ArrayList<NewsDTO>());
+                }
+                bag.getNews().add(0, m);
+                setFragment();
+                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+
+            }
+
+            @Override
+            public void onDateRequired() {
+                getDate(ResponseBag.NEWS);
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message, "bad", Constants.RED);
+            }
+        });
+
+        newArticleEditor.show(getSupportFragmentManager(), "SHEET_NEWS_ARTICLE");
+
+    }
+
+
+
 
     private void startWeeklyMessageBottomSheet(final WeeklyMessageDTO weeklyMessage, int type) {
 
@@ -499,10 +538,10 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.DAILY_THOUGHTS;
                 cachePresenter.getCacheDailyThoughts();
                 break;
-            /*case R.id.nav_ebooks:
-                type = ResponseBag.EBOOKS;
-                cachePresenter.getCacheEbooks();
-                break;*/
+            case R.id.nav_news_article:
+                type = ResponseBag.NEWS;
+                cachePresenter.getCacheNews();
+                break;
             /*case R.id.nav_podcasts:
                 type = ResponseBag.PODCASTS;
                 cachePresenter.getCachePodcasts();
@@ -575,6 +614,9 @@ public class CrudActivity extends AppCompatActivity
     public void onEntityAdded(String key) {
         Log.w(TAG, "onEntityAdded: ++++++++++ data has been added, key: ".concat(key));
         switch (type) {
+            case ResponseBag.NEWS:
+                newArticleEditor.dismiss();
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThoughtEditor.dismiss();
                 break;
@@ -903,6 +945,9 @@ public class CrudActivity extends AppCompatActivity
             case ResponseBag.CATEGORIES:
                 startCategoryBottomSheet(null, Constants.NEW_ENTITY);
                 break;
+            case ResponseBag.NEWS:
+                startNewsArticleBottomSheet(null, Constants.NEW_ENTITY);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
                 break;
@@ -949,6 +994,11 @@ public class CrudActivity extends AppCompatActivity
                 dailyThought = (DailyThoughtDTO) entity;
                 m = new Intent(this, LinksActivity.class);
                 m.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.NEWS:
+                article = (NewsDTO) entity;
+                m = new Intent(this, NewsArticleActivity.class);
+                m.putExtra("newsArticle", article);
                 break;
             case ResponseBag.PODCASTS:
                 podcast = (PodcastDTO) entity;
@@ -1044,6 +1094,10 @@ public class CrudActivity extends AppCompatActivity
         Intent m = new Intent(this, VideoSelectionActivity.class);
         m.putExtra("type", type);
         switch (type) {
+            case ResponseBag.NEWS:
+                article = (NewsDTO) base;
+                m.putExtra("newsArticle", article);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) base;
                 m.putExtra("dailyThought", dailyThought);
@@ -1065,6 +1119,10 @@ public class CrudActivity extends AppCompatActivity
         Intent intent = new Intent(this, PhotoSelectionActivity.class);
         intent.putExtra("type", type);
         switch (type) {
+            case ResponseBag.NEWS:
+                article = (NewsDTO) base;
+                intent.putExtra("newsArticle", article);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) base;
                 intent.putExtra("dailyThought", dailyThought);
@@ -1090,6 +1148,10 @@ public class CrudActivity extends AppCompatActivity
         Intent m = new Intent(this, CameraActivity.class);
         m.putExtra("type", CameraActivity.VIDEO_REQUEST);
         switch (type) {
+            case ResponseBag.NEWS:
+                article = (NewsDTO) entity;
+                m.putExtra("newsArticle", article);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) entity;
                 m.putExtra("dailyThought", dailyThought);
@@ -1142,6 +1204,10 @@ public class CrudActivity extends AppCompatActivity
         Intent intent = new Intent(this, PodcastSelectionActivity.class);
         intent.putExtra("type", type);
         switch (type) {
+            case ResponseBag.NEWS:
+                article = (NewsDTO) base;
+                intent.putExtra("newsArticle", article);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) base;
                 intent.putExtra("dailyThought", dailyThought);
@@ -1160,6 +1226,7 @@ public class CrudActivity extends AppCompatActivity
 
 
     DailyThoughtDTO dailyThought;
+    NewsDTO article;
 
     @Override
     public void onEntityClicked(BaseDTO entity) {
@@ -1174,6 +1241,11 @@ public class CrudActivity extends AppCompatActivity
         }
         Log.w(TAG, "onCalendarRequested: .......".concat(GSON.toJson(entity)));
         switch (type) {
+            case ResponseBag.NEWS:
+                article = (NewsDTO) entity;
+                SharedPrefUtil.saveNewsArticle(article, this);
+                startCalendar(ResponseBag.NEWS, article);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) entity;
                 SharedPrefUtil.saveDailyThought(dailyThought, this);
@@ -1203,6 +1275,9 @@ public class CrudActivity extends AppCompatActivity
         Intent m = new Intent(this, MediaListActivity.class);
         m.putExtra("type", entityType);
         switch (entityType) {
+            case ResponseBag.NEWS:
+                m.putExtra("newsArticle", (NewsDTO) entity);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 m.putExtra("dailyThought", (DailyThoughtDTO) entity);
                 break;
@@ -1275,6 +1350,13 @@ public class CrudActivity extends AppCompatActivity
     }
 
     @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+        isTooltip = true;
+        Toasty.success(this, "Add News article to this record",
+                Toast.LENGTH_SHORT, true).show();
+    }
+
+    @Override
     public void onActivityResult(int reqCode, int result, Intent data) {
         Log.w(TAG, "########## onActivityResult: result: " + result
                 + " reqCode: " + reqCode);
@@ -1288,7 +1370,7 @@ public class CrudActivity extends AppCompatActivity
             case CameraActivity.VIDEO_REQUEST:
                 confirmUpload(data);
                 break;
-            case /*PhotoSelectionActivity.PHOTO_REQUEST*/REQUEST_PHOTO:
+            case REQUEST_PHOTO:
                 if (reqCode == Activity.RESULT_OK) {
                   //  data
                 }
@@ -1320,6 +1402,9 @@ public class CrudActivity extends AppCompatActivity
 
     private void saveFiles(Intent data) {
         switch (type) {
+            case ResponseBag.NEWS:
+                saveNewsArticleFiles(data);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 saveDailyThoughtFiles(data);
                 break;
@@ -1354,7 +1439,25 @@ public class CrudActivity extends AppCompatActivity
         startVideoService();
 
     }
+    private void saveNewsArticleFiles(Intent data) {
+        ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
+        if (bag == null) return;
+        Log.d(TAG, "saveNewsArticleFiles: .......");
+        for (PhotoDTO p : bag.getPhotos()) {
+            p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            p.setCaption(dailyThought.getTitle());
+            PhotoCache.addPhoto(p, this, null);
+        }
+        for (VideoDTO p : bag.getVideos()) {
+            p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            p.setCaption(dailyThought.getTitle());
+            Log.e(TAG, "saveDailyThoughtFiles: ".concat(GSON.toJson(p)));
+            VideoCache.addVideo(p, this, null);
+        }
+        startPhotoService();
+        startVideoService();
 
+    }
     private void saveWeeklyMessageFiles(Intent data) {
         ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
         if (bag == null) return;

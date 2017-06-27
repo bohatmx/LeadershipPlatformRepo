@@ -3,15 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/mon_padding"
-    android:layout_marginLeft="@dimen/mon_margin"
-    android:layout_marginRight="@dimen/mon_margin"
-    app:cardElevation="@dimen/mon_divider_small">
+    android:layout_margin="@dimen/mon_padding">
 
     <RelativeLayout
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <RelativeLayout
             android:id="@+id/frame"
@@ -72,30 +70,41 @@
             android:layout_marginTop="@dimen/mon_margin"
             android:layout_toRightOf="@id/frame">
 
+
             <RelativeLayout
                 android:id="@+id/t0"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/ImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:src="@drawable/coffee_phone"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:scaleType="fitXY" />
 
                 <ImageView
                     android:id="@+id/iconCalendar"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@drawable/share" />
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_dots"
+                    android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/txtEvents"
+                    android:id="@+id/txtDate"
+                    android:layout_toEndOf="@+id/iconCalendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/mon_margin"
-                    android:layout_toLeftOf="@+id/iconCalendar"
-                    android:text="0"
-                    android:textColor="@color/pink_600"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:layout_alignLeft="@id/ImageView"
+                    android:layout_alignTop="@id/ImageView"
+                    android:layout_alignRight="@id/ImageView"
+                    android:layout_alignBottom="@id/ImageView"
+                    android:text="Wednesday 30 December 2099 12:36"
+                    android:textSize="16dp"
+                    android:textColor="@color/white"
+                    android:gravity="bottom"/>
             </RelativeLayout>
 
             <TextView
@@ -103,55 +112,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/t0"
-                android:layout_marginLeft="@dimen/mon_margin"
-                android:layout_marginTop="@dimen/mon_divider"
+                android:layout_marginLeft="@dimen/mon_pad"
                 android:text="A title will be placed here - daily thought etc. The length here is important and should be the most prominent on this screen."
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="normal" />
 
             <TextView
-                android:id="@+id/txtDate"
+                android:id="@+id/txtSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtTitle"
-                android:layout_marginBottom="@dimen/mon_wide"
-                android:layout_marginLeft="@dimen/mon_margin"
-                android:layout_marginTop="@dimen/mon_margin"
-                android:text="Wednesday 30 December 2099 12:36"
-                android:textColor="@color/blue_800"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_below="@+id/txtTitle"
+                android:layout_marginLeft="@dimen/mon_pad"
+                android:layout_marginRight="@dimen/mon_margin"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="little happy space"
+                android:textColor="@color/indigo_500"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/bottomLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/titleLayout"
-            android:layout_marginTop="@dimen/mon_wide"
+            android:layout_below="@+id/titleLayout"
             android:background="@color/grey_100"
-            android:paddingTop="@dimen/mon_wide">
-
-            <TextView
-                android:id="@+id/txtSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/mon_margin"
-                android:layout_marginRight="@dimen/mon_margin"
-                android:text="A subtitle of some sort will ingabit this little happy space. Hopefully there will be a little meat so that this text does not look too skinny."
-                android:textColor="@color/indigo_500"
-                android:textSize="16sp"
-                android:textStyle="normal" />
-
+            android:padding="12dp">
 
             <LinearLayout
                 android:id="@+id/iconLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtSubtitle"
-                android:layout_marginTop="@dimen/mon_wider"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/mon_wide">
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:id="@+id/deleteLayout"
@@ -162,8 +157,8 @@
 
                     <ImageView
                         android:id="@+id/iconDelete"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_cancel"
                         android:tint="@color/orange_800" />
@@ -186,8 +181,8 @@
 
                     <ImageView
                         android:id="@+id/iconUpdate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_create"
                         android:tint="@color/blue_500" />
@@ -202,7 +197,7 @@
                         android:alpha="0.5"
                         android:text="0"
                         android:textColor="@color/blue_500"
-                        android:textSize="20sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -215,8 +210,8 @@
 
                     <ImageView
                         android:id="@+id/iconMicrophone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_microphone"
                         android:tint="@color/teal_700" />
@@ -231,8 +226,10 @@
                         android:alpha="0.5"
                         android:text="0"
                         android:textColor="@color/teal_700"
-                        android:textSize="20sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
+
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -272,8 +269,8 @@
 
                     <ImageView
                         android:id="@+id/iconVideo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_videocam" />
 
@@ -287,7 +284,7 @@
                         android:alpha="0.5"
                         android:text="0"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -300,8 +297,8 @@
 
                     <ImageView
                         android:id="@+id/iconCamera"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_camera"
                         android:tint="@color/red_700" />
@@ -316,12 +313,107 @@
                         android:alpha="0.5"
                         android:text="0"
                         android:textColor="@color/red_700"
-                        android:textSize="20sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/shareLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iconShare"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_share"
+                        android:tint="@color/red_700" />
+
                 </RelativeLayout>
 
 
             </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/imageRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:scrollbars="vertical" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/videoRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:scrollbars="vertical" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/urlRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:scrollbars="vertical" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/podcastRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:scrollbars="vertical" />
+
+            <RelativeLayout
+                android:id="@+id/podcastAdapterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:visibility="gone">
+
+                <include
+                    layout="@layout/audio_item"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/videoAdapterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:visibility="gone">
+
+                <include
+                    layout="@layout/mini_video_item"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/photoAdapterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:visibility="gone">
+
+                <include
+                    layout="@layout/photos_item"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/urlAdapterLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iconLayout"
+                android:visibility="gone">
+
+                <include
+                    layout="@layout/url_item"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
 
         </RelativeLayout>

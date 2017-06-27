@@ -275,6 +275,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     }
 
     @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }
@@ -457,6 +462,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     @Override
     public void onCalendarTooltipRequired(int type) {
+
+    }
+
+    @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
 
     }
 

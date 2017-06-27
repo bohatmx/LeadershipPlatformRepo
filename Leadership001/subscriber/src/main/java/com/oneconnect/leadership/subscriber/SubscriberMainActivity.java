@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -52,6 +53,7 @@ import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.activities.VideoActivity;
 import com.oneconnect.leadership.library.activities.eBookActivity;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
+import com.oneconnect.leadership.library.adapters.NewsArticleAdapter;
 import com.oneconnect.leadership.library.adapters.WeeklyMessageAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -70,6 +72,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -81,6 +84,7 @@ import com.oneconnect.leadership.library.lists.EBookListFragment;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.lists.MasterListFragment;
 import com.oneconnect.leadership.library.lists.MediaListActivity;
+import com.oneconnect.leadership.library.lists.NewsListFragment;
 import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
@@ -106,7 +110,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         MasterListFragment.WeeklyMasterClassListener, WeeklyMessageListFragment.WeeklyMessageListener,
         CalendarEventListFragment.CalendarEventListener,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
-        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener{
+        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener, NewsListFragment.NewsArticleListener{
 
 
     private WeeklyMessageDTO weeklyMessage;
@@ -132,6 +136,11 @@ public class SubscriberMainActivity extends AppCompatActivity
     TextView usernametxt;
     PagerSlidingTabStrip strip;
 
+    //Bottom Navigation
+    private TextView textFavorites;
+    private TextView textSchedules;
+    private TextView textMusic;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +153,38 @@ public class SubscriberMainActivity extends AppCompatActivity
         ctx = getApplicationContext();
 
         page = getIntent().getStringExtra("page");
+
+      /*   textFavorites = (TextView) findViewById(R.id.text_favorites);
+        textSchedules = (TextView) findViewById(R.id.text_schedules);
+        textMusic = (TextView) findViewById(R.id.text_music);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+
+       bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_favorites:
+                                textFavorites.setVisibility(View.VISIBLE);
+                                textSchedules.setVisibility(View.GONE);
+                                textMusic.setVisibility(View.GONE);
+                                break;
+                            case R.id.action_schedules:
+                                textFavorites.setVisibility(View.GONE);
+                                textSchedules.setVisibility(View.VISIBLE);
+                                textMusic.setVisibility(View.GONE);
+                                break;
+                            case R.id.action_music:
+                                textFavorites.setVisibility(View.GONE);
+                                textSchedules.setVisibility(View.GONE);
+                                textMusic.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                        return false;
+                    }
+                });*/
 
 
         usernametxt = (TextView) findViewById(R.id.usernametxt);
@@ -258,6 +299,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     WeeklyMessageListFragment weeklyMessageListFragment;
     PhotoListFragment photoListFragment;
     CalendarEventListFragment calendarEventListFragment;
+    NewsListFragment newsListFragment;
 
 
     private void setUpViewPager() {
@@ -272,8 +314,9 @@ public class SubscriberMainActivity extends AppCompatActivity
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
         eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
         calendarEventListFragment = CalendarEventListFragment.newInstance();
+        newsListFragment = NewsListFragment.newInstance();
 
-
+        newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
         dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
         masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
         weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
@@ -283,16 +326,14 @@ public class SubscriberMainActivity extends AppCompatActivity
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
         calendarEventListFragment.setPageTitle(ctx.getString(R.string.calendar_events));
 
-
-         pageFragmentList.add(dailyThoughtListFragment);
+        pageFragmentList.add(newsListFragment);
+        pageFragmentList.add(dailyThoughtListFragment);
         pageFragmentList.add(masterListFragment);
         pageFragmentList.add(weeklyMessageListFragment);
         pageFragmentList.add(photoListFragment);
-
         pageFragmentList.add(videoListFragment);
         pageFragmentList.add(podcastListFragment);
         pageFragmentList.add(eBookListFragment);
-
         pageFragmentList.add(calendarEventListFragment);
 
         try {
@@ -322,30 +363,35 @@ public class SubscriberMainActivity extends AppCompatActivity
         } catch (Exception e) {
             Log.e(LOG, "PagerAdapter failed", e);
             if (page != null) {
-                if (page.equalsIgnoreCase("Daily Thoughts")) {
+
+                if (page.equalsIgnoreCase("News Article")) {
                     mPager.setCurrentItem(0);
                 }
-                if (page.equalsIgnoreCase("Weekly Master Classes")) {
+                if (page.equalsIgnoreCase("Daily Thoughts")) {
                     mPager.setCurrentItem(1);
                 }
-                if (page.equalsIgnoreCase("Weekly Message")) {
+                if (page.equalsIgnoreCase("Weekly Master Classes")) {
                     mPager.setCurrentItem(2);
                 }
-                if (page.equalsIgnoreCase("Photo")) {
+                if (page.equalsIgnoreCase("Weekly Message")) {
                     mPager.setCurrentItem(3);
                 }
-                if (page.equalsIgnoreCase("Video")) {
+                if (page.equalsIgnoreCase("Photo")) {
                     mPager.setCurrentItem(4);
                 }
-                if (page.equalsIgnoreCase("Podcast")) {
+                if (page.equalsIgnoreCase("Video")) {
                     mPager.setCurrentItem(5);
                 }
-                if (page.equalsIgnoreCase("eBooks")) {
+                if (page.equalsIgnoreCase("Podcast")) {
                     mPager.setCurrentItem(6);
                 }
-                if (page.equalsIgnoreCase("Calendar Event")) {
+                if (page.equalsIgnoreCase("eBooks")) {
                     mPager.setCurrentItem(7);
                 }
+                if (page.equalsIgnoreCase("Calendar Event")) {
+                    mPager.setCurrentItem(8);
+                }
+
             }
         }
 
@@ -359,38 +405,43 @@ public class SubscriberMainActivity extends AppCompatActivity
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 drawer.closeDrawers();
-                if (item.getItemId() == R.id.nav_daily_thought) {
+                if (item.getItemId() == R.id.nav_news_article) {
                     mPager.setCurrentItem(0, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_master) {
+                if (item.getItemId() == R.id.nav_daily_thought) {
                     mPager.setCurrentItem(1, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_weekly_message) {
+                if (item.getItemId() == R.id.nav_master) {
                     mPager.setCurrentItem(2, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_photo) {
+                if (item.getItemId() == R.id.nav_weekly_message) {
                     mPager.setCurrentItem(3, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_video) {
+                if (item.getItemId() == R.id.nav_photo) {
                     mPager.setCurrentItem(4, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_podcast) {
+                if (item.getItemId() == R.id.nav_video) {
                     mPager.setCurrentItem(5, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_eBooks) {
+                if (item.getItemId() == R.id.nav_podcast) {
                     mPager.setCurrentItem(6, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_calender_events) {
+                if (item.getItemId() == R.id.nav_eBooks) {
                     mPager.setCurrentItem(7, true);
                     return true;
                 }
+                if (item.getItemId() == R.id.nav_calender_events) {
+                    mPager.setCurrentItem(8, true);
+                    return true;
+                }
+
                 if (item.getItemId() == R.id.nav_sign_out) {
                     FirebaseAuth.getInstance().signOut();
                     Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
@@ -459,6 +510,11 @@ public class SubscriberMainActivity extends AppCompatActivity
         setFragment();
         cachePresenter.cacheDailyThoughts(list);
         presenter.getAllDailyThoughts();
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
+
     }
 
     @Override
@@ -811,6 +867,11 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
     public void onPhotoTapped(PhotoDTO photo) {
 
     }
@@ -847,6 +908,11 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onCalendarEventTapped(CalendarEventDTO calendarEvent) {
+
+    }
+
+    @Override
+    public void onNewsArticleTapped(NewsDTO article) {
 
     }
 
@@ -940,42 +1006,40 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
-        if (id == R.id.nav_daily_thought) {
+        if (id == R.id.nav_news_article) {
             mPager.setCurrentItem(0, true);
-            /*Intent intent = new Intent(SubscriberMainActivity.this, DailyThoughtActivity.class);
-            startActivity(intent);*/
+            return true;
+        }
+        else if (id == R.id.nav_daily_thought) {
+            mPager.setCurrentItem(1, true);
             return true;
 
-        } else if (id == R.id.nav_podcast) {
+        }  else if (id == R.id.nav_master) {
+            mPager.setCurrentItem(2, true);
+            return true;
+
+        } else if (id == R.id.nav_weekly_message) {
+            mPager.setCurrentItem(3, true);
+            return true;
+        }else if (id == R.id.nav_podcast) {
             Intent intent = new Intent(SubscriberMainActivity.this, PodcastActivity.class);
             startActivity(intent);
-
             return true;
+
         } else if (id == R.id.nav_video) {
             Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
             startActivity(intent);
             return true;
+
         } else if (id == R.id.nav_eBooks) {
             Intent intent = new Intent(SubscriberMainActivity.this, eBookActivity.class);
             startActivity(intent);
             return true;
         }
-        else if (id == R.id.nav_master) {
-            mPager.setCurrentItem(1, true);
-            return true;
-        } else if (id == R.id.nav_weekly_message) {
-            mPager.setCurrentItem(2, true);
-        }
-        /*else if (id == R.id.nav_sign_out) {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
-            startActivity(intent);
-            finish();
-        }
-*/
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -20,6 +20,7 @@ import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
@@ -71,6 +72,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         void onMicrophoneTooltipRequired(int type);
 
         void onCalendarTooltipRequired(int type);
+
+        void onNewsArticleRequested(BaseDTO entity);
+
+
 
 
     }
@@ -262,6 +267,11 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 setCategories(h, position, (CategoryDTO) p);
                 break;
 
+
+            case ResponseBag.NEWS:
+                setNews(h, position, (NewsDTO) p);
+                break;
+
             case ResponseBag.DAILY_THOUGHTS:
                 setDailyThought(h, position, (DailyThoughtDTO) p);
                 break;
@@ -345,6 +355,46 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         if (p.getPodcasts() != null) {
             h.txtPodcasts.setText(String.valueOf(p.getPodcasts().size()));
         }
+        h.txtNumBlack.setVisibility(View.VISIBLE);
+        h.txtNumBlack.setText(String.valueOf(position + 1));
+        h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_schedule));
+
+        h.linksLayout.setVisibility(View.VISIBLE);
+        h.photosLayout.setVisibility(View.VISIBLE);
+        h.videosLayout.setVisibility(View.VISIBLE);
+        h.micLayout.setVisibility(View.VISIBLE);
+
+        h.calLayout.setVisibility(View.VISIBLE);
+       /* if (p.getCalendarEvents() == null) {
+            h.txtEvents.setVisibility(View.GONE);
+        } else {
+            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
+            h.txtEvents.setVisibility(View.VISIBLE);
+        }*/
+    }
+
+    private void setNews(EntityViewHolder h, int position, NewsDTO p) {
+        h.txtTitle.setText(p.getTitle());
+        if (p.getDateScheduled() != null) {
+            h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
+            h.txtDate.setVisibility(View.VISIBLE);
+        } else {
+            h.txtDate.setVisibility(View.GONE);
+        }
+        h.txtSubTitle.setText(p.getSubtitle());
+
+        if (p.getPhotos() != null) {
+            h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
+        }
+        if (p.getVideos() != null) {
+            h.txtVideos.setText(String.valueOf(p.getVideos().size()));
+        }
+        if (p.getUrls() != null) {
+            h.txtLinks.setText(String.valueOf(p.getUrls().size()));
+        }
+        /*if (p.getPodcasts() != null) {
+            h.txtPodcasts.setText(String.valueOf(p.getPodcasts().size()));
+        }*/
         h.txtNumBlack.setVisibility(View.VISIBLE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
         h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_schedule));
