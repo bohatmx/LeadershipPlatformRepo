@@ -17,14 +17,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.audio.PodcastAdapter;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.photo.PhotoAdapter;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.photo.PhotoUploadContract;
@@ -80,6 +85,8 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     ImageView books, booksimg;
     private Toolbar toolbar;
     Context ctx;
+    SearchView searchView = null;
+    List<String> filePathList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,7 +242,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             }
         }
     }
-    List<String> filePathList;
+
     BaseDTO base;
     public void getEbooksOnDevice() {
 
@@ -292,6 +299,64 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             recyclerView.setAdapter(adapter);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu) {
+        getMenuInflater().inflate( R.menu.menu_search, menu);
+
+        final MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.i(TAG, "eBook to search: " + query);
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                myActionMenuItem.collapseActionView();
+                ArrayList<String> searchResult = getSearchList(query);
+                EbookAdapter adapter = new EbookAdapter(searchResult, EbookSelectionActivity.this, eBook, new EbookAdapter.EbookAdapterListener() {
+                    @Override
+                    public void onUploadEbook(String path) {
+                        confirmUpload(path);
+                    }
+
+                    @Override
+                    public void onReadEbook(String path) {
+                        readEbook(path);
+                    }
+
+                    @Override
+                    public void onPhotoUpload(BaseDTO base) {
+                        pickGalleryOrCamera(base);
+                    }
+
+                });
+                recyclerView.setAdapter(adapter);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    private ArrayList<String> getSearchList(String word){
+        ArrayList<String> list = new ArrayList<>();
+        String path;
+        for (int i = 0; i < filePathList.size(); i++){
+            path = filePathList.get(i);
+            if(Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE).matcher(path).find()){
+                list.add(filePathList.get(i));
+            }
+        }
+        return  list;
+    }
+
 
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
