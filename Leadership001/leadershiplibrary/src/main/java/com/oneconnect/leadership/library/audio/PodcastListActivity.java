@@ -70,7 +70,7 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_podcast_selection);
+        setContentView(R.layout.activity_podcast_list);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -120,8 +120,8 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
         }
         if (getIntent().getSerializableExtra("video") != null) {
             type = ResponseBag.VIDEOS;
-            eBook = (EBookDTO) getIntent().getSerializableExtra("video");
-            getSupportActionBar().setSubtitle(eBook.getStorageName());
+            video = (VideoDTO) getIntent().getSerializableExtra("video");
+            getSupportActionBar().setSubtitle(video.getStorageName());
         }
         if (getIntent().getSerializableExtra("url") != null) {
             type = ResponseBag.URLS;
@@ -154,7 +154,7 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
             }
         }); */
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.podRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getCachedPodcasts();

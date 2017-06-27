@@ -171,7 +171,7 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
 
-        vvh.imageUploadIcon.setOnClickListener(new View.OnClickListener() {
+        vvh.eBookMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Util.flashOnce(vvh.imageUploadIcon, 300, new Util.UtilAnimationListener() {
@@ -233,7 +233,7 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName, txtVideo, txtMicrophone, txtCamera, txtLinks;
         protected ImageView image, bookIcon, iconshar, imageUploadIcon, uploadIcon, readIcon,
-                iconUpdate, iconMicrophone, iconVideo, iconCamera;
+                iconUpdate, iconMicrophone, iconVideo, iconCamera, eBookMenu;
         protected Button btnPlay, btnUpload;
         protected RelativeLayout bottomLayout;
 
@@ -261,6 +261,8 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             readIcon.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             bottomLayout.setVisibility(View.GONE);
+            eBookMenu = (ImageView) itemView.findViewById(R.id.ebook_menu);
+            eBookMenu.setVisibility(View.VISIBLE);
         }
     }
 }
