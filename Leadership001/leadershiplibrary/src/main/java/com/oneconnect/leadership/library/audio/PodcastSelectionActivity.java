@@ -15,6 +15,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -32,12 +34,14 @@ import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
+import android.support.v7.widget.SearchView;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import io.reactivex.internal.schedulers.SchedulerPoolFactory;
 
@@ -58,6 +62,8 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     private PodcastUploadPresenter presenter;
     public static final String TAG = PodcastSelectionActivity.class.getSimpleName();
     ImageView image1, image2;
+    SearchView searchView = null;
+    ArrayList<String> downloadedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +153,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         } catch (Exception e) {
             Log.e(TAG, "getPodcastsOnDevice: ", e);
         }
-        ArrayList<String> downloadedList = new ArrayList<>(podcastItemHashSet);
+        downloadedList = new ArrayList<>(podcastItemHashSet);
         for (String id : downloadedList) {
             Log.e(TAG, "getPodcastsOnDevice: ".concat(id));
         }
@@ -332,4 +338,56 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     public void onError(String message) {
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu) {
+        getMenuInflater().inflate( R.menu.menu_search, menu);
+
+        final MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.i(TAG, "podcast to search: " + query);
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                myActionMenuItem.collapseActionView();
+                ArrayList<String> searchResult = getSearchList(query);
+                PodcastAdapter adapter = new PodcastAdapter(searchResult, PodcastSelectionActivity.this, new PodcastAdapter.AudioAdapterListener() {
+                    @Override
+                    public void onPlayAudioTapped(String path) {
+                        playAudio(path);
+                    }
+
+                    @Override
+                    public void onUploadAudioTapped(String path) {
+                        confirmUpload(path);
+                    }
+                });
+                recyclerView.setAdapter(adapter);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    private ArrayList<String> getSearchList(String word){
+        ArrayList<String> list = new ArrayList<>();
+        String path;
+        for (int i = 0; i < downloadedList.size(); i++){
+            path = downloadedList.get(i);
+            if(Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE).matcher(path).find()){
+                list.add(downloadedList.get(i));
+            }
+        }
+        return  list;
+    }
+
 }

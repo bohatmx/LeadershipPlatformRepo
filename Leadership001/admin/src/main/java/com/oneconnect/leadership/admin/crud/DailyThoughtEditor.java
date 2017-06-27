@@ -166,8 +166,8 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     public void setSelectedDate(Date selectedDate) {
 
-        //this.selectedDate  = Util.getDateAtMidnite(selectedDate);
-        btnDate.setText(sdf.format(this.selectedDate));
+        this.selectedDate  = Util.getDateAtMidnite(selectedDate);
+        btnDate.setText(sdf.format(selectedDate));
         if (dailyThought != null) {
             dailyThought.setDateScheduled(this.selectedDate.getTime());
             if (isReadyToSend) {

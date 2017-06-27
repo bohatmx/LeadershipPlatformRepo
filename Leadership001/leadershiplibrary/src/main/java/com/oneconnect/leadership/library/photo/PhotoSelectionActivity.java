@@ -11,12 +11,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.audio.PodcastAdapter;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -39,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import es.dmoral.toasty.Toasty;
 
@@ -60,6 +66,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     private WeeklyMasterClassDTO weeklyMasterClass;
     private Snackbar snackbar;
     public static final int PHOTO_REQUEST = 100000;
+    SearchView searchView = null;
+    ArrayList<String> resultIAV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +197,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         String[] projection = {MediaStore.Images.ImageColumns.DATA};
         Cursor c = null;
         SortedSet<String> dirList = new TreeSet<String>();
-        ArrayList<String> resultIAV = new ArrayList<String>();
+        resultIAV = new ArrayList<String>();
 
         String[] directories = null;
         if (u != null)
@@ -270,6 +278,59 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         return resultIAV;
 
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu) {
+        getMenuInflater().inflate( R.menu.menu_search, menu);
+
+        final MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                myActionMenuItem.collapseActionView();
+                ArrayList<String> searchResult = getSearchList(query);
+                PhotoAdapter adapter = new PhotoAdapter(searchResult, PhotoSelectionActivity.this, new PhotoAdapter.PhotoAdapterListener() {
+                    @Override
+                    public void onUploadPhoto(String path) {
+                        confirmUpload(path);
+                    }
+
+                    @Override
+                    public void onViewPhoto(String path) {
+                        //viewPhoto(path);
+                    }
+
+                });
+
+                recyclerView.setAdapter(adapter);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    private ArrayList<String> getSearchList(String word){
+        ArrayList<String> list = new ArrayList<>();
+        String path;
+        for (int i = 0; i < resultIAV.size(); i++){
+            path = resultIAV.get(i);
+            if(Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE).matcher(path).find()){
+                list.add(resultIAV.get(i));
+            }
+        }
+        return  list;
     }
     List<String> filePathList;
 

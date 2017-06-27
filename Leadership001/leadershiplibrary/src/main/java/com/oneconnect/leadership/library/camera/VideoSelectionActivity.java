@@ -13,13 +13,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -29,6 +33,8 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.ebook.EbookAdapter;
+import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
@@ -39,6 +45,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class VideoSelectionActivity extends AppCompatActivity implements VideoUploadContract.View {
@@ -57,6 +64,8 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     private VideoUploadPresenter presenter;
     public static final String TAG = VideoSelectionActivity.class.getSimpleName();
     ImageView image1, image2;
+    SearchView searchView = null;
+    ArrayList<String> downloadedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +171,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         } catch (Exception e) {
             Log.e(TAG, "getVideosOnDevice: ", e);
         }
-        ArrayList<String> downloadedList = new ArrayList<>(videoItemHashSet);
+        downloadedList = new ArrayList<>(videoItemHashSet);
         for (String id : downloadedList) {
             Log.e(TAG, "getVideosOnDevice: ".concat(id));
         }
@@ -181,6 +190,60 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
 
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu) {
+        getMenuInflater().inflate( R.menu.menu_search, menu);
+
+        final MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.i(TAG, "Video to search: " + query);
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                myActionMenuItem.collapseActionView();
+                ArrayList<String> searchResult = getSearchList(query);
+                VideoAdapter adapter = new VideoAdapter(searchResult, VideoSelectionActivity.this, new VideoAdapter.VideoAdapterListener() {
+                    @Override
+                    public void onPlayVideoTapped(String path) {
+                        playVideo(path);
+                    }
+
+                    @Override
+                    public void onUploadVideoTapped(String path) {
+                        confirmUpload(path);
+
+                    }
+
+                });
+
+                recyclerView.setAdapter(adapter);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    private ArrayList<String> getSearchList(String word){
+        ArrayList<String> list = new ArrayList<>();
+        String path;
+        for (int i = 0; i < downloadedList.size(); i++){
+            path = downloadedList.get(i);
+            if(Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE).matcher(path).find()){
+                list.add(downloadedList.get(i));
+            }
+        }
+        return  list;
     }
 
 
