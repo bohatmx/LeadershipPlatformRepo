@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -61,6 +62,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     private WeeklyMessageDTO weeklyMessage;
     private EBookDTO eBook;
     private PodcastDTO podcast;
+    private NewsDTO news;
     private VideoDTO video;
     private UrlDTO url;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -101,6 +103,10 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
                 getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
+            case ResponseBag.NEWS:
+                news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
+                getSupportActionBar().setSubtitle(news.getTitle());
+                break;
         }
         if (getIntent().getSerializableExtra("eBook") != null) {
             type = 3;
@@ -121,6 +127,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             type = ResponseBag.URLS;
             url = (UrlDTO) getIntent().getSerializableExtra("url");
             getSupportActionBar().setSubtitle(url.getTitle());
+        }
+        if (getIntent().getSerializableExtra("newsArticle") != null) {
+            type = ResponseBag.NEWS;
+            news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
+            getSupportActionBar().setSubtitle(news.getTitle());
         }
 
 
@@ -400,6 +411,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 break;
             case ResponseBag.URLS:
                 p.setUrlDTO(url);
+                break;
+            case ResponseBag.NEWS:
+                p.setNewsID(news.getNewsID());
+                p.setTitle(news.getTitle());
+                //p.setCaption(news.getBody());
                 break;
         }
         if (type == ResponseBag.EBOOKS) {

@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UrlDTO;
@@ -46,6 +47,7 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
     private PodcastDTO podcast;
     private VideoDTO video;
     private EBookDTO eBook;
+    private NewsDTO news;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private WeeklyMessageDTO weeklyMessage;
     private Toolbar toolbar;
@@ -74,6 +76,12 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
+            case ResponseBag.NEWS:
+                news = (NewsDTO) getIntent()
+                        .getSerializableExtra("newsArticle");
+                getSupportActionBar().setSubtitle(news.getTitle());
+                Log.d(TAG, "onCreate: ".concat(GSON.toJson(news)));
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) getIntent()
                         .getSerializableExtra("dailyThought");
@@ -125,6 +133,12 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
             podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
             getSupportActionBar().setSubtitle(podcast.getStorageName());
         }
+        if (getIntent().getSerializableExtra("newsArticle") != null) {
+            type = ResponseBag.NEWS;
+            news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
+            getSupportActionBar().setSubtitle(news.getTitle());
+        }
+
 
 
         setup();
@@ -219,6 +233,9 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
 
         showSnackbar("Adding link ....", "OK", "yellow");
         switch (type) {
+            case ResponseBag.NEWS:
+                presenter.addLink(u, news.getNewsID(), type);
+                break;
             case ResponseBag.DAILY_THOUGHTS:
                 presenter.addLink(u, dailyThought.getDailyThoughtID(), type);
                 break;

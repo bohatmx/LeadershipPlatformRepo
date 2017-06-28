@@ -47,8 +47,8 @@ public class NewsArticleActivity extends AppCompatActivity implements NewsArticl
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
-        newsListFragment = (NewsListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
 
+        newsListFragment = (NewsListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.GONE);

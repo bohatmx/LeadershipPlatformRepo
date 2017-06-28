@@ -201,6 +201,11 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .into(wmvh.photoView);
                                 wmvh.captiontxt.setText(vDTO.getCaption());
+
+                                Glide.with(ctx)
+                                        .load(photoUrl)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                        .into(wmvh.imageView);
                             }
 
                             miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
@@ -413,7 +418,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG;
+                playIMG, pauseIMG, stopIMG, imageView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout, photoAdapterLayout,
@@ -447,7 +452,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             pauseIMG = (ImageView)itemView.findViewById(R.id.pauseIMG);
             stopIMG = (ImageView) itemView.findViewById(R.id.stopIMG);
             podcastfileName = (TextView) itemView.findViewById(R.id.fileName);
-
+            imageView = (ImageView) itemView.findViewById(R.id.ImageView);
 
             iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
 

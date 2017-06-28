@@ -200,6 +200,19 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
+
+                        Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.imageView);
+                        dvh.captiontxt.setText(vDTO.getCaption());
+
+                        Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.imageView);
+
+
                     }
 
                     miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
@@ -418,7 +431,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG;
+                playIMG, pauseIMG, stopIMG, imageView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
@@ -449,6 +462,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             txtVideo = (TextView) itemView.findViewById(R.id.txtVideo);
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+            imageView = (ImageView) itemView.findViewById(R.id.ImageView);
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
             videoFileName.setVisibility(View.GONE);*/
 

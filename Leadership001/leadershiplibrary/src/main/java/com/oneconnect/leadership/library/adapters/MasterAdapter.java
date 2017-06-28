@@ -187,6 +187,11 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(dvh.photoView);
                             dvh.captiontxt.setText(vDTO.getCaption());
+
+                            Glide.with(ctx)
+                                    .load(photoUrl)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .into(dvh.imageView);
                         }
 
                         miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
@@ -422,7 +427,8 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class MasterViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
-        protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView, playIMG, pauseIMG, stopIMG;
+        protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo,
+                iconCamera, photoView, playIMG, pauseIMG, stopIMG, imageView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout, photoAdapterLayout,
@@ -457,7 +463,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             stopIMG = (ImageView) itemView.findViewById(R.id.stopIMG);
             podcastfileName = (TextView) itemView.findViewById(R.id.fileName);
 
-
+            imageView = (ImageView) itemView.findViewById(R.id.ImageView);
             iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
 
             iconVideo = (ImageView) itemView.findViewById(R.id.iconVideo);

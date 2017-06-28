@@ -28,9 +28,10 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
     private PodcastDTO podcast;
     private UrlDTO urlDTO;
     private VideoDTO video;
+    private NewsDTO news;
 
     private String weeklyMasterClassID, weeklyMessageID,
-            dailyThoughtID, eBookID, podcastID;
+            dailyThoughtID, eBookID, podcastID, newsID;
 
     public PhotoDTO() {
         date = new Date().getTime();
@@ -337,5 +338,21 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
 
     public void setVideo(VideoDTO video) {
         this.video = video;
+    }
+
+    public NewsDTO getNews() {
+        return news;
+    }
+
+    public void setNews(NewsDTO news) {
+        this.news = news;
+    }
+
+    public String getNewsID() {
+        return newsID;
+    }
+
+    public void setNewsID(String newsID) {
+        this.newsID = newsID;
     }
 }

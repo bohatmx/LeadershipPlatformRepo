@@ -13,6 +13,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
@@ -21,6 +23,7 @@ import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
@@ -30,8 +33,10 @@ import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by aubreyM on 14/12/17.
@@ -345,6 +350,26 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
+
+            DailyThoughtDTO dtd = p;//mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(h.imageView);
+                //h.captiontxt.setText(vDTO.getCaption());
+
+
+            }
         }
         if (p.getVideos() != null) {
             h.txtVideos.setText(String.valueOf(p.getVideos().size()));
@@ -385,6 +410,25 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
+            NewsDTO dtd = p;//mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(h.imageView);
+                //h.captiontxt.setText(vDTO.getCaption());
+
+
+            }
         }
         if (p.getVideos() != null) {
             h.txtVideos.setText(String.valueOf(p.getVideos().size()));
@@ -466,6 +510,25 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
+            WeeklyMessageDTO dtd = p;//mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(h.imageView);
+                //h.captiontxt.setText(vDTO.getCaption());
+
+
+            }
         }
         if (p.getVideos() != null) {
             h.txtVideos.setText(String.valueOf(p.getVideos().size()));
@@ -507,6 +570,25 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
+            WeeklyMasterClassDTO dtd = p;//mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(h.imageView);
+                //h.captiontxt.setText(vDTO.getCaption());
+
+
+            }
         }
         if (p.getVideos() != null) {
             h.txtVideos.setText(String.valueOf(p.getVideos().size()));
@@ -643,7 +725,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 txtPhotos, txtVideos, txtEvents, txtLinks, txtPodcasts;
 
         protected ImageView iconCalendar, iconDelete, iconLinks,
-                iconPhoto, iconVideo, iconLocation, iconMicrophone;
+                iconPhoto, iconVideo, iconLocation, iconMicrophone, imageView;
 
         protected View bottomLayout, frameLayout, linksLayout, iconLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
@@ -651,6 +733,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         public EntityViewHolder(View itemView) {
             super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.ImageView);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);

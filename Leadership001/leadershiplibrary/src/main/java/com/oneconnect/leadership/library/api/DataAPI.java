@@ -971,9 +971,27 @@ public class DataAPI {
 
     public void addPhotoToEntity(final PhotoDTO photo, final DataListener listener) {
         if (photo.getDailyThoughtID() == null && photo.getWeeklyMasterClassID() == null
-                && photo.getWeeklyMessageID() == null && photo.getPodcastID() == null) {
+                && photo.getWeeklyMessageID() == null && photo.getPodcastID() == null && photo.getNewsID() == null)  {
             listener.onResponse("No entity to add to");
             return;
+
+        }
+        if (photo.getNewsID() != null) {
+            DatabaseReference ref = db.getReference(NEWS)
+                    .child(photo.getNewsID()).child(PHOTOS);
+            log("addPhotoToEntity", ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to newsArticle: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
 
         }
         if (photo.getDailyThoughtID() != null) {

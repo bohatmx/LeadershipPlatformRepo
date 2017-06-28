@@ -184,6 +184,11 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
+
+                        Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.imageView);
                     }
 
                     miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
@@ -402,7 +407,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG;
+                playIMG, pauseIMG, stopIMG, imageView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
@@ -434,8 +439,9 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
-            videoFileName.setVisibility(View.GONE);*/
 
+            videoFileName.setVisibility(View.GONE);*/
+            imageView = (ImageView) itemView.findViewById(R.id.ImageView);
 
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);
             pauseIMG = (ImageView)itemView.findViewById(R.id.pauseIMG);

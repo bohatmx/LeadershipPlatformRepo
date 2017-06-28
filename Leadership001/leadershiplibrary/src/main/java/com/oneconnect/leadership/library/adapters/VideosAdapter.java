@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import android.widget.VideoView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.util.List;
 
@@ -93,6 +95,22 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 vvh.videoSeekBar.setMax(vvh.videoView.getDuration());
                // vvh.videoSeekBar.postDelayed(onEverySecond, 1000);
 
+            }
+        });
+
+        vvh.fileName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(vvh.fileName, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (vvh.bottomLayout.getVisibility() == View.GONE) {
+                            vvh.bottomLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            vvh.bottomLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
         });
 
@@ -238,6 +256,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected Button btnPlay;
          protected VideoView videoView;
          protected SeekBar videoSeekBar;
+         protected RelativeLayout bottomLayout;
 
 
         public VideosViewHolder(View itemView) {
@@ -246,6 +265,8 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             image = (ImageView) itemView.findViewById(R.id.image);
             //btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             //btnPlay.setVisibility(View.GONE);
+            bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
+            bottomLayout.setVisibility(View.GONE);
             videoView = (VideoView) itemView.findViewById(R.id.videoView);
             overflow = (ImageView) itemView.findViewById(R.id.overflow);
             count = (TextView) itemView.findViewById(R.id.fileName);

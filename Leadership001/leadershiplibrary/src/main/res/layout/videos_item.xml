@@ -51,12 +51,13 @@
                 android:id="@+id/fileName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/videoView"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
                 android:textColor="@color/brown_500"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:layout_below="@+id/videoView"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/count"

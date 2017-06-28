@@ -79,7 +79,7 @@
                     android:id="@+id/ImageView"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    android:src="@drawable/coffee_phone"
+                    android:src="@drawable/woman_in_field"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:scaleType="fitXY" />
