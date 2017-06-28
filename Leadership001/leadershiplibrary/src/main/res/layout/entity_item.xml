@@ -107,14 +107,16 @@
             </RelativeLayout>
 
             <TextView
+                android:padding="@dimen/mon_padding"
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/t0"
+                android:textColor="@color/black"
                 android:layout_marginLeft="@dimen/mon_pad"
                 android:text="A title will be placed here - daily thought etc. The length here is important and should be the most prominent on this screen."
                 android:textSize="15sp"
-                android:textStyle="normal" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtSubtitle"
