@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.R.attr.mimeType;
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 
@@ -353,8 +355,13 @@ public class FirebaseStorageAPI extends Activity {
         Log.w("IR", "TRYING TO RENDER: " + path);
         File file = new File(path);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        Uri apkURI = FileProvider.getUriForFile(
+                ctx,
+                ctx.getApplicationContext()
+                        .getPackageName() + ".provider", file);
+        intent.setDataAndType(apkURI, "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
         ctx.startActivity(intent);
     }
 

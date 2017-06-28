@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -245,9 +246,11 @@ public class SubscriberMainActivity extends AppCompatActivity
                     break;
             }
 
-        IntentFilter filter = new IntentFilter(SubscriberMessagingService.BROADCAST_MESSAGE_RECEIVED);
-        LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
-    }
+            IntentFilter filter = new IntentFilter(SubscriberMessagingService.BROADCAST_MESSAGE_RECEIVED);
+            LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+        }
     }
 
     static List<PageFragment> pageFragmentList;
@@ -330,8 +333,8 @@ public class SubscriberMainActivity extends AppCompatActivity
         pageFragmentList.add(dailyThoughtListFragment);
         pageFragmentList.add(masterListFragment);
         pageFragmentList.add(weeklyMessageListFragment);
-        pageFragmentList.add(photoListFragment);
-        pageFragmentList.add(videoListFragment);
+        //pageFragmentList.add(photoListFragment);
+        //pageFragmentList.add(videoListFragment);
         pageFragmentList.add(podcastListFragment);
         pageFragmentList.add(eBookListFragment);
         pageFragmentList.add(calendarEventListFragment);
