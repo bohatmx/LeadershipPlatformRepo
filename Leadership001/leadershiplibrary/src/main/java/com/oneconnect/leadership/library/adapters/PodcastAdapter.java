@@ -21,13 +21,19 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -198,6 +204,27 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
 
+        if (v.getPhotos() != null) {
+           // pvh.fileName.setText("" + v.getPhotos().size());
+            PodcastDTO dtd = mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(pvh.iconImage);
+            }
+
+        }
+
         /*pvh.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -332,7 +359,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class PodcastsViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic;
+        protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic, iconImage;
         protected Button btnPlay, btnUpload;
         protected RelativeLayout uploadLayout, bottomLayout;
 
@@ -340,6 +367,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             image = (ImageView) itemView.findViewById(R.id.image);
+            iconImage = (ImageView) itemView.findViewById(R.id.list_image);
            // image.setVisibility(View.GONE);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             btnPlay.setVisibility(View.GONE);

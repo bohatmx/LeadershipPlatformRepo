@@ -379,7 +379,7 @@ public class SubscriberMainActivity extends AppCompatActivity
                 if (page.equalsIgnoreCase("Weekly Masterclass")) {
                     mPager.setCurrentItem(2);
                 }
-                if (page.equalsIgnoreCase("Weekly Messages")) {
+                if (page.equalsIgnoreCase("Weekly Message")) {
                     mPager.setCurrentItem(3);
                 }
                 if (page.equalsIgnoreCase("Calendar Event")) {
@@ -423,7 +423,7 @@ public class SubscriberMainActivity extends AppCompatActivity
                     mPager.setCurrentItem(2, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_weekly_message) {
+                if (item.getItemId() == R.id.nav_weekly) {
                     mPager.setCurrentItem(3, true);
                     return true;
                 }
