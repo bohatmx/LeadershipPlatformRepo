@@ -171,6 +171,23 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
         if (wm.getPhotos() != null) {
             wmvh.txtCamera.setText("" + wm.getPhotos().size());
+
+            WeeklyMessageDTO dtd = mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(wmvh.imageView);
+            }
             wmvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -202,10 +219,6 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         .into(wmvh.photoView);
                                 wmvh.captiontxt.setText(vDTO.getCaption());
 
-                                Glide.with(ctx)
-                                        .load(photoUrl)
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .into(wmvh.imageView);
                             }
 
                             miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {

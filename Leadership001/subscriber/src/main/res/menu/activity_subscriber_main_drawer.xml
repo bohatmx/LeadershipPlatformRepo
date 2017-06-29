@@ -12,7 +12,7 @@
                 <item
                     android:id="@+id/nav_daily_thought"
                     android:icon="@drawable/ic_comment_black_24dp"
-                    android:title="Daily Thought" />
+                    android:title="Daily Thoughts" />
                 <item
                     android:id="@+id/nav_master"
                     android:icon="@drawable/ic_class_black_24dp"
@@ -20,7 +20,7 @@
                 <item
                     android:id="@+id/nav_weekly"
                     android:icon="@drawable/ic_chat"
-                    android:title="Weekly Message" />
+                    android:title="Weekly Messages" />
             </menu>
         </item>
     </group>
@@ -36,37 +36,37 @@
 
     <item android:title="Media">
         <menu>
-            <item
+            <!--<item
                 android:id="@+id/nav_photo"
                 android:icon="@drawable/ic_photo_black_24dp"
-                android:title="Photo" />
+                android:title="Photo" />-->
             <item
                 android:id="@+id/nav_podcast"
                 android:icon="@drawable/ic_microphone"
-                android:title="Podcast" />
-            <item
-                android:id="@+id/nav_video"
-                android:icon="@drawable/ic_videocam"
-                android:title="Video" />
-        </menu>
-    </item>
+                android:title="Podcasts" />
+            <!--<item
+               android:id="@+id/nav_video"
+               android:icon="@drawable/ic_videocam"
+               android:title="Video" />-->
+       </menu>
+   </item>
 
-    <item android:title="Read">
-        <menu>
-            <item
-                android:id="@+id/nav_eBooks"
-                android:icon="@drawable/ic_library_books_black_24dp"
-                android:title="Books" />
-        </menu>
-    </item>
+   <item android:title="Read">
+       <menu>
+           <item
+               android:id="@+id/nav_eBooks"
+               android:icon="@drawable/ic_library_books_black_24dp"
+               android:title="Books" />
+       </menu>
+   </item>
 
-    <item android:title="Sign out">
-        <menu>
-            <item
-                android:id="@+id/nav_sign_out"
-                android:icon="@drawable/ic_exit_to_app_black_24dp"
-                android:title="Sign Out" />
-        </menu>
-    </item>
+   <item android:title="Sign out">
+       <menu>
+           <item
+               android:id="@+id/nav_sign_out"
+               android:icon="@drawable/ic_exit_to_app_black_24dp"
+               android:title="Sign Out" />
+       </menu>
+   </item>
 
 </menu>

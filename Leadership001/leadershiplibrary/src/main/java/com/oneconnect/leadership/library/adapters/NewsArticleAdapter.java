@@ -157,6 +157,23 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
+            NewsDTO dtd = mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(dvh.imageView);
+            }
+
             dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,10 +202,6 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
 
-                        Glide.with(ctx)
-                                .load(photoUrl)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(dvh.imageView);
                     }
 
                     miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {

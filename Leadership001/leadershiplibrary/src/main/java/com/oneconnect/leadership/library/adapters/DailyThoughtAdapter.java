@@ -173,6 +173,26 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
+
+            DailyThoughtDTO dtd = mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(dvh.imageView);
+             //   dvh.captiontxt.setText(vDTO.getCaption());
+
+
+            }
             dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -201,16 +221,11 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
 
-                        Glide.with(ctx)
+                        /*Glide.with(ctx)
                                 .load(photoUrl)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(dvh.imageView);
-                        dvh.captiontxt.setText(vDTO.getCaption());
-
-                        Glide.with(ctx)
-                                .load(photoUrl)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(dvh.imageView);
+                        dvh.captiontxt.setText(vDTO.getCaption());*/
 
 
                     }
