@@ -19,7 +19,8 @@
             android:layout_marginRight="@dimen/mon_margin"
             android:text="Filename inserted here"
             android:textColor="@color/blue_500"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone"/>
 
         <ImageView
             android:padding="@dimen/appbar_padding_top"
