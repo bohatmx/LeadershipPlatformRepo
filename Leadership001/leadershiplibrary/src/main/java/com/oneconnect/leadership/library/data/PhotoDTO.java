@@ -15,7 +15,7 @@ import static com.oneconnect.leadership.library.lists.BasicEntityAdapter.sdf;
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<PhotoDTO>, Parcelable {
+public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<PhotoDTO>/*, Parcelable*/ {
 
     @Exclude
     private String filePath;
@@ -60,7 +60,7 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
         podcastID = in.readString();
     }
 
-    public static final Creator<PhotoDTO> CREATOR = new Creator<PhotoDTO>() {
+   /* public static final Creator<PhotoDTO> CREATOR = new Creator<PhotoDTO>() {
         @Override
         public PhotoDTO createFromParcel(Parcel in) {
             return new PhotoDTO(in);
@@ -70,7 +70,7 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
         public PhotoDTO[] newArray(int size) {
             return new PhotoDTO[size];
         }
-    };
+    };*/
 
     public long getBytes() {
         return bytes;
@@ -306,7 +306,7 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
     }
 
     ////
-    @Override
+    /*@Override
     public int describeContents() {
         return 0;
     }
@@ -315,7 +315,7 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(caption);
     }
-
+*/
     public PodcastDTO getPodcast() {
         return podcast;
     }

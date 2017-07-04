@@ -12,7 +12,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.FullPhotoActivity;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class MiniPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         final PhotoDTO p = mList.get(position);
         final MiniPhotoViewHolder pvh = (MiniPhotoViewHolder) holder;
@@ -42,6 +45,23 @@ public class MiniPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 .load(p.getUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(pvh.photoView);
+
+        pvh.photoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(pvh.photoView, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(ctx, FullPhotoActivity.class);
+                        intent.putExtra("photo", p);
+                        ctx.startActivity(intent);
+                        /*Intent intent = new Intent(ctx, FullPhotoActivity.class);
+                        intent.putExtra("photo", p);
+                        ctx.startActivity(intent);*/
+                    }
+                });
+            }
+        });
 
         /*pvh.iconshare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +109,7 @@ public class MiniPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(itemView);
 
             captiontxt = (TextView) itemView.findViewById(R.id.captiontxt);
+            captiontxt.setVisibility(View.GONE);
             photoView = (ImageView) itemView.findViewById(R.id.photoView);
 
         }

@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.video;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -117,11 +118,15 @@ public class LeExoPlayerActivity extends AppCompatActivity
     private Snackbar snackbar;
     String podcastText;
 
+    Context ctx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.w(TAG, "onCreate: #######################");
         app = (App) getApplication();
+
+        ctx = getApplicationContext();
 
         shouldAutoPlay = true;
         clearResumePosition();

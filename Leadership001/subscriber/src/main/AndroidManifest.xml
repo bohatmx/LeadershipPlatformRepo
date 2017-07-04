@@ -83,6 +83,10 @@
             android:label="@string/title_activity_main"
             android:parentActivityName=".SubscriberMainActivity" />
 
+        <activity android:name="com.oneconnect.leadership.library.activities.PodcastPlayerActivity"
+            android:label="@string/title_activity_podcast_player"
+            android:parentActivityName=".SubscriberMainActivity"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bf8084862d623f44e2edfdf76bc8e2be5ba185a8"

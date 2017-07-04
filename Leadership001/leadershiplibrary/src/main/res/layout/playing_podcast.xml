@@ -2,12 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-
     android:orientation="horizontal">
 <!-- android:background="@drawable/playing_list_selector"-->
     <!--  //ListRow Left sied Thumbnail image -->
     <LinearLayout
-
         android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,12 +18,14 @@
             android:id="@+id/list_image"
             android:layout_width="50dip"
             android:layout_height="50dip"
-            android:src="@drawable/musical" />
+            android:src="@drawable/musical"
+            android:scaleType="fitXY"/>
 
     </LinearLayout>
 
     <!-- Title Of Song-->
     <TextView
+        android:layout_centerVertical="true"
         android:id="@+id/fileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,6 +72,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>-->
     <RelativeLayout
+        android:id="@+id/podControlLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

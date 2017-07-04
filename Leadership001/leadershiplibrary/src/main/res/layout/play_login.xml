@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="Registered Email"
-        android:textColor="@color/tw__light_gray"
+        android:textColor="@color/grey_100"
         android:textSize="17sp" />
 
     <EditText
@@ -34,7 +34,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1px"
-        android:background="@color/tw__light_gray" />
+        android:background="@color/grey_100" />
 
     <RelativeLayout
         android:layout_width="fill_parent"

@@ -7,6 +7,7 @@ import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.WebViewActivity;
 import com.oneconnect.leadership.library.audio.AudioPlayerActivity;
@@ -424,6 +426,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+
+
     private void shareIt() {
         //sharing implementation here
         Intent i = new Intent(Intent.ACTION_SEND);
@@ -498,12 +502,13 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
             //
             imageRecyclerView = (RecyclerView) itemView.findViewById(R.id.imageRecyclerView);
-            imageRecyclerView.setVisibility(View.GONE);
+            imageRecyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
+            imageRecyclerView.setVisibility(View.GONE);/*
             LinearLayoutManager llm = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
             imageRecyclerView.setLayoutManager(llm);
             imageRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
             imageRecyclerView.setHasFixedSize(true);
-            //
+            *///
 
             videoRecyclerView = (RecyclerView) itemView.findViewById(R.id.videoRecyclerView);
             videoRecyclerView.setVisibility(View.GONE);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -138,6 +140,33 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.fileName.setText(v.getStorageName().substring(i + 1));
         final String podcastURL = v.getUrl();
 
+        pvh.audio_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(pvh.audio_card, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                        intent.putExtra("podcast", v);
+                        ctx.startActivity(intent);
+                    }
+                });
+            }
+        });
+        pvh.fileName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                        intent.putExtra("podcast", v);
+                        ctx.startActivity(intent);
+                    }
+                });
+            }
+        });
+
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,7 +217,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
 
-        pvh.fileName.setOnClickListener(new View.OnClickListener() {
+      /*  pvh.fileName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
@@ -202,7 +231,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 });
             }
-        });
+        });*/
 
         if (v.getPhotos() != null) {
            // pvh.fileName.setText("" + v.getPhotos().size());
@@ -358,14 +387,18 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public class PodcastsViewHolder extends RecyclerView.ViewHolder {
-        protected TextView fileName;
-        protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic, iconImage;
+        protected TextView fileName, duration;
+        protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic, iconImage, iconVideo;
         protected Button btnPlay, btnUpload;
-        protected RelativeLayout uploadLayout, bottomLayout;
+        protected RelativeLayout uploadLayout, bottomLayout, podControlLayout;
+        protected CardView audio_card;
 
         public PodcastsViewHolder(View itemView) {
             super(itemView);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
+            duration = (TextView) itemView.findViewById(R.id.duration);
+            audio_card = (CardView) itemView.findViewById(R.id.audio_card);
+            duration.setVisibility(View.GONE);
             image = (ImageView) itemView.findViewById(R.id.image);
             iconImage = (ImageView) itemView.findViewById(R.id.list_image);
            // image.setVisibility(View.GONE);
@@ -375,6 +408,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             btnUpload.setVisibility(View.GONE);
             seekbar = (SeekBar) itemView.findViewById(R.id.seekBar);
             headerpic = (ImageView) itemView.findViewById(R.id.headerpic);
+            headerpic.setVisibility(View.GONE);
             /*seekBar.setProgress(0);
             seekBar.setMax(100);*/
 
@@ -395,6 +429,9 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             bottomLayout.setVisibility(View.GONE);
+
+            podControlLayout = (RelativeLayout) itemView.findViewById(R.id.podControlLayout);
+            podControlLayout.setVisibility(View.GONE);
 
             uploadLayout = (RelativeLayout) itemView.findViewById(R.id.uploadLayout);
             uploadLayout.setVisibility(View.GONE);

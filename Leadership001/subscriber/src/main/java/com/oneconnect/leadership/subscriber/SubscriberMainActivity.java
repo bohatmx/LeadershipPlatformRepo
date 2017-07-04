@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,9 +42,15 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.activities.DailyThoughtActivity;
@@ -152,8 +160,43 @@ public class SubscriberMainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.leadership_logo);
         ctx = getApplicationContext();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         page = getIntent().getStringExtra("page");
+
+            // ...
+
+            // Check for App Invite invitations and launch deep-link activity if possible.
+            // Requires that an Activity is registered in AndroidManifest.xml to handle
+            // deep-link URLs.
+            FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
+                    .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                        @Override
+                        public void onSuccess(PendingDynamicLinkData data) {
+                            if (data == null) {
+                                Log.d(TAG, "getInvitation: no data");
+                                return;
+                            }
+
+                            // Get the deep link
+                            Uri deepLink = data.getLink();
+
+                            // Extract invite
+                            FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(data);
+                            if (invite != null) {
+                                String invitationId = invite.getInvitationId();
+                            }
+
+                            // Handle the deep link
+                            // ...
+                        }
+                    })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "getDynamicLink:onFailure", e);
+                        }
+                    });
 
       /*   textFavorites = (TextView) findViewById(R.id.text_favorites);
         textSchedules = (TextView) findViewById(R.id.text_schedules);
@@ -447,6 +490,18 @@ public class SubscriberMainActivity extends AppCompatActivity
                     mPager.setCurrentItem(6, true);
                     return true;
                 }
+                if (item.getItemId() == R.id.nav_share) {
+                   /*onInviteClicked();*/
+                    Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
+                            .setMessage(getString(R.string.invitation_message))
+                            .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                            .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                            .setCallToActionText(getString(R.string.invitation_cta))
+                            .build();
+                    //startActivity(intent);
+                    startActivityForResult(intent, REQUEST_INVITE);
+                    return true;
+                }
 
                 if (item.getItemId() == R.id.nav_sign_out) {
                     FirebaseAuth.getInstance().signOut();
@@ -459,6 +514,38 @@ public class SubscriberMainActivity extends AppCompatActivity
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(LOG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(LOG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+            }
+        }
+    }
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivity(intent);
+       // startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    private static final int REQUEST_INVITE = 321;
     @Override
     public void onEntityAdded(String key) {
 
