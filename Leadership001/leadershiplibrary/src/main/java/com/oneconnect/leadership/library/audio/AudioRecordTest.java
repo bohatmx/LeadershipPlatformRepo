@@ -5,10 +5,12 @@ package com.oneconnect.leadership.library.audio;
  */
 
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 
 import android.os.Environment;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -18,6 +20,9 @@ import android.util.Log;
 import android.view.View;
 
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -34,6 +40,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -55,22 +62,157 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
     String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     public static final int RequestPermissionCode = 1;
     MediaPlayer mediaPlayer ;
-    TextView recordProgress;
+    TextView recordProgress, textCurrentPosition, textView_maxTime;
     long miliSecs = 0;
     Thread t;
     String timer;
     PodcastUploadPresenter presenter;
+    SeekBar recorderSeekBar;
+    ImageView stopIMG, pauseIMG, playIMG, imageView;
+    RelativeLayout controlsLay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_audio);
 
+        recorderSeekBar = (SeekBar) findViewById(R.id.recorderSeekBar);
+        recorderSeekBar.setVisibility(View.GONE);
+        textCurrentPosition = (TextView) findViewById(R.id.textCurrentPosition);
+        textCurrentPosition.setVisibility(View.GONE);
+        textView_maxTime = (TextView) findViewById(R.id.textView_maxTime);
+        textView_maxTime.setVisibility(View.GONE);
+        playIMG = (ImageView) findViewById(R.id.playIMG);
+        playIMG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(playIMG, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        playIMG.setVisibility(View.GONE);
+                        pauseIMG.setVisibility(View.VISIBLE);
+                        stopIMG.setVisibility(View.VISIBLE);
+                        recordProgress.setVisibility(View.GONE);
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        try {
+                            mediaPlayer.setDataSource(AudioSavePathInDevice);
+                            mediaPlayer.prepare();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        /*mediaPlayer.start();*/
+                        int duration = mediaPlayer.getDuration();
+                        int currentPosition = mediaPlayer.getCurrentPosition();
+                        if(currentPosition== 0)  {
+                             recorderSeekBar.setMax(duration);
+                            String maxTimeString = /*this.*/millisecondsToString(duration);
+                           textView_maxTime.setText(maxTimeString);
+                        } else if(currentPosition== duration)  {
+                            // Resets the MediaPlayer to its uninitialized state.
+                           mediaPlayer.reset();
+                        }
+                            mediaPlayer.start();
+                        // Create a thread to update position of SeekBar.
+                        UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
+                        threadHandler.postDelayed(updateSeekBarThread,50);
+
+                        setTimerLabel("Playing Audio....");
+                        Toast.makeText(AudioRecordTest.this, "Recording Playing",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+        pauseIMG = (ImageView) findViewById(R.id.pauseIMG);
+        pauseIMG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(pauseIMG, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        pauseIMG.setVisibility(View.GONE);
+                        playIMG.setVisibility(View.VISIBLE);
+                        //mediaRecorder.pause();
+                        mediaPlayer.pause();
+                    }
+                });
+            }
+        });
+        stopIMG = (ImageView) findViewById(R.id.stopIMG);
+        stopIMG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(stopIMG, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mediaPlayer.stop();
+                        stopIMG.setVisibility(View.GONE);
+                        pauseIMG.setVisibility(View.GONE);
+                        playIMG.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
+        controlsLay = (RelativeLayout) findViewById(R.id.controlsLay);
+        controlsLay.setVisibility(View.GONE);
+        imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(imageView, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if(checkPermission()) {
+
+                            AudioSavePathInDevice =
+                                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/    " +
+                                            CreateRandomAudioFileName(5) + "AudioRecording.mp3";
+
+                            MediaRecorderReady();
+
+                            try {
+                                mediaRecorder.prepare();
+                                mediaRecorder.start();
+                            } catch (IllegalStateException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+
+                            buttonStart.setEnabled(false);
+                            buttonStop.setEnabled(true);
+                            buttonUpload.setEnabled(false);
+                            recordProgress.setVisibility(View.VISIBLE);
+                            recordProgress.setText("");
+                            buttonStop.setVisibility(View.VISIBLE);
+                            setTimerLabel("Recording Audio....");
+                            Toast.makeText(AudioRecordTest.this, "Recording started",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            requestPermission();
+                        }
+                    }
+                });
+            }
+        });
+
+
+
         buttonStart = (Button) findViewById(R.id.button);
+        buttonStart.setVisibility(View.GONE);
         buttonStop = (Button) findViewById(R.id.button2);
+        buttonStop.setVisibility(View.GONE);
         buttonPlayLastRecordAudio = (Button) findViewById(R.id.button3);
+        buttonPlayLastRecordAudio.setVisibility(View.GONE);
         buttonStopPlayingRecording = (Button)findViewById(R.id.button4);
+        buttonStopPlayingRecording.setVisibility(View.GONE);
         buttonUpload  = (Button)findViewById(R.id.button5);
+        buttonUpload.setVisibility(View.GONE);
         recordProgress = (TextView) findViewById(R.id.timerText);
 
         buttonStop.setEnabled(false);
@@ -125,6 +267,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
             @Override
             public void onClick(View view) {
                 mediaRecorder.stop();
+                buttonStop.setVisibility(View.GONE);
                 buttonStop.setEnabled(false);
                 buttonPlayLastRecordAudio.setEnabled(true);
                 buttonStart.setEnabled(true);
@@ -132,6 +275,17 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                 buttonUpload.setEnabled(true);
                 t.interrupt();
                 miliSecs = 0;
+
+                buttonUpload.setVisibility(View.VISIBLE);
+                controlsLay.setVisibility(View.VISIBLE);
+                pauseIMG.setVisibility(View.GONE);
+                stopIMG.setVisibility(View.GONE);
+                recorderSeekBar.setVisibility(View.VISIBLE);
+                textCurrentPosition.setVisibility(View.VISIBLE);
+                textView_maxTime.setVisibility(View.VISIBLE);
+                recordProgress.setVisibility(View.GONE);
+
+
                 Toast.makeText(AudioRecordTest.this, "Recording Completed",
                         Toast.LENGTH_LONG).show();
             }
@@ -194,6 +348,27 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
             }
         });
 
+    }
+
+    private Handler threadHandler = new Handler();
+
+    class UpdateSeekBarThread implements Runnable {
+
+        public void run()  {
+            int currentPosition = mediaPlayer.getCurrentPosition();
+            String currentPositionStr = millisecondsToString(currentPosition);
+            textCurrentPosition.setText(currentPositionStr);
+
+            recorderSeekBar.setProgress(currentPosition);
+            // Delay thread 50 milisecond.
+            threadHandler.postDelayed(this, 50);
+        }
+    }
+
+    private String millisecondsToString(int milliseconds) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes((long) milliseconds);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds((long) milliseconds);
+        return minutes + ":" + seconds;
     }
 
     public  void setTimerLabel(final String label){

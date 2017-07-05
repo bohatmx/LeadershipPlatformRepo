@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -52,11 +53,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class PodcastPlayerActivity extends AppCompatActivity {
 
-     TextView fileName,count, txtSubtitle, txtLinks, txtMicrophone, txtVideo, txtCamera, urlTxt, podcastfileName;
-     ImageView image, overflow, playbtn, pausebtn, podcastIMGAE, iconUpdate, iconDelete, iconMicrophone,
+     TextView fileName,count, txtSubtitle, txtLinks, txtMicrophone, txtVideo, txtCamera, urlTxt, podcastfileName,textCurrentPosition,
+             textView_maxTime;
+     ImageView image, overflow, playbtn, pausebtn, stopbtn, podcastIMGAE, iconUpdate, iconDelete, iconMicrophone,
              iconVideo, iconCamera, photoView, iconShare;
      Button btnPlay;
      VideoView videoView;
@@ -72,6 +75,8 @@ public class PodcastPlayerActivity extends AppCompatActivity {
 
     RelativeLayout urlAdapterLayout, videoAdapterLayout, deleteLayout, podcastAdapterLayout;
     LinearLayout podcastPlayerLayout;
+    private Handler threadHandler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +89,8 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.image);
         podcastIMGAE = (ImageView) findViewById(R.id.podcastIMGAE);
         podcastIMGAE.setVisibility(View.GONE);
+        textCurrentPosition = (TextView) findViewById(R.id.textCurrentPosition);
+        textView_maxTime = (TextView) findViewById(R.id.textView_maxTime);
         //url
         urlAdapterLayout = (RelativeLayout) findViewById(R.id.urlAdapterLayout);
         urlRecyclerView = (RecyclerView) findViewById(R.id.urlRecyclerView);
@@ -93,20 +100,22 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         urlRecyclerView.setLayoutManager(llm3);
         urlRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
         urlRecyclerView.setHasFixedSize(true);
+
         //
         //btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
         //btnPlay.setVisibility(View.GONE);
         bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
         videoView = (VideoView) findViewById(R.id.videoView);
+
         overflow = (ImageView) findViewById(R.id.overflow);
         overflow.setVisibility(View.GONE);
         count = (TextView) findViewById(R.id.fileName);
-        playbtn = (ImageView) findViewById(R.id.playbtn);
+        playbtn = (ImageView) findViewById(R.id.playIMG);
         playbtn.setVisibility(View.GONE);
-        pausebtn = (ImageView) findViewById(R.id.pausebtn);
+        pausebtn = (ImageView) findViewById(R.id.pauseIMG);
         pausebtn.setVisibility(View.GONE);
-        playbtn = (ImageView) findViewById(R.id.playbtn);
-
+        stopbtn = (ImageView) findViewById(R.id.stopIMG);
+        stopbtn.setVisibility(View.GONE);
         txtLinks = (TextView) findViewById(R.id.txtLinks);
         txtMicrophone = (TextView) findViewById(R.id.txtMicrophone);
         txtVideo = (TextView) findViewById(R.id.txtVideo);
@@ -117,7 +126,8 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         iconUpdate = (ImageView) findViewById(R.id.iconUpdate);
 
         videoSeekBar = (SeekBar) findViewById(R.id.videoSeekBar);
-        videoSeekBar.setVisibility(View.GONE);
+        videoSeekBar.setClickable(false);
+       // videoSeekBar.setVisibility(View.GONE);
 
         //photo
         photoView = (ImageView) findViewById(R.id.photoView);
@@ -151,7 +161,7 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         podcastPlayerLayout = (LinearLayout) findViewById(R.id.podcastPlayerLayout);
 
         iconShare = (ImageView) findViewById(R.id.iconShare);
-        iconShare.setOnClickListener(new View.OnClickListener() {
+        /*iconShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Util.flashOnce(iconShare, 300, new Util.UtilAnimationListener() {
@@ -161,18 +171,18 @@ public class PodcastPlayerActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
 
         deleteLayout = (RelativeLayout) findViewById(R.id.deleteLayout);
         deleteLayout.setVisibility(View.GONE);
 
-        videoView.setOnLongClickListener(new View.OnLongClickListener() {
+       /* videoView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 showFullView();
                 return true;
             }
-        });
+        });*/
 
 
 
@@ -190,6 +200,51 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         }
 
     }
+
+
+    //convert millisecond to string
+    private String millisecondsToString(int milliseconds) {
+        long minutes = TimeUnit.MILLISECONDS.toMinutes((long) milliseconds);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds((long) milliseconds);
+        return minutes + ":" + seconds;
+    }
+
+    public void doStart(View view)  {
+        // The duration in milliseconds
+        int duration = this.mediaPlayer.getDuration();
+
+        int currentPosition = this.mediaPlayer.getCurrentPosition();
+        if(currentPosition== 0)  {
+            this.videoSeekBar.setMax(duration);
+            String maxTimeString = this.millisecondsToString(duration);
+            this.textView_maxTime.setText(maxTimeString);
+        } else if(currentPosition== duration)  {
+            // Resets the MediaPlayer to its uninitialized state.
+            this.mediaPlayer.reset();
+        }
+        this.mediaPlayer.start();
+        // Create a thread to update position of SeekBar.
+        UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
+        threadHandler.postDelayed(updateSeekBarThread,50);
+
+      //  this.buttonPause.setEnabled(true);
+      //  this.buttonStart.setEnabled(false);
+    }
+
+    // Thread to Update position for SeekBar.
+    class UpdateSeekBarThread implements Runnable {
+
+        public void run()  {
+            int currentPosition = mediaPlayer.getCurrentPosition();
+            String currentPositionStr = millisecondsToString(currentPosition);
+            textCurrentPosition.setText(currentPositionStr);
+
+            videoSeekBar.setProgress(currentPosition);
+            // Delay thread 50 milisecond.
+            threadHandler.postDelayed(this, 50);
+        }
+    }
+
 
     private void showFullView() {
         /*DisplayMetrics metrics = new DisplayMetrics();
@@ -233,6 +288,7 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         toolbar.setVisibility(View.GONE);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         if (video.getPodcasts() != null) {
             txtMicrophone.setText("" + video.getPodcasts().size());
             iconMicrophone.setOnClickListener(new View.OnClickListener() {
@@ -401,13 +457,22 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         }
 
         try {
-             mediaController = new MediaController(ctx);
+            mediaPlayer = new MediaPlayer();
+             mediaController = new MediaController(PodcastPlayerActivity.this/*ctx*/);
              mediaController.setAnchorView(videoView);
+            videoView.setMediaController(mediaController);
             Uri videoURL = Uri.parse(video.getUrl());
             //  vvh.videoView.setMediaController(mediaController);
             videoView.setVideoURI(videoURL);
             videoView.seekTo(300);
-            videoView.start();
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaController.show();
+                }
+            });
+
+            /*videoView.start();*/
         } catch (Exception e) {
             Log.e(LOG,"Video something went wrong: " + e.getMessage());
         }
@@ -416,11 +481,21 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+              //  videoView.seekTo(position);
+                videoView.start();
                 videoSeekBar.setMax(videoView.getDuration());
                 // vvh.videoSeekBar.postDelayed(onEverySecond, 1000);
 
+                mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+                    @Override
+                    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                        mediaController.setAnchorView(videoView);
+                    }
+                });
             }
         });
+
+
     }
 
 
@@ -433,6 +508,8 @@ public class PodcastPlayerActivity extends AppCompatActivity {
     private void playPodcast() {
 //        showHalfView();
         videoView.setVisibility(View.GONE);
+        pausebtn.setVisibility(View.VISIBLE);
+        stopbtn.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.drawable.leadership_logo);
         getSupportActionBar().setSubtitle(podcast.getTitle());
@@ -460,7 +537,68 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(LOG, "You might not set the URI correctly!");
         }
-        mediaPlayer.start();
+      //  mediaPlayer.start();
+
+        int duration = /*this.*/mediaPlayer.getDuration();
+
+        int currentPosition = /*this.*/mediaPlayer.getCurrentPosition();
+        if(currentPosition== 0)  {
+            /*this.*/videoSeekBar.setMax(duration);
+            String maxTimeString = /*this.*/millisecondsToString(duration);
+            /*this.*/textView_maxTime.setText(maxTimeString);
+        } else if(currentPosition== duration)  {
+            // Resets the MediaPlayer to its uninitialized state.
+            /*this.*/mediaPlayer.reset();
+        }
+        /*this.*/mediaPlayer.start();
+        // Create a thread to update position of SeekBar.
+        UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
+        threadHandler.postDelayed(updateSeekBarThread,50);
+
+        pausebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(pausebtn, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mediaPlayer.pause();
+                        pausebtn.setVisibility(View.GONE);
+                        playbtn.setVisibility(View.VISIBLE);
+                        stopbtn.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
+        stopbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(stopbtn, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mediaPlayer.stop();
+                        stopbtn.setVisibility(View.GONE);
+                        pausebtn.setVisibility(View.GONE);
+                        playbtn.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
+        playbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(playbtn, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mediaPlayer.start();
+                        playbtn.setVisibility(View.GONE);
+                        pausebtn.setVisibility(View.VISIBLE);
+                        stopbtn.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
 
         if (podcast.getPhotos() != null) {
             txtCamera.setText("" + podcast.getPhotos().size());
