@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.WebViewActivity;
-import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 
 import java.util.List;
@@ -83,7 +82,8 @@ public class UrlAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public UrlViewHolder(View itemView) {
             super(itemView);
 
-            urlTxt = (TextView) itemView.findViewById(R.id.urlTxt);
+            urlTxt = (TextView) itemView.findViewById(
+                    R.id.urlTxt);
         }
     }
 }

@@ -70,7 +70,6 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.video.EventLogger;
-import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 import com.oneconnect.leadership.library.video.TrackSelectionHelper;
 
 import java.net.CookieHandler;

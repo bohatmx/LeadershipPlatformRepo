@@ -43,8 +43,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import io.reactivex.internal.schedulers.SchedulerPoolFactory;
-
 public class PodcastSelectionActivity extends AppCompatActivity implements PodcastUploadContract.View{
 
     private RecyclerView recyclerView;

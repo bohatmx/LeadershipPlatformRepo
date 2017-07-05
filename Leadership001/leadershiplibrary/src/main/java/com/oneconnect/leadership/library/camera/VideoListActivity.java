@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.audio.PodcastListActivity;
-import com.oneconnect.leadership.library.ebook.EbookListActivity;
 import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
 import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
@@ -42,7 +40,6 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
-import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.util.ArrayList;

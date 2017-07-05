@@ -1,8 +1,6 @@
 package com.oneconnect.leadership.library.lists;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +13,6 @@ import android.view.ViewGroup;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
-import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.WeeklyMessageAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -42,7 +39,6 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

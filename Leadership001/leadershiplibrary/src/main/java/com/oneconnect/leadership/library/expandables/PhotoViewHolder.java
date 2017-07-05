@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.data.PhotoDTO;
 
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 

@@ -2,13 +2,11 @@ package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaController;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,7 +29,6 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;

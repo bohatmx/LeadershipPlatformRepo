@@ -39,7 +39,6 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

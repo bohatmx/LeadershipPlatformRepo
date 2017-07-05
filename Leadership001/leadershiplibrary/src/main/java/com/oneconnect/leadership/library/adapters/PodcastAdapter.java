@@ -3,7 +3,9 @@ package com.oneconnect.leadership.library.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -19,22 +21,18 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
-import com.oneconnect.leadership.library.data.VideoDTO;
-import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nkululeko on 2017/04/19.
@@ -138,6 +136,32 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.fileName.setText(v.getStorageName().substring(i + 1));
         final String podcastURL = v.getUrl();
 
+
+        /*MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+        metaRetriever.setDataSource(podcastURL);
+
+        String out = "";
+        // get mp3 info
+
+        // convert duration to minute:seconds
+        String duration =
+                metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        Log.v("time", duration);
+        long dur = Long.parseLong(duration);
+        String seconds = String.valueOf((dur % 60000) / 1000);
+
+        Log.v("seconds", seconds);
+        String minutes = String.valueOf(dur / 60000);
+        out = minutes + ":" + seconds;
+        if (seconds.length() == 1) {
+            initTimetxt.setText("0" + minutes + ":0" + seconds);
+        }else {
+            finalTimetxt.setText("0" + minutes + ":" + seconds);
+        }
+        Log.v("minutes", minutes);
+        // close object
+        metaRetriever.release();*/
+
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,6 +176,8 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                         try {
                             mediaPlayer.setDataSource(podcastURL);
+                           // int soundLength = (int) new SoxController(ctx, new File(""), shell).getLength(podcastURL);
+
                         } catch (IllegalArgumentException e) {
                             Log.e(LOG, "You might not set the URI correctly!");
                         } catch (SecurityException e) {
@@ -358,13 +384,14 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public class PodcastsViewHolder extends RecyclerView.ViewHolder {
-        protected TextView fileName;
+        protected TextView fileName, txtTime;
         protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic, iconImage;
         protected Button btnPlay, btnUpload;
         protected RelativeLayout uploadLayout, bottomLayout;
 
         public PodcastsViewHolder(View itemView) {
             super(itemView);
+            txtTime = (TextView) itemView.findViewById(R.id.duration);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             image = (ImageView) itemView.findViewById(R.id.image);
             iconImage = (ImageView) itemView.findViewById(R.id.list_image);

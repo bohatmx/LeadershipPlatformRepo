@@ -9,9 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.adapters.PodcastAdapter;
 import com.oneconnect.leadership.library.data.PodcastDTO;
-import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
 
 public class PodcastActivity extends AppCompatActivity implements PodcastListFragment.PodcastListener {

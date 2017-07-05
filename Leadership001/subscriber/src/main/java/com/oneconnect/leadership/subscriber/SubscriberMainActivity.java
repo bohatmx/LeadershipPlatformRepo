@@ -152,40 +152,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.leadership_logo);
         ctx = getApplicationContext();
-
         page = getIntent().getStringExtra("page");
-
-      /*   textFavorites = (TextView) findViewById(R.id.text_favorites);
-        textSchedules = (TextView) findViewById(R.id.text_schedules);
-        textMusic = (TextView) findViewById(R.id.text_music);
-
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
-
-       bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_favorites:
-                                textFavorites.setVisibility(View.VISIBLE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_schedules:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.VISIBLE);
-                                textMusic.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_music:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.VISIBLE);
-                                break;
-                        }
-                        return false;
-                    }
-                });*/
 
 
         usernametxt = (TextView) findViewById(R.id.usernametxt);
@@ -273,7 +240,7 @@ public class SubscriberMainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        drawer.openDrawer(GravityCompat.START, true);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -291,7 +258,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
         entityListFragment = EntityListFragment.newInstance(bag);
-        //entityListFragment.setListener(this);
+        entityListFragment.setListener(this);
 
         ft.replace(R.id.frame, entityListFragment);
         ft.commit();
