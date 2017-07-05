@@ -1,19 +1,33 @@
 package com.oneconnect.leadership.library.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.net.http.*;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class WebViewActivity extends AppCompatActivity {
 

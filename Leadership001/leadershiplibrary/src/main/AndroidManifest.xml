@@ -73,6 +73,14 @@
             android:name=".audio.PodcastSelectionActivity"
             android:label="@string/title_activity_podcast_selection"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.PodcastPlayerActivity"
+            android:label="@string/title_activity_podcast_player"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.FullPhotoActivity"
+            android:label="@string/title_activity_full_photo"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

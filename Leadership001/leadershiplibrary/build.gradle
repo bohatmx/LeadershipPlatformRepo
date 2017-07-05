@@ -59,7 +59,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.cloudinary/cloudinary-android
 
     // https://mvnrepository.com/artifact/com.cloudinary/cloudinary-core
-    compile('com.firebaseui:firebase-ui:1.2.0', {
+    compile('com.firebaseui:firebase-ui:2.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'customtabs'
@@ -73,11 +73,10 @@ dependencies {
         exclude module: 'kryo'
     }*/
     //  compile 'com.firebase:firebase-client-android:2.5.2'
-    
 
     /*compile files('libs/kryo-2.20.jar')*/
     compile files(
-    'libs/Pdf_Viewer_.jar')
+            'libs/Pdf_Viewer_.jar')
 
     compile 'com.cloudinary:cloudinary-android:1.9.1'
     compile 'com.cloudinary:cloudinary-core:1.9.1'
@@ -89,21 +88,23 @@ dependencies {
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:support-v13:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
-    compile 'com.google.android.gms:play-services-awareness:10.2.6'
-    compile 'com.google.android.gms:play-services-gcm:10.2.6'
-    compile 'com.google.android.gms:play-services-places:10.2.6'
-    compile 'com.google.android.gms:play-services-nearby:10.2.6'
-    compile 'com.google.android.gms:play-services-auth:10.2.6'
-    compile 'com.google.firebase:firebase-database:10.2.6'
-    compile 'com.google.firebase:firebase-auth:10.2.6'
-    compile 'com.google.firebase:firebase-storage:10.2.6'
-    compile 'com.google.firebase:firebase-crash:10.2.6'
-    compile 'com.google.firebase:firebase-messaging:10.2.6'
-    compile 'com.google.firebase:firebase-invites:10.2.6'
-    compile 'com.google.firebase:firebase-ads:10.2.6'
-    compile 'com.google.firebase:firebase-core:10.2.6'
-    compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    compile 'com.google.android.gms:play-services-maps:11.0.1'
+    compile 'com.google.android.gms:play-services-awareness:11.0.1'
+    compile 'com.google.android.gms:play-services-gcm:11.0.1'
+    compile 'com.google.android.gms:play-services-places:11.0.1'
+    compile 'com.google.android.gms:play-services-nearby:11.0.1'
+    compile 'com.google.android.gms:play-services-auth:11.0.1'
+    compile 'com.google.firebase:firebase-database:11.0.1'
+    compile 'com.google.android.gms:play-services-plus:11.0.1'
+    compile 'com.google.android.gms:play-services-base:11.0.1'
+    compile 'com.google.firebase:firebase-auth:11.0.1'
+    compile 'com.google.firebase:firebase-storage:11.0.1'
+    compile 'com.google.firebase:firebase-crash:11.0.1'
+    compile 'com.google.firebase:firebase-messaging:11.0.1'
+    compile 'com.google.firebase:firebase-invites:11.0.1'
+    compile 'com.google.firebase:firebase-ads:11.0.1'
+    compile 'com.google.firebase:firebase-core:11.0.1'
+    compile 'com.firebaseui:firebase-ui-auth:2.0.1'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.2'
     compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'commons-io:commons-io:2.4'
@@ -113,7 +114,7 @@ dependencies {
     compile 'joda-time:joda-time:2.9.7'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'commons-codec:commons-codec:1.10'
-    compile 'com.facebook.android:facebook-android-sdk:4.2.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.24.0'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile 'com.github.GrenderG:Toasty:1.1.3'
     compile 'cn.hugeterry.coordinatortablayout:coordinatortablayout:1.0.6'
@@ -129,6 +130,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
 }
+
 
 
 

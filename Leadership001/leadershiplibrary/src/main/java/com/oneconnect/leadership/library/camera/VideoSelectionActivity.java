@@ -23,6 +23,7 @@ import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -32,6 +33,8 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.ebook.EbookAdapter;
+import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;

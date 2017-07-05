@@ -15,7 +15,10 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.util.Util;
+import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 
 import java.util.List;
 
@@ -58,6 +61,20 @@ public class MiniVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         final MiniVideoViewHolder vvh = (MiniVideoViewHolder) holder;
         int i = v.getStorageName().lastIndexOf("/");
         vvh.vidFileNametxt.setText(v.getStorageName().substring(i + 1));
+
+        vvh.vidFileNametxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(vvh.vidFileNametxt, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                        intent.putExtra("video", v);
+                        ctx.startActivity(intent);
+                    }
+                });
+            }
+        });
         try {
            // mediaController = new MediaController(ctx);
            // mediaController.setAnchorView(vvh.videoVideoView);

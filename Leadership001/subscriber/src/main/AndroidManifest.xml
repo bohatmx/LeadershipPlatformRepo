@@ -28,6 +28,11 @@
             android:label="@string/app_name"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".NotifHandlerActivity"
@@ -78,6 +83,10 @@
             android:label="@string/title_activity_main"
             android:parentActivityName=".SubscriberMainActivity" />
 
+        <activity android:name="com.oneconnect.leadership.library.activities.PodcastPlayerActivity"
+            android:label="@string/title_activity_podcast_player"
+            android:parentActivityName=".SubscriberMainActivity"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bf8084862d623f44e2edfdf76bc8e2be5ba185a8"
@@ -87,7 +96,7 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-       <activity
+        <activity
             android:name=".SplashScreenActivity"
             android:label="@string/title_activity_splash"
             android:theme="@style/AppTheme.NoActionBar">
@@ -97,7 +106,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.WebViewActivity;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nkululeko on 2017/04/19.

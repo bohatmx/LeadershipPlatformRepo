@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -12,17 +13,32 @@ import android.view.View;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
+import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
+import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CategoryDTO;
+import com.oneconnect.leadership.library.data.CompanyDTO;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
+import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
+import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DailyThoughtActivity extends AppCompatActivity implements DailyThoughtAdapter.DailyThoughtAdapterlistener/*, SubscriberContract.View,

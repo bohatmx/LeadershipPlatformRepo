@@ -9,8 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.adapters.EbookAdapter;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.lists.EBookListFragment;
+import com.oneconnect.leadership.library.lists.VideoListFragment;
 
 public class eBookActivity extends AppCompatActivity implements EBookListFragment.EBookListener {
 

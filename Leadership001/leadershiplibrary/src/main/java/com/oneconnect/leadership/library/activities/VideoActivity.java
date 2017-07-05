@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.lists.VideoListFragment;
 
 public class VideoActivity extends AppCompatActivity implements VideoListFragment.VideoListener{

@@ -2,13 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:checkableBehavior="single" >
-        <item android:title="Message">
+
+    <group android:checkableBehavior="single">
+        <item android:title="News">
             <menu>
                 <item
                     android:id="@+id/nav_news_article"
                     android:icon="@drawable/ic_info"
                     android:title="News Articles" />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="single" >
+        <item android:title="Message">
+            <menu>
                 <item
                     android:id="@+id/nav_daily_thought"
                     android:icon="@drawable/ic_comment_black_24dp"
@@ -59,6 +66,15 @@
                android:title="Books" />
        </menu>
    </item>
+
+    <item android:title="Share">
+        <menu>
+            <item
+                android:id="@+id/nav_invite"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Invite Friends"/>
+        </menu>
+    </item>
 
    <item android:title="Sign out">
        <menu>

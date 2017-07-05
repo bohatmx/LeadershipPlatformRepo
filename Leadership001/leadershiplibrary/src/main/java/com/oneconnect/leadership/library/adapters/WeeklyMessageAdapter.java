@@ -18,10 +18,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;

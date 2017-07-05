@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
