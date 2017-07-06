@@ -114,6 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/t0"
                 android:layout_marginLeft="@dimen/mon_pad"
+                android:scrollHorizontally="true"
                 android:text="A title will be placed here - daily thought etc. The length here is important and should be the most prominent on this screen."
                 android:textSize="15sp"
                 android:textColor="@color/black"

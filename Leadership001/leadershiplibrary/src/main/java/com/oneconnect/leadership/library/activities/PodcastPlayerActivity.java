@@ -50,6 +50,7 @@ import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -201,11 +202,15 @@ public class PodcastPlayerActivity extends AppCompatActivity {
 
     }
 
+    DecimalFormat timeFormat = new DecimalFormat("#.00");
+
 
     //convert millisecond to string
     private String millisecondsToString(int milliseconds) {
         long minutes = TimeUnit.MILLISECONDS.toMinutes((long) milliseconds);
         long seconds = TimeUnit.MILLISECONDS.toSeconds((long) milliseconds);
+        timeFormat.format(minutes);
+        timeFormat.format(seconds);
         return minutes + ":" + seconds;
     }
 
@@ -236,6 +241,7 @@ public class PodcastPlayerActivity extends AppCompatActivity {
 
         public void run()  {
             int currentPosition = mediaPlayer.getCurrentPosition();
+            timeFormat.format(currentPosition);
             String currentPositionStr = millisecondsToString(currentPosition);
             textCurrentPosition.setText(currentPositionStr);
 
@@ -244,38 +250,6 @@ public class PodcastPlayerActivity extends AppCompatActivity {
             threadHandler.postDelayed(this, 50);
         }
     }
-
-
-    private void showFullView() {
-        /*DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        android.widget.LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) videoView.getLayoutParams();
-        params.width =  metrics.widthPixels;
-        params.height = metrics.heightPixels;
-        params.leftMargin = 0;
-        videoView.setLayoutParams(params);*/
-        bottomLayout.setVisibility(View.GONE);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();
-        params.width =  metrics.widthPixels;
-        params.height = metrics.heightPixels;
-        params.leftMargin = 0;
-        videoView.setLayoutParams(params);
-    }
-
-    private void showHalfView() {
-        bottomLayout.setVisibility(View.VISIBLE);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) /*videoView*/podcastPlayerLayout.getLayoutParams();
-       // params.width =  (int) (300*metrics.density);
-        params.height = (int) (250*metrics.density);
-        params.leftMargin = 30;
-        /*videoView*/podcastPlayerLayout.setLayoutParams(params);
-    }
-
-
 
     String url;
     private void playVideo() {
@@ -539,18 +513,22 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         }
       //  mediaPlayer.start();
 
-        int duration = /*this.*/mediaPlayer.getDuration();
+        int duration = mediaPlayer.getDuration();
 
-        int currentPosition = /*this.*/mediaPlayer.getCurrentPosition();
+        int currentPosition = mediaPlayer.getCurrentPosition();
         if(currentPosition== 0)  {
-            /*this.*/videoSeekBar.setMax(duration);
-            String maxTimeString = /*this.*/millisecondsToString(duration);
-            /*this.*/textView_maxTime.setText(maxTimeString);
+            timeFormat.format(currentPosition);
+            videoSeekBar.setMax(duration);
+           // timeFormat.format(duration);
+            String maxTimeString = millisecondsToString(duration);
+            textView_maxTime.setText(maxTimeString);
+
+           // timeFormat.format(seconds);
         } else if(currentPosition== duration)  {
             // Resets the MediaPlayer to its uninitialized state.
-            /*this.*/mediaPlayer.reset();
+            mediaPlayer.reset();
         }
-        /*this.*/mediaPlayer.start();
+        mediaPlayer.start();
         // Create a thread to update position of SeekBar.
         UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
         threadHandler.postDelayed(updateSeekBarThread,50);
@@ -577,6 +555,7 @@ public class PodcastPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnded() {
                         mediaPlayer.stop();
+                      //  mediaPlayer.reset();
                         stopbtn.setVisibility(View.GONE);
                         pausebtn.setVisibility(View.GONE);
                         playbtn.setVisibility(View.VISIBLE);

@@ -8,6 +8,7 @@ import android.media.session.MediaController;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -85,6 +86,10 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final NewsViewHolder dvh = (NewsViewHolder) holder;
         //dvh.txtEvents.setText("" + (position + 1));
         dvh.txtTitle.setText(dt.getTitle());
+        if (dvh.txtTitle.getLineCount() > 3) {
+            dvh.txtTitle.setLines(3);
+            dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
+        }
         dvh.txtSubtitle.setText(dt.getSubtitle());
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
@@ -317,8 +322,17 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     public void onAnimationEnded() {
                         if (dvh.bottomLayout.getVisibility() == View.GONE){
                             dvh.bottomLayout.setVisibility(View.VISIBLE);
+                            if (dvh.txtTitle.getLineCount() > 3) {
+                                dvh.txtTitle.setLines(7);
+                            }
+                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
+                         //   dvh.txtTitle.setText(dvh.txtTitle.getText());
                         } else {
                             dvh.bottomLayout.setVisibility(View.GONE);
+                            if (dvh.txtTitle.getLineCount() > 3) {
+                                dvh.txtTitle.setLines(3);
+                                dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
+                            }
                         }
                     }
                 });

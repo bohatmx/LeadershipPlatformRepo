@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -75,6 +76,10 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         final WeeklyMessageViewHolder wmvh = (WeeklyMessageViewHolder) holder;
       //  wmvh.txtEvents.setText("" + (position + 1));
         wmvh.txtTitle.setText(wm.getTitle());
+        if (wmvh.txtTitle.getLineCount() > 3) {
+            wmvh.txtTitle.setLines(3);
+            wmvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
+        }
         wmvh.txtSubtitle.setText(wm.getSubtitle());
         StringBuilder sb = new StringBuilder(wm.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
@@ -93,8 +98,15 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
                     public void onAnimationEnded() {
                         if (wmvh.bottomLayout.getVisibility() == View.GONE){
                             wmvh.bottomLayout.setVisibility(View.VISIBLE);
+                            if (wmvh.txtTitle.getLineCount() > 3) {
+                                wmvh.txtTitle.setLines(5);
+                            }
                         } else {
                             wmvh.bottomLayout.setVisibility(View.GONE);
+                            if (wmvh.txtTitle.getLineCount() > 3) {
+                                wmvh.txtTitle.setLines(3);
+                                wmvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
+                            }
                         }
                     }
                 });
