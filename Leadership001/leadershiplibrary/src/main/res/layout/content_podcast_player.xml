@@ -26,15 +26,15 @@
                 android:padding="5dp"
                 android:id="@+id/podcastIMGAE"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="250dp"
                 android:src="@drawable/podcasts"
                 android:scaleType="fitXY"/>
             <SeekBar
+                android:layout_below="@+id/podcastIMGAE"
                 android:id="@+id/videoSeekBar"
                 android:padding="@dimen/mon_padding"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="200dp"/>
+                android:layout_height="wrap_content"/>
             <TextView
                 android:layout_below="@+id/videoSeekBar"
                 android:id="@+id/textCurrentPosition"

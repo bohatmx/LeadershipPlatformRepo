@@ -40,12 +40,28 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
         startMain();
     }
 
+    boolean isAlreadySignedIn = true;
+
     private void startMain() {
         Toasty.success(this, getString(R.string.success),
                 Toast.LENGTH_LONG, true).show();
-        Intent m = new Intent(this, SubscriberMainActivity.class);
+        Intent m = new Intent(SubscriberSignInActivityBase.this, SubscriberMainActivity.class);
         startActivity(m);
         finish();
+
+
+       /* if (isAlreadySignedIn) {
+            Intent intent = new Intent(this, SubscriberMainActivity.class);
+            startActivity(intent);
+            finish();
+            //return;
+        } else {
+            Toasty.success(this, getString(R.string.success),
+                    Toast.LENGTH_LONG, true).show();
+            Intent m = new Intent(this, SubscriberMainActivity.class);
+            startActivity(m);
+            finish();
+        }*/
     }
 
     @Override
