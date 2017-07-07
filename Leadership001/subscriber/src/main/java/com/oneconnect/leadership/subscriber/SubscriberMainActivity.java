@@ -235,7 +235,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         /*if (SharedPrefUtil.getUser(ctx).getFullName() != null) {
             usernametxt.setText(SharedPrefUtil.getUser(ctx).getFullName());
         }*/
-        mPager = (ViewPager) findViewById(com.oneconnect.leadership.library.R.id.viewpager);
+        mPager = (ViewPager) findViewById(R.id.viewpager);
         //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 

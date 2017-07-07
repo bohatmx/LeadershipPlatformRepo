@@ -68,7 +68,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
     String timer;
     PodcastUploadPresenter presenter;
     SeekBar recorderSeekBar;
-    ImageView stopIMG, pauseIMG, playIMG, imageView;
+    ImageView stopIMG, pauseIMG, playIMG, imageView, podcasts;
     RelativeLayout controlsLay;
 
     @Override
@@ -201,7 +201,47 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
             }
         });
 
+        podcasts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(imageView, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if(checkPermission()) {
 
+                            AudioSavePathInDevice =
+                                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/    " +
+                                            CreateRandomAudioFileName(5) + "AudioRecording.mp3";
+
+                            MediaRecorderReady();
+
+                            try {
+                                mediaRecorder.prepare();
+                                mediaRecorder.start();
+                            } catch (IllegalStateException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+
+                            buttonStart.setEnabled(false);
+                            buttonStop.setEnabled(true);
+                            buttonUpload.setEnabled(false);
+                            recordProgress.setVisibility(View.VISIBLE);
+                            recordProgress.setText("");
+                            buttonStop.setVisibility(View.VISIBLE);
+                            setTimerLabel("Recording Audio....");
+                            Toast.makeText(AudioRecordTest.this, "Recording started",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            requestPermission();
+                        }
+                    }
+                });
+            }
+        });
 
         buttonStart = (Button) findViewById(R.id.button);
         buttonStart.setVisibility(View.GONE);
@@ -214,7 +254,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         buttonUpload  = (Button)findViewById(R.id.button5);
         buttonUpload.setVisibility(View.GONE);
         recordProgress = (TextView) findViewById(R.id.timerText);
-
+        podcasts =(ImageView) findViewById(R.id.podcastIMGAE);
         buttonStop.setEnabled(false);
         buttonPlayLastRecordAudio.setEnabled(false);
         buttonStopPlayingRecording.setEnabled(false);
