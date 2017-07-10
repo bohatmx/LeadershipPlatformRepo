@@ -12,12 +12,15 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:background="@color/white"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
         <android.support.v4.view.PagerTitleStrip
             android:id="@+id/pager_title_strip"
             style="@style/PagerSmall"
+            android:background="@color/sasa_red"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"

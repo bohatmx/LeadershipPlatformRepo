@@ -177,7 +177,21 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
-
+        dvh.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (dvh.bottomLayout.getVisibility() == View.GONE){
+                            dvh.bottomLayout.setVisibility(View.VISIBLE);
+                        }else{
+                            dvh.bottomLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
 

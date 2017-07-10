@@ -56,6 +56,7 @@ public class UrlAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(ctx, WebViewActivity.class);
                 intent.putExtra("url", u.getUrl());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ctx.startActivity(intent);
             }
         });

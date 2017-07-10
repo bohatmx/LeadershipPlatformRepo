@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/absa_red">
+    android:background="@color/sasa_red">
 
     <TextView
         android:text="Welcome to Leadership Platform"

@@ -12,5 +12,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment"
-        android:name="com.oneconnect.leadership.library.lists.EBookReaderFragment" />
+        android:name="com.oneconnect.leadership.library.lists.EBookListFragment" />
 </android.support.constraint.ConstraintLayout>
