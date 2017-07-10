@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 
 import java.io.File;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     }
 
     public interface PhotoAdapterListener {
-        void onUploadPhoto(String path);
+        void onUploadPhoto(String path, int position);
         void onViewPhoto(String path);
     }
 
@@ -45,11 +46,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     }
 
     @Override
-    public void onBindViewHolder(PhotoViewHolder holder, int position) {
+    public void onBindViewHolder(PhotoViewHolder holder, final int position) {
 
         final String path = paths.get(position);
-        File file = new File(path);
-        Log.w("PhotoAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
+        //File file = new File(path);
+        //Log.w("PhotoAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
         /*Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MINI_KIND);
         holder.image.setImageBitmap(thumb);*/
         Glide.with(context)
@@ -62,7 +63,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         holder.uploadIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onUploadPhoto(path);
+                listener.onUploadPhoto(path, position);
             }
         });
         /*holder.btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -89,5 +90,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             uploadIMG = (ImageView) itemView.findViewById(R.id.uploadIMG);
         }
 
+    }
+
+    public List<String> getPaths() {
+        return paths;
+    }
+
+    public void setPaths(List<String> paths) {
+        this.paths = paths;
     }
 }

@@ -53,7 +53,7 @@ public class MiniPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onAnimationEnded() {
                         Intent intent = new Intent(ctx, FullPhotoActivity.class);
-                        intent.putExtra("photo", p);
+                        //intent.putExtra("photo", p);
                         ctx.startActivity(intent);
                         /*Intent intent = new Intent(ctx, FullPhotoActivity.class);
                         intent.putExtra("photo", p);

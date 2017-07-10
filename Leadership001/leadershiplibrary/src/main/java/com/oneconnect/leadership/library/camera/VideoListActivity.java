@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.camera;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -130,6 +131,9 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         image1 = (ImageView) findViewById(R.id.image1);
+        image2 = (ImageView) findViewById(R.id.image2);
+        image2.setColorFilter(ContextCompat.getColor(VideoListActivity.this,R.color.black));
+        image1.setColorFilter(ContextCompat.getColor(VideoListActivity.this,R.color.green_500));
         image1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,8 +146,6 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
                 });
             }
         });
-        image2 = (ImageView) findViewById(R.id.image2);
-        image2.setVisibility(View.GONE);
 
         getCachedVideos();
         getVideos();

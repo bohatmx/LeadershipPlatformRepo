@@ -142,9 +142,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         /*LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);*/
         recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
-
         /*recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));*/
-
         getCachedEBooks();
         getEBooks();
 

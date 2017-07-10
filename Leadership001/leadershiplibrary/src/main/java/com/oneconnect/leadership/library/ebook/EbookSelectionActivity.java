@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
+import com.oneconnect.leadership.library.camera.VideoListActivity;
 import com.oneconnect.leadership.library.photo.PhotoAdapter;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.photo.PhotoUploadContract;
@@ -61,6 +63,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import static com.oneconnect.leadership.library.R.id.image1;
+import static com.oneconnect.leadership.library.R.id.image2;
 
 
 public class EbookSelectionActivity extends AppCompatActivity implements EbookUploadContract.View, PhotoUploadContract.View,
@@ -462,7 +466,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             //
             PhotoAdapter adapter = new PhotoAdapter(resultIAV, this, new PhotoAdapter.PhotoAdapterListener() {
                 @Override
-                public void onUploadPhoto(String path) {
+                public void onUploadPhoto(String path, int position) {
                     confirmPhotoUpload(path);
                 }
 
@@ -671,6 +675,8 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         books = (ImageView) findViewById(R.id.books);
 
         booksimg = (ImageView) findViewById(R.id.booksimg);
+        booksimg.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.black));
+        books.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.green_500));
         booksimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

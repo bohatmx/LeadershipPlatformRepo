@@ -8,7 +8,7 @@ import java.util.Date;
  */
 
 public class ThumbnailDTO  {
-    private String thumbnailID, url, stringDate, companyID, companyName, filePath;
+    private String thumbnailID, url, stringDate, companyID, companyName, filePath, imageSize;
     private long date;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm:ss");
 

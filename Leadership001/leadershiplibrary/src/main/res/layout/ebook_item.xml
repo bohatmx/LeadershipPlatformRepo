@@ -23,12 +23,12 @@
             android:visibility="gone"/>
 
         <ImageView
-            android:padding="@dimen/appbar_padding_top"
+            android:padding="2dp"
             android:id="@+id/ebook_menu"
             android:layout_width="20dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_dots"
             android:layout_alignRight="@+id/fileName"
@@ -48,9 +48,8 @@
         <ImageView
             android:id="@+id/bookIcon"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             android:layout_below="@+id/image"
-            android:layout_margin="8dp"
             android:scaleType="fitXY"
             android:src="@drawable/cover" />
 

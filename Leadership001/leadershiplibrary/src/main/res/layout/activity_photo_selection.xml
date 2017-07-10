@@ -22,5 +22,4 @@
 
     <include layout="@layout/content_photo_selection" />
 
-
 </android.support.design.widget.CoordinatorLayout>

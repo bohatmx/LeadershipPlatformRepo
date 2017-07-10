@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
+import com.oneconnect.leadership.library.audio.PodcastListActivity;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -76,24 +78,30 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         getSupportActionBar().setTitle("Video Selection & Upload");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new VideoUploadPresenter(this);
+        image1 = (ImageView) findViewById(R.id.image1);
+        image2 = (ImageView) findViewById(R.id.image2);
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
                 getSupportActionBar().setSubtitle(dailyThought.getTitle());
+                image2.setVisibility(View.GONE);
                 break;
             case ResponseBag.WEEKLY_MASTERCLASS:
                 weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
                 getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+                image2.setVisibility(View.GONE);
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
                 getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                image2.setVisibility(View.GONE);
                 break;
             case ResponseBag.EBOOKS:
                 eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
                 getSupportActionBar().setSubtitle(eBook.getStorageName());
+                image2.setVisibility(View.GONE);
                 break;
             case ResponseBag.PODCASTS:
                 podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
@@ -127,8 +135,8 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     private void setup() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        image1 = (ImageView) findViewById(R.id.image1);
-        image2 = (ImageView) findViewById(R.id.image2);
+        image2.setColorFilter(ContextCompat.getColor(VideoSelectionActivity.this,R.color.black));
+        image1.setColorFilter(ContextCompat.getColor(VideoSelectionActivity.this,R.color.green_500));
         image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
