@@ -1,12 +1,14 @@
 package com.oneconnect.leadership.library.photo;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +19,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
+import com.oneconnect.leadership.library.api.ListAPI;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
+import com.oneconnect.leadership.library.audio.PodcastListActivity;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -37,6 +43,7 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -49,13 +56,13 @@ import java.util.regex.Pattern;
 
 import es.dmoral.toasty.Toasty;
 
-public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View{
+public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View{
 
 
     private RecyclerView recyclerView;
     private int type;
     private PhotoUploadPresenter presenter;
-
+    private PhotoDownloadPresenter presenterPhotoDownload;
     private EbookUploadPresenter eBookpresenter;
     private Toolbar toolbar;
     private DailyThoughtDTO dailyThought;
@@ -70,6 +77,15 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     public static final int PHOTO_REQUEST = 100000;
     SearchView searchView = null;
     ArrayList<String> resultIAV;
+    private ListAPI listAPI;
+    public static List<String> serverList;
+    ImageView galleryImage, serverImage;
+    ArrayList<String> searchResult;
+    PhotoAdapter adapter;
+    FirebaseStorageAPI fbs;
+    List<PhotoDTO> photoDTOs;
+    boolean isServerList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +96,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         getSupportActionBar().setTitle("Photo Selection & Upload");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new PhotoUploadPresenter(this);
+        presenterPhotoDownload = new PhotoDownloadPresenter(this);
+        fbs = new FirebaseStorageAPI();
         //remove if it doesnt work
         eBookpresenter = new EbookUploadPresenter(this);
 
@@ -140,10 +158,32 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         LinearLayoutManager lm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(lm);
 
+        serverImage = (ImageView) findViewById(R.id.booksimg);
+        galleryImage = (ImageView) findViewById(R.id.books);
+        galleryImage.setColorFilter(ContextCompat.getColor(PhotoSelectionActivity.this,R.color.green_500));
+        serverImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                serverImage.setColorFilter(ContextCompat.getColor(PhotoSelectionActivity.this,R.color.green_500));
+                galleryImage.setColorFilter(ContextCompat.getColor(PhotoSelectionActivity.this,R.color.black));
+                adapter.setPaths(serverList);
+                recyclerView.getAdapter().notifyDataSetChanged();
+                isServerList = true;
+            }
+        });
+        galleryImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                serverImage.setColorFilter(ContextCompat.getColor(PhotoSelectionActivity.this,R.color.black));
+                galleryImage.setColorFilter(ContextCompat.getColor(PhotoSelectionActivity.this,R.color.green_500));
+                getFilePaths();
+            }
+        });
 
        // setUp();
         //walkdir(Environment.getExternalStorageDirectory());
         getFilePaths();
+        getAllPhotos();
     }
 
     private void setUp() {
@@ -269,10 +309,10 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             }
 
             //
-            PhotoAdapter adapter = new PhotoAdapter(resultIAV, this, new PhotoAdapter.PhotoAdapterListener() {
+            adapter = new PhotoAdapter(resultIAV, this, new PhotoAdapter.PhotoAdapterListener() {
                 @Override
-                public void onUploadPhoto(String path) {
-                    confirmUpload(path);
+                public void onUploadPhoto(String path, int pos) {
+                    confirmUpload(path, pos);
                 }
 
                 @Override
@@ -305,11 +345,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                     searchView.setIconified(true);
                 }
                 myActionMenuItem.collapseActionView();
-                ArrayList<String> searchResult = getSearchList(query);
-                PhotoAdapter adapter = new PhotoAdapter(searchResult, PhotoSelectionActivity.this, new PhotoAdapter.PhotoAdapterListener() {
+                searchResult = getSearchList(query);
+                adapter = new PhotoAdapter(searchResult, PhotoSelectionActivity.this, new PhotoAdapter.PhotoAdapterListener() {
                     @Override
-                    public void onUploadPhoto(String path) {
-                        confirmUpload(path);
+                    public void onUploadPhoto(String path, int pos) {
+                        confirmUpload(path, pos);
                     }
 
                     @Override
@@ -345,14 +385,18 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     }
     List<String> filePathList;
 
-    private void confirmUpload(final String path) {
+    private void confirmUpload(final String path, final int pos) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Confirmation")
                 .setMessage("Do you want to upload this photo to the database?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        uploadPhoto(path);
+                        if(isServerList){
+                            addExistingPhoto(pos);
+                        }else{
+                            uploadPhoto(path);
+                        }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -426,6 +470,74 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         presenter.uploadPhoto(p);
     }
 
+    private void addExistingPhoto(int pos) {
+        showSnackbar("Uploading photo ...", "OK", Constants.CYAN);
+        UserDTO u = SharedPrefUtil.getUser(getApplicationContext());
+        PhotoDTO p = photoDTOs.get(pos);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+                p.setTitle(dailyThought.getTitle());
+                // p.setDescription(dailyThought.getTitle());
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                p.setWeeklyMasterClassID(weeklyMasterClass.getWeeklyMasterClassID());
+                p.setTitle(weeklyMasterClass.getTitle());
+                //p.setDescription(weeklyMasterClass.getTitle());
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
+                p.setTitle(weeklyMessage.getTitle());
+                //p.setDescription(weeklyMessage.getTitle());
+                break;
+            case ResponseBag.EBOOKS:
+                p.seteBookID(eBook.geteBookID());
+                p.setTitle(eBook.getStorageName());
+                eBook.setPhotoUrl(p.getUrl());
+                eBook.setPhotoID(p.getPhotoID());
+                break;
+            case ResponseBag.PODCASTS:
+                p.setPodcast(podcast);
+                break;
+            case ResponseBag.VIDEOS:
+                p.setVideo(video);
+                break;
+            case ResponseBag.URLS:
+                p.setUrlDTO(url);
+                break;
+            case ResponseBag.NEWS:
+                p.setNewsID(news.getNewsID());
+                p.setTitle(news.getTitle());
+                //p.setCaption(news.getBody());
+                break;
+        }
+        if (type == ResponseBag.EBOOKS) {
+            eBookpresenter.uploadEbook(eBook);
+            return;
+        }
+        fbs.addExistingPhotoToFirebase(p, new FirebaseStorageAPI.StorageListener() {
+            @Override
+            public void onResponse(String key) {
+                //view.onPhotoUploaded(key);
+            }
+
+            @Override
+            public void onProgress(long transferred, long size) {
+                //view.onProgress(transferred, size);
+            }
+
+            @Override
+            public void onError(String message) {
+                //view.onError(message);
+            }
+        });
+    }
+
+    private void getAllPhotos() {
+        Log.d(LOG, "************** getAllPhotos: " );
+        presenterPhotoDownload.getAllPhotos();
+    }
+
     private File photoFile,  currentThumbFile;
     private List<PhotoDTO> photos = new ArrayList<>();
 
@@ -486,8 +598,30 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     }
 
     @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+        photoDTOs = list;
+        serverList = getThumbNailUrl(list);
+    }
+
+    @Override
     public void onError(String message) {
 
+    }
+
+    private List<String> getThumbNailUrl(List<PhotoDTO> photoDTOs){
+        List<String> urlList = new ArrayList<>();
+        PhotoDTO photoDTO;
+        String photoUrl = null;
+        for(int i = 0; i < photoDTOs.size(); i++ ){
+            photoDTO = photoDTOs.get(i);
+            if(photoDTO.getThumbNailUrl() != null){
+                photoUrl = photoDTO.getThumbNailUrl();
+            }else{
+                photoUrl = photoDTO.getUrl();
+            }
+            urlList.add(photoUrl);
+        }
+      return urlList;
     }
 
     static final String LOG = PhotoSelectionActivity.class.getSimpleName();

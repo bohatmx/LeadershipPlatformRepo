@@ -186,7 +186,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             bottomLayout.setVisibility(View.GONE);
             eBookMenu = (ImageView) itemView.findViewById(R.id.ebook_menu);
-            //eBookMenu.setVisibility(View.VISIBLE);
+            eBookMenu.setVisibility(View.VISIBLE);
         }
     }
 }

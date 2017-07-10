@@ -62,7 +62,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         File file = new File(path);
         Log.w("EbookAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
         int i = path.lastIndexOf("/");
-        //holder.txtFileName.setText(path.substring(i + 1));
+        holder.txtFileName.setText(path.substring(i + 1));
 
         holder.uploadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +147,6 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         public EbookViewHolder(View itemView) {
             super(itemView);
             txtFileName = (TextView) itemView.findViewById(R.id.fileName);
-            txtFileName.setVisibility(View.GONE);
             uploadIcon = (ImageView) itemView.findViewById(R.id.uploadIcon);
             readIcon = (ImageView) itemView.findViewById(R.id.readIcon);
             bookIcon = (ImageView) itemView.findViewById(R.id.bookIcon);
@@ -155,7 +154,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
             imageUploadIcon.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             bottomLayout.setVisibility(View.GONE);
-            //btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
+            btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             //btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
         }
 

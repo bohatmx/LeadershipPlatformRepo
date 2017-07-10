@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +32,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
@@ -74,16 +76,19 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         getSupportActionBar().setTitle("Podcast Selection & Upload");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new PodcastUploadPresenter(this);
+        image2 = (ImageView) findViewById(R.id.image2);
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
                 getSupportActionBar().setSubtitle(dailyThought.getTitle());
+                image2.setVisibility(View.GONE );
                 break;
             case ResponseBag.WEEKLY_MASTERCLASS:
                 weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
                 getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+                image2.setVisibility(View.GONE );
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
@@ -96,14 +101,17 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             case ResponseBag.VIDEOS:
                 video = (VideoDTO) getIntent().getSerializableExtra("video");
                 getSupportActionBar().setSubtitle(video.getStorageName());
+                image2.setVisibility(View.GONE );
                 break;
             case ResponseBag.PODCASTS:
                 podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
                 getSupportActionBar().setSubtitle(podcast.getStorageName());
+                image2.setVisibility(View.GONE );
                 break;
             case ResponseBag.URLS:
                 url = (UrlDTO) getIntent().getSerializableExtra("url");
                 getSupportActionBar().setSubtitle(url.getTitle());
+                image2.setVisibility(View.GONE );
                 break;
         }
         if (getIntent().getSerializableExtra("eBook") != null) {
@@ -292,10 +300,13 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                 });
             }
         });
-        image2 = (ImageView) findViewById(R.id.image2);
+        image2.setColorFilter(ContextCompat.getColor(PodcastSelectionActivity.this,R.color.black));
+        image1.setColorFilter(ContextCompat.getColor(PodcastSelectionActivity.this,R.color.green_500));
         image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                image2.setColorFilter(ContextCompat.getColor(PodcastSelectionActivity.this,R.color.green_500));
+                image1.setColorFilter(ContextCompat.getColor(PodcastSelectionActivity.this,R.color.black));
                 Util.flashOnce(image2, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {

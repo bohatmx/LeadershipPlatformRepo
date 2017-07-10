@@ -15,11 +15,11 @@ import static com.oneconnect.leadership.library.lists.BasicEntityAdapter.sdf;
  * Created by aubreymalabie on 2/11/17.
  */
 
-public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<PhotoDTO>/*, Parcelable*/ {
+public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<PhotoDTO>, Parcelable {
 
     @Exclude
     private String filePath;
-    private String photoID, caption, url;
+    private String photoID, caption, url, thumbNailUrl;
     private int height, width;
     private long bytes;
     private long date, imageSize, dateUploaded;
@@ -58,9 +58,10 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
         dailyThoughtID = in.readString();
         eBookID = in.readString();
         podcastID = in.readString();
+        thumbNailUrl = in.readString();
     }
 
-   /* public static final Creator<PhotoDTO> CREATOR = new Creator<PhotoDTO>() {
+    public static final Creator<PhotoDTO> CREATOR = new Creator<PhotoDTO>() {
         @Override
         public PhotoDTO createFromParcel(Parcel in) {
             return new PhotoDTO(in);
@@ -70,7 +71,7 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
         public PhotoDTO[] newArray(int size) {
             return new PhotoDTO[size];
         }
-    };*/
+    };
 
     public long getBytes() {
         return bytes;
@@ -306,7 +307,7 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
     }
 
     ////
-    /*@Override
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -315,7 +316,7 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(caption);
     }
-*/
+
     public PodcastDTO getPodcast() {
         return podcast;
     }
@@ -354,5 +355,13 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
 
     public void setNewsID(String newsID) {
         this.newsID = newsID;
+    }
+
+    public String getThumbNailUrl() {
+        return thumbNailUrl;
+    }
+
+    public void setThumbNailUrl(String thumbNailUrl) {
+        this.thumbNailUrl = thumbNailUrl;
     }
 }

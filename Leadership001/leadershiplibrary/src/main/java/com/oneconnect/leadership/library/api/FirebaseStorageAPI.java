@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -38,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import com.oneconnect.leadership.library.activities.WebViewActivity;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -47,6 +49,8 @@ import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -187,9 +191,76 @@ public class FirebaseStorageAPI extends Activity {
         }
     }
 
+    public void uploadThumbnailForPhoto(final ThumbnailDTO thumbnail, final PhotoDTO photo,
+                                        final UploadTask.TaskSnapshot photoTaskSnapshot,
+                                        final StorageListener listener) {
+
+        Log.d(TAG, "uploadThumbnail: ".concat(thumbnail.getFilePath()));
+        final File f = new File(thumbnail.getFilePath());
+        if (f.exists()) {
+            Log.d(TAG, "uploadThumbnail: prior to upload: "
+                    + f.length() + " - " + f.getAbsolutePath());
+        } else {
+            listener.onError("Cannot find file for upload");
+            return;
+        }
+        StorageReference reference = storageReference.child(THUMBNAILS
+                + "/"
+                + f.getName().concat(" ").concat(sdf.format(new Date())));
+        Log.d(TAG, "uploadThumbnail: starting upload ...: " + f.getAbsolutePath());
+        try {
+            reference.putStream(new FileInputStream(f)).addOnSuccessListener(
+                    new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //delete thumbnail after successful upload
+                            if(f.exists()){
+                                f.delete();
+                            }
+                            thumbnail.setUrl(taskSnapshot.getDownloadUrl().toString());
+                            photo.setThumbNailUrl(thumbnail.getUrl());
+                            addPhotoToFirebase(photo, photoTaskSnapshot, listener);
+                            dataAPI.addThumbnail(thumbnail, new DataAPI.DataListener() {
+                                @Override
+                                public void onResponse(String key) {
+                                    Log.i(TAG, "onResponse: thumbnail added to firebase: ".concat(key));
+                                    listener.onResponse(key);
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    listener.onError(message);
+                                }
+                            });
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.w(TAG, "onProgress: bytes transferred: "
+                            + taskSnapshot.getBytesTransferred()
+                            + " from total " + taskSnapshot.getTotalByteCount()
+                            + " done: ".concat(getPercentage(taskSnapshot.getBytesTransferred(),
+                            taskSnapshot.getTotalByteCount())));
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "uploadThumbnail: we fell down", e);
+                    FirebaseCrash.report(new Exception("Thumbnail file upload failed "));
+                    listener.onError("Unable to upload the bleeding file");
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, "uploadThumbnail: we fell down", e);
+            FirebaseCrash.report(new Exception("Photo file upload failed "));
+            listener.onError("Unable to upload the bleeding file");
+        }
+    }
+
     public void uploadPhoto(final PhotoDTO photo,
                             final StorageListener listener) {
-
+        //checkFileWriteExternalStoragePermission();
         Log.d(TAG, "###### uploadPhoto: ".concat(photo.getFilePath())
                 .concat("\n").concat(GSON.toJson(photo)));
         final File f = new File(photo.getFilePath());
@@ -206,7 +277,13 @@ public class FirebaseStorageAPI extends Activity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Log.i(TAG, "onSuccess: photo uploaded to firebase storage");
-                    addPhotoToFirebase(photo, taskSnapshot, listener);
+                    ThumbnailDTO thumbnailDTO = new ThumbnailDTO();
+                    final int THUMBSIZE = 64;
+                    //Bitmap thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photo.getFilePath()),
+                    //        THUMBSIZE, THUMBSIZE);
+                    //thumbnailDTO.setFilePath(getThumbNailPath(photo.getFilePath(), thumbImage));
+                    thumbnailDTO.setFilePath(Util.compressImage(photo.getFilePath()));
+                    uploadThumbnailForPhoto(thumbnailDTO, photo, taskSnapshot, listener);
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -228,6 +305,32 @@ public class FirebaseStorageAPI extends Activity {
             listener.onError("Unable to upload the photo file");
         }
     }
+
+    private String getThumbNailPath(String imagePath, Bitmap bmp){
+        FileOutputStream out = null;
+        File pictureNameThumbNail = null;
+        try {
+            String filename = imagePath.substring(imagePath.lastIndexOf(File.separator) + 1, imagePath.lastIndexOf("."));
+            pictureNameThumbNail = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+            out = new FileOutputStream(pictureNameThumbNail);
+            int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+            Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
+            scaled.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+            // PNG is a lossless format, the compression factor (100) is ignored
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return  pictureNameThumbNail.toString();
+    }
+
     private String getSize(long num) {
         BigDecimal d = new BigDecimal(num).divide(new BigDecimal(1024*1024));
         return df.format(d.doubleValue()) + " MB";
@@ -363,6 +466,18 @@ public class FirebaseStorageAPI extends Activity {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
         ctx.startActivity(intent);
+
+        //Intent myIntent = new Intent(ctx, WebViewActivity.class);
+        //Uri apkURI = FileProvider.getUriForFile(
+        //        ctx,
+        //        ctx.getApplicationContext()
+        //                .getPackageName() + ".provider", file);
+
+        //myIntent.setDataAndType(Uri.fromFile(file), "application/pdf");
+        //myIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //myIntent.putExtra("url", file.toString()); //Optional parameters
+        //ctx.startActivity(myIntent);
+
     }
 
     public void checkWriteExternalStoragePermission() {
@@ -395,7 +510,7 @@ public class FirebaseStorageAPI extends Activity {
     }
 
     private void startDownloadEbook(){
-        File bookName = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName + ".pdf");;
+        File bookName = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName + ".pdf");
 
         if(!bookName.exists()){
             DownloadManager.Request r = new DownloadManager.Request(Uri.parse(bookUrl));
@@ -483,6 +598,7 @@ public class FirebaseStorageAPI extends Activity {
         return "" + df.format(a.doubleValue()) + " %";
     }
     private static final DecimalFormat df = new DecimalFormat("##0.00");
+
     @SuppressWarnings("VisibleForTests")
     private void addPhotoToFirebase(final PhotoDTO photo,
                                     UploadTask.TaskSnapshot taskSnapshot,
@@ -518,6 +634,28 @@ public class FirebaseStorageAPI extends Activity {
             }
         });
 
+    }
+
+    public void addExistingPhotoToFirebase(final PhotoDTO photo,
+                                    final StorageListener listener) {
+        Log.i(TAG, "...about to add photoDTO to firebase: "
+                + photo.getUrl());
+        photo.setUrl(photo.getUrl());
+        photo.setDateUploaded(new Date().getTime());
+        photo.setFilePath(null);
+        photo.setPhotoID(null);
+        dataAPI.addPhotoToEntity(photo, new DataAPI.DataListener() {
+            @Override
+            public void onResponse(String k) {
+                Log.w(TAG, "onResponse: photo added to firebase, OK: " + photo.getPhotoID());
+                listener.onResponse(photo.getPhotoID());
+            }
+
+            @Override
+            public void onError(String message) {
+                listener.onError(message);
+            }
+        });
     }
 
     @SuppressWarnings("VisibleForTests")
