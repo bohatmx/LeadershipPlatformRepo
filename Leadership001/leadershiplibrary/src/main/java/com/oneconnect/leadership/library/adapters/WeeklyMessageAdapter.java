@@ -112,6 +112,56 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
         });
+
+        wmvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(wmvh.txtSubtitle, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (wmvh.bottomLayout.getVisibility() == View.GONE){
+                            wmvh.bottomLayout.setVisibility(View.VISIBLE);
+                            if (wmvh.txtSubtitle.getLineCount() > 3) {
+                                wmvh.txtSubtitle.setLines(5);
+                            }
+                        } else {
+                            wmvh.bottomLayout.setVisibility(View.GONE);
+                            if (wmvh.txtSubtitle.getLineCount() > 3) {
+                                wmvh.txtSubtitle.setLines(3);
+                                wmvh.txtSubtitle.setEllipsize(TextUtils.TruncateAt.END);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        wmvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                Util.flashOnce(wmvh.iconCalendar, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        showPopupMenu(v);
+                    }
+                });
+            }
+        });
+
+        wmvh.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(wmvh.imageView, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (wmvh.bottomLayout.getVisibility() == View.GONE){
+                            wmvh.bottomLayout.setVisibility(View.VISIBLE);
+                        }else{
+                            wmvh.bottomLayout.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
         wmvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -247,6 +297,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             });
 
         }
+
         if (wm.getPodcasts() != null) {
             wmvh.txtMicrophone.setText("" + wm.getPodcasts().size());
             wmvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
