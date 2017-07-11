@@ -76,7 +76,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public int getItemCount() {
-        return paths.size();
+        if(paths != null){
+            return paths.size();
+        }else{
+            return 0;
+        }
     }
 
     public class PhotoViewHolder extends RecyclerView.ViewHolder {

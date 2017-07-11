@@ -48,7 +48,7 @@
         <ImageView
             android:id="@+id/bookIcon"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="200dp"
             android:layout_below="@+id/image"
             android:scaleType="fitXY"
             android:src="@drawable/cover" />
@@ -59,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/fileName"
             android:id="@+id/booktop"
-            android:padding="@dimen/mon_margin">
+            android:padding="@dimen/mon_margin"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/uploadIcon"
