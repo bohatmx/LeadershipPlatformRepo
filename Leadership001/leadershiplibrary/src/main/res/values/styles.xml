@@ -39,6 +39,9 @@
     <style name="TextAppearance">
         <item name="android:textColor">@android:color/black</item>
     </style>
+    <style name="TitleText">
+        <item name="android:textSize">15sp</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

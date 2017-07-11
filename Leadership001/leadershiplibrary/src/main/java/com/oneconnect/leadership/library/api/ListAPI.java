@@ -243,7 +243,7 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+//                Log.d(LOG, dataSnapshot.getValue().toString());
                 ResponseBag bag = new ResponseBag();
                 bag.setCalendarEvents(new ArrayList<CalendarEventDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
@@ -267,7 +267,7 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+//                Log.d(LOG, dataSnapshot.getValue().toString());
                 ResponseBag bag = new ResponseBag();
                 bag.setPhotos(new ArrayList<PhotoDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {

@@ -95,6 +95,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_thought_editor, container, false);
         btn = (Button) view.findViewById(R.id.btn);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,8 +103,9 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             }
         });
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
+        editTitle.setHint("Enter Thought");
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
-        editSubtitle.setHint("Enter thought");
+        editSubtitle.setHint("Enter thought author");
         btnDate = (Button) view.findViewById(R.id.btnDate);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,11 +123,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     private void send() {
         if (TextUtils.isEmpty(editTitle.getText())) {
-            editTitle.setError(getString(R.string.enter_title));
+            editTitle.setError(getString(R.string.enter_thought));
             return;
         }
         if (TextUtils.isEmpty(editSubtitle.getText())) {
-            editTitle.setError(getString(R.string.enter_subtitle));
+            editTitle.setError(getString(R.string.enter_thought_author));
             return;
         }
         Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");

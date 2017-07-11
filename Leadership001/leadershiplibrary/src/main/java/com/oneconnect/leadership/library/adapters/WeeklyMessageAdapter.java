@@ -7,6 +7,8 @@ import android.media.MediaPlayer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +32,9 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.MySpannable;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
+import com.oneconnect.leadership.library.util.TextViewExpandableAnimation;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.IOException;
@@ -76,10 +80,10 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         final WeeklyMessageViewHolder wmvh = (WeeklyMessageViewHolder) holder;
       //  wmvh.txtEvents.setText("" + (position + 1));
         wmvh.txtTitle.setText(wm.getTitle());
-        if (wmvh.txtTitle.getLineCount() > 3) {
+        /*if (wmvh.txtTitle.getLineCount() > 3) {
             wmvh.txtTitle.setLines(3);
             wmvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-        }
+        }*/
         wmvh.txtSubtitle.setText(wm.getSubtitle());
         StringBuilder sb = new StringBuilder(wm.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
@@ -98,15 +102,15 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
                     public void onAnimationEnded() {
                         if (wmvh.bottomLayout.getVisibility() == View.GONE){
                             wmvh.bottomLayout.setVisibility(View.VISIBLE);
-                            if (wmvh.txtTitle.getLineCount() > 3) {
+                           /* if (wmvh.txtTitle.getLineCount() > 3) {
                                 wmvh.txtTitle.setLines(5);
-                            }
+                            }*/
                         } else {
                             wmvh.bottomLayout.setVisibility(View.GONE);
-                            if (wmvh.txtTitle.getLineCount() > 3) {
+                            /*if (wmvh.txtTitle.getLineCount() > 3) {
                                 wmvh.txtTitle.setLines(3);
                                 wmvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }
+                            }*/
                         }
                     }
                 });
@@ -424,6 +428,9 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             return false;
         }
     }
+
+
+
     private void shareIt() {
         //sharing implementation here
         Intent i = new Intent(Intent.ACTION_SEND);
@@ -440,7 +447,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class WeeklyMessageViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
+        protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
                 playIMG, pauseIMG, stopIMG, imageView;
@@ -451,11 +458,12 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         protected Button btnPlay;
+        protected TextViewExpandableAnimation txtTitle;
 
         public WeeklyMessageViewHolder(View itemView) {
             super(itemView);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
-            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+            txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
