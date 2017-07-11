@@ -59,8 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/fileName"
             android:id="@+id/booktop"
-            android:padding="@dimen/mon_margin"
-            android:visibility="gone">
+            android:padding="@dimen/mon_margin">
 
             <ImageView
                 android:id="@+id/uploadIcon"
