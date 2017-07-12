@@ -81,15 +81,15 @@
                     android:src="@drawable/women_bridge"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    android:layout_below="@+id/iconCalendar"/>
 
                 <ImageView
                     android:id="@+id/iconCalendar"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_dots"
-                    android:visibility="gone" />
+                    android:src="@drawable/ic_history" />
 
                 <TextView
                     android:id="@+id/txtDate"
