@@ -78,7 +78,7 @@
                     android:id="@+id/ImageView"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    android:src="@drawable/women_bridge"
+                    android:src="@drawable/leader"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:scaleType="fitXY" />
@@ -102,7 +102,7 @@
                     android:layout_alignBottom="@id/ImageView"
                     android:text="Wednesday 30 December 2099 12:36"
                     android:textSize="16dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/blue"
                     android:gravity="bottom"/>
             </RelativeLayout>
 
@@ -127,9 +127,9 @@
                 android:layout_marginRight="@dimen/mon_margin"
                 android:layout_marginTop="2dp"
                 android:paddingBottom="2dp"
-                android:text="little happy space"
-                android:textColor="@color/indigo_500"
-                android:textSize="12sp"
+                android:text="Jill Scoot"
+                android:textColor="@color/blue"
+                android:textSize="13sp"
                 android:textStyle="normal" />
 
 

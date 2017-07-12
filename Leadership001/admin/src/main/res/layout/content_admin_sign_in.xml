@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="@color/absa_red"
+    android:background="@color/sasa_red"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.oneconnect.leadership.admin.SplashScreenActivity"
     tools:showIn="@layout/activity_admin_sign_in">

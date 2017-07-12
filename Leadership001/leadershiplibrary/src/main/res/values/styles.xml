@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/red_500</item>
+        <item name="colorPrimary">@color/sasa_red</item>
         <item name="colorPrimaryDark">@color/red_900</item>
         <item name="colorAccent">@color/red_900</item>
         <item name="android:itemTextAppearance">@style/TextAppearance</item>
@@ -16,7 +16,7 @@
 
     <style name="AppTheme1" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/red_500</item>
+        <item name="colorPrimary">@color/sasa_red</item>
         <item name="colorPrimaryDark">@color/red_900</item>
         <item name="colorAccent">@color/orange_900</item>
         <item name="android:itemTextAppearance">@style/TextAppearance</item>
@@ -30,7 +30,7 @@
     </style>
 
     <style name="SubscriberTheme" parent="LeadershipTheme">
-        <item name="colorPrimary">@color/red_500</item>
+        <item name="colorPrimary">@color/sasa_red</item>
         <item name="colorPrimaryDark">@color/red_700</item>
     </style>
 
