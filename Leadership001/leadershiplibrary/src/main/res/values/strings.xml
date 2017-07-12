@@ -21,6 +21,10 @@
     <string name="title_activity_le_you_tube">LeYouTubeActivity</string>
     <string name="title_activity_podcast_selection">PodcastSelectionActivity</string>
 
+    <string name="expand">expand</string>
+    <string name="shrink">shrink</string>
+    <string name="ellipse">...</string>
+    <string name="tips">This is a custom TextView that can be expanded with a smooth transition animation,you can set the number of lines to expand,change its icon or text and so on\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

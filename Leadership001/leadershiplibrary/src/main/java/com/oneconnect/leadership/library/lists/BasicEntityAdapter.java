@@ -30,6 +30,7 @@ import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.TextViewExpandableAnimation;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -720,7 +721,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     }
 
     public class EntityViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtTitle, txtSubTitle, txtDate,
+        protected TextView /*txtTitle,*/ txtSubTitle, txtDate,
                 txtNumBlack, txtNumBlue, txtNumGrey, txtNumGreen, txtNumRed,
                 txtPhotos, txtVideos, txtEvents, txtLinks, txtPodcasts;
 
@@ -729,12 +730,13 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         protected View bottomLayout, frameLayout, linksLayout, iconLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
+        protected TextViewExpandableAnimation txtTitle;
 
 
         public EntityViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.ImageView);
-            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+            txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
 

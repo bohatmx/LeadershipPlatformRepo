@@ -4,6 +4,9 @@
     <string name="sign_out">Sign Out</string>
     <string name="confirm_photo">Use Photo</string>
     <string name="confirm_video">Use Video</string>
+    <string name="expand">expand</string>
+    <string name="shrink">shrink</string>
+    <string name="ellipse">...</string>
     <string name="title_activity_notif_handler">NotifHandlerActivity</string>
     <string name="title_activity_admin_main">Administration</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -16,6 +19,13 @@
     <string name="enter_category_name">Enter Category Name</string>
     <string name="submit_the_category_data">Submit the Category Data</string>
     <string name="enter_title">Enter Title</string>
+    <string name="enter_message">Enter message</string>
+    <string name="enter_message_author">Enter message author</string>
+    <string name="enter_thought">Enter Thought</string>
+    <string name="enter_thought_author">Enter thought author</string>
+    <string name="enter_news_content">Enter news content</string>
+    <string name="enter_class_message">Enter class message</string>
+    <string name="enter_author_name">Enter author name</string>
     <string name="enter_news">Enter News</string>
     <string name="enter_subtitle">Enter Subtitle</string>
     <string name="title_activity_calendar">CalendarActivity</string>

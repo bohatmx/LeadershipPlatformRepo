@@ -86,9 +86,11 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_thought_editor, container, false);
         btnSend = (Button) view.findViewById(R.id.btn);
+        btnSend.setText("SUBMIT CLASS MESSAGE");
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
+        editTitle.setHint("Enter class message");
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
-        editSubtitle.setHint("Enter class message");
+        editSubtitle.setHint("Enter author name");
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,11 +113,11 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
 
     private void send() {
         if (TextUtils.isEmpty(editTitle.getText())) {
-            editTitle.setError(getString(R.string.enter_title));
+            editTitle.setError(getString(R.string.enter_class_message));
             return;
         }
         if (TextUtils.isEmpty(editSubtitle.getText())) {
-            editTitle.setError(getString(R.string.enter_subtitle));
+            editTitle.setError(getString(R.string.enter_author_name));
             return;
         }
         Log.d(TAG, "send: @@@@@@@@@@@ starting to send weeky message to Firebase");

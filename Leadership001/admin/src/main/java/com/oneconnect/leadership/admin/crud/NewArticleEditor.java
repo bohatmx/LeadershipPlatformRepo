@@ -89,6 +89,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.new_article_editor, container, false);
         btn = (Button) view.findViewById(R.id.btn);
+        btn.setText("SUBMIT NEWS");
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,8 +97,9 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
             }
         });
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
+        editTitle.setHint("Enter news content");
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
-        editSubtitle.setHint("Enter News");
+        editSubtitle.setHint("Enter author name");
         btnDate = (Button) view.findViewById(R.id.btnDate);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,11 +117,11 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
 
     private void send() {
         if (TextUtils.isEmpty(editTitle.getText())) {
-            editTitle.setError(getString(R.string.enter_title));
+            editTitle.setError(getString(R.string.enter_news_content));
             return;
         }
         if (TextUtils.isEmpty(editSubtitle.getText())) {
-            editTitle.setError(getString(R.string.enter_news));
+            editTitle.setError(getString(R.string.enter_author_name));
             return;
         }
         Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");

@@ -32,6 +32,7 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
+import com.oneconnect.leadership.library.util.TextViewExpandableAnimation;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.IOException;
@@ -79,10 +80,10 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         final MasterViewHolder dvh = (MasterViewHolder) holder;
 //        dvh.txtEvents.setText("" + (position + 1));
         dvh.txtTitle.setText(dt.getTitle());
-        if (dvh.txtTitle.getLineCount() > 3) {
+        /*if (dvh.txtTitle.getLineCount() > 3) {
             dvh.txtTitle.setLines(3);
             dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-        }
+        }*/
         dvh.txtSubtitle.setText(dt.getSubtitle());
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
@@ -334,21 +335,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
         }
-        dvh.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                        }else{
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                        }
-                    }
-                });
-            }
-        });
+
         dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -357,15 +344,15 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     public void onAnimationEnded() {
                         if (dvh.bottomLayout.getVisibility() == View.GONE){
                             dvh.bottomLayout.setVisibility(View.VISIBLE);
-                            if (dvh.txtTitle.getLineCount() > 3) {
+                            /*if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(5);
-                            }
+                            }*/
                         } else {
                             dvh.bottomLayout.setVisibility(View.GONE);
-                            if (dvh.txtTitle.getLineCount() > 3) {
+                           /* if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(3);
                                 dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }
+                            }*/
                         }
                     }
                 });
@@ -463,7 +450,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return mList == null ? 0 : mList.size();
     }
     public class MasterViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
+        protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo,
                 iconCamera, photoView, playIMG, pauseIMG, stopIMG, imageView;
@@ -474,11 +461,12 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         protected Button btnPlay;
+        protected TextViewExpandableAnimation txtTitle;
 
         public MasterViewHolder(View itemView) {
             super(itemView);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
-            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+            txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);

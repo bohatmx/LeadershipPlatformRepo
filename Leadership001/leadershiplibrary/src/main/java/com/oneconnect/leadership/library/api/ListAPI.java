@@ -1,5 +1,8 @@
 package com.oneconnect.leadership.library.api;
 
+import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
@@ -72,6 +75,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getNewsArticle(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.NEWS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -95,6 +99,7 @@ public class ListAPI {
             }
         });
     }
+
     public void getAllWeeklyMessages(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MESSAGES);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -147,7 +152,9 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
                 ResponseBag bag = new ResponseBag();
                 bag.seteBooks(new ArrayList<EBookDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
@@ -171,15 +178,17 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
                 ResponseBag bag = new ResponseBag();
                 bag.setPodcasts(new ArrayList<PodcastDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
-                  for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                PodcastDTO p = shot.getValue(PodcastDTO.class);
-                bag.getPodcasts().add(p);
-                      }
-                   }
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        PodcastDTO p = shot.getValue(PodcastDTO.class);
+                        bag.getPodcasts().add(p);
+                    }
+                }
                 listener.onResponse(bag);
             }
 
@@ -195,15 +204,17 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
                 ResponseBag bag = new ResponseBag();
                 bag.setVideos(new ArrayList<VideoDTO>());
-                 if (dataSnapshot.getChildrenCount() > 0) {
-                   for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                VideoDTO v = shot.getValue(VideoDTO.class);
-                bag.getVideos().add(v);
-                         }
-                      }
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        VideoDTO v = shot.getValue(VideoDTO.class);
+                        bag.getVideos().add(v);
+                    }
+                }
                 listener.onResponse(bag);
             }
 
@@ -219,7 +230,9 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
                 ResponseBag bag = new ResponseBag();
                 bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
@@ -243,7 +256,9 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
                 ResponseBag bag = new ResponseBag();
                 bag.setCalendarEvents(new ArrayList<CalendarEventDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
@@ -267,7 +282,9 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
                 ResponseBag bag = new ResponseBag();
                 bag.setPhotos(new ArrayList<PhotoDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
@@ -286,22 +303,24 @@ public class ListAPI {
         });
     }
 
-            public void getAllWeeklyMasterClasses(final DataListener listener) {
-                DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MASTER_CLASSES);
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(LOG, dataSnapshot.getValue().toString());
-                        ResponseBag bag = new ResponseBag();
-                        bag.setWeeklyMasterClasses(new ArrayList<WeeklyMasterClassDTO>());
-                        if (dataSnapshot.getChildrenCount() > 0) {
-                            for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                                WeeklyMasterClassDTO dt = shot.getValue(WeeklyMasterClassDTO.class);
-                                bag.getWeeklyMasterClasses().add(dt);
-                            }
-                        }
-                        listener.onResponse(bag);
+    public void getAllWeeklyMasterClasses(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MASTER_CLASSES);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setWeeklyMasterClasses(new ArrayList<WeeklyMasterClassDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        WeeklyMasterClassDTO dt = shot.getValue(WeeklyMasterClassDTO.class);
+                        bag.getWeeklyMasterClasses().add(dt);
                     }
+                }
+                listener.onResponse(bag);
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -316,7 +335,9 @@ public class ListAPI {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(LOG, dataSnapshot.getValue().toString());
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
                 ResponseBag bag = new ResponseBag();
                 bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
@@ -853,4 +874,6 @@ public class ListAPI {
     }
 
     static final String LOG = ListAPI.class.getSimpleName();
+
+
 }
