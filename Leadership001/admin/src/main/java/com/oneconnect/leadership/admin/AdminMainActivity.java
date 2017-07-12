@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.crud.CrudActivity;
 import com.oneconnect.leadership.admin.services.AdminMessagingService;
+import com.oneconnect.leadership.library.activities.DailyThoughtActivity;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.cache.UserCache;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -72,8 +73,7 @@ public class AdminMainActivity extends AppCompatActivity
                                        Util.flashOnce(fab, 300, new Util.UtilAnimationListener() {
                                            @Override
                                            public void onAnimationEnded() {
-                                               Intent intent = new Intent(ctx, CrudActivity.class);
-                                               intent.putExtra("Add",true);
+                                               Intent intent = new Intent(ctx, DailyThoughtActivity.class);
                                                ctx.startActivity(intent);
                                            }
                                        });

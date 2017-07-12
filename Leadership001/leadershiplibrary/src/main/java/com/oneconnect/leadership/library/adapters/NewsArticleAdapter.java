@@ -328,6 +328,31 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         }*/
 
+        dvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(dvh.txtSubtitle, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (dvh.bottomLayout.getVisibility() == View.GONE){
+                            dvh.bottomLayout.setVisibility(View.VISIBLE);
+                            if (dvh.txtSubtitle.getLineCount() > 3) {
+                                dvh.txtSubtitle.setLines(7);
+                            }
+                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
+                            //   dvh.txtTitle.setText(dvh.txtTitle.getText());
+                        } else {
+                            dvh.bottomLayout.setVisibility(View.GONE);
+                            if (dvh.txtSubtitle.getLineCount() > 3) {
+                                dvh.txtSubtitle.setLines(3);
+                                dvh.txtSubtitle.setEllipsize(TextUtils.TruncateAt.END);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
         dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
