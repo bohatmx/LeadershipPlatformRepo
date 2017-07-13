@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.ebook;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,9 +31,20 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PhotoActivity;
+import com.oneconnect.leadership.library.activities.SubscriberContract;
+import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.camera.VideoListActivity;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
+import com.oneconnect.leadership.library.data.CategoryDTO;
+import com.oneconnect.leadership.library.data.CompanyDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PaymentDTO;
+import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.photo.PhotoAdapter;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.photo.PhotoUploadContract;
@@ -68,7 +81,7 @@ import static com.oneconnect.leadership.library.R.id.image2;
 
 
 public class EbookSelectionActivity extends AppCompatActivity implements EbookUploadContract.View, PhotoUploadContract.View,
-        EbookListFragment.EBookListener, BasicEntityAdapter.EntityListener{
+        EbookListFragment.EBookListener, BasicEntityAdapter.EntityListener, SubscriberContract.View{
 
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
@@ -82,6 +95,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     private Snackbar snackbar;
     private EbookUploadPresenter presenter;
     private PhotoUploadPresenter photoPresenter;
+    private SubscriberPresenter presenterEbook;
     private EBookDTO eBook;
     public static final String TAG = EbookSelectionActivity.class.getSimpleName();
    // private EbookListFragment eBookListFragment;
@@ -90,7 +104,10 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     private Toolbar toolbar;
     Context ctx;
     SearchView searchView = null;
-    List<String> filePathList;
+    public List<String> filePathList;
+    EbookAdapter adapter;
+    private List<EBookDTO> eBooks = new ArrayList<>();
+    public static List<String> serverList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +127,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
         presenter = new EbookUploadPresenter(this);
         photoPresenter = new PhotoUploadPresenter(this);
+        presenterEbook = new SubscriberPresenter(this);
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
@@ -163,7 +181,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         setup();
        // getEbooksOnDevice();
         walkdir(Environment.getExternalStorageDirectory());
-
+        getEBooks();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +193,15 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         });
     }
 
+    private void getEBooks() {
+        Log.d(LOG, "************** getEBooks: " );
+        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+            presenterEbook.getAllEBooks();
+        } else {
+            Log.d(LOG, "user is null");
+        }
+
+    }
 
     public void walkdir(File dir) {
         String pdfPattern = ".pdf";
@@ -196,7 +223,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                         Log.d(LOG, "FileName: " + listFile[i].getName());
 
                         //
-                        EbookAdapter adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
+                        adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
                             @Override
                             public void onUploadEbook(String path) {
                                 confirmUpload(path);
@@ -211,6 +238,12 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                             public void onPhotoUpload(BaseDTO base) {
 
                              //   pickGalleryOrCamera(base);
+                            }
+
+                            @Override
+                            public void onAttachPhoto(EBookDTO ebook) {
+                                //startPhotoGallerySelection(ebook);
+                                pickGalleryOrCamera(ebook);
                             }
 
                            /* @Override
@@ -274,7 +307,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             for (FileContainer f : fileContainerList) {
                 filePathList.add(f.fileName);
             }
-            EbookAdapter adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
+            adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
                 @Override
                 public void onUploadEbook(String path) {
                     confirmUpload(path);
@@ -290,14 +323,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                     pickGalleryOrCamera(base);
                 }
 
-                /*@Override
-                public void onPhotoUpload(String path) {
-                    pickGalleryOrCamera(base);
-                    //startActivity(base);
-                   // getFilePaths();
-                    //confirmPhotoUpload();
-                   // uploadPhoto();
-                }*/
+                @Override
+                public void onAttachPhoto(EBookDTO ebook) {
+                    //startPhotoGallerySelection(ebook);
+                    pickGalleryOrCamera(ebook);
+                }
             });
 
             recyclerView.setAdapter(adapter);
@@ -319,7 +349,10 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 }
                 myActionMenuItem.collapseActionView();
                 ArrayList<String> searchResult = getSearchList(query);
-                EbookAdapter adapter = new EbookAdapter(searchResult, EbookSelectionActivity.this, eBook, new EbookAdapter.EbookAdapterListener() {
+                adapter.setPaths(searchResult);
+                recyclerView.getAdapter().notifyDataSetChanged();
+
+                /*adapter = new EbookAdapter(searchResult, EbookSelectionActivity.this, eBook, new EbookAdapter.EbookAdapterListener() {
                     @Override
                     public void onUploadEbook(String path) {
                         confirmUpload(path);
@@ -336,7 +369,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                     }
 
                 });
-                recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);*/
                 return false;
             }
 
@@ -362,7 +395,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     }
 
 
-    private void pickGalleryOrCamera(final BaseDTO base) {
+    /*private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Select Images")
                 .setMessage("Please select the source of the photos")
@@ -381,6 +414,21 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
             }
         }).show();
+    } */
+
+    private void pickGalleryOrCamera(final BaseDTO base) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this/*ctx*/);
+        b.setTitle("Select Images")
+                .setMessage("Please select the source of the photos")
+                .setPositiveButton("Use Gallery", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(EbookSelectionActivity.this, PhotoActivity.class);
+                        eBook = (EBookDTO) base;
+                        intent.putExtra("eBook", eBook);
+                        startActivity(intent);
+                    }
+                }).show();
     }
 
     private void startPhotoGallerySelection(BaseDTO base){
@@ -680,31 +728,30 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         booksimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.setVisibility(View.GONE);
-                Intent intent = new Intent(EbookSelectionActivity.this, EbookListActivity.class);
-                startActivity(intent);
-                /*eBookListFragment.getView().setVisibility(View.VISIBLE);*/
+                //recyclerView.setVisibility(View.GONE);
+                booksimg.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.green_500));
+                books.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.black));
+                adapter.setServerList(true);
+                adapter.setPaths(filePathList);
+                recyclerView.getAdapter().notifyDataSetChanged();
+                //isServerList = true;
 
-                //fm.beginTransaction().show(eBookListFragment).commit();
-                //ft.show(eBookListFragment);
-               // eBookListFragment.isVisible();
-               // eBookListFragment = (EbookListFragment) getSupportFragmentManager().findFragmentById(R.id.ebookFragment);
-                //eBook = (EBookDTO) getIntent().getSerializableExtra("ebook");
             }
         });
-
         books.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.setVisibility(View.VISIBLE);
-                /*eBookListFragment.getView().setVisibility(View.GONE);*/
-                //eBookListFragment.setUserVisibleHint(false);
-                // fm = getSupportFragmentManager();
-                //fm.beginTransaction().remove(eBookListFragment).commit();
-                //ft.hide(eBookListFragment);
-                // eBookListFragment.isHidden();
+                //recyclerView.setVisibility(View.GONE);
+                booksimg.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.black));
+                books.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.green_500));
+                //adapter.setPaths(serverList);
+                //recyclerView.getAdapter().notifyDataSetChanged();
+                adapter.setServerList(false);
+                walkdir(Environment.getExternalStorageDirectory());
+
             }
         });
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -739,8 +786,13 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         File f = new File(path);
         if (f.exists()) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(f), "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            Uri apkURI = FileProvider.getUriForFile(
+                    ctx,
+                    ctx.getApplicationContext()
+                            .getPackageName() + ".provider", f);
+            intent.setDataAndType(apkURI, "application/pdf");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(intent);
         }
     }
@@ -832,6 +884,17 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         photoPresenter.uploadPhoto(p);
     }
 
+    private List<String> getEbookUrl(List<EBookDTO> list){
+        List<String> urlList = new ArrayList<>();
+        EBookDTO eBookDTO;
+        String eBookUrl = null;
+        for(int i = 0; i < list.size(); i++ ){
+            eBookDTO = list.get(i);
+            urlList.add(eBookDTO.getCoverUrl());
+        }
+        return urlList;
+    }
+
     @Override
     public void onEbookUpdated(String key) {
 
@@ -856,4 +919,142 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     public void onError(String message) {
 
     }
-}
+
+    @Override
+    public void onAllEBooks(List<EBookDTO> list) {
+        Log.i(LOG, "onEbooks: " + list.size());
+        serverList = getEbookUrl(list);
+    }
+
+    @Override
+    public void onEntityAdded(String key) {
+
+    }
+
+    @Override
+    public void onEntityUpdated() {
+
+    }
+
+    @Override
+    public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCompanies(List<CompanyDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onAllVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
+    public void onEbooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onPayments(List<PaymentDTO> list) {
+
+    }
+
+    @Override
+    public void onPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onPrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+
+ }

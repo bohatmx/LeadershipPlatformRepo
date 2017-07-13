@@ -156,20 +156,19 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
 
-        getCachedEBooks();
+        //getCachedEBooks();
         getEBooks();
       //  ebookListFragment = (EbookListFragment) getSupportFragmentManager().findFragmentById(R.id.ebookFragment);
        // eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
 
     }
 
-    @Override
-    public void onRestart()
-    {
-        super.onRestart();
-        finish();
-        startActivity(getIntent());
-    }
+   // @Override
+   //    {
+   //     super.onRestart();
+   //     finish();
+   //     startActivity(getIntent());
+   // }
 
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this/*ctx*/);
