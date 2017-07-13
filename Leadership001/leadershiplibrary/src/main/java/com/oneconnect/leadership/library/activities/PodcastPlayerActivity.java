@@ -729,5 +729,13 @@ public class PodcastPlayerActivity extends AppCompatActivity {
             }
         });*/
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mediaPlayer.stop();
+        finish();
+    }
+
     static final String LOG = PodcastPlayerActivity.class.getSimpleName();
 }

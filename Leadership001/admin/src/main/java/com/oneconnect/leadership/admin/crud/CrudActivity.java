@@ -451,6 +451,7 @@ public class CrudActivity extends AppCompatActivity
 
     private void setup() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
