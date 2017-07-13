@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.oneconnect.leadership.library.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.oneconnect.leadership.library.activities.MyAndroidAppActivity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -439,13 +440,16 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             });
         }
 
-        dvh.iconShare.setOnClickListener(new View.OnClickListener() {
+        dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.iconShare, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(dvh.ratingBar, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        shareIt();
+                        Intent intent = new Intent(ctx, MyAndroidAppActivity.class);
+                        //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
+                        intent.putExtra("weeklyMasterClass", dt);
+                        ctx.startActivity(intent);
                     }
                 });
             }
@@ -504,7 +508,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo,
-                iconCamera, photoView, playIMG, pauseIMG, stopIMG, imageView, iconShare;
+                iconCamera, photoView, playIMG, pauseIMG, stopIMG, imageView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout, photoAdapterLayout,
@@ -513,14 +517,15 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         protected Button btnPlay;
         protected TextViewExpandableAnimation txtTitle;
+        protected ImageView ratingBar;
 
         public MasterViewHolder(View itemView) {
             super(itemView);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
+            ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
-            iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);

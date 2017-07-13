@@ -339,6 +339,14 @@
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_share"
                         android:tint="@color/red_700" />
+                    <ImageView
+                        android:id="@+id/ratingBar"
+                        android:layout_below="@+id/iconShare"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/mon_wide"
+                        android:src="@drawable/star" />
 
                 </RelativeLayout>
 

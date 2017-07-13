@@ -19,9 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +33,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.MyAndroidAppActivity;
 import com.oneconnect.leadership.library.activities.WebViewActivity;
 import com.oneconnect.leadership.library.audio.AudioPlayerActivity;
 import com.oneconnect.leadership.library.camera.VideoAdapter;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -70,6 +74,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     MiniPodcastAdapter miniPodcastAdapter;
     MiniVideoAdapter miniVideoAdapter;
     UrlAdapter urlAdapter;
+    private int type;
 
 
     public interface DailyThoughtAdapterlistener{
@@ -356,7 +361,20 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
 
         }
-
+        dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(dvh.ratingBar, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(ctx, MyAndroidAppActivity.class);
+                        //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
+                        intent.putExtra("dailyThought", dt);
+                        ctx.startActivity(intent);
+                    }
+                });
+            }
+        });
         dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -527,6 +545,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
                 photoAdapterLayout, urlAdapterLayout;
         protected Button btnPlay;
+        protected ImageView ratingBar;
+        protected EditText ratingCom;
         //video
         /*protected VideoView videoView;*/
         //
@@ -535,6 +555,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public DailyViewHolder(View itemView) {
             super(itemView);
+            ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
+            ratingCom = (EditText) itemView.findViewById(R.id.ratingCom);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);

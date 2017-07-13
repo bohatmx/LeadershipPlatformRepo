@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.MyAndroidAppActivity;
 import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -139,6 +140,21 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int i = v.getStorageName().lastIndexOf("/");
         pvh.fileName.setText(v.getStorageName().substring(i + 1));
         final String podcastURL = v.getUrl();
+
+        pvh.ratingBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(pvh.ratingBar, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(ctx, MyAndroidAppActivity.class);
+                        //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
+                        intent.putExtra("podcast", v);
+                        ctx.startActivity(intent);
+                    }
+                });
+            }
+        });
 
         pvh.audio_card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -388,13 +404,15 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class PodcastsViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName, duration;
-        protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic, iconImage, iconVideo;
+        protected ImageView image, playIMG, pauseIMG, stopIMG, headerpic, iconImage, iconVideo;
         protected Button btnPlay, btnUpload;
         protected RelativeLayout uploadLayout, bottomLayout, podControlLayout;
         protected CardView audio_card;
+        protected ImageView ratingBar;
 
         public PodcastsViewHolder(View itemView) {
             super(itemView);
+            ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             duration = (TextView) itemView.findViewById(R.id.duration);
             audio_card = (CardView) itemView.findViewById(R.id.audio_card);

@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.MyAndroidAppActivity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -440,13 +441,15 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             });
         }
 
-        wmvh.iconShare.setOnClickListener(new View.OnClickListener() {
+        wmvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(wmvh.iconShare, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(wmvh.ratingBar, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        shareIt();
+                        Intent intent = new Intent(ctx, MyAndroidAppActivity.class);
+                        intent.putExtra("weeklyMessage", wm);
+                        ctx.startActivity(intent);
                     }
                 });
             }
@@ -503,7 +506,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG, imageView, iconShare;
+                playIMG, pauseIMG, stopIMG, imageView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout, photoAdapterLayout,
@@ -512,14 +515,15 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         protected Button btnPlay;
         protected TextViewExpandableAnimation txtTitle;
+        protected ImageView ratingBar;
 
         public WeeklyMessageViewHolder(View itemView) {
             super(itemView);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
+            ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
-            iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);

@@ -100,6 +100,7 @@
 
     <string name="confirm_photo">Use Photo</string>
     <string name="confirm_video">Use Video</string>
+    <string name="rating">Rating</string>
     <string name="title_activity_daily_thought">DailyThoughtActivity</string>
     <string name="title_activity_podcast">PodcastActivity</string>
     <string name="title_activity_video">VideoActivity</string>
@@ -125,6 +126,7 @@
     <string name="text_music">Music</string>
     <string name="title_activity_podcast_player">PodcastPlayerActivity</string>
     <string name="title_activity_full_photo">FullPhotoActivity</string>
+    <string name="title_activity_my_android_app">Rating Activity</string>
 
     <!-- INVITES -->
     <string name="invitation_title">Leadership Platform</string>
