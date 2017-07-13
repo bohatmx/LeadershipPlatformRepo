@@ -169,7 +169,7 @@ public class SubscriberMainActivity extends AppCompatActivity
             // Check for App Invite invitations and launch deep-link activity if possible.
             // Requires that an Activity is registered in AndroidManifest.xml to handle
             // deep-link URLs.
-            FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
+            /*FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
                     .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
                         @Override
                         public void onSuccess(PendingDynamicLinkData data) {
@@ -196,7 +196,7 @@ public class SubscriberMainActivity extends AppCompatActivity
                         public void onFailure(@NonNull Exception e) {
                             Log.w(TAG, "getDynamicLink:onFailure", e);
                         }
-                    });
+                    });*/
 
       /*   textFavorites = (TextView) findViewById(R.id.text_favorites);
         textSchedules = (TextView) findViewById(R.id.text_schedules);
@@ -491,15 +491,15 @@ public class SubscriberMainActivity extends AppCompatActivity
                     return true;
                 }
                 if (item.getItemId() == R.id.nav_share) {
-                   /*onInviteClicked();*/
-                    Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
+                   onInviteClicked();
+                    /*Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
                             .setMessage(getString(R.string.invitation_message))
                             .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
                             .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
                             .setCallToActionText(getString(R.string.invitation_cta))
                             .build();
                     //startActivity(intent);
-                    startActivityForResult(intent, REQUEST_INVITE);
+                    startActivityForResult(intent, REQUEST_INVITE);*/
                     return true;
                 }
 
@@ -530,19 +530,21 @@ public class SubscriberMainActivity extends AppCompatActivity
             } else {
                 // Sending failed or it was canceled, show failure message to the user
                 // ...
+                Log.d(LOG, "failed to send invite");
             }
         }
     }
 
     private void onInviteClicked() {
-        Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
+        Log.d(LOG, "****onInviteClicked****");
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                 .setMessage(getString(R.string.invitation_message))
                 .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
                 .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
-        startActivity(intent);
-       // startActivityForResult(intent, REQUEST_INVITE);
+       // startActivity(intent);
+        startActivityForResult(intent, REQUEST_INVITE);
     }
 
     private static final int REQUEST_INVITE = 321;

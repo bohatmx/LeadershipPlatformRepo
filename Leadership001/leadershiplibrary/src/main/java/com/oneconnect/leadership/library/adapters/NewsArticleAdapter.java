@@ -422,6 +422,19 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 dvh.deleteLayout.setVisibility(View.GONE);
             }
         });
+
+
+        dvh.iconShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(dvh.iconShare, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        shareIt();
+                    }
+                });
+            }
+        });
     }
     private void showPopupMenu(View view) {
         // inflate menu
@@ -473,7 +486,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG, imageView;
+                playIMG, pauseIMG, stopIMG, imageView, iconShare;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
@@ -490,6 +503,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
+            iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             //iconCalendar.setVisibility(View.GONE);

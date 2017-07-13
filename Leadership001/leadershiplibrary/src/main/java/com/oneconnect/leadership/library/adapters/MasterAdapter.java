@@ -438,6 +438,18 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
         }
+
+        dvh.iconShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(dvh.iconShare, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        shareIt();
+                    }
+                });
+            }
+        });
     }
     private void showPopupMenu(View view) {
         // inflate menu
@@ -492,7 +504,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo,
-                iconCamera, photoView, playIMG, pauseIMG, stopIMG, imageView;
+                iconCamera, photoView, playIMG, pauseIMG, stopIMG, imageView, iconShare;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout, photoAdapterLayout,
@@ -508,6 +520,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
+            iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);

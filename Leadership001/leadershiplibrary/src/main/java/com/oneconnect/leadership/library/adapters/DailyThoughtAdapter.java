@@ -447,6 +447,18 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 dvh.deleteLayout.setVisibility(View.GONE);
             }
         });
+
+        dvh.iconShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(dvh.iconShare, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        shareIt();
+                    }
+                });
+            }
+        });
     }
     private void showPopupMenu(View view) {
         // inflate menu
@@ -470,13 +482,22 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int i = menuItem.getItemId();
             if (i == R.id.share) {
                 shareIt();
+              //  dynamicShare();
                 return true;
             }
             return false;
         }
     }
 
-
+   /* String myDynamicLink = "https://vfb7b.app.goo.gl/tobR";
+    private void dynamicShare(){
+    Intent sendIntent = new Intent();
+    String msg = "Hey, check this out: " + myDynamicLink;
+    sendIntent.setAction(Intent.ACTION_SEND);
+    sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
+    sendIntent.setType("text/plain");
+    ctx.startActivity(sendIntent);
+}*/
 
     private void shareIt() {
         //sharing implementation here
@@ -500,7 +521,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG, imageView;
+                playIMG, pauseIMG, stopIMG, imageView, iconShare;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
@@ -516,6 +537,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
+            iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);

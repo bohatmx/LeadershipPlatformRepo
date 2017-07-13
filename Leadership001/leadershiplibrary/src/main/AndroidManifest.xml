@@ -80,6 +80,10 @@
         <activity
             android:name=".activities.FullPhotoActivity"
             android:label="@string/title_activity_full_photo"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.DeepLinkActivity"
+            android:label="@string/title_activity_deep_link"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

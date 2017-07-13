@@ -110,6 +110,7 @@
     <string name="title_activity_video_player">VideoPlayerActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity__podcast_list">Podcasts Attachments</string>
+    <string name="title_activity_deep_link">Deep Link</string>
 
 
     <!--VideoMenu-->
@@ -131,6 +132,11 @@
     <string name="invitation_deep_link">https://vfb7b.app.goo.gl/tobR</string>
     <string name="invitation_custom_image">http://urbanleadershiplab.com/wp-content/uploads/2013/09/14970845-leadership-concept-in-word-tag-cloud-on-white-background1.jpg</string>
     <string name="invitation_cta">View App</string>
+    <string name="invite_dialog_title">You got an invitation!</string>
+    <string name="deep_link_default">Deep link not set</string>
+    <string name="invitation_id_default">Invitation ID not set</string>
+    <string name="deep_link_fmt" formatted="false">Deep Link: %s</string>
+    <string name="invitation_id_fmt" formatted="false">Invitation ID: %s</string>
 
 
 
