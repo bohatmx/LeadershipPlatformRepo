@@ -98,7 +98,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     private SubscriberPresenter presenterEbook;
     private EBookDTO eBook;
     public static final String TAG = EbookSelectionActivity.class.getSimpleName();
-   // private EbookListFragment eBookListFragment;
+    private List<EBookDTO> eBooks = new ArrayList<>();
 
     ImageView books, booksimg;
     private Toolbar toolbar;
@@ -106,8 +106,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     SearchView searchView = null;
     public List<String> filePathList;
     EbookAdapter adapter;
-    private List<EBookDTO> eBooks = new ArrayList<>();
-    public static List<String> serverList;
+    public List<String> serverList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,9 +176,8 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             getSupportActionBar().setSubtitle(url.getTitle());
         }
 
-
         setup();
-       // getEbooksOnDevice();
+        //getEbooksOnDevice();
         walkdir(Environment.getExternalStorageDirectory());
         getEBooks();
 
@@ -191,6 +189,13 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 
     private void getEBooks() {
@@ -223,7 +228,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                         Log.d(LOG, "FileName: " + listFile[i].getName());
 
                         //
-                        adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
+                        adapter = new EbookAdapter(filePathList, this, null, new EbookAdapter.EbookAdapterListener() {
                             @Override
                             public void onUploadEbook(String path) {
                                 confirmUpload(path);
@@ -307,7 +312,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             for (FileContainer f : fileContainerList) {
                 filePathList.add(f.fileName);
             }
-            adapter = new EbookAdapter(filePathList, this, eBook, new EbookAdapter.EbookAdapterListener() {
+            adapter = new EbookAdapter(filePathList, this, null, new EbookAdapter.EbookAdapterListener() {
                 @Override
                 public void onUploadEbook(String path) {
                     confirmUpload(path);
@@ -732,7 +737,8 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 booksimg.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.green_500));
                 books.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.black));
                 adapter.setServerList(true);
-                adapter.setPaths(filePathList);
+                adapter.setPaths(serverList);
+                adapter.setmList(eBooks);
                 recyclerView.getAdapter().notifyDataSetChanged();
                 //isServerList = true;
 
@@ -923,6 +929,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     @Override
     public void onAllEBooks(List<EBookDTO> list) {
         Log.i(LOG, "onEbooks: " + list.size());
+        this.eBooks = list;
         serverList = getEbookUrl(list);
     }
 

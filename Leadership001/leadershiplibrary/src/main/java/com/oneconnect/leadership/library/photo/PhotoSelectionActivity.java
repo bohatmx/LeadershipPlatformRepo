@@ -78,7 +78,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     SearchView searchView = null;
     ArrayList<String> resultIAV;
     private ListAPI listAPI;
-    public static List<String> serverList;
+    public List<String> serverList;
     ImageView galleryImage, serverImage;
     ArrayList<String> searchResult;
     PhotoAdapter adapter;

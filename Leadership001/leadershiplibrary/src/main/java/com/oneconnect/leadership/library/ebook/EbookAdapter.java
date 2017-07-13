@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -36,20 +38,25 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     private Context context;
     private EbookAdapterListener listener;
     EBookDTO eBook;
+    List<EBookDTO> mList;
+
     boolean isServerList;
 
     public interface EbookAdapterListener {
         void onUploadEbook(String path);
+
         void onReadEbook(String path);
+
         void onAttachPhoto(EBookDTO ebook);
+
         void onPhotoUpload(BaseDTO base/*String path*/);
     }
 
-    public EbookAdapter(List<String> paths, Context context, EBookDTO book, EbookAdapterListener listener) {
+    public EbookAdapter(List<String> paths, Context context, List<EBookDTO> mList, EbookAdapterListener listener) {
         this.paths = paths;
         this.context = context;
         this.listener = listener;
-        this.eBook = book;
+        this.mList = mList;
     }
 
     @Override
@@ -60,42 +67,45 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     }
 
     @Override
-    public void onBindViewHolder(final EbookViewHolder holder, int position) {
-            final String path = paths.get(position);
-            //File file = new File(path);
-            //.w("EbookAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
-            //int i = path.lastIndexOf("/");
-            //holder.txtFileName.setText(path.substring(i + 1));
-            if(isServerList){
-                holder.eBookMenu.setVisibility(View.VISIBLE);
-                holder.uploadIcon.setVisibility(View.GONE);
-                holder.readIcon.setVisibility(View.GONE);
-                holder.imageUploadIcon.setVisibility(View.GONE);
+    public void onBindViewHolder(final EbookViewHolder holder, final int position) {
+        if(mList != null){
+            eBook = mList.get(position);
+        }
+        final String path = paths.get(position);
+        //File file = new File(path);
+        //.w("EbookAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
+        //int i = path.lastIndexOf("/");
+        //holder.txtFileName.setText(path.substring(i + 1));
+        if (isServerList) {
+            holder.eBookMenu.setVisibility(View.VISIBLE);
+            holder.uploadIcon.setVisibility(View.GONE);
+            holder.readIcon.setVisibility(View.GONE);
+            holder.imageUploadIcon.setVisibility(View.GONE);
+        }
+
+        holder.uploadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onUploadEbook(path);
             }
+        });
 
-            holder.uploadIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onUploadEbook(path);
-                }
-            });
+        holder.readIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onReadEbook(path);
+            }
+        });
 
-            holder.readIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onReadEbook(path);
-                }
-            });
-
-            holder.imageUploadIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        holder.imageUploadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 /*Intent intent = new Intent(context, PhotoSelectionActivity.class);
                 context.startActivity(intent);*/
-                    //listener.onPhotoUpload(path);
-                    Util.flashOnce(holder.imageUploadIcon, 300, new Util.UtilAnimationListener() {
-                        @Override
-                        public void onAnimationEnded() {
+                //listener.onPhotoUpload(path);
+                Util.flashOnce(holder.imageUploadIcon, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
                         /*Intent intent = new Intent(context, PhotoSelectionActivity.class);
                         intent.putExtra("type", type);
                         switch (type) {
@@ -105,26 +115,34 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
                                 break;
                         }
                         context.startActivity(intent);*/
-                            //startPhotoGallerySelection(path);
-                            listener.onPhotoUpload(eBook);
-                        }
-                    });
+                        //startPhotoGallerySelection(path);
+                        listener.onPhotoUpload(eBook);
+                    }
+                });
 
-                }
-            });
-            holder.eBookMenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Util.flashOnce(holder.imageUploadIcon, 300, new Util.UtilAnimationListener() {
-                        @Override
-                        public void onAnimationEnded() {
-                            listener.onAttachPhoto(eBook);
+            }
+        });
+        holder.eBookMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(holder.imageUploadIcon, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        listener.onAttachPhoto(mList.get(position));
 
-                        }
-                    });
-                }
-            });
+                    }
+                });
+            }
+        });
+        if(eBook != null){
+            if(eBook.getCoverUrl() != null){
+                Glide.with(context)
+                        .load(eBook.getCoverUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.bookIcon);
+            }
         }
+    }
 
 
 
@@ -144,7 +162,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
 
     BaseDTO base;
 
-    private void startPhotoGallerySelection(BaseDTO base){
+    private void startPhotoGallerySelection(BaseDTO base) {
         Intent intent = new Intent(context, PhotoSelectionActivity.class);
         intent.putExtra("type", type);
         switch (type) {
@@ -159,7 +177,11 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
 
     @Override
     public int getItemCount() {
-        return paths.size();
+        if(paths != null){
+            return paths.size();
+        }else{
+            return 0;
+        }
     }
 
     public class EbookViewHolder extends RecyclerView.ViewHolder {
@@ -193,4 +215,9 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     public void setServerList(boolean serverList) {
         isServerList = serverList;
     }
+
+    public void setmList(List<EBookDTO> mList) {
+        this.mList = mList;
+    }
+
 }
