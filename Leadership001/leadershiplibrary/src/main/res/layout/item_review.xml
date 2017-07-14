@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/screen_edge_horizontal_margin"
+        android:paddingRight="@dimen/screen_edge_horizontal_margin"
+        android:paddingTop="@dimen/screen_edge_vertical_margin"
+        android:paddingBottom="@dimen/screen_edge_vertical_margin"
+        android:orientation="vertical">
+
+        <!-- Normal Layout -->
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/normal_layout"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+        <TextView
+            android:id="@+id/txtComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/framework_implementation"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+        <RatingBar
+            android:id="@+id/framework_normal_ratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:maxHeight="48dp"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginRight="-4dp"
+            android:rating="2.5" />
+        <TextView
+            android:id="@+id/txtDate"
+            android:layout_toEndOf="@+id/iconCalendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/ImageView"
+            android:layout_alignTop="@id/ImageView"
+            android:layout_alignRight="@id/ImageView"
+            android:layout_alignBottom="@id/ImageView"
+            android:text="Wednesday 30 December 2099 12:36"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:gravity="bottom"/>
+
+
+    </LinearLayout>
+</ScrollView>

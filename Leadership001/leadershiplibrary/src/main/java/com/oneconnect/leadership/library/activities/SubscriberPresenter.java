@@ -232,6 +232,21 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
         });
     }
 
+    @Override
+    public void getAllRatings() {
+        listAPI.getAllRatings(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onAllRatings(bag.getRatings());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
 
     @Override
     public void getEbooks(String companyID) {

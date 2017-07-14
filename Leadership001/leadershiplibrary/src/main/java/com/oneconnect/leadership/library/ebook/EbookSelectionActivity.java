@@ -44,6 +44,7 @@ import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.photo.PhotoAdapter;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
@@ -945,6 +946,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
     @Override
     public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onAllRatings(List<RatingDTO> list) {
 
     }
 

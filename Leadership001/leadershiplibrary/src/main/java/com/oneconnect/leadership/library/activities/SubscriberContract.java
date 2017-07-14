@@ -12,6 +12,7 @@ import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -41,6 +42,7 @@ public class SubscriberContract {
         void getAllEBooks();
         void getAllPhotos();
         void getAllCalendarEvents();
+        void getAllRatings();
         void getEbooks(String companyID);
         void getPayments(String companyID);
         void getPodcasts(String companyID);
@@ -61,7 +63,7 @@ public class SubscriberContract {
         void onEntityAdded(String key);
         void onEntityUpdated();
         void onUserCreated(UserDTO user);
-
+        void onAllRatings(List<RatingDTO> list);
         void onCategories(List<CategoryDTO> list);
         void onCompanies(List<CompanyDTO> list);
         void onDailyThoughts(List<DailyThoughtDTO> list);

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.audio.PodcastListActivity;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.ebook.EbookListActivity;
 import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
 import com.oneconnect.leadership.library.links.LinksActivity;
@@ -260,6 +261,11 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
 
     @Override
     public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onAllRatings(List<RatingDTO> list) {
 
     }
 

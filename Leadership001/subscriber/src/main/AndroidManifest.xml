@@ -95,6 +95,7 @@
         <activity
             android:name="com.oneconnect.leadership.library.activities.MyAndroidAppActivity"
             android:label="@string/title_activity_my_android_app"
+            android:parentActivityName=".SubscriberMainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".SplashScreenActivity"

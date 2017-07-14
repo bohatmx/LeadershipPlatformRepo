@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -608,6 +609,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onAllRatings(List<RatingDTO> list) {
 
     }
 
