@@ -17,17 +17,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
+
+
         <service android:name=".services.SubscriberMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <intent-filter>
-            <action android:name="android.intent.action.SEND" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <data android:mimeType="image/*" />
-        </intent-filter>
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider12345"
+            android:exported="true" />
 
         <activity
             android:name=".SubscriberSignInActivityBase"

@@ -112,6 +112,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.graphics.Color.GRAY;
 import static android.graphics.Color.RED;
 
 
@@ -182,7 +183,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
         strip.setVisibility(View.VISIBLE);
-        strip.setTextColor(RED);
+        strip.setTextColor(GRAY);
          setup();
 
         presenter = new SubscriberPresenter(this);
