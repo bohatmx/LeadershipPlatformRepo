@@ -129,6 +129,27 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
+       /* if(dt.getRatings() != null){
+            dvh.iconReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Util.flashOnce(dvh.iconReview, 300, new Util.UtilAnimationListener() {
+                        @Override
+                        public void onAnimationEnded() {
+                            DailyThoughtDTO dt = mList.get(position);
+                            List<RatingDTO> ratingList = new ArrayList<>();
+                            Map map = dt.getRatings();
+                            RatingDTO rDTO;
+                            for (Object value : map.values()) {
+                                rDTO = (RatingDTO) value;
+                                ratingList.add(rDTO);
+                            }
+                        }
+                    });
+                }
+            });
+        }*/
+
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
             dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
@@ -539,7 +560,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG, imageView, iconShare;
+                playIMG, pauseIMG, stopIMG, imageView, iconShare, iconReview;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
@@ -576,6 +597,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             imageView = (ImageView) itemView.findViewById(R.id.ImageView);
+            iconReview = (ImageView) itemView.findViewById(R.id.iconReview);
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
             videoFileName.setVisibility(View.GONE);*/
 

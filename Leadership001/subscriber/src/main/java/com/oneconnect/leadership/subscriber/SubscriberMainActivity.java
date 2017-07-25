@@ -79,6 +79,7 @@ import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
@@ -561,6 +562,11 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onAllRatings(List<RatingDTO> list) {
 
     }
 

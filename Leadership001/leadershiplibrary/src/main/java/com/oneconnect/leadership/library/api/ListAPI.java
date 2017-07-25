@@ -23,6 +23,7 @@ import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.SubscriptionTypeDTO;
@@ -122,6 +123,30 @@ public class ListAPI {
             }
         });
     }
+
+    public void getAllRatings( final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.RATINGS);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setRatings(new ArrayList<RatingDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        RatingDTO u = shot.getValue(RatingDTO.class);
+                        bag.getRatings().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
 
     public void getAllNewsArticle(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.NEWS);

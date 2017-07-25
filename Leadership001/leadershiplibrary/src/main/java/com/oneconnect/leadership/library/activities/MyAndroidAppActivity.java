@@ -4,12 +4,13 @@ package com.oneconnect.leadership.library.activities;
  * Created by Kurisani on 2017/07/12.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -19,16 +20,27 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.adapters.RatingReviewAdapter;
+import com.oneconnect.leadership.library.api.ListAPI;
+import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
+import com.oneconnect.leadership.library.cache.RatingCache;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
+import com.oneconnect.leadership.library.data.CategoryDTO;
+import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PaymentDTO;
+import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -41,8 +53,9 @@ import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.util.Date;
+import java.util.List;
 
-public class MyAndroidAppActivity extends AppCompatActivity implements RatingContract.View {
+public class MyAndroidAppActivity extends AppCompatActivity implements RatingContract.View, SubscriberContract.View , CacheContract.View{
 
     private RatingBar ratingBar;
     private TextView txtRatingValue, lblRateMe;
@@ -60,8 +73,12 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
     private NewsDTO news;
     private EBookDTO eBook;
     private PodcastDTO podcast;
+    private RatingDTO rating;
     private VideoDTO video;
     private UrlDTO url;
+    private RecyclerView recyclerView;
+    private RatingReviewAdapter ratingReviewAdapter;
+    private SubscriberPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +90,10 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
         getSupportActionBar().setTitle("Rating Activity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        presenter = new SubscriberPresenter(this);
+        cachePresenter = new CachePresenter(this, ctx);
         ratingPresenter = new RatingPresenter(this);
+
         //cachePresenter = new CachePresenter(this, ctx);
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
@@ -140,6 +160,35 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
       //  addListenerOnButton();
 
         setup();
+        getCachedRatings();
+        getRatings();
+
+    }
+    private ListAPI listAPI;
+
+    private void getCachedRatings() {
+        RatingCache.getRatings(ctx, new RatingCache.ReadListener() {
+
+            @Override
+            public void onDataRead(List<RatingDTO> rating) {
+                Log.d(LOG, "onDataRead: rating: " + rating);
+            }
+
+            @Override
+            public void onError(String message) {
+                getCachedRatings();
+            }
+        });
+    }
+
+    private void getRatings() {
+        Log.d(LOG, "************** getRatings: " );
+        presenter.getAllRatings();
+        /*if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+            presenter.getAllRatings();
+        } else {
+            Log.d(LOG, "user is null");
+        }*/
 
     }
 
@@ -148,6 +197,8 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
         txtRatingValue = (TextView) findViewById(R.id.txtRatingValue);
         txtRatingValue.setVisibility(View.GONE);
         ratingCom = (EditText) findViewById(R.id.ratingCom);
+        recyclerView = (RecyclerView) findViewById(R.id.review) ;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         //if rating value is changed,
         //display the current rating value in the result (textview) automatically
         ratingBar.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
@@ -161,9 +212,7 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
 
         lblRateMe = (TextView) findViewById(R.id.lblRateMe);
         lblRateMe.setVisibility(View.GONE);
-       // ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
-        // ratingCom = (EditText) findViewById(R.id.ratingCom);
 
         //if click on me, then display the current rating value.
         btnSubmit.setOnClickListener(new OnClickListener() {
@@ -281,6 +330,228 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
     public void onRatingUploaded(String key) {
         showSnackbar("rating successfully added ...", "OK", Constants.CYAN);
         ratingCom.setText(" ");
+    }
+
+    @Override
+    public void onEntityAdded(String key) {
+
+    }
+
+    @Override
+    public void onEntityUpdated() {
+
+    }
+
+    @Override
+    public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onAllRatings(List<RatingDTO> list) {
+        Log.i(LOG,"onAllRatings: " + list.size());
+        ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {
+            @Override
+            public void addListenerOnButton() {
+
+            }
+
+            @Override
+            public void addListenerOnRatingBar() {
+
+            }
+        });
+        recyclerView.setAdapter(ratingReviewAdapter);
+    }
+
+    @Override
+    public void onCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCompanies(List<CompanyDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onAllVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onAllEBooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onAllPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
+    public void onEbooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onPayments(List<PaymentDTO> list) {
+
+    }
+
+    @Override
+    public void onPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onPrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onDataCached() {
+
+    }
+
+    @Override
+    public void onCacheCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheEbooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
     }
 
     @Override
