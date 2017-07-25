@@ -47,6 +47,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
@@ -165,76 +166,16 @@ public class SubscriberMainActivity extends AppCompatActivity
 
         page = getIntent().getStringExtra("page");
 
-            // ...
-
-            // Check for App Invite invitations and launch deep-link activity if possible.
-            // Requires that an Activity is registered in AndroidManifest.xml to handle
-            // deep-link URLs.
-            /*FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
-                    .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-                        @Override
-                        public void onSuccess(PendingDynamicLinkData data) {
-                            if (data == null) {
-                                Log.d(TAG, "getInvitation: no data");
-                                return;
-                            }
-
-                            // Get the deep link
-                            Uri deepLink = data.getLink();
-
-                            // Extract invite
-                            FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(data);
-                            if (invite != null) {
-                                String invitationId = invite.getInvitationId();
-                            }
-
-                            // Handle the deep link
-                            // ...
-                        }
-                    })
-                    .addOnFailureListener(this, new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "getDynamicLink:onFailure", e);
-                        }
-                    });*/
-
-      /*   textFavorites = (TextView) findViewById(R.id.text_favorites);
-        textSchedules = (TextView) findViewById(R.id.text_schedules);
-        textMusic = (TextView) findViewById(R.id.text_music);
-
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
-
-       bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_favorites:
-                                textFavorites.setVisibility(View.VISIBLE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_schedules:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.VISIBLE);
-                                textMusic.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_music:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.VISIBLE);
-                                break;
-                        }
-                        return false;
-                    }
-                });*/
-
-
         usernametxt = (TextView) findViewById(R.id.usernametxt);
-        /*if (SharedPrefUtil.getUser(ctx).getFullName() != null) {
-            usernametxt.setText(SharedPrefUtil.getUser(ctx).getFullName());
+
+       /* user = SharedPrefUtil.getUser(ctx);
+        if (user != null) {
+            if (usernametxt != null)
+                usernametxt.setText(user.getFirstName() + " " + user.getLastName());
+        }
+
+        if (SharedPrefUtil.getUser(ctx).getEmail() != null) {
+            usernametxt.setText(SharedPrefUtil.getUser(ctx).getEmail());
         }*/
         mPager = (ViewPager) findViewById(R.id.viewpager);
         //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);

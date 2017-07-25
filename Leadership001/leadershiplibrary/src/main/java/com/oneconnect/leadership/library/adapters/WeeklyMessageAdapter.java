@@ -70,7 +70,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item_two, parent, false);
         return new WeeklyMessageViewHolder(v);
     }
 

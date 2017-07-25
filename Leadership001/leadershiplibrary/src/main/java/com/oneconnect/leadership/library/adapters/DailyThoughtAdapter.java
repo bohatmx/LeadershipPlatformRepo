@@ -572,14 +572,16 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /*protected VideoView videoView;*/
         //
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
-        protected TextViewExpandableAnimation txtTitle;
+        //protected TextViewExpandableAnimation txtTitle;
+        protected TextView txtTitle;
 
         public DailyViewHolder(View itemView) {
             super(itemView);
             ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
             ratingCom = (EditText) itemView.findViewById(R.id.ratingCom);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
-            txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
+            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+            //txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);

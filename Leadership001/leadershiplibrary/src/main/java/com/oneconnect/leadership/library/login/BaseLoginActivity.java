@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.login;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -49,6 +50,8 @@ public abstract class BaseLoginActivity extends AppCompatActivity
     EndpointPresenter fcmPresenter;
     public int type;
     ProgressDialog progressDialog;
+    UserDTO user;
+    Context ctx;
 
     private static final int REQUEST_SIGN_IN = 123;
 
