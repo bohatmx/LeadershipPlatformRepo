@@ -997,7 +997,7 @@ public class CrudActivity extends AppCompatActivity
                 break;
             case ResponseBag.NEWS:
                 article = (NewsDTO) entity;
-                m = new Intent(this, NewsArticleActivity.class);
+                m = new Intent(this, LinksActivity.class);
                 m.putExtra("newsArticle", article);
                 break;
             case ResponseBag.PODCASTS:

@@ -13,6 +13,7 @@ import android.view.View;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.adapters.NewsArticleAdapter;
 import com.oneconnect.leadership.library.cache.CachePresenter;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
@@ -29,7 +30,8 @@ import java.util.List;
  * Created by Kurisani on 2017/06/26.
  */
 
-public class NewsArticleActivity extends AppCompatActivity implements NewsArticleAdapter.NewsArticleListener {
+public class NewsArticleActivity extends AppCompatActivity implements
+        NewsArticleAdapter.NewsArticleListener, NewsListFragment.NewsArticleListener {
 
     NewsListFragment newsListFragment;
     SubscriberPresenter presenter;
@@ -48,17 +50,18 @@ public class NewsArticleActivity extends AppCompatActivity implements NewsArticl
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
 
-        newsListFragment = (NewsListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
+        newsListFragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //fab.setVisibility(View.GONE);
+        /*fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setFragment();
 
             }
-        });
+        });*/
 
         user = SharedPrefUtil.getUser(this);
 
@@ -109,4 +112,9 @@ public class NewsArticleActivity extends AppCompatActivity implements NewsArticl
     }
 
     static final String TAG = NewsArticleActivity.class.getSimpleName();
+
+    @Override
+    public void onNewsArticleTapped(NewsDTO article) {
+
+    }
 }

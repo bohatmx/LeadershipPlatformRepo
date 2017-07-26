@@ -1348,6 +1348,11 @@ public class DataAPI {
                 ref = db.getReference(PODCASTS)
                         .child(id).child(URLS);
                 break;
+            case ResponseBag.NEWS:
+                ref = db.getReference(NEWS)
+                        .child(id).child(URLS);
+                break;
+
             //
             case ResponseBag.EBOOKS:
                 ref = db.getReference(EBOOKS).child(id).child(URLS);

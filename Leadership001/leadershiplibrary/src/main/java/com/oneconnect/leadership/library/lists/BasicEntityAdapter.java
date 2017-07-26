@@ -730,13 +730,13 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         protected View bottomLayout, frameLayout, linksLayout, iconLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
-        protected TextViewExpandableAnimation txtTitle;
+        protected TextView txtTitle;
 
 
         public EntityViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.ImageView);
-            txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
+            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
 
