@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.PhotoActivity;
@@ -65,6 +67,7 @@ import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
 import org.joda.time.DateTime;
 
@@ -102,12 +105,15 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     private List<EBookDTO> eBooks = new ArrayList<>();
 
     ImageView books, booksimg;
+    TextView nameTxt, bookCounterTxt;
     private Toolbar toolbar;
     Context ctx;
     SearchView searchView = null;
     public List<String> filePathList;
     EbookAdapter adapter;
+   // MultipleEbookSelectorAdapter adapter;
     public List<String> serverList;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +121,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         setContentView(R.layout.activity_ebook_selection);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("EBook Selection & Upload");
+        //getSupportActionBar().setTitle("EBook Selection & Upload");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ctx = getApplicationContext();
@@ -229,7 +235,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                         Log.d(LOG, "FileName: " + listFile[i].getName());
 
                         //
-                        adapter = new EbookAdapter(filePathList, this, null, new EbookAdapter.EbookAdapterListener() {
+                        /*adapter = new EbookAdapter(filePathList, this, null, new EbookAdapter.EbookAdapterListener() {
                             @Override
                             public void onUploadEbook(String path) {
                                 confirmUpload(path);
@@ -251,30 +257,28 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                                 //startPhotoGallerySelection(ebook);
                                 pickGalleryOrCamera(ebook);
                             }
+                        });*/
 
-                           /* @Override
-                            public void onPhotoUpload(String path) {
+                        adapter = new EbookAdapter(filePathList, this, null, new EbookAdapter.EbookAdapterListener() {
+                            @Override
+                            public void onUploadEbook(String path) {
+                                confirmUpload(path);
+                            }
 
-                                AlertDialog.Builder b = new AlertDialog.Builder(ctx);
-                                b.setTitle("Select Images")
-                                        .setMessage("Please select the source of the photos")
-                                        .*//*setPositiveButton("Use Camera", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                // startCamera(base);
-                                            }
-                                        })*//*setNegativeButton("Use Gallery", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Intent.ACTION_VIEW, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            @Override
+                            public void onReadEbook(String path) {
+                                readEbook(path);
+                            }
 
-                                        // startActivityForResult(intent, RESULT_LOAD_IMG);
-                                        startPhotoGallerySelection(base);
+                            @Override
+                            public void onAttachPhoto(EBookDTO ebook) {
+                                pickGalleryOrCamera(ebook);
+                            }
 
-                                    }
-                                }).show();
-                                //pickGalleryOrCamera(base);
-                            }*/
+                            @Override
+                            public void onPhotoUpload(BaseDTO base) {
+
+                            }
                         });
 
                         recyclerView.setAdapter(adapter);
@@ -316,6 +320,26 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
             adapter = new EbookAdapter(filePathList, this, null, new EbookAdapter.EbookAdapterListener() {
                 @Override
                 public void onUploadEbook(String path) {
+
+                }
+
+                @Override
+                public void onReadEbook(String path) {
+
+                }
+
+                @Override
+                public void onAttachPhoto(EBookDTO ebook) {
+
+                }
+
+                @Override
+                public void onPhotoUpload(BaseDTO base) {
+
+                }
+            });/*EbookAdapter.EbookAdapterListener() {
+                @Override
+                public void onUploadEbook(String path) {
                     confirmUpload(path);
                 }
 
@@ -334,8 +358,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                     //startPhotoGallerySelection(ebook);
                     pickGalleryOrCamera(ebook);
                 }
-            });
-
+            });*/
             recyclerView.setAdapter(adapter);
         }
     }
@@ -358,7 +381,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 adapter.setPaths(searchResult);
                 recyclerView.getAdapter().notifyDataSetChanged();
 
-                /*adapter = new EbookAdapter(searchResult, EbookSelectionActivity.this, eBook, new EbookAdapter.EbookAdapterListener() {
+                adapter = new EbookAdapter(searchResult, EbookSelectionActivity.this, null/*eBook*/, new EbookAdapter.EbookAdapterListener() {
                     @Override
                     public void onUploadEbook(String path) {
                         confirmUpload(path);
@@ -370,12 +393,17 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                     }
 
                     @Override
+                    public void onAttachPhoto(EBookDTO ebook) {
+
+                    }
+
+                    @Override
                     public void onPhotoUpload(BaseDTO base) {
                         pickGalleryOrCamera(base);
                     }
 
                 });
-                recyclerView.setAdapter(adapter);*/
+                recyclerView.setAdapter(adapter);
                 return false;
             }
 
@@ -723,8 +751,12 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     FragmentManager fm;
 
     private void setup() {
+        nameTxt = (TextView) findViewById(R.id.nameTxt);
+        nameTxt.setText("EBook Selection & Upload");
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
+       // listView = (ListView) findViewById(R.id.listView);
         //recyclerView.setLayoutManager(new LinearLayoutManager(this));
         books = (ImageView) findViewById(R.id.books);
 
@@ -740,6 +772,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 adapter.setServerList(true);
                 adapter.setPaths(serverList);
                 adapter.setmList(eBooks);
+              //  listView.deferNotifyDataSetChanged();
                 recyclerView.getAdapter().notifyDataSetChanged();
                 //isServerList = true;
 
@@ -751,8 +784,8 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 //recyclerView.setVisibility(View.GONE);
                 booksimg.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.black));
                 books.setColorFilter(ContextCompat.getColor(EbookSelectionActivity.this,R.color.green_500));
-                //adapter.setPaths(serverList);
-                //recyclerView.getAdapter().notifyDataSetChanged();
+                adapter.setPaths(serverList);
+                recyclerView.getAdapter().notifyDataSetChanged();
                 adapter.setServerList(false);
                 walkdir(Environment.getExternalStorageDirectory());
 
@@ -782,7 +815,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.dismiss();
                     }
                 })
                 .show();

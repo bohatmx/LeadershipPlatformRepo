@@ -3,6 +3,8 @@ package com.oneconnect.leadership.library.ebook;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,9 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -39,6 +44,9 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     private EbookAdapterListener listener;
     EBookDTO eBook;
     List<EBookDTO> mList;
+    int checkAccumulator = 0;
+
+
 
     boolean isServerList;
 
@@ -142,6 +150,58 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
                         .into(holder.bookIcon);
             }
         }
+
+       /* if (holder.checkbox.isChecked()) {
+            holder.uploadIcon.setVisibility(View.GONE);
+            Toast.makeText(context, "counter: " + holder.checkbox.);
+        }*/
+
+        CompoundButton.OnCheckedChangeListener checkListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                countCheck(isChecked);
+                showSnackbar("Selected books: " + checkAccumulator + "", "Upload Selected","green");
+              //  holder.bookCounterTxt.setText(checkAccumulator + "");
+                Log.i(LOG, checkAccumulator + "" + "\n" +"Book path: " + path);
+                for (String p : paths) {
+                    p = path;
+                    listener.onUploadEbook(p);
+
+                }
+            }
+        };
+
+        holder.checkbox.setOnCheckedChangeListener(checkListener);
+
+        holder.bookIcon.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                holder.checkbox.setVisibility(View.VISIBLE);
+                holder.checkbox.isChecked();
+
+                return false;
+            }
+        });
+    }
+
+    public void countCheck(boolean isChecked) {
+        checkAccumulator += isChecked ? 1 : -1;
+    }
+    public Snackbar snackbar;
+    RelativeLayout mainLay;
+
+    public void showSnackbar(String title, String action, String color) {
+        snackbar = Snackbar.make(mainLay, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // snackbar.dismiss();
+
+            }
+        });
+        snackbar.show();
+
     }
 
 
@@ -185,13 +245,17 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
     }
 
     public class EbookViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtFileName;
+        protected TextView txtFileName, bookCounterTxt;
         protected Button btnUpload, btnPlay;
         protected RelativeLayout bottomLayout;
         protected ImageView uploadIcon, readIcon, bookIcon, imageUploadIcon, eBookMenu;
+        protected CheckBox checkbox;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
+      //      bookCounterTxt = (TextView) itemView.findViewById(R.id.bookCounterTxt);
+            checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
+            checkbox.setVisibility(View.GONE);
             txtFileName = (TextView) itemView.findViewById(R.id.fileName);
             uploadIcon = (ImageView) itemView.findViewById(R.id.uploadIcon);
             readIcon = (ImageView) itemView.findViewById(R.id.readIcon);
@@ -203,6 +267,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             eBookMenu = (ImageView) itemView.findViewById(R.id.ebook_menu);
             eBookMenu.setVisibility(View.GONE);
+            mainLay = (RelativeLayout) itemView.findViewById(R.id.mainLay);
 
         }
 
@@ -220,4 +285,6 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         this.mList = mList;
     }
 
+
+    static final String LOG = EbookAdapter.class.getSimpleName();
 }

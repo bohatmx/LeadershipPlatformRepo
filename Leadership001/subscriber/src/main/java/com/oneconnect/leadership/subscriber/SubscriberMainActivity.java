@@ -145,7 +145,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private CachePresenter cachePresenter;
     private SubscriberPresenter presenter;
     private UserDTO user;
-    TextView usernametxt;
+    private TextView usernametxt;
     PagerSlidingTabStrip strip;
 
     //Bottom Navigation
@@ -236,7 +236,7 @@ public class SubscriberMainActivity extends AppCompatActivity
             if (usernametxt != null)
                 usernametxt.setText(user.getFirstName() + " " + user.getLastName());
         } else if(FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
-            usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+//            usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         }
         else {
             usernametxt.setVisibility(View.GONE);
