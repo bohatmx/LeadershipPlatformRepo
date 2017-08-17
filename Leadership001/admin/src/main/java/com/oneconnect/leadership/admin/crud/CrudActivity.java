@@ -123,10 +123,10 @@ public class CrudActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Leadership Platform");
         getSupportActionBar().setSubtitle("Data Management");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
+        }*/
 
         setup();
 
@@ -504,7 +504,7 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
+        /*int id = item.getItemId();
         switch (id) {
             case R.id.action_daily:
                 cachePresenter.getCacheDailyThoughts();
@@ -521,7 +521,7 @@ public class CrudActivity extends AppCompatActivity
             case R.id.action_help:
                 Toasty.warning(this, "Under construction", Toast.LENGTH_SHORT, true).show();
                 break;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

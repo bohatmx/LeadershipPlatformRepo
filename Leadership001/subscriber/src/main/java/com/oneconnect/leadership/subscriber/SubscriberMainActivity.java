@@ -145,7 +145,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private CachePresenter cachePresenter;
     private SubscriberPresenter presenter;
     private UserDTO user;
-    TextView usernametxt;
+    private TextView usernametxt;
     PagerSlidingTabStrip strip;
 
     //Bottom Navigation
@@ -169,15 +169,8 @@ public class SubscriberMainActivity extends AppCompatActivity
 
         usernametxt = (TextView) findViewById(R.id.usernametxt);
 
-       /* user = SharedPrefUtil.getUser(ctx);
-        if (user != null) {
-            if (usernametxt != null)
-                usernametxt.setText(user.getFirstName() + " " + user.getLastName());
-        }
+      //  user = SharedPrefUtil.getUser(ctx);
 
-        if (SharedPrefUtil.getUser(ctx).getEmail() != null) {
-            usernametxt.setText(SharedPrefUtil.getUser(ctx).getEmail());
-        }*/
         mPager = (ViewPager) findViewById(R.id.viewpager);
         //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -237,6 +230,23 @@ public class SubscriberMainActivity extends AppCompatActivity
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
+
+        if (user != null) {
+            Log.i(LOG, "user: " + user.getFullName());
+            if (usernametxt != null)
+                usernametxt.setText(user.getFirstName() + " " + user.getLastName());
+        } else if(FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+//            usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }
+        else {
+            usernametxt.setVisibility(View.GONE);
+        }
+
+
+
+        /*if (SharedPrefUtil.getUser(ctx).getEmail() != null) {
+            usernametxt.setText(SharedPrefUtil.getUser(ctx).getEmail());
+        }*/
     }
 
     static List<PageFragment> pageFragmentList;

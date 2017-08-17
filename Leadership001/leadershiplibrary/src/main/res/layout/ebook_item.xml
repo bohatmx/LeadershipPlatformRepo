@@ -7,6 +7,7 @@
     app:cardElevation="@dimen/mon_divider_small">
 
     <RelativeLayout
+        android:id="@+id/mainLay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingRight="10dp">
@@ -77,6 +78,14 @@
                 android:layout_marginRight="@dimen/mon_wide"
                 android:src="@drawable/open_book"
                 android:tint="@color/pink_600" />
+
+            <CheckBox
+                android:layout_centerHorizontal="true"
+                android:id="@+id/checkbox"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/pink_600"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <ImageView
                 android:id="@+id/imageUploadIcon"
