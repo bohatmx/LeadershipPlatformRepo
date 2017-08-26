@@ -667,5 +667,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+
+
     static final String LOG = DailyThoughtAdapter.class.getSimpleName();
 }

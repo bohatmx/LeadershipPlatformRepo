@@ -50,7 +50,7 @@ public class Util {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        return  cal.getTime();
+        return cal.getTime();
 
     }
 
@@ -72,7 +72,7 @@ public class Util {
                                            String token) {
         FCMUserDTO u = new FCMUserDTO();
         u.setFcmID(user.getUserID().concat("@").concat(Build.SERIAL)
-        .concat("*") + user.getUserType());
+                .concat("*") + user.getUserType());
         u.setDate(user.getDateRegistered());
         u.setUserID(user.getUserID());
         u.setName(user.getFullName());
@@ -117,6 +117,7 @@ public class Util {
             Log.e("Util", "could not write exif data in image", e);
         }
     }
+
     private static String decimalToDMS(double coord) {
         coord = coord > 0 ? coord : -coord;  // -105.9876543 -> 105.9876543
         String sOut = Integer.toString((int) coord) + "/1,";   // 105/1,
@@ -184,32 +185,35 @@ public class Util {
         Log.i(TAG, "### Import Files in list : " + fileList.size());
         return fileList;
     }
+
     private static final String TAG = Util.class.getSimpleName();
 
     //
+
     /**
      * Function to convert milliseconds time to
      * Timer Format
      * Hours:Minutes:Seconds
-     * */
-    static public String milliSecondsToTimer(long milliseconds){
+     */
+    static public String milliSecondsToTimer(long milliseconds) {
         String finalTimerString = "";
         String secondsString = "";
 
         // Convert total duration into time
-        int hours = (int)( milliseconds / (1000*60*60));
-        int minutes = (int)(milliseconds % (1000*60*60)) / (1000*60);
-        int seconds = (int) ((milliseconds % (1000*60*60)) % (1000*60) / 1000);
+        int hours = (int) (milliseconds / (1000 * 60 * 60));
+        int minutes = (int) (milliseconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliseconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
         // Add hours if there
-        if(hours > 0){
+        if (hours > 0) {
             finalTimerString = hours + ":";
         }
 
         // Prepending 0 to seconds if it is one digit
-        if(seconds < 10){
+        if (seconds < 10) {
             secondsString = "0" + seconds;
-        }else{
-            secondsString = "" + seconds;}
+        } else {
+            secondsString = "" + seconds;
+        }
 
         finalTimerString = finalTimerString + minutes + ":" + secondsString;
 
@@ -219,17 +223,18 @@ public class Util {
 
     /**
      * Function to get Progress percentage
+     *
      * @param currentDuration
      * @param totalDuration
-     * */
-    public int getProgressPercentage(long currentDuration, long totalDuration){
+     */
+    public int getProgressPercentage(long currentDuration, long totalDuration) {
         Double percentage = (double) 0;
 
         long currentSeconds = (int) (currentDuration / 1000);
         long totalSeconds = (int) (totalDuration / 1000);
 
         // calculating percentage
-        percentage =(((double)currentSeconds)/totalSeconds)*100;
+        percentage = (((double) currentSeconds) / totalSeconds) * 100;
 
         // return percentage
         return percentage.intValue();
@@ -237,14 +242,14 @@ public class Util {
 
     /**
      * Function to change progress to timer
-     * @param progress -
-     * @param totalDuration
-     * returns current duration in milliseconds
-     * */
+     *
+     * @param progress      -
+     * @param totalDuration returns current duration in milliseconds
+     */
     public int progressToTimer(int progress, int totalDuration) {
         int currentDuration = 0;
         totalDuration = (int) (totalDuration / 1000);
-        currentDuration = (int) ((((double)progress) / 100) * totalDuration);
+        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
 
         // return current duration in milliseconds
         return currentDuration * 1000;
@@ -292,14 +297,14 @@ public class Util {
 
     }
 
-    static public long getMiliseconds(String date){
+    static public long getMiliseconds(String date) {
         long milliseconds = (long) 0.00;
-        try{
+        try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMMM yyyy");
             Date date1 = dateFormat.parse(date);
             milliseconds = date1.getTime();
-        }catch (ParseException pe){
-            Log.d(String.valueOf(pe),"checkkkkkkkkk");
+        } catch (ParseException pe) {
+            Log.d(String.valueOf(pe), "checkkkkkkkkk");
         }
 
         return milliseconds;
@@ -314,9 +319,9 @@ public class Util {
         final String timeFormatString = "h:mm aa";
         final String dateTimeFormatString = "EEE, d MMM yyyy HH:mm";
 
-        if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE) ) {
+        if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
             return "Today " + DateFormat.format(timeFormatString, smsTime);
-        } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1  ){
+        } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
             return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
         } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
             return DateFormat.format(dateTimeFormatString, smsTime).toString();
@@ -327,7 +332,7 @@ public class Util {
 
     public static String compressImage(String filePath) {
 
-       Bitmap scaledBitmap = null;
+        Bitmap scaledBitmap = null;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -471,5 +476,4 @@ public class Util {
 
         return inSampleSize;
     }
-
 }

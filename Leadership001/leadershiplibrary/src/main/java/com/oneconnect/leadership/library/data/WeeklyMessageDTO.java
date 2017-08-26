@@ -28,6 +28,7 @@ public class WeeklyMessageDTO  extends BaseDTO implements  Serializable, Compara
     private HashMap<String,EBookDTO> ebooks;
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
+    private CategoryDTO category;
 
     public HashMap<String, RatingDTO> getRatings() {
         return ratings;
@@ -264,4 +265,11 @@ public class WeeklyMessageDTO  extends BaseDTO implements  Serializable, Compara
         this.companyName = companyName;
     }
 
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
+    }
 }

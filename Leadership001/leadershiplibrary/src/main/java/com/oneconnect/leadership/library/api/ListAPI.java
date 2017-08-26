@@ -802,6 +802,143 @@ public class ListAPI {
         });
     }
 
+    public void getCategorisedDailyThoughts(String categoryID, final DataListener listener){
+        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
+        Query q = ref.orderByChild("categoryID").equalTo(categoryID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO dt = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getCategorisedWeeklyMessages(String categoryID, final DataListener listener){
+        DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MESSAGES);
+        Query q = ref.orderByChild("categoryID").equalTo(categoryID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setWeeklyMessages(new ArrayList<WeeklyMessageDTO>());
+                // bag.setCategories(new ArrayList<CategoryDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        WeeklyMessageDTO dt = shot.getValue(WeeklyMessageDTO.class);
+                        bag.getWeeklyMessages().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getCategorisedWeeklyMasterClasses(String categoryID, final DataListener listener){
+        DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MASTER_CLASSES);
+        Query q = ref.orderByChild("categoryID").equalTo(categoryID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setWeeklyMasterClasses(new ArrayList<WeeklyMasterClassDTO>());
+                // bag.setCategories(new ArrayList<CategoryDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        WeeklyMasterClassDTO dt = shot.getValue(WeeklyMasterClassDTO.class);
+                        bag.getWeeklyMasterClasses().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getCategorisedCalenderEvents(String categoryID, final DataListener listener){
+        DatabaseReference ref = db.getReference(DataAPI.CALENDAR_EVENTS);
+        Query q = ref.orderByChild("categoryID").equalTo(categoryID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setCalendarEvents(new ArrayList<CalendarEventDTO>());
+                // bag.setCategories(new ArrayList<CategoryDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        CalendarEventDTO dt = shot.getValue(CalendarEventDTO.class);
+                        bag.getCalendarEvents().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllCategories(final DataListener listener){
+        DatabaseReference ref = db.getReference(DataAPI.CATEGORIES);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setCategories(new ArrayList<CategoryDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        CategoryDTO dt = shot.getValue(CategoryDTO.class);
+                        bag.getCategories().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
     public void getAllSubscribers(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.USERS);
         Query q = ref.orderByChild("userType").equalTo(UserDTO.SUBSCRIBER);

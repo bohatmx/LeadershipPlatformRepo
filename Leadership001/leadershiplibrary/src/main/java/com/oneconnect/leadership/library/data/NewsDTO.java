@@ -20,8 +20,26 @@ public class NewsDTO  extends BaseDTO implements  Serializable, Comparable<NewsD
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
 
+    private CategoryDTO category;
+    private HashMap<String, CategoryDTO> categories;
 
     public NewsDTO() {
+    }
+
+    public HashMap<String, CategoryDTO> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(HashMap<String, CategoryDTO> categories) {
+        this.categories = categories;
+    }
+
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
     }
 
     public String getHtml() {

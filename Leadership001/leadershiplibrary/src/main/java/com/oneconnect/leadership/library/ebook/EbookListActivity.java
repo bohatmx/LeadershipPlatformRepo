@@ -696,6 +696,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

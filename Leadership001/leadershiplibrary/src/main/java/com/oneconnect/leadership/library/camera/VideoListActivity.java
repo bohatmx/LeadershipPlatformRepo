@@ -299,6 +299,11 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
 
     }
 
+    @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
     private List<VideoDTO> videos = new ArrayList<>();
     AdminVideoAdapter adapter;
 

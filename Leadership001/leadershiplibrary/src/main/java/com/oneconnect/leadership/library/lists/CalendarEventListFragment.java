@@ -380,6 +380,11 @@ public class CalendarEventListFragment extends Fragment implements PageFragment,
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

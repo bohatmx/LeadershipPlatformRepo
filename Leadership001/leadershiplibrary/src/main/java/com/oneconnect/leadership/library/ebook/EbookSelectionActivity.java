@@ -1018,6 +1018,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

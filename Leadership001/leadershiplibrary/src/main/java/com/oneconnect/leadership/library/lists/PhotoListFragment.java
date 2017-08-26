@@ -417,6 +417,11 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

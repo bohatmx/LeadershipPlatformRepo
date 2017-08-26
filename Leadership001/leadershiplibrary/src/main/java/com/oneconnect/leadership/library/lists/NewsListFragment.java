@@ -272,6 +272,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

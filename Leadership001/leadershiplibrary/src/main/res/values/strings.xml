@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">LeadershipLibrary</string>
     <string name="facebook_application_id" translatable="false">1837583773163041</string>
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
@@ -33,25 +34,25 @@
     <string name="action_photo">Photo</string>
     <string name="title_activity_le_exo_player">LeExoPlayerActivity</string>
 
-    <string name="video">VIDEOS</string>
+    <string name="video">LEADERSHIP VIDEOS</string>
 
     <string name="audio">Audio</string>
 
-    <string name="daily_thought">DAILY THOUGHTS</string>
+    <string name="daily_thought">LEADERSHIP DAILY THOUGHTS</string>
 
-    <string name="news_article">NEWS ARTICLES</string>
+    <string name="news_article">LEADERSHIP NEWS ARTICLES</string>
 
-    <string name="weeky_master_class">WEEKLY MASTERCLASS</string>
+    <string name="weeky_master_class">LEADERSHIP WEEKLY MASTERCLASS</string>
 
-    <string name="weekly_message">WEEKLY MESSAGES</string>
+    <string name="weekly_message">LEADERSHIP WEEKLY MESSAGES</string>
 
-    <string name="photo">PHOTOS</string>
+    <string name="photo">LEADERSHIP PHOTOS</string>
 
-    <string name="podcast">PODCASTS</string>
+    <string name="podcast">LEADERSHIP PODCASTS</string>
 
-    <string name="ebooks">EBOOKS</string>
+    <string name="ebooks">LEADERSHIP EBOOKS</string>
 
-    <string name="calendar_events">CALENDER EVENTS</string>
+    <string name="calendar_events">LEADERSHIP CALENDER EVENTS</string>
 
     <string name="Photographs">Photographs</string>
 
@@ -142,21 +143,19 @@
 
     <!--To be deleted-->
 
-   <string name="normal_layout">Username</string>
-   <string name="wide_layout">Wide Layout</string>
-   <string name="decimal_step_size">Decimal Step Size</string>
-   <string name="framework_implementation">Comments made</string>
-   <string name="library_implementation">Category</string>
-   <string name="library_implementation_tinted">Library Implementation (Tinted)</string>
-   <string name="action_about">About</string>
+    <string name="normal_layout">Username</string>
+    <string name="wide_layout">Wide Layout</string>
+    <string name="decimal_step_size">Decimal Step Size</string>
+    <string name="framework_implementation">Comments made</string>
+    <string name="library_implementation">Category</string>
+    <string name="library_implementation_tinted">Library Implementation (Tinted)</string>
+    <string name="action_about">About</string>
 
-   <string name="about_title">About</string>
-   <string name="about_name">MaterialRatingBar</string>
-   <string name="about_version_format">Version %1$s</string>
-   <string name="about_credit">Zhang Hai 2016</string>
-   <string name="about_github"><a href="https://github.com/DreaminginCodeZH/MaterialRatingBar">View on GitHub</a></string>
-
-
-
+    <string name="about_title">About</string>
+    <string name="about_name">MaterialRatingBar</string>
+    <string name="about_version_format">Version %1$s</string>
+    <string name="about_credit">Zhang Hai 2016</string>
+    <string name="about_github"><a href="https://github.com/DreaminginCodeZH/MaterialRatingBar">View on GitHub</a></string>
+    <string name="title_activity_category">CategoryActivity</string>
 
 </resources>

@@ -4,44 +4,44 @@
 
 
     <group android:checkableBehavior="single">
-        <item android:title="News">
+        <item android:title="Leadership News">
             <menu>
                 <item
                     android:id="@+id/nav_news_article"
                     android:icon="@drawable/ic_info"
-                    android:title="News Articles" />
+                    android:title="Leadership News Articles" />
             </menu>
         </item>
     </group>
     <group android:checkableBehavior="single" >
-        <item android:title="Message">
+        <item android:title="Leadership Message">
             <menu>
                 <item
                     android:id="@+id/nav_daily_thought"
                     android:icon="@drawable/ic_comment_black_24dp"
-                    android:title="Daily Thoughts" />
+                    android:title="Leadership Daily Thoughts" />
                 <item
                     android:id="@+id/nav_master"
                     android:icon="@drawable/ic_class_black_24dp"
-                    android:title="Weekly Master Classes" />
+                    android:title="Leadership Weekly Master Classes" />
                 <item
                     android:id="@+id/nav_weekly"
                     android:icon="@drawable/ic_chat"
-                    android:title="Weekly Messages" />
+                    android:title="Leadership Weekly Messages" />
             </menu>
         </item>
     </group>
 
-    <item android:title="Events">
+    <item android:title="Leadership Events">
         <menu>
             <item
                 android:id="@+id/nav_calender_events"
                 android:icon="@drawable/ic_event_black_24dp"
-                android:title="Calendar Events" />
+                android:title="Leadership Calendar Events" />
         </menu>
     </item>
 
-    <item android:title="Media">
+    <item android:title="Leadership Media">
         <menu>
             <!--<item
                 android:id="@+id/nav_photo"
@@ -50,7 +50,7 @@
             <item
                 android:id="@+id/nav_podcast"
                 android:icon="@drawable/ic_microphone"
-                android:title="Podcasts" />
+                android:title="Leadership Podcasts" />
             <!--<item
                android:id="@+id/nav_video"
                android:icon="@drawable/ic_videocam"
@@ -58,12 +58,12 @@
        </menu>
    </item>
 
-   <item android:title="Read">
+   <item android:title="Leadership Read">
        <menu>
            <item
                android:id="@+id/nav_eBooks"
                android:icon="@drawable/ic_library_books_black_24dp"
-               android:title="Books" />
+               android:title="Leadership eBooks" />
        </menu>
    </item>
 

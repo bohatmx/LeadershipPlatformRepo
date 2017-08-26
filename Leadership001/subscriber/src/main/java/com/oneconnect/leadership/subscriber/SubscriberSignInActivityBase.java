@@ -9,8 +9,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.oneconnect.leadership.library.data.UserDTO;
-import com.oneconnect.leadership.library.lists.MediaListActivity;
 import com.oneconnect.leadership.library.login.BaseLoginActivity;
+import com.twitter.sdk.android.core.Twitter;
 
 import es.dmoral.toasty.Toasty;
 
@@ -24,7 +24,7 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         type = UserDTO.SUBSCRIBER;
-
+        //Twitter.initialize(this);
         if (firebaseAuth.getCurrentUser() == null) {
             startLogin();
         } else {
@@ -45,7 +45,7 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
     private void startMain() {
         Toasty.success(this, getString(R.string.success),
                 Toast.LENGTH_LONG, true).show();
-        Intent m = new Intent(SubscriberSignInActivityBase.this, SubscriberMainActivity.class);
+        Intent m = new Intent(SubscriberSignInActivityBase.this, /*SubscriberMainActivity*/CategoryActivity.class);
         startActivity(m);
         finish();
 

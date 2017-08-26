@@ -391,6 +391,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

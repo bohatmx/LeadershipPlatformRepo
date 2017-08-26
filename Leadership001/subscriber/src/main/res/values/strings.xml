@@ -11,4 +11,9 @@
     <string name="signin_failed">Sign in failed. Try again</string>
     <string name="title_activity_sign_in_subscriber">SignInSubscriberActivity</string>
     <string name="title_activity_login">LoginActivity</string>
+
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">Eh396VmwhTt9tzAtwhe8cXUla</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET"> bOGapescSkdYf8MqVqV5UWuIBEhrx7UWLC8ZRuYv0rdsKjwnzN</string>
+
 </resources>

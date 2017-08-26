@@ -29,6 +29,7 @@ public class WeeklyMasterClassDTO extends BaseDTO implements  Serializable, Comp
     private HashMap<String,UrlDTO> urls;
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
+    private CategoryDTO category;
 
     public HashMap<String, RatingDTO> getRatings() {
         return ratings;
@@ -289,4 +290,11 @@ public class WeeklyMasterClassDTO extends BaseDTO implements  Serializable, Comp
         this.companyName = companyName;
     }
 
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
+    }
 }

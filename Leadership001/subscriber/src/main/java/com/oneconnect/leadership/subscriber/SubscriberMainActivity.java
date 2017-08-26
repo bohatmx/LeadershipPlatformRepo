@@ -147,11 +147,14 @@ public class SubscriberMainActivity extends AppCompatActivity
     private UserDTO user;
     private TextView usernametxt;
     PagerSlidingTabStrip strip;
+    CategoryDTO category;
 
     //Bottom Navigation
     private TextView textFavorites;
     private TextView textSchedules;
     private TextView textMusic;
+    //
+    private DailyThoughtDTO dailyThought;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,9 +192,11 @@ public class SubscriberMainActivity extends AppCompatActivity
             switch (type) {
                 case ResponseBag.CATEGORIES:
                     cachePresenter.getCacheCategories();
+                    category = (CategoryDTO) getIntent().getSerializableExtra("category");
                     break;
                 case ResponseBag.DAILY_THOUGHTS:
                     cachePresenter.getCacheDailyThoughts();
+                    dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
                     break;
                 case ResponseBag.EBOOKS:
                     cachePresenter.getCacheEbooks();
@@ -231,7 +236,7 @@ public class SubscriberMainActivity extends AppCompatActivity
             StrictMode.setVmPolicy(builder.build());
         }
 
-        if (user != null) {
+        /*if (user != null) {
             Log.i(LOG, "user: " + user.getFullName());
             if (usernametxt != null)
                 usernametxt.setText(user.getFirstName() + " " + user.getLastName());
@@ -239,14 +244,16 @@ public class SubscriberMainActivity extends AppCompatActivity
 //            usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         }
         else {
-            usernametxt.setVisibility(View.GONE);
-        }
-
-
-
-        /*if (SharedPrefUtil.getUser(ctx).getEmail() != null) {
-            usernametxt.setText(SharedPrefUtil.getUser(ctx).getEmail());
+            //usernametxt.setVisibility(View.GONE);
         }*/
+
+    }
+
+    private void getDailyThoughts() {
+        Log.d(LOG, "*********** fetching dailyThoughts ************");
+        if (dailyThought.getDailyThoughtID() != null) {
+            presenter.getCategorisedDailyThoughts(dailyThought.getDailyThoughtID());
+        }
     }
 
     static List<PageFragment> pageFragmentList;
@@ -366,31 +373,26 @@ public class SubscriberMainActivity extends AppCompatActivity
             Log.e(LOG, "PagerAdapter failed", e);
             if (page != null) {
 
-                if (page.equalsIgnoreCase("News Article")) {
+                if (page.equalsIgnoreCase("Leadership News Article")) {
                     mPager.setCurrentItem(0);
                 }
-                if (page.equalsIgnoreCase("Daily Thoughts")) {
+                if (page.equalsIgnoreCase("Leadership Daily Thoughts")) {
                     mPager.setCurrentItem(1);
                 }
-                if (page.equalsIgnoreCase("Weekly Masterclass")) {
+                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
                     mPager.setCurrentItem(2);
                 }
-                if (page.equalsIgnoreCase("Weekly Message")) {
+                if (page.equalsIgnoreCase("Leadership Weekly Message")) {
                     mPager.setCurrentItem(3);
                 }
-                if (page.equalsIgnoreCase("Calendar Event")) {
+                if (page.equalsIgnoreCase("Leadership Calendar Event")) {
                     mPager.setCurrentItem(4);
                 }
-               /* if (page.equalsIgnoreCase("Photo")) {
-                    mPager.setCurrentItem(5);
-                }*/
-                if (page.equalsIgnoreCase("Podcasts")) {
+
+                if (page.equalsIgnoreCase("Leadership Podcasts")) {
                     mPager.setCurrentItem(5);
                 }
-               /* if (page.equalsIgnoreCase("Video")) {
-                    mPager.setCurrentItem(7);
-                }*/
-                if (page.equalsIgnoreCase("eBooks")) {
+                if (page.equalsIgnoreCase("Leadership eBooks")) {
                     mPager.setCurrentItem(6);
                 }
 
@@ -539,6 +541,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         Collections.sort(bag.getDailyThoughts());
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
+        presenter.getAllDailyThoughts();
         cachePresenter.cacheDailyThoughts(list);
     }
 
@@ -562,11 +565,17 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
         cachePresenter.cacheDailyThoughts(list);
+        //presenter.getCategorisedDailyThoughts(category.getCategoryID());
         presenter.getAllDailyThoughts();
     }
 
     @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCategories(List<CategoryDTO> list) {
 
     }
 
@@ -617,6 +626,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         setFragment();
         cachePresenter.cacheWeeklyMessages(list);
         presenter.getAllWeeklyMessages();
+        //presenter.getCategorisedWeeklyMessages(category.getCategoryID());
     }
 
     @Override
@@ -714,7 +724,8 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
         setFragment();
         cachePresenter.cacheWeeklyMasterclasses(list);
-        presenter.getAllWeeklyMasterClasses();
+       presenter.getAllWeeklyMasterClasses();
+       // presenter.getCategorisedWeeklyMasterClasses(category.getCategoryID());
     }
 
     @Override
@@ -727,6 +738,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         setFragment();
         cachePresenter.cacheWeeklyMessages(list);
         presenter.getAllWeeklyMessages();
+       // presenter.getCategorisedWeeklyMessages(category.getCategoryID());
     }
 
     @Override
@@ -796,7 +808,13 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-
+        Log.i(TAG, "onCacheWeeklyMasterclasses " + list.size());
+        bag = new ResponseBag();
+        bag.setWeeklyMasterClasses(list);
+        bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
+        setFragment();
+        //presenter.getCategorisedWeeklyMasterClasses(category.getCategoryID());
+        presenter.getAllWeeklyMasterClasses();
     }
 
     @Override
@@ -806,6 +824,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setWeeklyMessages(list);
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
         setFragment();
+        //presenter.getCategorisedWeeklyMessages(category.getCategoryID());
         presenter.getAllWeeklyMessages();
     }
 

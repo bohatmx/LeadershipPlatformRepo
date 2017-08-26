@@ -76,7 +76,8 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 googleIdp,
-                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(), new AuthUI.IdpConfig.Builder
+                                        (AuthUI.TWITTER_PROVIDER).build()))
                         .build(),
                 REQUEST_SIGN_IN);
     }

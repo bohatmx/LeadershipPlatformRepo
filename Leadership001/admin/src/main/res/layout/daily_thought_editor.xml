@@ -45,10 +45,18 @@ app:cardElevation="@dimen/mon_padding">
 
         </android.support.design.widget.TextInputLayout>
 
+        <Spinner
+            android:id="@+id/Catspinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/t2">
+
+        </Spinner>
+
         <Button
             android:id="@+id/btnDate"
             style="?attr/borderlessButtonStyle"
-            android:layout_below="@+id/t2"
+            android:layout_below="@+id/Catspinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mon_padding"
