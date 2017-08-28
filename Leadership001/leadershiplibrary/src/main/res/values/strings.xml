@@ -142,21 +142,20 @@
 
     <!--To be deleted-->
 
-   <string name="normal_layout">Username</string>
-   <string name="wide_layout">Wide Layout</string>
-   <string name="decimal_step_size">Decimal Step Size</string>
-   <string name="framework_implementation">Comments made</string>
-   <string name="library_implementation">Category</string>
-   <string name="library_implementation_tinted">Library Implementation (Tinted)</string>
-   <string name="action_about">About</string>
+    <string name="normal_layout">Username</string>
+    <string name="wide_layout">Wide Layout</string>
+    <string name="decimal_step_size">Decimal Step Size</string>
+    <string name="framework_implementation">Comments made</string>
+    <string name="library_implementation">Category</string>
+    <string name="library_implementation_tinted">Library Implementation (Tinted)</string>
+    <string name="action_about">About</string>
 
-   <string name="about_title">About</string>
-   <string name="about_name">MaterialRatingBar</string>
-   <string name="about_version_format">Version %1$s</string>
-   <string name="about_credit">Zhang Hai 2016</string>
-   <string name="about_github"><a href="https://github.com/DreaminginCodeZH/MaterialRatingBar">View on GitHub</a></string>
-
-
+    <string name="about_title">About</string>
+    <string name="about_name">MaterialRatingBar</string>
+    <string name="about_version_format">Version %1$s</string>
+    <string name="about_credit">Zhang Hai 2016</string>
+    <string name="about_github"><a href="https://github.com/DreaminginCodeZH/MaterialRatingBar">View on GitHub</a></string>
+    <string name="title_activity_image_list">ImageListActivity</string>
 
 
 </resources>

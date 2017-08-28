@@ -41,7 +41,15 @@
         <activity
             android:name=".SubscriberMainActivity"
             android:label="@string/title_activity_subscriber_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="https://leadershipplatform-158316.firebaseapp.com/" android:scheme="http"/>
+                <data android:host="https://leadershipplatform-158316.firebaseapp.com/" android:scheme="https"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.oneconnect.leadership.library.lists.MediaListActivity"
             android:label="@string/title_activity_media_list"
@@ -105,6 +113,18 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.DeepLinkActivity"
+            android:label="@string/title_activity_deep_link"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="https://leadershipplatform-158316.firebaseapp.com/" android:scheme="http"/>
+                <data android:host="https://leadershipplatform-158316.firebaseapp.com/" android:scheme="https"/>
             </intent-filter>
         </activity>
         <provider

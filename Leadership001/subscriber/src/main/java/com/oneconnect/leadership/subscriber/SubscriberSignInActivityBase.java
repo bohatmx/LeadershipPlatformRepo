@@ -1,6 +1,8 @@
 package com.oneconnect.leadership.subscriber;
 
+import android.*;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +27,11 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
         setSupportActionBar(toolbar);
         type = UserDTO.SUBSCRIBER;
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
+
         if (firebaseAuth.getCurrentUser() == null) {
             startLogin();
         } else {
@@ -45,7 +52,7 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
     private void startMain() {
         Toasty.success(this, getString(R.string.success),
                 Toast.LENGTH_LONG, true).show();
-        Intent m = new Intent(SubscriberSignInActivityBase.this, SubscriberMainActivity.class);
+        Intent m = new Intent(this, SubscriberMainActivity.class);
         startActivity(m);
         finish();
 

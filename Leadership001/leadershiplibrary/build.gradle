@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         minSdkVersion 21
@@ -67,17 +67,16 @@ dependencies {
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile files('libs/pdf-js-0.5.5.jar')
     compile files('libs/objenesis-1.2.jar')
-
     /*compile files('libs/kryo-2.20.jar')*/
+
     /*compile('com.esotericsoftware:kryonet:2.22.0-RC1') {
-        exclude module: 'kryo'
-    }*/
+            exclude module: 'kryo'
+        }*/
+
     //  compile 'com.firebase:firebase-client-android:2.5.2'
 
     /*compile files('libs/kryo-2.20.jar')*/
-    compile files(
-            'libs/Pdf_Viewer_.jar')
-
+    compile files('libs/Pdf_Viewer_.jar')
     compile 'com.cloudinary:cloudinary-android:1.9.1'
     compile 'com.cloudinary:cloudinary-core:1.9.1'
     compile 'me.relex:circleindicator:1.2.1@aar'

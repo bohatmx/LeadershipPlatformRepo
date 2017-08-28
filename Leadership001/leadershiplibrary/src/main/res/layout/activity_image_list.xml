@@ -4,34 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.oneconnect.leadership.library.audio.PodcastSelectionActivity">
+    tools:context="com.oneconnect.leadership.library.activities.ImageListActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:background="#be1d2c"
             android:layout_width="match_parent"
-            android:layout_height="120dp">
-        </android.support.v7.widget.Toolbar>
-
-
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/sasa_red"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_podcast_selection" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fabIcon"
-        android:src="@drawable/ic_microphone_white"
-        app:layout_anchor="@+id/appBar"
-        app:layout_anchorGravity="center|bottom"/>
-
+    <include layout="@layout/content_image_list" />
 
 </android.support.design.widget.CoordinatorLayout>

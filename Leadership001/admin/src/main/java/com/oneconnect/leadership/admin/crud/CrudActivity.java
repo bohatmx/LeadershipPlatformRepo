@@ -40,6 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.activities.ImageListActivity;
 import com.oneconnect.leadership.library.activities.NewsArticleActivity;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
@@ -586,7 +587,7 @@ public class CrudActivity extends AppCompatActivity
 
             case R.id.nav_photos:
                 type = ResponseBag.PHOTOS;
-                Intent intent3 = new Intent(CrudActivity.this, PhotoSelectionActivity.class);
+                Intent intent3 = new Intent(CrudActivity.this, ImageListActivity/*PhotoSelectionActivity*/.class);
                 startActivity(intent3);
                 break;
 

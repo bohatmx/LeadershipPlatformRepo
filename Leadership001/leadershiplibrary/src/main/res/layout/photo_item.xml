@@ -17,6 +17,9 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitXY"/>
 
+        <include
+            layout="@layout/selected_item"/>
+
         <TextView
             android:id="@+id/captiontxt"
             android:padding="@dimen/mon_padding"

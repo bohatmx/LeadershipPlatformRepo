@@ -42,7 +42,13 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -120,7 +126,8 @@ public class SubscriberMainActivity extends AppCompatActivity
         MasterListFragment.WeeklyMasterClassListener, WeeklyMessageListFragment.WeeklyMessageListener,
         CalendarEventListFragment.CalendarEventListener,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
-        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener, NewsListFragment.NewsArticleListener{
+        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener, NewsListFragment.NewsArticleListener,
+        GoogleApiClient.OnConnectionFailedListener{
 
 
     private WeeklyMessageDTO weeklyMessage;
@@ -151,6 +158,8 @@ public class SubscriberMainActivity extends AppCompatActivity
     private TextView textSchedules;
     private TextView textMusic;
 
+    private GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +173,29 @@ public class SubscriberMainActivity extends AppCompatActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         page = getIntent().getStringExtra("page");
+
+        Uri data = getIntent().getData();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(AppInvite.API)
+                .enableAutoManage(this, this)
+                .build();
+
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(new ResultCallback<AppInviteInvitationResult>() {
+                    @Override
+                    public void onResult(@NonNull AppInviteInvitationResult result) {
+                        if (result.getStatus().isSuccess()){
+                            Intent intent = result.getInvitationIntent();
+                            String deepLink = AppInviteReferral.getDeepLink(intent);
+                            Log.i(LOG, "**DeepLink: " + deepLink);
+                        } else {
+                            Log.d(LOG, "getInvitation: no deep link found");
+                        }
+                     }
+                });
+
 
             // ...
 
@@ -1014,6 +1046,11 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onNewsArticleTapped(NewsDTO article) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
