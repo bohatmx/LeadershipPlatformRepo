@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.Util;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -230,13 +232,9 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private void shareIt() {
         //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+        File dir = Environment.getExternalStorageDirectory();
+        File dcim = new File(dir.getAbsolutePath());
+        Uri videoUri = Uri.fromFile(dcim);
     }
 
 

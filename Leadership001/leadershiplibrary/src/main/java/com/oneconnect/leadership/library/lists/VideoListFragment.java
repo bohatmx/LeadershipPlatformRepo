@@ -424,6 +424,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
         Log.i(LOG, "onAllVideos: " + list.size());
         this.videos = list;

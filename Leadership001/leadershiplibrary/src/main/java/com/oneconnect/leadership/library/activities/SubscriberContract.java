@@ -33,7 +33,15 @@ public class SubscriberContract {
         void getCompanies(String companyID);
         void getDailyThoughts(String companyID);
         void getAllCompanyDailyThoughts(String companyID);
+        void getCategorisedDailyThoughts(String categoryID);
+        void getCategorisedWeeklyMessages(String categoryID);
+        void getCategorisedWeeklyMasterClasses(String categoryID);
+        void getCategorisedCalenderEvents();
+        void getAllStaff();
+        void getAllLeaders();
+        void getAllSubscribers();
         void getAllDailyThoughts();
+        void getAllCategories();
         void getAllNewsArticle();
         void getAllWeeklyMessages();
         void getAllWeeklyMasterClasses();
@@ -70,6 +78,7 @@ public class SubscriberContract {
         void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list);
         void onAllDailyThoughts(List<DailyThoughtDTO> list);
         void onAllNewsArticle(List<NewsDTO> list);
+        void onAllCategories(List<CategoryDTO> list);
         void onAllVideos(List<VideoDTO> list);
         void onAllEBooks(List<EBookDTO> list);
         void onAllPhotos(List<PhotoDTO> list);

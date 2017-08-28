@@ -305,6 +305,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

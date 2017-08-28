@@ -21,6 +21,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         api.getUserByEmail(email, new DataAPI.EmailQueryListener() {
             @Override
             public void onUserFoundByEmail(UserDTO user) {
+
                 view.onUserFoundByEmail(user);
             }
 

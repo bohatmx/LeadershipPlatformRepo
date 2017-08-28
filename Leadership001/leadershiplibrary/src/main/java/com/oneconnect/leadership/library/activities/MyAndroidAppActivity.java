@@ -395,6 +395,11 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

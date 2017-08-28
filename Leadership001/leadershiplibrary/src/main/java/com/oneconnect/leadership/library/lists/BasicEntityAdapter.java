@@ -105,7 +105,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     @Override
     public EntityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.entity_item, parent, false);
+                .inflate(R.layout.entity_item_two, parent, false);
         return new EntityViewHolder(v);
     }
 
@@ -730,6 +730,8 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         protected View bottomLayout, frameLayout, linksLayout, iconLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
+        //protected TextView txtTitle;
+
         protected TextViewExpandableAnimation txtTitle;
 
 
@@ -737,6 +739,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.ImageView);
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
+            //txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
 

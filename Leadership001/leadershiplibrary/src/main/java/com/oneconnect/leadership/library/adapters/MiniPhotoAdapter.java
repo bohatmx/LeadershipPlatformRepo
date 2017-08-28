@@ -2,6 +2,7 @@ package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,14 +73,14 @@ public class MiniPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void shareIt() {
+        PhotoDTO p = new PhotoDTO();
         //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        Uri screenshotUri = Uri.parse("file://" + p.getFilePath());
+
+        sharingIntent.setType("image/png");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+        ctx.startActivity(Intent.createChooser(sharingIntent, "Share image using"));
     }
 
 

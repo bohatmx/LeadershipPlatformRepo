@@ -42,17 +42,12 @@ import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.google.android.gms.appinvite.AppInviteInvitationResult;
-import com.google.android.gms.appinvite.AppInviteReferral;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
@@ -117,6 +112,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.graphics.Color.GRAY;
 import static android.graphics.Color.RED;
 
 
@@ -126,8 +122,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         MasterListFragment.WeeklyMasterClassListener, WeeklyMessageListFragment.WeeklyMessageListener,
         CalendarEventListFragment.CalendarEventListener,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
-        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener, NewsListFragment.NewsArticleListener,
-        GoogleApiClient.OnConnectionFailedListener{
+        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener, NewsListFragment.NewsArticleListener{
 
 
     private WeeklyMessageDTO weeklyMessage;
@@ -150,15 +145,16 @@ public class SubscriberMainActivity extends AppCompatActivity
     private CachePresenter cachePresenter;
     private SubscriberPresenter presenter;
     private UserDTO user;
-    TextView usernametxt;
+    private TextView usernametxt;
     PagerSlidingTabStrip strip;
+    CategoryDTO category;
 
     //Bottom Navigation
     private TextView textFavorites;
     private TextView textSchedules;
     private TextView textMusic;
-
-    private GoogleApiClient mGoogleApiClient;
+    //
+    private DailyThoughtDTO dailyThought;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,106 +170,16 @@ public class SubscriberMainActivity extends AppCompatActivity
 
         page = getIntent().getStringExtra("page");
 
-        Uri data = getIntent().getData();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(AppInvite.API)
-                .enableAutoManage(this, this)
-                .build();
-
-        boolean autoLaunchDeepLink = true;
-        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
-                .setResultCallback(new ResultCallback<AppInviteInvitationResult>() {
-                    @Override
-                    public void onResult(@NonNull AppInviteInvitationResult result) {
-                        if (result.getStatus().isSuccess()){
-                            Intent intent = result.getInvitationIntent();
-                            String deepLink = AppInviteReferral.getDeepLink(intent);
-                            Log.i(LOG, "**DeepLink: " + deepLink);
-                        } else {
-                            Log.d(LOG, "getInvitation: no deep link found");
-                        }
-                     }
-                });
-
-
-            // ...
-
-            // Check for App Invite invitations and launch deep-link activity if possible.
-            // Requires that an Activity is registered in AndroidManifest.xml to handle
-            // deep-link URLs.
-            /*FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
-                    .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-                        @Override
-                        public void onSuccess(PendingDynamicLinkData data) {
-                            if (data == null) {
-                                Log.d(TAG, "getInvitation: no data");
-                                return;
-                            }
-
-                            // Get the deep link
-                            Uri deepLink = data.getLink();
-
-                            // Extract invite
-                            FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(data);
-                            if (invite != null) {
-                                String invitationId = invite.getInvitationId();
-                            }
-
-                            // Handle the deep link
-                            // ...
-                        }
-                    })
-                    .addOnFailureListener(this, new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "getDynamicLink:onFailure", e);
-                        }
-                    });*/
-
-      /*   textFavorites = (TextView) findViewById(R.id.text_favorites);
-        textSchedules = (TextView) findViewById(R.id.text_schedules);
-        textMusic = (TextView) findViewById(R.id.text_music);
-
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
-
-       bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_favorites:
-                                textFavorites.setVisibility(View.VISIBLE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_schedules:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.VISIBLE);
-                                textMusic.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_music:
-                                textFavorites.setVisibility(View.GONE);
-                                textSchedules.setVisibility(View.GONE);
-                                textMusic.setVisibility(View.VISIBLE);
-                                break;
-                        }
-                        return false;
-                    }
-                });*/
-
-
         usernametxt = (TextView) findViewById(R.id.usernametxt);
-        /*if (SharedPrefUtil.getUser(ctx).getFullName() != null) {
-            usernametxt.setText(SharedPrefUtil.getUser(ctx).getFullName());
-        }*/
+
+      //  user = SharedPrefUtil.getUser(ctx);
+
         mPager = (ViewPager) findViewById(R.id.viewpager);
         //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
         strip.setVisibility(View.VISIBLE);
-        strip.setTextColor(RED);
+        strip.setTextColor(GRAY);
          setup();
 
         presenter = new SubscriberPresenter(this);
@@ -286,9 +192,11 @@ public class SubscriberMainActivity extends AppCompatActivity
             switch (type) {
                 case ResponseBag.CATEGORIES:
                     cachePresenter.getCacheCategories();
+                    category = (CategoryDTO) getIntent().getSerializableExtra("category");
                     break;
                 case ResponseBag.DAILY_THOUGHTS:
                     cachePresenter.getCacheDailyThoughts();
+                    dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
                     break;
                 case ResponseBag.EBOOKS:
                     cachePresenter.getCacheEbooks();
@@ -326,6 +234,25 @@ public class SubscriberMainActivity extends AppCompatActivity
             LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
+        }
+
+        /*if (user != null) {
+            Log.i(LOG, "user: " + user.getFullName());
+            if (usernametxt != null)
+                usernametxt.setText(user.getFirstName() + " " + user.getLastName());
+        } else if(FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+//            usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }
+        else {
+            //usernametxt.setVisibility(View.GONE);
+        }*/
+
+    }
+
+    private void getDailyThoughts() {
+        Log.d(LOG, "*********** fetching dailyThoughts ************");
+        if (dailyThought.getDailyThoughtID() != null) {
+            presenter.getCategorisedDailyThoughts(dailyThought.getDailyThoughtID());
         }
     }
 
@@ -446,31 +373,26 @@ public class SubscriberMainActivity extends AppCompatActivity
             Log.e(LOG, "PagerAdapter failed", e);
             if (page != null) {
 
-                if (page.equalsIgnoreCase("News Article")) {
+                if (page.equalsIgnoreCase("Leadership News Article")) {
                     mPager.setCurrentItem(0);
                 }
-                if (page.equalsIgnoreCase("Daily Thoughts")) {
+                if (page.equalsIgnoreCase("Leadership Daily Thoughts")) {
                     mPager.setCurrentItem(1);
                 }
-                if (page.equalsIgnoreCase("Weekly Masterclass")) {
+                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
                     mPager.setCurrentItem(2);
                 }
-                if (page.equalsIgnoreCase("Weekly Message")) {
+                if (page.equalsIgnoreCase("Leadership Weekly Message")) {
                     mPager.setCurrentItem(3);
                 }
-                if (page.equalsIgnoreCase("Calendar Event")) {
+                if (page.equalsIgnoreCase("Leadership Calendar Event")) {
                     mPager.setCurrentItem(4);
                 }
-               /* if (page.equalsIgnoreCase("Photo")) {
-                    mPager.setCurrentItem(5);
-                }*/
-                if (page.equalsIgnoreCase("Podcasts")) {
+
+                if (page.equalsIgnoreCase("Leadership Podcasts")) {
                     mPager.setCurrentItem(5);
                 }
-               /* if (page.equalsIgnoreCase("Video")) {
-                    mPager.setCurrentItem(7);
-                }*/
-                if (page.equalsIgnoreCase("eBooks")) {
+                if (page.equalsIgnoreCase("Leadership eBooks")) {
                     mPager.setCurrentItem(6);
                 }
 
@@ -619,6 +541,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         Collections.sort(bag.getDailyThoughts());
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
+        presenter.getAllDailyThoughts();
         cachePresenter.cacheDailyThoughts(list);
     }
 
@@ -642,11 +565,17 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
         cachePresenter.cacheDailyThoughts(list);
+        //presenter.getCategorisedDailyThoughts(category.getCategoryID());
         presenter.getAllDailyThoughts();
     }
 
     @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCategories(List<CategoryDTO> list) {
 
     }
 
@@ -697,6 +626,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         setFragment();
         cachePresenter.cacheWeeklyMessages(list);
         presenter.getAllWeeklyMessages();
+        //presenter.getCategorisedWeeklyMessages(category.getCategoryID());
     }
 
     @Override
@@ -794,7 +724,8 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
         setFragment();
         cachePresenter.cacheWeeklyMasterclasses(list);
-        presenter.getAllWeeklyMasterClasses();
+       presenter.getAllWeeklyMasterClasses();
+       // presenter.getCategorisedWeeklyMasterClasses(category.getCategoryID());
     }
 
     @Override
@@ -807,6 +738,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         setFragment();
         cachePresenter.cacheWeeklyMessages(list);
         presenter.getAllWeeklyMessages();
+       // presenter.getCategorisedWeeklyMessages(category.getCategoryID());
     }
 
     @Override
@@ -876,7 +808,13 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-
+        Log.i(TAG, "onCacheWeeklyMasterclasses " + list.size());
+        bag = new ResponseBag();
+        bag.setWeeklyMasterClasses(list);
+        bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
+        setFragment();
+        //presenter.getCategorisedWeeklyMasterClasses(category.getCategoryID());
+        presenter.getAllWeeklyMasterClasses();
     }
 
     @Override
@@ -886,6 +824,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         bag.setWeeklyMessages(list);
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
         setFragment();
+        //presenter.getCategorisedWeeklyMessages(category.getCategoryID());
         presenter.getAllWeeklyMessages();
     }
 
@@ -1046,11 +985,6 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onNewsArticleTapped(NewsDTO article) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 

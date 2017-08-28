@@ -8,19 +8,19 @@
             android:id="@+id/nav_news_article"
             android:icon="@drawable/ic_info"
             android:tint="@color/blue_500"
-            android:title="News Articles" />
+            android:title="Leadership News Articles" />
         <item
             android:id="@+id/nav_daily"
             android:icon="@drawable/ic_create"
-            android:title="Daily Thought" />
+            android:title="Leadership Daily Thought" />
         <item
             android:id="@+id/nav_weekly_message"
             android:icon="@drawable/ic_chat"
-            android:title="Weekly Message" />
+            android:title="Leadership Weekly Message" />
         <item
             android:id="@+id/nav_weekly_master"
             android:icon="@drawable/ic_create"
-            android:title="Weekly MasterClass" />
+            android:title="Leadership Weekly MasterClass" />
 
     </group>
 
@@ -31,19 +31,19 @@
             <item
                 android:id="@+id/nav_ebooks"
                 android:icon="@drawable/ic_beacon"
-                android:title="Books" />
+                android:title="Leadership eBooks" />
             <item
                 android:id="@+id/nav_videos"
                 android:icon="@drawable/ic_videocam"
-                android:title="Videos" />
+                android:title="Leadership Videos" />
             <item
                 android:id="@+id/nav_podcasts"
                 android:icon="@drawable/ic_minibus"
-                android:title="Podcasts" />
+                android:title="Leadership Podcasts" />
             <item
                 android:id="@+id/nav_photos"
                 android:icon="@drawable/ic_photo_black_24dp"
-                android:title="Photos"/>
+                android:title="Leadership Photos"/>
 
             <item
                 android:id="@+id/nav_subscrip"
@@ -53,11 +53,11 @@
             <item
                 android:id="@+id/nav_categories"
                 android:icon="@drawable/ic_list_bulleted"
-                android:title="Categories" />
+                android:title="Leadership Categories" />
             <item
                 android:id="@+id/nav_users"
                 android:icon="@drawable/ic_people"
-                android:title="Users" />
+                android:title="Leadership Users" />
         </menu>
     </item>
     <item android:title="Calender Events"
@@ -66,7 +66,7 @@
             <item
                 android:id="@+id/nav_calender"
                 android:icon="@drawable/ic_history"
-                android:title="Calender Events" />
+                android:title="Leadership Calender Events" />
         </menu>
     </item>
 

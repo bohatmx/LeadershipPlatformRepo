@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ public class EntityListFragment extends BaseListingFragment {
     private ImageView iconAdd;
     private RecyclerView recyclerView;
     private BasicEntityAdapter.EntityListener mListener;
+    Context ctx;
 
     public static EntityListFragment newInstance(ResponseBag bag) {
         EntityListFragment fragment = new EntityListFragment();
@@ -69,11 +72,18 @@ public class EntityListFragment extends BaseListingFragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_category_list, container, false);
+        ctx = getActivity();
         txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         txtCount = (TextView) view.findViewById(R.id.txtCount);
         iconAdd = (ImageView) view.findViewById(R.id.iconAdd);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        LinearLayoutManager lm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        /*LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        recyclerView.setHasFixedSize(true);*/
+        /*LinearLayoutManager lm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(lm);*/
+        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
         txtTitle.setText(stringTitle);
         iconAdd.setOnClickListener(new View.OnClickListener() {

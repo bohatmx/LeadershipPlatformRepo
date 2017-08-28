@@ -68,7 +68,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item,parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item_two,parent, false);
         return new MasterViewHolder(v);
     }
 
@@ -518,12 +518,14 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected Button btnPlay;
         protected TextViewExpandableAnimation txtTitle;
         protected ImageView ratingBar;
+        //protected TextView txtTitle;
 
         public MasterViewHolder(View itemView) {
             super(itemView);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
+            //txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);

@@ -5,6 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +28,10 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.util.Util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -107,15 +118,27 @@ public class PhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
     }
+    public Bitmap mBitmap;
     private void shareIt() {
-        //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+
+        Bitmap icon = mBitmap;
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("image/jpeg");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg");
+        try {
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpg"));
+        ctx.startActivity(Intent.createChooser(share, "Share Image"));
+
+
+
     }
 
     private void confirmUpload(final PhotoDTO photoDTO) {

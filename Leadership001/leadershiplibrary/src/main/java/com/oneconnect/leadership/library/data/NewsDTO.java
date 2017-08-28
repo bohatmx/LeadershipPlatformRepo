@@ -16,12 +16,30 @@ public class NewsDTO  extends BaseDTO implements  Serializable, Comparable<NewsD
     private String body, newsID,
             stringArticleDate, html;
     private long  articleDate;
-    private HashMap<String, String> urls;
+    private HashMap<String, UrlDTO> urls;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
 
+    private CategoryDTO category;
+    private HashMap<String, CategoryDTO> categories;
 
     public NewsDTO() {
+    }
+
+    public HashMap<String, CategoryDTO> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(HashMap<String, CategoryDTO> categories) {
+        this.categories = categories;
+    }
+
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
     }
 
     public String getHtml() {
@@ -91,13 +109,22 @@ public class NewsDTO  extends BaseDTO implements  Serializable, Comparable<NewsD
         this.articleDate = articleDate;
     }
 
-    public HashMap<String, String> getUrls() {
+    public HashMap<String, UrlDTO> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(HashMap<String, UrlDTO> urls) {
+        this.urls = urls;
+    }
+
+    /* public HashMap<String, String> getUrls() {
         return urls;
     }
 
     public void setUrls(HashMap<String, String> urls) {
         this.urls = urls;
     }
+    */
 
     @Exclude
     public int compareTo(@NonNull NewsDTO d) {

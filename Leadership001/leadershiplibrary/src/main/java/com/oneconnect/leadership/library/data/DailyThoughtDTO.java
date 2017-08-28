@@ -22,7 +22,7 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
             stringDateUpdated, html;
     private boolean active;
     private long dateUpdated;
-
+    private CategoryDTO category;
     private HashMap<String, CategoryDTO> categories;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
@@ -31,6 +31,8 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,UrlDTO> urls;
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
+
+
 
 
 
@@ -251,4 +253,11 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         this.companyName = companyName;
     }
 
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
+    }
 }

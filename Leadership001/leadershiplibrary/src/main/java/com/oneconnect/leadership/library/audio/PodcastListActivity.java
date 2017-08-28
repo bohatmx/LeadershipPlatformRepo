@@ -311,6 +311,11 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     }
 
     @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
     public void onAllVideos(List<VideoDTO> list) {
 
     }

@@ -97,11 +97,103 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     }
 
     @Override
+    public void getCategorisedDailyThoughts(String categoryID) {
+        listAPI.getCategorisedDailyThoughts(categoryID, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onDailyThoughts(bag.getDailyThoughts());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
+    public void getCategorisedWeeklyMessages(String categoryID) {
+
+            listAPI.getCategorisedWeeklyMessages(categoryID, new ListAPI.DataListener() {
+                @Override
+                public void onResponse(ResponseBag bag) {
+                    view.onWeeklyMessages(bag.getWeeklyMessages());
+                }
+
+                @Override
+                public void onError(String messsage) {
+                    view.onError(messsage);
+                }
+            });
+
+    }
+
+    @Override
+    public void getCategorisedWeeklyMasterClasses(String categoryID) {
+        listAPI.getCategorisedWeeklyMasterClasses(categoryID, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onWeeklyMasterclasses(bag.getWeeklyMasterClasses());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
+    public void getCategorisedCalenderEvents() {
+        /*listAPI.getCategorisedCalenderEvents(categoryID, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onCalenderEvents(bag.getCalenderEvents());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });*/
+    }
+
+    @Override
+    public void getAllStaff() {
+
+    }
+
+    @Override
+    public void getAllLeaders() {
+
+    }
+
+    @Override
+    public void getAllSubscribers() {
+
+    }
+
+    @Override
     public void getAllDailyThoughts() {
         listAPI.getAllDailyThoughts(new ListAPI.DataListener() {
             @Override
             public void onResponse(ResponseBag bag) {
                 view.onAllDailyThoughts(bag.getDailyThoughts());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
+    public void getAllCategories() {
+        listAPI.getAllCategories(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onAllCategories(bag.getCategories());
             }
 
             @Override

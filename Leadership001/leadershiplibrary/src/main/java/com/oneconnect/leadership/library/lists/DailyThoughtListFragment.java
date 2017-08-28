@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -66,6 +69,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
 
+
     public DailyThoughtListFragment() {
         // Required empty public constructor
     }
@@ -104,6 +108,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private List<DailyThoughtDTO> dailyThoughtList = new ArrayList<>();
 
 
+    CategoryDTO category;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,6 +116,12 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
        view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        if (getActivity().getIntent().getSerializableExtra("category") != null) {
+            category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
+            Log.i(LOG, "category: " + category.getCategoryName());
+        } else {
+            Log.i(LOG, "No Category");
+        }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         photoRecyclerView = (RecyclerView) view.findViewById(R.id.photoRecyclerView);
@@ -226,6 +237,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
+        list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
@@ -272,6 +284,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onAllCompanyDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
+        list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
@@ -313,10 +326,24 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         recyclerView.setAdapter(adapter);
     }
 
+    private List<DailyThoughtDTO> getCategoryList(List<DailyThoughtDTO> list, String typeName){
+        //DailyThoughtDTO dailyThoughtDTO = null;
+        List<DailyThoughtDTO> returnList = new ArrayList<>();
+        for(DailyThoughtDTO dailyThoughtDTO : list){
+            if (dailyThoughtDTO.getCategory().getCategoryName() != null){
+            if(dailyThoughtDTO.getCategory().getCategoryName().equals(typeName)){
+                returnList.add(dailyThoughtDTO);
+            }
+            }
+        }
+        return returnList;
+
+    }
     @Override
-    public void onAllDailyThoughts(final List<DailyThoughtDTO> list) {
+    public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
         Log.w(LOG, "onAllDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
+        list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
@@ -360,6 +387,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCategories(List<CategoryDTO> list) {
 
     }
 

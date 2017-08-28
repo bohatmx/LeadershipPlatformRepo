@@ -159,6 +159,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         controlsLay = (RelativeLayout) findViewById(R.id.controlsLay);
         controlsLay.setVisibility(View.GONE);
         imageView = (ImageView) findViewById(R.id.imageView);
+        podcasts =(ImageView) findViewById(R.id.podcastIMGAE);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -254,7 +255,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         buttonUpload  = (Button)findViewById(R.id.button5);
         buttonUpload.setVisibility(View.GONE);
         recordProgress = (TextView) findViewById(R.id.timerText);
-        podcasts =(ImageView) findViewById(R.id.podcastIMGAE);
+
         buttonStop.setEnabled(false);
         buttonPlayLastRecordAudio.setEnabled(false);
         buttonStopPlayingRecording.setEnabled(false);
