@@ -127,6 +127,7 @@
     <string name="title_activity_podcast_player">PodcastPlayerActivity</string>
     <string name="title_activity_full_photo">FullPhotoActivity</string>
     <string name="title_activity_my_android_app">Rating Activity</string>
+    <string name="title_category">Categories</string>
 
     <!-- INVITES -->
     <string name="invitation_title">Leadership Platform</string>

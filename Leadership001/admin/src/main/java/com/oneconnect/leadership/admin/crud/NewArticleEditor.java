@@ -93,6 +93,11 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
     }
 
     @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

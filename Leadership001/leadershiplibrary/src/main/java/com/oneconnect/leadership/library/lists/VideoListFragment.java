@@ -394,6 +394,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     }
 
     @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

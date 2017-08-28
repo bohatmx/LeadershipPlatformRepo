@@ -72,7 +72,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private Spinner catSpinner;
     private SubscriberPresenter Catpresenter;
 
-   List<CategoryDTO> categoryList = new ArrayList();
+   List<CategoryDTO> categoryList; //= new ArrayList();
 
     @Override
     public void onEntityAdded(String key) {
@@ -95,6 +95,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onAllRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
 
     }
 

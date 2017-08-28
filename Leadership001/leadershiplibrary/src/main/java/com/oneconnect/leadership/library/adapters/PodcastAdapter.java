@@ -20,24 +20,20 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.activities.MyAndroidAppActivity;
+import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
-import com.oneconnect.leadership.library.data.VideoDTO;
-import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nkululeko on 2017/04/19.
@@ -147,7 +143,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Util.flashOnce(pvh.ratingBar, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, MyAndroidAppActivity.class);
+                        Intent intent = new Intent(ctx, RatingActivity.class);
                         //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
                         intent.putExtra("podcast", v);
                         ctx.startActivity(intent);

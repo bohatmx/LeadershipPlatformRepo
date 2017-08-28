@@ -3,15 +3,11 @@ package com.oneconnect.leadership.library.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.media.Image;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -23,41 +19,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.activities.MyAndroidAppActivity;
-import com.oneconnect.leadership.library.activities.WebViewActivity;
-import com.oneconnect.leadership.library.audio.AudioPlayerActivity;
-import com.oneconnect.leadership.library.camera.VideoAdapter;
+import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
-import com.oneconnect.leadership.library.data.RatingDTO;
-import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
-import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
-import com.oneconnect.leadership.library.util.TextViewExpandableAnimation;
 import com.oneconnect.leadership.library.util.Util;
-import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
-import com.oneconnect.leadership.library.video.VideoPlayerActivity;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -388,7 +367,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Util.flashOnce(dvh.ratingBar, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, MyAndroidAppActivity.class);
+                        Intent intent = new Intent(ctx, RatingActivity.class);
                         //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
                         intent.putExtra("dailyThought", dt);
                         ctx.startActivity(intent);

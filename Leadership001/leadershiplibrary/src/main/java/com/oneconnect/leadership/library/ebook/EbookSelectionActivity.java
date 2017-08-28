@@ -988,6 +988,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     }
 
     @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

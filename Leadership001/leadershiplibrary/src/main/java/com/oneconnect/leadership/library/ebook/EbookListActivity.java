@@ -666,6 +666,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

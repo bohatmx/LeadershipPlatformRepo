@@ -55,7 +55,7 @@ import com.oneconnect.leadership.library.util.Util;
 import java.util.Date;
 import java.util.List;
 
-public class MyAndroidAppActivity extends AppCompatActivity implements RatingContract.View, SubscriberContract.View , CacheContract.View{
+public class RatingActivity extends AppCompatActivity implements RatingContract.View, SubscriberContract.View , CacheContract.View{
 
     private RatingBar ratingBar;
     private TextView txtRatingValue, lblRateMe;
@@ -183,7 +183,8 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
 
     private void getRatings() {
         Log.d(LOG, "************** getRatings: " );
-        presenter.getAllRatings();
+        presenter.getDailyThoughtsRating(dailyThought.getDailyThoughtID());
+        //presenter.getAllRatings();
         /*if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllRatings();
         } else {
@@ -226,7 +227,7 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
                     }
                 });
 
-               /* Toast.makeText(MyAndroidAppActivity.this,
+               /* Toast.makeText(RatingActivity.this,
                         String.valueOf(ratingBar.getRating()),
                         Toast.LENGTH_SHORT).show(); */
 
@@ -316,7 +317,7 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
             @Override
             public void onClick(View v) {
                 uploadRating();
-               /* Toast.makeText(MyAndroidAppActivity.this,
+               /* Toast.makeText(RatingActivity.this,
                         String.valueOf(ratingBar.getRating()),
                         Toast.LENGTH_SHORT).show();*/
 
@@ -350,6 +351,23 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
     @Override
     public void onAllRatings(List<RatingDTO> list) {
         Log.i(LOG,"onAllRatings: " + list.size());
+        ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {
+            @Override
+            public void addListenerOnButton() {
+
+            }
+
+            @Override
+            public void addListenerOnRatingBar() {
+
+            }
+        });
+        recyclerView.setAdapter(ratingReviewAdapter);
+    }
+
+    @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+        Log.i(LOG,"onDailyThoughtRatings: " + list.size());
         ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {
             @Override
             public void addListenerOnButton() {
@@ -564,5 +582,5 @@ public class MyAndroidAppActivity extends AppCompatActivity implements RatingCon
         Log.e(LOG, "onError: " + message);
     }
 
-    static final String LOG = MyAndroidAppActivity.class.getSimpleName();
+    static final String LOG = RatingActivity.class.getSimpleName();
 }

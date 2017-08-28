@@ -802,9 +802,9 @@ public class ListAPI {
         });
     }
 
-    public void getCategorisedDailyThoughts(String categoryID, final DataListener listener){
-        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("categoryID").equalTo(categoryID);
+    public void getDailyThoughtsRating(String dailyThoughtID, final DataListener listener){
+        DatabaseReference ref = db.getReference(DataAPI.RATINGS);
+        Query q = ref.orderByChild("dailyThoughtID").equalTo(dailyThoughtID);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -812,11 +812,11 @@ public class ListAPI {
                     Log.d(LOG, dataSnapshot.getValue().toString());
                 }
                 ResponseBag bag = new ResponseBag();
-                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                bag.setRatings(new ArrayList<RatingDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                        DailyThoughtDTO dt = shot.getValue(DailyThoughtDTO.class);
-                        bag.getDailyThoughts().add(dt);
+                        RatingDTO dt = shot.getValue(RatingDTO.class);
+                        bag.getRatings().add(dt);
                     }
                 }
                 listener.onResponse(bag);

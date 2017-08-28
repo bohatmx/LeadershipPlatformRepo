@@ -224,6 +224,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }
@@ -343,7 +348,9 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
         Log.w(LOG, "onAllDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        list = getCategoryList(list, category.getCategoryName());
+        if (list != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
