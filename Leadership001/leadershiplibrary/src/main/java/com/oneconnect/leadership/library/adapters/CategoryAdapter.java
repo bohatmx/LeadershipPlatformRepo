@@ -53,6 +53,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 listener.onCategorySelected(cat);
             }
         });
+        cvh.categoryText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onCategorySelected(cat);
+            }
+        });
         /*if (cat.getCategoryName().equalsIgnoreCase("Executive Leadership")) {
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.woman_screens));
         } else if (cat.getCategoryName().equalsIgnoreCase("Managerial Leadership")) {

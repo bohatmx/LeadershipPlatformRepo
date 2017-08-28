@@ -126,7 +126,29 @@ public class WeeklyMessageEditor extends BaseBottomSheet
 
     @Override
     public void onAllCategories(List<CategoryDTO> list) {
+        Log.i(TAG, "**** onAllCategories: ****");
 
+        List<String> lis = new ArrayList<String>();
+        lis.add("Select Category");
+        //  Collections.sort(list);
+
+        for (CategoryDTO cat : list) {
+            lis.add(cat.getCategoryName());
+            category = cat;
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+        catSpinner.setAdapter(adapter);
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -275,32 +297,18 @@ public class WeeklyMessageEditor extends BaseBottomSheet
             }
         });
 
-        getCachedCategories();
         getCategories();
 
         return view;
     }
+
     public void getCategories() {
         // Log.d(LOG, "******* getCategories: ");
         Catpresenter.getAllCategories();/*getCategories();*/
     }
 
-    public void getCachedCategories() {
-        CategoryCache.getCategories(getActivity(), new CategoryCache.ReadListener() {
-            @Override
-            public void onDataRead(List<CategoryDTO> categories) {
-                Log.d(LOG, "onDataRead: Categories: " + categories);
-                categoryList = categories;
-                setCategorySpinner();
-            }
 
-            @Override
-            public void onError(String message) {
-                getCachedCategories();
-            }
-        });
-    }
-    public String LOG = DailyThoughtEditor.class.getSimpleName();
+
     private void setCategorySpinner() {
 
         List<String> list = new ArrayList<String>();

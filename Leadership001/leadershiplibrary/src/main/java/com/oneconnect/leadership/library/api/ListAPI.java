@@ -913,7 +913,7 @@ public class ListAPI {
         });
     }
 
-    public void getAllCategories(final DataListener listener){
+    public void getAllCategories(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.CATEGORIES);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

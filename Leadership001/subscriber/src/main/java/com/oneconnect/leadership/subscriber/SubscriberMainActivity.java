@@ -122,7 +122,8 @@ public class SubscriberMainActivity extends AppCompatActivity
         MasterListFragment.WeeklyMasterClassListener, WeeklyMessageListFragment.WeeklyMessageListener,
         CalendarEventListFragment.CalendarEventListener,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
-        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener, NewsListFragment.NewsArticleListener{
+        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
+        NewsListFragment.NewsArticleListener{
 
 
     private WeeklyMessageDTO weeklyMessage;
