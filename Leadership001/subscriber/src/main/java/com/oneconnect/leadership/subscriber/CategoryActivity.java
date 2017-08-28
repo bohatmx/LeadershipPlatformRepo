@@ -57,7 +57,7 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(ctx, 3));
 
         getCachedCategories();
         getCategories();

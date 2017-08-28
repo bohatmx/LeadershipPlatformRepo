@@ -84,7 +84,7 @@
         <activity
             android:name="com.oneconnect.leadership.subscriber.CategoryActivity"
             android:label="@string/title_activity_category"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

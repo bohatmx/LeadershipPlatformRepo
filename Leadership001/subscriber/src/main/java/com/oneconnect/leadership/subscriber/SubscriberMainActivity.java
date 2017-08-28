@@ -236,15 +236,11 @@ public class SubscriberMainActivity extends AppCompatActivity
             StrictMode.setVmPolicy(builder.build());
         }
 
-        /*if (user != null) {
-            Log.i(LOG, "user: " + user.getFullName());
-            if (usernametxt != null)
-                usernametxt.setText(user.getFirstName() + " " + user.getLastName());
-        } else if(FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
-//            usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+      /* if(FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+               usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         }
         else {
-            //usernametxt.setVisibility(View.GONE);
+            usernametxt.setVisibility(View.GONE);
         }*/
 
     }

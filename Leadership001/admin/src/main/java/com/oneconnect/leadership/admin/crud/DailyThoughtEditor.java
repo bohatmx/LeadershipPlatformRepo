@@ -276,15 +276,15 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 bottomSheetListener.onDateRequired();
             }
         });
-        getCachedCategories();
-        getCategories();
 
+        getCategories();
+        getCachedCategories();
 
         return view;
     }
     public void getCategories() {
        // Log.d(LOG, "******* getCategories: ");
-        Catpresenter.getAllCategories();/*getCategories();*/
+        Catpresenter.getAllCategories();
     }
 
     public void getCachedCategories() {

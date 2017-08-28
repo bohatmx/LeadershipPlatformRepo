@@ -6,18 +6,19 @@
 
     <ImageView
         android:id="@+id/homeImage"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_below="@+id/image"
         android:scaleType="fitXY"
         android:src="@drawable/black_white_hands" />
 
     <TextView
         android:id="@+id/categoryText"
-        style="@style/Title2TextStyleWhite"
-        android:layout_centerHorizontal="true"
-        android:layout_width="match_parent"
+        style="@style/TextStyleWhiteSmallNormal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Category"/>
+        android:text="Category"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
