@@ -53,7 +53,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 listener.onCategorySelected(cat);
             }
         });
-        if (cat.getCategoryName().equalsIgnoreCase("Executive Leadership")) {
+        cvh.categoryText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onCategorySelected(cat);
+            }
+        });
+        /*if (cat.getCategoryName().equalsIgnoreCase("Executive Leadership")) {
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.woman_screens));
         } else if (cat.getCategoryName().equalsIgnoreCase("Managerial Leadership")) {
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.tablet));
@@ -83,7 +89,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.cute_toddler));
         } else if (cat.getCategoryName().equalsIgnoreCase("Social")) {
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.hand_signs));
-        }
+        }*/
     }
 
     @Override

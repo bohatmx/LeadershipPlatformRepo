@@ -24,6 +24,9 @@ import com.oneconnect.leadership.library.activities.SheetContract;
 import com.oneconnect.leadership.library.activities.SheetPresenter;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.adapters.CategoryAdapter;
+import com.oneconnect.leadership.library.cache.CacheContract;
+import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.CategoryCache;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -59,7 +62,7 @@ import java.util.Locale;
  * Created by aubreymalabie on 3/18/17.
  */
 
-public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View, SubscriberContract.View {
+public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View, SubscriberContract.View, CacheContract.View, CategoryAdapter.CategoryAdapterListener {
     private DailyThoughtDTO dailyThought;
 
 
@@ -71,8 +74,10 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private Date selectedDate;
     private Spinner catSpinner;
     private SubscriberPresenter Catpresenter;
+    private CachePresenter cachePresenter;
 
-   List<CategoryDTO> categoryList = new ArrayList();
+   List<CategoryDTO> categoryList;
+    private CategoryDTO category;
 
     @Override
     public void onEntityAdded(String key) {
@@ -95,6 +100,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onAllRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
 
     }
 
@@ -128,9 +138,34 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     }
 
+    CategoryAdapter.CategoryAdapterListener listener;
+
     @Override
     public void onAllCategories(List<CategoryDTO> list) {
+        Log.i(TAG, "**** onAllCategories: ****");
 
+        List<String> lis = new ArrayList<String>();
+        lis.add("Select Category");
+      //  Collections.sort(list);
+
+        for (CategoryDTO cat : list) {
+            lis.add(cat.getCategoryName());
+            category = cat;
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+        catSpinner.setAdapter(adapter);
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+             //   listener.onCategorySelected(category);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -229,6 +264,76 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onDataCached() {
+
+    }
+
+    @Override
+    public void onCacheCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheEbooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
+    }
+
+    @Override
     public void onError(String message) {
           bottomSheetListener.onError(message);
     }
@@ -251,6 +356,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         type = getArguments().getInt("type", 0);
         presenter = new SheetPresenter(this);
         Catpresenter = new SubscriberPresenter(this);
+        cachePresenter = new CachePresenter(this, getActivity());
     }
 
     @Override
@@ -277,13 +383,14 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             }
         });
 
+      //  getCachedCategories();
         getCategories();
-        getCachedCategories();
+
 
         return view;
     }
     public void getCategories() {
-       // Log.d(LOG, "******* getCategories: ");
+        Log.d(TAG, "******* getAllCategories: ");
         Catpresenter.getAllCategories();
     }
 
@@ -291,7 +398,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         CategoryCache.getCategories(getActivity(), new CategoryCache.ReadListener() {
             @Override
             public void onDataRead(List<CategoryDTO> categories) {
-                Log.d(LOG, "onDataRead: Categories: " + categories);
+                Log.d(TAG, "onDataRead: Categories: " + categories.size());
                 categoryList = categories;
                 setCategorySpinner();
             }
@@ -302,9 +409,8 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             }
         });
     }
-    public String LOG = DailyThoughtEditor.class.getSimpleName();
-    private void setCategorySpinner() {
 
+    private void setCategorySpinner() {
         List<String> list = new ArrayList<String>();
         list.add("Select Category");
         Collections.sort(categoryList);
@@ -329,7 +435,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     }
 
-    private CategoryDTO category;
+
     private boolean isReadyToSend;
     private void send() {
 
@@ -404,4 +510,8 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     public static final String TAG = DailyThoughtEditor.class.getSimpleName();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    @Override
+    public void onCategorySelected(CategoryDTO cat) {
+        category = cat;
+    }
 }

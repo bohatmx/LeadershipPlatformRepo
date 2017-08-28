@@ -256,6 +256,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     }
 
     @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

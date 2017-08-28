@@ -97,11 +97,11 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     }
 
     @Override
-    public void getCategorisedDailyThoughts(String categoryID) {
-        listAPI.getCategorisedDailyThoughts(categoryID, new ListAPI.DataListener() {
+    public void getDailyThoughtsRating(String dailyThoughtID) {
+        listAPI.getDailyThoughtsRating(dailyThoughtID, new ListAPI.DataListener() {
             @Override
             public void onResponse(ResponseBag bag) {
-                view.onDailyThoughts(bag.getDailyThoughts());
+                view.onDailyThoughtRatings(bag.getRatings());
             }
 
             @Override

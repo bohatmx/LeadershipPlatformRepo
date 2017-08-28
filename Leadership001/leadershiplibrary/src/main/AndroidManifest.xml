@@ -18,6 +18,11 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
 
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1234"
+            android:exported="true" />
+
         <!-- SERVICES -->
         <service android:name=".services.LeadershipInstanceIDService">
             <intent-filter>
@@ -77,14 +82,9 @@
             android:label="@string/title_activity_full_photo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.DeepLinkActivity"
-            android:label="@string/title_activity_deep_link"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.twitter.sdk.android.core.identity.OAuthActivity" />
-        <activity
-            android:name="com.oneconnect.leadership.subscriber.CategoryActivity"
-            android:label="@string/title_activity_category"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".activities.ImageListActivity"
+            android:label="@string/title_activity_image_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

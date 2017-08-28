@@ -942,12 +942,12 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
     @Override
     public void onEbookUploaded(String key) {
-
+        showSnackbar("Book successfully uploaded ...", "OK", Constants.CYAN);
     }
 
     @Override
     public void onPhotoUploaded(String key) {
-
+        showSnackbar("Photo successfully uploaded ...", "OK", Constants.CYAN);
     }
 
     @Override
@@ -984,6 +984,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
     @Override
     public void onAllRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
 
     }
 

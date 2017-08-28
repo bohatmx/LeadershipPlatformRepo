@@ -122,7 +122,8 @@ public class SubscriberMainActivity extends AppCompatActivity
         MasterListFragment.WeeklyMasterClassListener, WeeklyMessageListFragment.WeeklyMessageListener,
         CalendarEventListFragment.CalendarEventListener,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
-        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener, NewsListFragment.NewsArticleListener{
+        PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
+        NewsListFragment.NewsArticleListener{
 
 
     private WeeklyMessageDTO weeklyMessage;
@@ -247,9 +248,9 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     private void getDailyThoughts() {
         Log.d(LOG, "*********** fetching dailyThoughts ************");
-        if (dailyThought.getDailyThoughtID() != null) {
-            presenter.getCategorisedDailyThoughts(dailyThought.getDailyThoughtID());
-        }
+        /*if (dailyThought.getDailyThoughtID() != null) {*/
+            presenter.getAllDailyThoughts();
+       /* }*/
     }
 
     static List<PageFragment> pageFragmentList;
@@ -516,6 +517,11 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onAllRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
 
     }
 
