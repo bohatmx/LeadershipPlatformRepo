@@ -318,8 +318,7 @@ public class CrudActivity extends AppCompatActivity
 
     private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
 
-        dailyThoughtEditor =
-                DailyThoughtEditor.newInstance(thought, type);
+        dailyThoughtEditor = DailyThoughtEditor.newInstance(thought, type);
         dailyThoughtEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
             @Override
             public void onWorkDone(BaseDTO entity) {
@@ -1501,22 +1500,30 @@ public class CrudActivity extends AppCompatActivity
 
     @Override
     public void onUpdateDailyThought(DailyThoughtDTO dailyThought) {
-
+        Intent intent = new Intent(this, UpdateEntityActivity.class);
+        intent.putExtra("dailyThought", dailyThought);
+        startActivity(intent);
     }
 
     @Override
     public void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
-
+        Intent intent = new Intent(this, UpdateEntityActivity.class);
+        intent.putExtra("weeklyMessage", weeklyMessage);
+        startActivity(intent);
     }
 
     @Override
     public void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
-
+        Intent intent = new Intent(this, UpdateEntityActivity.class);
+        intent.putExtra("masterClass", masterClass);
+        startActivity(intent);
     }
 
     @Override
     public void onUpdateNews(NewsDTO news) {
-
+        Intent intent = new Intent(this, UpdateEntityActivity.class);
+        intent.putExtra("news", news);
+        startActivity(intent);
     }
 
     @Override

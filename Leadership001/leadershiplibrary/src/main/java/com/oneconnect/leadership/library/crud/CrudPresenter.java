@@ -304,23 +304,63 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
-    public void updateDailyThought(DailyThoughtDTO dailyThought) {
+    public void updateDailyThought(final DailyThoughtDTO dailyThought) {
+        dataAPI.updateDailyThought(dailyThought, new DataAPI.UpdateListener() {
+            @Override
+            public void onSuccess() {
+                view.onDailyThoughtUpdated(dailyThought);
+            }
 
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
-    public void updateWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+    public void updateWeeklyMasterClass(final WeeklyMasterClassDTO masterClass) {
+        dataAPI.updateWeeklyMasterClass(masterClass, new DataAPI.UpdateListener() {
+            @Override
+            public void onSuccess() {
+                view.onWeeklyMasterClassUpdated(masterClass);
+            }
 
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
-    public void updateWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+    public void updateWeeklyMessage(final WeeklyMessageDTO weeklyMessage) {
+        dataAPI.updateWeeklyMessage(weeklyMessage, new DataAPI.UpdateListener() {
+            @Override
+            public void onSuccess() {
+                view.onWeeklyMessageUpdated(weeklyMessage);
+            }
 
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override
-    public void updateNews(NewsDTO news) {
+    public void updateNews(final NewsDTO news) {
+        dataAPI.updateNews(news, new DataAPI.UpdateListener() {
+            @Override
+            public void onSuccess() {
+                view.onNewsUpdated(news);
+            }
 
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
     }
 
     @Override

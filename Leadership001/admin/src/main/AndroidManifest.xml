@@ -23,7 +23,6 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
-
         <service android:name=".services.AdminMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -148,12 +147,11 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.oneconnect.leadership.admin.crud.UpdateUsersActivity"
+            android:name=".crud.UpdateUsersActivity"
             android:label="@string/title_activity_update_user"
             android:parentActivityName=".crud.UpdateUsersActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name="com.oneconnect.leadership.library.activities.NewsArticleActivity"
             android:label="@string/title_news"
@@ -192,6 +190,8 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <activity android:name=".crud.UpdateEntityActivity"></activity>
     </application>
 
 </manifest>

@@ -380,6 +380,74 @@ public class DataAPI {
 
     }
 
+    public void updateDailyThought(final DailyThoughtDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
+                .child(c.getDailyThoughtID());
+        log("updateDailyThought", ref);
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public void updateWeeklyMessage(final WeeklyMessageDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
+                .child(c.getWeeklyMessageID());
+        log("updateWeeklyMessage", ref);
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public void updateWeeklyMasterClass(final WeeklyMasterClassDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES)
+                .child(c.getWeeklyMasterClassID());
+        log("updateWeeklyMasterClass", ref);
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public void updateNews(final NewsDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(NEWS)
+                .child(c.getNewsID());
+        log("updateNews", ref);
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+
+    }
+
     public void updateUser(final UserDTO c, final UpdateListener listener) {
         DatabaseReference ref = db.getReference(USERS)
                 .child(c.getUserID());

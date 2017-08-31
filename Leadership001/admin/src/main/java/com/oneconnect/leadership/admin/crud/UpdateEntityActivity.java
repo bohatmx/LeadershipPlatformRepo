@@ -1,23 +1,18 @@
 package com.oneconnect.leadership.admin.crud;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
-import com.google.android.gms.nearby.messages.internal.Update;
 import com.oneconnect.leadership.admin.R;
-import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -35,56 +30,68 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
-import com.oneconnect.leadership.library.util.Constants;
-import com.oneconnect.leadership.library.util.SharedPrefUtil;
-import com.oneconnect.leadership.library.util.UpdateContract;
-import com.oneconnect.leadership.library.util.UpdatePresenter;
 import com.oneconnect.leadership.library.util.Util;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Kurisani on 2017/08/30.
- */
 
-public class UpdateUsersActivity extends AppCompatActivity implements CrudContract.View {
+public class UpdateEntityActivity extends AppCompatActivity implements CrudContract.View{
 
-    private UserDTO user;
-    private TextInputEditText eFirst,eLast,eMail;
-    private Spinner spinner;
-    private Button btn;
+    private DailyThoughtDTO dailyThought;
+    private WeeklyMasterClassDTO masterClass;
+    private WeeklyMessageDTO weeklyMessage;
+    private NewsDTO news;
+
+    private TextInputEditText editTitle, editSubtitle;
+    private RecyclerView recyclerView;
+    private ImageView iconCamera, iconVideo, iconDate, iconURLs;
+    private View iconLayout;
+    private Button btn, btnDate;
+    private Date selectedDate;
+    private Spinner catSpinner;
+    private SubscriberPresenter Catpresenter;
+    private CachePresenter cachePresenter;
     private CrudPresenter crudPresenter;
-    Context ctx;
-    private CategoryDTO category;
-
+    private Spinner spinner;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_update_editor);
+        setContentView(R.layout.activity_update_entity);
         crudPresenter = new CrudPresenter(this);
 
         btn = (Button) findViewById(R.id.btn);
-        eFirst = (TextInputEditText) findViewById(R.id.editFirstName);
-        eLast = (TextInputEditText) findViewById(R.id.editLastName);
-        eMail = (TextInputEditText) findViewById(R.id.editEmail);
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setVisibility(View.GONE);
+        editTitle = (TextInputEditText) findViewById(R.id.editTitle);
+        editSubtitle = (TextInputEditText) findViewById(R.id.editSubtitle);
+      //  spinner = (Spinner) findViewById(R.id.spinner);
+       // spinner.setVisibility(View.GONE);
 
-        if (getIntent().getSerializableExtra("user") != null){
-            user = (UserDTO) getIntent().getSerializableExtra("user");
-            eFirst.setText(user.getFirstName());
-            eLast.setText(user.getLastName());
-            eMail.setText(user.getEmail());
-            spinner.setSelection(user.getUserType());
-        } if (getIntent().getSerializableExtra("category") != null) {
-            category = (CategoryDTO) getIntent().getSerializableExtra("category");
-            eFirst.setText(category.getCategoryName());
-            eLast.setVisibility(View.GONE);
-            eMail.setVisibility(View.GONE);
-            spinner.setVisibility(View.GONE);
+        if (getIntent().getSerializableExtra("dailyThought") != null){
+            dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            editTitle.setText(dailyThought.getTitle());
+            editSubtitle.setText(dailyThought.getSubtitle());
+          //  spinner.setSelection(dailyThought.getCategories().size());
         }
+        if (getIntent().getSerializableExtra("masterClass") != null){
+            masterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("masterClass");
+            editTitle.setText(masterClass.getTitle());
+            editSubtitle.setText(masterClass.getSubtitle());
+            //  spinner.setSelection(dailyThought.getCategories().size());
+        }
+        if (getIntent().getSerializableExtra("weeklyMessage") != null){
+            weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
+            editTitle.setText(weeklyMessage.getTitle());
+            editSubtitle.setText(weeklyMessage.getSubtitle());
+            //  spinner.setSelection(dailyThought.getCategories().size());
+        }
+        if (getIntent().getSerializableExtra("news") != null){
+            news = (NewsDTO) getIntent().getSerializableExtra("news");
+            editTitle.setText(news.getTitle());
+            editSubtitle.setText(news.getSubtitle());
+            //  spinner.setSelection(dailyThought.getCategories().size());
+        }
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,14 +100,23 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
                     @Override
                     public void onAnimationEnded() {
                         //update();
-                        if (user != null){
+                        if (dailyThought != null){
                             update();
                             return;
                         }
-                        if (category!= null){
-                            updateCategory();
+                        if (masterClass != null){
+                            update();
                             return;
                         }
+                        if (weeklyMessage != null){
+                            update();
+                            return;
+                        }
+                        if (news != null){
+                            update();
+                            return;
+                        }
+
                     }
                 });
 
@@ -108,92 +124,47 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
         });
     }
 
-
-    static final String LOG = UpdateUsersActivity.class.getSimpleName();
-
-    private void updateCategory() {
-        Log.i(LOG, "updating category");
-
-        if (TextUtils.isEmpty(eFirst.getText())) {
-            eFirst.setError("Enter category name");
-            return;
-        }
-
-        if (category != null) {
-            category.setCategoryName(eFirst.getText().toString());
-            crudPresenter.updateCategory(category);
-            return;
-        }
-
-    }
     private void update() {
 
-        if (TextUtils.isEmpty(eFirst.getText())) {
-            eFirst.setError("Enter first name");
+        if (TextUtils.isEmpty(editTitle.getText())) {
+            editTitle.setError("Enter title");
             return;
         }
-        if (TextUtils.isEmpty(eLast.getText())) {
-            eLast.setError("Enter last name");
+        if (TextUtils.isEmpty(editSubtitle.getText())) {
+            editSubtitle.setError("Enter subtitle");
             return;
         }
-        if (TextUtils.isEmpty(eMail.getText())) {
-            eMail.setError("Enter email address");
+
+        if (dailyThought != null) {
+            dailyThought.setTitle(editTitle.getText().toString());
+            dailyThought.setSubtitle(editSubtitle.getText().toString());
+            crudPresenter.updateDailyThought(dailyThought);
+            finish();
             return;
         }
-        if (user != null) {
-            user.setFirstName(eFirst.getText().toString());
-            user.setLastName(eLast.getText().toString());
-            crudPresenter.updateUser(user);
+        if (masterClass != null) {
+            masterClass.setTitle(editTitle.getText().toString());
+            masterClass.setSubtitle(editSubtitle.getText().toString());
+            crudPresenter.updateWeeklyMasterClass(masterClass);
+            finish();
             return;
         }
-       /* if (category != null) {
-            category.setCategoryName(eFirst.getText().toString());
-            crudPresenter.updateCategory(category);
+        if (weeklyMessage != null) {
+            weeklyMessage.setTitle(editTitle.getText().toString());
+            weeklyMessage.setSubtitle(editSubtitle.getText().toString());
+            crudPresenter.updateWeeklyMessage(weeklyMessage);
+            finish();
             return;
-        }*/
+        }
+        if (news != null) {
+            news.setTitle(editTitle.getText().toString());
+            news.setSubtitle(editSubtitle.getText().toString());
+            crudPresenter.updateNews(news);
+            finish();
+            return;
+        }
 
     }
-    int userType;
-
-    public void setCrudPresenter(CrudPresenter crudPresenter) {
-        this.crudPresenter = crudPresenter;
-    }
-    private void setSpinner() {
-        List<String> list = new ArrayList<>();
-        list.add("Select User Type");
-        list.add(UserDTO.DESC_STAFF);
-        list.add(UserDTO.DESC_SUBSCRIBER);
-        list.add(UserDTO.DESC_LEADER);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                ctx,android.R.layout.simple_list_item_1,list);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (i) {
-                    case 0:
-                        userType = 0;
-                        break;
-                    case 1:
-                        userType = UserDTO.COMPANY_STAFF;
-                        break;
-                    case 2:
-                        userType = UserDTO.SUBSCRIBER;
-                        break;
-                    case 3:
-                        userType = UserDTO.LEADER;
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-    }
-
 
     @Override
     public void onEntityAdded(String key) {
@@ -212,11 +183,6 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
 
     @Override
     public void onUserUpdated(UserDTO user) {
-
-    }
-
-    @Override
-    public void onCategoryUpdated(CategoryDTO category) {
 
     }
 
@@ -369,5 +335,9 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
     public void onError(String message) {
 
     }
-}
 
+    @Override
+    public void onCategoryUpdated(CategoryDTO category) {
+
+    }
+}
