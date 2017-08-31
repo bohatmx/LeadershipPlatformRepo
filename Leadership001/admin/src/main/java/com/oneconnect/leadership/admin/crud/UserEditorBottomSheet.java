@@ -14,6 +14,7 @@ import android.widget.Spinner;
 
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
@@ -92,6 +93,19 @@ public class UserEditorBottomSheet extends BaseBottomSheet {
             user.setCompanyName(me.getCompanyName());
             user.setUserType(userType);
         }
+
+        if(type == Constants.UPDATE_ENTITY){
+
+
+
+        }
+
+        if(type == Constants.DELETE_ENTITY){
+
+
+
+        }
+
         user.setFirstName(eFirst.getText().toString());
         user.setLastName(eLast.getText().toString());
 
@@ -101,7 +115,8 @@ public class UserEditorBottomSheet extends BaseBottomSheet {
                  bottomSheetListener.onWorkDone(user);
                  break;
              case Constants.UPDATE_ENTITY:
-
+             //       crudPresenter.updateUser(user);
+             //    bottomSheetListener.onWorkDone(user);
                  break;
              case Constants.DELETE_ENTITY:
 

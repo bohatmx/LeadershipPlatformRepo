@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.crud.CrudContract;
+import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.CountryDTO;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
@@ -35,7 +39,7 @@ import java.util.List;
 
 
 
-public class EntityListFragment extends BaseListingFragment {
+public class EntityListFragment extends BaseListingFragment implements CrudContract.View {
 
     public EntityListFragment() {
     }
@@ -49,6 +53,7 @@ public class EntityListFragment extends BaseListingFragment {
     private RecyclerView recyclerView;
     private BasicEntityAdapter.EntityListener mListener;
     Context ctx;
+    private CrudPresenter presenter;
 
     public static EntityListFragment newInstance(ResponseBag bag) {
         EntityListFragment fragment = new EntityListFragment();
@@ -73,6 +78,7 @@ public class EntityListFragment extends BaseListingFragment {
 
         view = inflater.inflate(R.layout.fragment_category_list, container, false);
         ctx = getActivity();
+        presenter = new CrudPresenter(this);
         txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         txtCount = (TextView) view.findViewById(R.id.txtCount);
         iconAdd = (ImageView) view.findViewById(R.id.iconAdd);
@@ -111,6 +117,53 @@ public class EntityListFragment extends BaseListingFragment {
             @Override
             public void onDeleteClicked(BaseDTO entity) {
                 mListener.onDeleteClicked(entity);
+            }
+
+            @Override
+            public void onDeleteUser(UserDTO user) {
+               // Log.i(LOG, "onDeleteUser");
+              mListener.onDeleteUser(user);
+               // presenter.deleteUser(user);
+            }
+
+            @Override
+            public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+                mListener.onDeleteDailyThought(dailyThought);
+            }
+
+            @Override
+            public void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+                mListener.onDeleteWeeklyMessage(weeklyMessage);
+            }
+
+            @Override
+            public void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+                mListener.onDeleteWeeklyMasterClass(masterClass);
+            }
+
+            @Override
+            public void onDeletePodcast(PodcastDTO podcast) {
+                mListener.onDeletePodcast(podcast);
+            }
+
+            @Override
+            public void onDeleteNews(NewsDTO news) {
+                mListener.onDeleteNews(news);
+            }
+
+            @Override
+            public void onDeleteVideo(VideoDTO video) {
+                mListener.onDeleteVideo(video);
+            }
+
+            @Override
+            public void onDeleteEbook(EBookDTO eBook) {
+                mListener.onDeleteEbook(eBook);
+            }
+
+            @Override
+            public void onDeleteCategory(CategoryDTO category) {
+                mListener.onDeleteCategory(category);
             }
 
             @Override
@@ -192,6 +245,36 @@ public class EntityListFragment extends BaseListingFragment {
             @Override
             public void onNewsArticleRequested(BaseDTO entity) {
                 mListener.onNewsArticleRequested(entity);
+            }
+
+            @Override
+            public void onUpdateUser(UserDTO user) {
+                mListener.onUpdateUser(user);
+            }
+
+            @Override
+            public void onUpdateDailyThought(DailyThoughtDTO dailyThought) {
+                mListener.onUpdateDailyThought(dailyThought);
+            }
+
+            @Override
+            public void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+                mListener.onUpdateWeeklyMessage(weeklyMessage);
+            }
+
+            @Override
+            public void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+                mListener.onUpdateWeeklyMasterClass(masterClass);
+            }
+
+            @Override
+            public void onUpdateNews(NewsDTO news) {
+                mListener.onUpdateNews(news);
+            }
+
+            @Override
+            public void onUpdateCategory(CategoryDTO category) {
+                mListener.onUpdateCategory(category);
             }
         });
 
@@ -298,4 +381,178 @@ public class EntityListFragment extends BaseListingFragment {
         }
     }
 
+    @Override
+    public void onEntityAdded(String key) {
+
+    }
+
+    @Override
+    public void onEntityUpdated() {
+
+    }
+
+    @Override
+    public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onUserUpdated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onDailyThoughtUpdated(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassUpdated(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageUpdated(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onNewsUpdated(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUserDeleted(UserDTO user) {
+
+    }
+
+    @Override
+    public void onDailyThoughtDeleted(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageDeleted(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassDeleted(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onVideoDeleted(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onPodcastDeleted(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onNewsDeleted(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onPhotoDeleted(PhotoDTO photo) {
+
+    }
+
+    @Override
+    public void onEbookDeleted(EBookDTO eBook) {
+
+    }
+
+    @Override
+    public void onCategoryDeleted(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCompanies(List<CompanyDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onEbooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onPayments(List<PaymentDTO> list) {
+
+    }
+
+    @Override
+    public void onPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onPrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onError(String message) {
+
+    }
+
+    @Override
+    public void onCategoryUpdated(CategoryDTO category) {
+
+    }
 }

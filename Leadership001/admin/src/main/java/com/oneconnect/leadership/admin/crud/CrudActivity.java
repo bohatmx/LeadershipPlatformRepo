@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -29,8 +28,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
@@ -41,7 +38,8 @@ import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.activities.ImageListActivity;
-import com.oneconnect.leadership.library.activities.NewsArticleActivity;
+import com.oneconnect.leadership.library.crud.CrudContract;
+import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
@@ -649,6 +647,83 @@ public class CrudActivity extends AppCompatActivity
     }
 
     @Override
+    public void onUserUpdated(UserDTO user) {
+        Intent intent= new Intent(this, UpdateUsersActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDailyThoughtUpdated(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassUpdated(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageUpdated(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onNewsUpdated(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUserDeleted(UserDTO user) {
+        Log.i(TAG, "onUserDeleted");
+    }
+
+    @Override
+    public void onDailyThoughtDeleted(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageDeleted(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassDeleted(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onVideoDeleted(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onPodcastDeleted(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onNewsDeleted(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onPhotoDeleted(PhotoDTO photo) {
+
+    }
+
+    @Override
+    public void onEbookDeleted(EBookDTO eBook) {
+
+    }
+
+    @Override
+    public void onCategoryDeleted(CategoryDTO category) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
         Log.i(TAG, "onCategories: " + list.size());
         bag = new ResponseBag();
@@ -921,6 +996,13 @@ public class CrudActivity extends AppCompatActivity
         showSnackbar(message, "Not OK", "red");
     }
 
+    @Override
+    public void onCategoryUpdated(CategoryDTO category) {
+        Intent intent = new Intent(this, UpdateUsersActivity.class);
+        intent.putExtra("category", category);
+        startActivity(intent);
+    }
+
     public void showSnackbar(String title, String action, String color) {
         snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(Color.parseColor(color));
@@ -970,6 +1052,60 @@ public class CrudActivity extends AppCompatActivity
             return;
         }
 
+    }
+
+    @Override
+    public void onDeleteUser(UserDTO user) {
+        Log.i(TAG, "onDeleteUser");
+        presenter.deleteUser(user);
+    }
+
+    @Override
+    public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+        Log.i(TAG, "onDeleteDailyThought");
+        presenter.deleteDailyThought(dailyThought);
+    }
+
+    @Override
+    public void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+        Log.i(TAG, "onDeleteWeeklyMessage");
+        presenter.deleteWeeklyMessage(weeklyMessage);
+    }
+
+    @Override
+    public void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+        Log.i(TAG, "onDeleteWeeklyMasterClass");
+        presenter.deleteWeeklyMasterClass(masterClass);
+    }
+
+    @Override
+    public void onDeletePodcast(PodcastDTO podcast) {
+        Log.i(TAG, "onDeletePodcast");
+        presenter.deletePodcast(podcast);
+    }
+
+    @Override
+    public void onDeleteNews(NewsDTO news) {
+        Log.i(TAG, "onDeleteNews");
+        presenter.deleteNews(news);
+    }
+
+    @Override
+    public void onDeleteVideo(VideoDTO video) {
+        Log.i(TAG, "onDeleteVideo");
+        presenter.deleteVideo(video);
+    }
+
+    @Override
+    public void onDeleteEbook(EBookDTO eBook) {
+        Log.i(TAG, "onDeleteEbook");
+        presenter.deleteEbook(ebook);
+    }
+
+    @Override
+    public void onDeleteCategory(CategoryDTO category) {
+        Log.i(TAG, "onDeleteCategory");
+        presenter.deleteCategory(category);
     }
 
     @Override
@@ -1197,8 +1333,6 @@ public class CrudActivity extends AppCompatActivity
         }
         showSnackbar("Audio recording under construction", "OK", "cyan");
         startPodcastSelection(entity);
-
-
     }
 
     private void startPodcastSelection(BaseDTO base){
@@ -1232,6 +1366,7 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onEntityClicked(BaseDTO entity) {
         Log.w(TAG, "onEntityClicked: .......".concat(GSON.toJson(entity)));
+
     }
 
     @Override
@@ -1355,6 +1490,40 @@ public class CrudActivity extends AppCompatActivity
         isTooltip = true;
         Toasty.success(this, "Add News article to this record",
                 Toast.LENGTH_SHORT, true).show();
+    }
+
+    @Override
+    public void onUpdateUser(UserDTO user) {
+        Intent intent = new Intent(this, UpdateUsersActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUpdateDailyThought(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onUpdateNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUpdateCategory(CategoryDTO category) {
+        Intent intent = new Intent(this, UpdateUsersActivity.class);
+        intent.putExtra("category", category);
+        startActivity(intent);
     }
 
     @Override

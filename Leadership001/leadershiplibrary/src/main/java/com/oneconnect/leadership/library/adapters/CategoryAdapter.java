@@ -59,7 +59,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 listener.onCategorySelected(cat);
             }
         });
-        /*if (cat.getCategoryName().equalsIgnoreCase("Executive Leadership")) {
+      /*  if (cat.getCategoryName().equalsIgnoreCase("Executive Leadership")) {
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.woman_screens));
         } else if (cat.getCategoryName().equalsIgnoreCase("Managerial Leadership")) {
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.tablet));

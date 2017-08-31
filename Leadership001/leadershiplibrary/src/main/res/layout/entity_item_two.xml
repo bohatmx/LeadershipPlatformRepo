@@ -17,7 +17,6 @@
             android:layout_marginLeft="@dimen/mon_padding"
             android:layout_marginTop="@dimen/mon_margin"
             android:visibility="gone">
-
             <TextView
                 android:id="@+id/txtNumberRed"
                 style="@style/RedCircleSmall"

@@ -39,6 +39,13 @@ public class UserCache {
         void onError(String message);
     }
 
+    public interface DeleteListener {
+        void onDataRead(List<UserDTO> users);
+
+        void onError(String message);
+    }
+
+
     public static void addUsers(List<UserDTO> users, Context ctx, WriteListener listener) {
         setSnappyDB(ctx);
         MTask task = new MTask(users, listener);
@@ -51,14 +58,21 @@ public class UserCache {
         task.execute();
     }
 
+    public static void deleteUsers(List<UserDTO> users, Context ctx, DeleteListener listener) {
+        setSnappyDB(ctx);
+        MTask task = new MTask(users, listener);
+        task.execute();
+    }
+
 
     static class MTask extends AsyncTask<Void, Void, Integer> {
 
         List<UserDTO> users = new ArrayList<>();
         WriteListener writeListener;
         ReadListener readListener;
+        DeleteListener deleteListener;
         int type;
-        static final int ADD_USERS = 1, GET_USERS = 2;
+        static final int ADD_USERS = 1, GET_USERS = 2, DELETE_USERS = 3;
         static final String USER_KEY = "user";
 
         public MTask(List<UserDTO> users, WriteListener listener) {
@@ -72,6 +86,11 @@ public class UserCache {
             readListener = listener;
         }
 
+        public MTask(List<UserDTO> users, DeleteListener listener){
+            this.users = users;
+            type = DELETE_USERS;
+            deleteListener = listener;
+        }
 
         @Override
         protected Integer doInBackground(Void... voids) {
@@ -94,6 +113,13 @@ public class UserCache {
                         Log.i(TAG, "doInBackground: found " + users.size() + " users");
                         break;
 
+                    case DELETE_USERS:
+                        for(UserDTO d : users){
+                            String json3 = gson.toJson(d);
+                            snappydb.del(json3);
+                            Log.i(TAG, ".......doInBackground: deleted: " + d.getFullName());
+                        }
+                        break;
 
                 }
             } catch (SnappydbException e) {
@@ -115,6 +141,10 @@ public class UserCache {
                     readListener.onError("Unable to read data cache");
                     return;
                 }
+                if (deleteListener != null) {
+                    deleteListener.onError("Unable to check data cache");
+                    return;
+                }
                 return;
             }
             switch (type) {
@@ -126,6 +156,11 @@ public class UserCache {
                 case GET_USERS:
                     if (readListener != null)
                         readListener.onDataRead(users);
+                    break;
+
+                case DELETE_USERS:
+                    if (deleteListener != null)
+                        deleteListener.onDataRead(users);
                     break;
             }
         }

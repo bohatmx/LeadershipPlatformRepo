@@ -272,6 +272,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
                 startLinksActivity(base);
             }
 
+            @Override
+            public void onDeleteEbook(EBookDTO eBook) {
+                mListener.onEBookTapped(eBook);
+            }
+
 
 
            /* @Override
@@ -413,7 +418,53 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
     public void onDeleteClicked(BaseDTO entity) {
 
     }
-       PodcastDTO podcast;
+
+    @Override
+    public void onDeleteUser(UserDTO user) {
+
+    }
+
+    @Override
+    public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onDeletePodcast(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onDeleteNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onDeleteVideo(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onDeleteEbook(EBookDTO eBook) {
+
+    }
+
+    @Override
+    public void onDeleteCategory(CategoryDTO category) {
+
+    }
+
+    PodcastDTO podcast;
     @Override
     public void onLinksRequired(BaseDTO entity) {
 
@@ -524,6 +575,36 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onUpdateUser(UserDTO user) {
+
+    }
+
+    @Override
+    public void onUpdateDailyThought(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onUpdateNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUpdateCategory(CategoryDTO category) {
 
     }
 
@@ -731,6 +812,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
             @Override
             public void onUrlRequired(BaseDTO base) {
                 startLinksActivity(base);
+            }
+
+            @Override
+            public void onDeleteEbook(EBookDTO eBook) {
+
             }
 
 

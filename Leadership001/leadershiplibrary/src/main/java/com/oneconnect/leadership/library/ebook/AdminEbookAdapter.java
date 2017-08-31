@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         void onVideoRequired(BaseDTO base);
         void onPoadcastRequired(BaseDTO base);
         void onUrlRequired(BaseDTO base);
+        void onDeleteEbook(EBookDTO eBook);
     }
 
     public AdminEbookAdapter(List<EBookDTO> mList, Context ctx, EbookAdapterListener listener) {
@@ -101,6 +103,19 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     vvh.bottomLayout.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        vvh.bookIcon.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Util.flashOnce(vvh.bookIcon, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        vvh.iconDelete.setVisibility(View.VISIBLE);
+                    }
+                });
+                return false;
             }
         });
 
@@ -171,6 +186,19 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
 
+        vvh.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(vvh.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        listener.onDeleteEbook(v);
+                    }
+                });
+            }
+        });
+
+
         vvh.eBookMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,15 +206,7 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onAnimationEnded() {
                         listener.onAttachPhoto(v);
-                       /* Intent intent = new Intent(ctx, PhotoSelectionActivity.class);
-                        intent.putExtra("type", type);
-                        switch (type) {
-                            case ResponseBag.EBOOKS:
-                                eBook = (EBookDTO) base;
-                                intent.putExtra("ebook", eBook);
-                                break;
-                        }
-                        ctx.startActivity(intent);*/
+
                     }
                 });
             }
@@ -233,12 +253,15 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName, txtVideo, txtMicrophone, txtCamera, txtLinks;
         protected ImageView image, bookIcon, iconshar, imageUploadIcon, uploadIcon, readIcon,
-                iconUpdate, iconMicrophone, iconVideo, iconCamera, eBookMenu;
+                iconUpdate, iconMicrophone, iconVideo, iconCamera, eBookMenu, iconDelete;
         protected Button btnPlay, btnUpload;
         protected RelativeLayout bottomLayout;
+        protected CheckBox checkbox;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
+            checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
+            checkbox.setVisibility(View.GONE);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
             txtMicrophone = (TextView) itemView.findViewById(R.id.txtMicrophone);
@@ -260,9 +283,10 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             readIcon = (ImageView) itemView.findViewById(R.id.readIcon);
             readIcon.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
-            bottomLayout.setVisibility(View.GONE);
+            //bottomLayout.setVisibility(View.V);
             eBookMenu = (ImageView) itemView.findViewById(R.id.ebook_menu);
             eBookMenu.setVisibility(View.VISIBLE);
+            iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
         }
     }
 }

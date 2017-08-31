@@ -28,6 +28,7 @@ import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.EbookCache;
 import com.oneconnect.leadership.library.camera.VideoListActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
+import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -52,6 +53,8 @@ import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
+import com.oneconnect.leadership.library.util.DeleteContract;
+import com.oneconnect.leadership.library.util.DeletePresenter;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import org.joda.time.DateTime;
@@ -64,7 +67,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class EbookListActivity extends AppCompatActivity implements SubscriberContract.View, CacheContract.View,
-        BasicEntityAdapter.EntityListener, PhotoListFragment.PhotoListener{
+        BasicEntityAdapter.EntityListener, PhotoListFragment.PhotoListener, DeleteContract.View{
 
     Toolbar toolbar;
     Context ctx;
@@ -81,6 +84,7 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     private RecyclerView recyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
+    private DeletePresenter deletePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,8 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         }
 
+
+        deletePresenter = new DeletePresenter(this);
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
 
@@ -363,6 +369,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
                 startLinksActivity(base);
             }
 
+            @Override
+            public void onDeleteEbook(EBookDTO eBook) {
+                deletePresenter.deleteEbook(eBook);
+            }
+
            /* @Override
             public void onAttachPhoto(BaseDTO base) {
                 pickGalleryOrCamera(base);
@@ -496,6 +507,51 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onDeleteUser(UserDTO user) {
+
+    }
+
+    @Override
+    public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onDeletePodcast(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onDeleteNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onDeleteVideo(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onDeleteEbook(EBookDTO eBook) {
+       // presenter.del
+    }
+
+    @Override
+    public void onDeleteCategory(CategoryDTO category) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -572,6 +628,36 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
     @Override
     public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onUpdateUser(UserDTO user) {
+
+    }
+
+    @Override
+    public void onUpdateDailyThought(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onUpdateNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUpdateCategory(CategoryDTO category) {
 
     }
 
@@ -757,6 +843,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
                 startLinksActivity(base);
             }
 
+            @Override
+            public void onDeleteEbook(EBookDTO eBook) {
+                deletePresenter.deleteEbook(eBook);
+            }
+
            /* @Override
             public void onAttachPhoto(BaseDTO base) {
                 pickGalleryOrCamera(base);
@@ -842,6 +933,51 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onUserDeleted(UserDTO user) {
+
+    }
+
+    @Override
+    public void onDailyThoughtDeleted(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageDeleted(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassDeleted(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onVideoDeleted(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onPodcastDeleted(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onNewsDeleted(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onPhotoDeleted(PhotoDTO photo) {
+
+    }
+
+    @Override
+    public void onEbookDeleted(EBookDTO eBook) {
 
     }
 

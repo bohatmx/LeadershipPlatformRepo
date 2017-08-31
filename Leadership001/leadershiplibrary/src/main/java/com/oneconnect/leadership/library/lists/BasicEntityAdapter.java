@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,9 +29,11 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.TextViewExpandableAnimation;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -48,6 +51,24 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         void onAddEntity();
 
         void onDeleteClicked(BaseDTO entity);
+
+        void onDeleteUser(UserDTO user);
+
+        void onDeleteDailyThought(DailyThoughtDTO dailyThought);
+
+        void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage);
+
+        void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass);
+
+        void onDeletePodcast(PodcastDTO podcast);
+
+        void onDeleteNews(NewsDTO news);
+
+        void onDeleteVideo(VideoDTO video);
+
+        void onDeleteEbook(EBookDTO eBook);
+
+        void onDeleteCategory(CategoryDTO category);
 
         void onLinksRequired(BaseDTO entity);
 
@@ -80,6 +101,13 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         void onCalendarTooltipRequired(int type);
 
         void onNewsArticleRequested(BaseDTO entity);
+
+        void onUpdateUser(UserDTO user);
+        void onUpdateDailyThought(DailyThoughtDTO dailyThought);
+        void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage);
+        void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass);
+        void onUpdateNews(NewsDTO news);
+        void onUpdateCategory(CategoryDTO category);
 
 
 
@@ -124,6 +152,23 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 }
             }
         });
+        h.titleLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.titleLayout, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        if (h.bottomLayout.getVisibility() == View.GONE) {
+                            h.bottomLayout.setVisibility(View.VISIBLE);
+                            //animateIn(h.bottomLayout, p);
+                        } else {
+                            h.bottomLayout.setVisibility(View.GONE);
+                       //     animateOut(h.bottomLayout, p);
+                        }
+                    }
+                });
+            }
+        });
         h.txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,7 +180,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             }
         });
 
-        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+      /*  h.iconDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onDeleteClicked(p);
@@ -147,7 +192,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 mListener.onDeleteTooltipRequired(type);
                 return false;
             }
-        });
+        });*/
         //
         h.iconLinks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,6 +278,13 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             }
         });
 
+      /*  h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onDeleteClicked(p);
+            }
+        });*/
+
         h.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -317,29 +369,94 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.iconLayout.setVisibility(View.GONE);
     }
 
-    private void setCategories(EntityViewHolder h, int position, CategoryDTO p) {
+    private void setCategories(final EntityViewHolder h, int position,final CategoryDTO p) {
         h.txtTitle.setText(p.getCategoryName());
         h.txtDate.setVisibility(View.GONE);
         h.txtSubTitle.setVisibility(View.GONE);
-        h.txtNumBlack.setVisibility(View.VISIBLE);
+        h.txtNumBlack.setVisibility(View.GONE);
+        h.txtLinks.setVisibility(View.GONE);
+        h.iconShare.setVisibility(View.GONE);
+        h.iconRate.setVisibility(View.GONE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
-        h.iconLayout.setVisibility(View.GONE);
+        h.iconLayout.setVisibility(View.VISIBLE);
+       // h.iconDelete.setVisibility(View.VISIBLE);
+        //h.iconLinks.setVisibility(View.VISIBLE);
+        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onUpdateCategory(p);
+                    }
+                });
+            }
+        });
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteCategory(p);
+                    }
+                });
+            }
+        });
     }
 
-    private void setUser(EntityViewHolder h, int position, UserDTO p) {
+    private void setUser(final EntityViewHolder h, int position,final UserDTO p) {
         h.txtTitle.setText(p.getFullName());
         h.txtDate.setVisibility(View.GONE);
         h.txtSubTitle.setText(p.getEmail());
         h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, android.R.drawable.ic_menu_send));
         h.iconVideo.setVisibility(View.GONE);
         h.iconCalendar.setVisibility(View.GONE);
-        h.iconLinks.setVisibility(View.GONE);
+        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
 
-        h.txtNumBlack.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+        h.txtLinks.setVisibility(View.GONE);
+        h.iconRate.setVisibility(View.GONE);
+        h.iconShare.setVisibility(View.GONE);
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteUser(p);
+                    }
+                });
+            }
+        });
+
+        h.txtNumBlack.setVisibility(View.GONE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
+
+        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onUpdateUser(p);
+                    }
+                });
+            }
+        });
     }
 
-    private void setDailyThought(EntityViewHolder h, int position, DailyThoughtDTO p) {
+    private void setDailyThought(final EntityViewHolder h, int position,final DailyThoughtDTO p) {
         h.txtTitle.setText(p.getTitle());
         if (p.getDateScheduled() != null) {
             h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
@@ -384,6 +501,18 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.txtNumBlack.setVisibility(View.VISIBLE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
         h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_schedule));
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteDailyThought(p);
+                    }
+                });
+            }
+        });
 
         h.linksLayout.setVisibility(View.VISIBLE);
         h.photosLayout.setVisibility(View.VISIBLE);
@@ -391,6 +520,18 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
 
         h.calLayout.setVisibility(View.VISIBLE);
+
+        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onUpdateDailyThought(p);
+                    }
+                });
+            }
+        });
        /* if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
@@ -399,7 +540,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         }*/
     }
 
-    private void setNews(EntityViewHolder h, int position, NewsDTO p) {
+    private void setNews(final EntityViewHolder h, int position,final NewsDTO p) {
         h.txtTitle.setText(p.getTitle());
         if (p.getDateScheduled() != null) {
             h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
@@ -450,6 +591,30 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
 
         h.calLayout.setVisibility(View.VISIBLE);
+
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteNews(p);
+                    }
+                });
+            }
+        });
+        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onUpdateNews(p);
+                    }
+                });
+            }
+        });
        /* if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
@@ -458,7 +623,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         }*/
     }
 
-    private void setPodcast(EntityViewHolder h, int position, PodcastDTO p) {
+    private void setPodcast(final EntityViewHolder h, int position,final PodcastDTO p) {
         h.txtTitle.setText(p.getTitle());
         if (p.getDateScheduled() != null) {
             h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
@@ -489,6 +654,19 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
 
         h.calLayout.setVisibility(View.VISIBLE);
+
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeletePodcast(p);
+                    }
+                });
+            }
+        });
         /*if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
@@ -498,7 +676,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private void setWeeklyMessage(EntityViewHolder h, int position, WeeklyMessageDTO p) {
+    private void setWeeklyMessage(final EntityViewHolder h, int position,final WeeklyMessageDTO p) {
         Log.d("BasicEntityAdapter", "setWeeklyMessage: ".concat(GSON.toJson(p)));
         h.txtTitle.setText(p.getTitle());
         if (p.getDateScheduled() != null) {
@@ -550,6 +728,30 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
 
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteWeeklyMessage(p);
+                    }
+                });
+            }
+        });
+
+        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onUpdateWeeklyMessage(p);
+                    }
+                });
+            }
+        });
         /*if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
@@ -559,7 +761,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     }
 
-    private void setWeeklyMasterclass(EntityViewHolder h, int position, WeeklyMasterClassDTO p) {
+    private void setWeeklyMasterclass(final EntityViewHolder h, int position,final WeeklyMasterClassDTO p) {
         h.txtTitle.setText(p.getTitle());
         if (p.getDateScheduled() != null) {
             h.txtDate.setText(sdf.format(new Date(p.getDateScheduled())));
@@ -609,6 +811,29 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.videosLayout.setVisibility(View.VISIBLE);
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteWeeklyMasterClass(p);
+                    }
+                });
+            }
+        });
+        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onUpdateWeeklyMasterClass(p);
+                    }
+                });
+            }
+        });
        /* if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
         } else {
@@ -618,7 +843,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     }
 
-    private void setEBook(EntityViewHolder h, int position, EBookDTO p) {
+    private void setEBook(final EntityViewHolder h, int position,final EBookDTO p) {
         h.txtTitle.setText(p.getTitle());
         h.txtDate.setVisibility(View.GONE);
         h.txtSubTitle.setText(p.getDescription());
@@ -644,6 +869,19 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.videosLayout.setVisibility(View.VISIBLE);
         h.micLayout.setVisibility(View.VISIBLE);
         h.calLayout.setVisibility(View.VISIBLE);
+
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteEbook(p);
+                    }
+                });
+            }
+        });
 
         /*if (p.getCalendarEvents() == null) {
             h.txtEvents.setVisibility(View.GONE);
@@ -725,14 +963,15 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 txtNumBlack, txtNumBlue, txtNumGrey, txtNumGreen, txtNumRed,
                 txtPhotos, txtVideos, txtEvents, txtLinks, txtPodcasts;
 
-        protected ImageView iconCalendar, iconDelete, iconLinks,
+        protected ImageView iconCalendar, iconDelete, iconLinks,iconUpdate,iconShare,iconRate,
                 iconPhoto, iconVideo, iconLocation, iconMicrophone, imageView;
 
         protected View bottomLayout, frameLayout, linksLayout, iconLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
         //protected TextView txtTitle;
-
         protected TextViewExpandableAnimation txtTitle;
+
+        protected RelativeLayout titleLayout;
 
 
         public EntityViewHolder(View itemView) {
@@ -763,8 +1002,13 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             iconVideo = (ImageView) itemView.findViewById(R.id.iconVideo);
             iconLocation = (ImageView) itemView.findViewById(R.id.iconLocation);
 
+            //iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
+            iconRate = (ImageView) itemView.findViewById(R.id.ratingBar);
+
             frameLayout = itemView.findViewById(R.id.frame);
             bottomLayout = itemView.findViewById(R.id.bottomLayout);
+            titleLayout = (RelativeLayout) itemView.findViewById(R.id.titleLayout);
             linksLayout = itemView.findViewById(R.id.linksLayout);
             photosLayout = itemView.findViewById(R.id.photosLayout);
             videosLayout = itemView.findViewById(R.id.videosLayout);

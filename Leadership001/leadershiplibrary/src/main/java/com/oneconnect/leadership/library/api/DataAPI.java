@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+//import com.google.api.server.spi.auth.common.User;
+import com.google.api.services.youtube.model.Video;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -382,6 +384,23 @@ public class DataAPI {
         DatabaseReference ref = db.getReference(USERS)
                 .child(c.getUserID());
         log("updateUser", ref);
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public void updateCategory(final CategoryDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(CATEGORIES)
+                .child(c.getCategoryID());
+        log("updateCategory", ref);
         ref.setValue(c, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -1381,6 +1400,65 @@ public class DataAPI {
             }
         });
     }
+
+    public void deleteUser(final UserDTO user, final DataListener listener) {
+        DatabaseReference ref = db.getReference(USERS).child(user.getUserID());
+        ref.removeValue();
+        log("deleting user: ", ref);
+    }
+
+    public void deleteDailyThought(final DailyThoughtDTO dailyThought, final DataListener listener){
+        DatabaseReference ref = db.getReference(DAILY_THOUGHTS).child(dailyThought.getDailyThoughtID());
+        ref.removeValue();
+        log("deleting dailyThought: ", ref);
+    }
+
+    public void deleteWeeklyMessage(final WeeklyMessageDTO weeklyMessage, final DataListener listener) {
+        DatabaseReference ref = db.getReference(WEEKLY_MESSAGES).child(weeklyMessage.getWeeklyMessageID());
+        ref.removeValue();
+        log("deleting weeklyMessage: ", ref);
+    }
+
+    public void deleteWeeklyMasterClass(final WeeklyMasterClassDTO masterClass, final DataListener listener) {
+        DatabaseReference ref = db.getReference(WEEKLY_MASTER_CLASSES).child(masterClass.getWeeklyMasterClassID());
+        ref.removeValue();
+        log("deleting weeklyMasterClass: ", ref);
+    }
+    public void deletePodcast(final PodcastDTO podcast, final DataListener listener){
+        DatabaseReference ref = db.getReference(PODCASTS).child(podcast.getPodcastID());
+        ref.removeValue();
+        log("deleting podcast: ", ref);
+    }
+    public void deleteVideo(final VideoDTO video, final DataListener listener){
+        DatabaseReference ref = db.getReference(VIDEOS).child(video.getVideoID());
+        ref.removeValue();
+        log("deleting video: ", ref);
+    }
+    public void deletePhoto(final PhotoDTO photo, final DataListener listener){
+        DatabaseReference ref = db.getReference(PHOTOS).child(photo.getPhotoID());
+        ref.removeValue();
+        log("deleting photo: ", ref);
+    }
+
+    public void deleteNews(final NewsDTO news, final DataListener listener) {
+        DatabaseReference ref = db.getReference(NEWS).child(news.getNewsID());
+        ref.removeValue();
+        log("deleting newsArticle: ", ref);
+    }
+
+    public void deleteBook(final EBookDTO ebook, final DataListener listener){
+        DatabaseReference ref = db.getReference(EBOOKS).child(ebook.geteBookID());
+        ref.removeValue();
+        log("deleting deletingBook: ", ref);
+    }
+
+    public void deleteCategory(final CategoryDTO category, final DataListener listener){
+        DatabaseReference ref = db.getReference(CATEGORIES).child(category.getCategoryID());
+        ref.removeValue();
+        log("deleting deletingCategory: ", ref);
+    }
+
+
 
     public static void log(DatabaseReference ref) {
         Log.w("Firebase APIs", "Firebase Request Log: databaseReference: " + ref.getRef().toString());

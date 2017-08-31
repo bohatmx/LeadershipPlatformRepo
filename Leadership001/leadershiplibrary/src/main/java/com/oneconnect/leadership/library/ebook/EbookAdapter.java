@@ -58,6 +58,8 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         void onAttachPhoto(EBookDTO ebook);
 
         void onPhotoUpload(BaseDTO base/*String path*/);
+
+        void onDeleteEbook(EBookDTO eBook);
     }
 
     public EbookAdapter(List<String> paths, Context context, List<EBookDTO> mList, EbookAdapterListener listener) {
@@ -89,7 +91,26 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
             holder.uploadIcon.setVisibility(View.GONE);
             holder.readIcon.setVisibility(View.GONE);
             holder.imageUploadIcon.setVisibility(View.GONE);
+            holder.checkbox.setVisibility(View.GONE);
+            holder.iconDelete.setVisibility(View.VISIBLE);
+            holder.iconDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Util.flashOnce(holder.iconDelete, 300, new Util.UtilAnimationListener() {
+                        @Override
+                        public void onAnimationEnded() {
+                            listener.onDeleteEbook(eBook);
+                        }
+                    });
+                }
+            });
+        } else{
+            holder.iconDelete.setVisibility(View.GONE);
         }
+
+
+
+
 
         holder.uploadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +197,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         holder.bookIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                holder.iconDelete.setVisibility(View.GONE);
                 holder.checkbox.setVisibility(View.VISIBLE);
                 holder.checkbox.isChecked();
 
@@ -248,7 +270,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         protected TextView txtFileName, bookCounterTxt;
         protected Button btnUpload, btnPlay;
         protected RelativeLayout bottomLayout;
-        protected ImageView uploadIcon, readIcon, bookIcon, imageUploadIcon, eBookMenu;
+        protected ImageView uploadIcon, readIcon, bookIcon, imageUploadIcon, eBookMenu, iconDelete;
         protected CheckBox checkbox;
 
         public EbookViewHolder(View itemView) {
@@ -268,6 +290,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
             eBookMenu = (ImageView) itemView.findViewById(R.id.ebook_menu);
             eBookMenu.setVisibility(View.GONE);
             mainLay = (RelativeLayout) itemView.findViewById(R.id.mainLay);
+            iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
 
         }
 

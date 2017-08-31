@@ -34,7 +34,7 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:authorities="com.facebook.app.FacebookContentProvider1234"
             android:exported="true" />
 
-       <activity
+        <activity
             android:name=".AdminSignInActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -146,6 +146,12 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:parentActivityName=".crud.CrudActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.oneconnect.leadership.admin.crud.UpdateUsersActivity"
+            android:label="@string/title_activity_update_user"
+            android:parentActivityName=".crud.UpdateUsersActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name="com.oneconnect.leadership.library.activities.NewsArticleActivity"
@@ -153,7 +159,6 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:parentActivityName=".crud.CrudActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/title_activity_splash"
@@ -167,15 +172,16 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
         <activity
             android:name="com.oneconnect.leadership.library.camera.VideoListActivity"
             android:label="@string/title_activity_video_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <activity android:name="com.oneconnect.leadership.library.audio.PodcastListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.oneconnect.leadership.library.audio.PodcastListActivity"
             android:label="@string/title_activity__podcast_list"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name="com.oneconnect.leadership.library.activities.ImageListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.ImageListActivity"
             android:label="@string/title_activity_image_list"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -183,7 +189,7 @@ Error:Failed to resolve: com.afollestad:easyvideoplayer:0.3.0
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
     </application>
 

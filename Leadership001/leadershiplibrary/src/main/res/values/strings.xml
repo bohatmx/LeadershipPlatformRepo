@@ -98,7 +98,7 @@
 
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_audio_player">AudioPlayerActivity</string>
-
+    <string name="title_category">Categories</string>
     <string name="confirm_photo">Use Photo</string>
     <string name="confirm_video">Use Video</string>
     <string name="rating">Rating</string>
@@ -114,7 +114,7 @@
     <string name="title_activity__podcast_list">Podcasts Attachments</string>
     <string name="title_activity_deep_link">Deep Link</string>
 
-
+    <string name="title_activity_image_list">Images</string>
     <!--VideoMenu-->
     <string name="share">Share</string>
     <string name="action_play_next">Play Next</string>
@@ -128,7 +128,7 @@
     <string name="title_activity_podcast_player">PodcastPlayerActivity</string>
     <string name="title_activity_full_photo">FullPhotoActivity</string>
     <string name="title_activity_my_android_app">Rating Activity</string>
-
+    title_acttitle_activity_image_listivity_image_list
     <!-- INVITES -->
     <string name="invitation_title">Leadership Platform</string>
     <string name="invitation_message">The world needs leaders</string>

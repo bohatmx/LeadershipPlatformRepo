@@ -18,9 +18,13 @@ import android.view.MenuItem;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CategoryDTO;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
@@ -173,6 +177,51 @@ public class SubscriberDrawerActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDeleteUser(UserDTO user) {
+
+    }
+
+    @Override
+    public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onDeletePodcast(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onDeleteNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onDeleteVideo(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onDeleteEbook(EBookDTO eBook) {
+
+    }
+
+    @Override
+    public void onDeleteCategory(CategoryDTO category) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -249,6 +298,36 @@ public class SubscriberDrawerActivity extends AppCompatActivity
 
     @Override
     public void onNewsArticleRequested(BaseDTO entity) {
+
+    }
+
+    @Override
+    public void onUpdateUser(UserDTO user) {
+
+    }
+
+    @Override
+    public void onUpdateDailyThought(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onUpdateNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUpdateCategory(CategoryDTO category) {
 
     }
 
