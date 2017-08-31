@@ -906,6 +906,11 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDeleteCategory(CategoryDTO category) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -1007,6 +1012,11 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onUpdateNews(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUpdateCategory(CategoryDTO category) {
 
     }
 

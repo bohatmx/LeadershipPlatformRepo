@@ -24,7 +24,7 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         type = UserDTO.SUBSCRIBER;
-        //Twitter.initialize(this);
+
         if (firebaseAuth.getCurrentUser() == null) {
             startLogin();
         } else {

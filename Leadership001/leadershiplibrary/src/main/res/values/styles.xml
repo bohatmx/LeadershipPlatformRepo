@@ -391,7 +391,7 @@
 
     <style name="TextStyleWhiteSmallNormal" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">normal</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
         <style name="BrownCircleSmall" parent="@android:style/TextAppearance.Small">

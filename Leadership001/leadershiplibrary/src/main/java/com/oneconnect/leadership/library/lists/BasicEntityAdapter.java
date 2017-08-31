@@ -49,69 +49,38 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
     public interface EntityListener {
         void onAddEntity();
-
         void onDeleteClicked(BaseDTO entity);
-
         void onDeleteUser(UserDTO user);
-
         void onDeleteDailyThought(DailyThoughtDTO dailyThought);
-
         void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage);
-
         void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass);
-
         void onDeletePodcast(PodcastDTO podcast);
-
         void onDeleteNews(NewsDTO news);
-
         void onDeleteVideo(VideoDTO video);
-
         void onDeleteEbook(EBookDTO eBook);
-
         void onDeleteCategory(CategoryDTO category);
-
         void onLinksRequired(BaseDTO entity);
-
         void onPhotoCaptureRequested(BaseDTO entity);
-
         void onVideoCaptureRequested(BaseDTO entity);
-
         void onSomeActionRequired(BaseDTO entity);
-
         void onMicrophoneRequired(BaseDTO entity);
-
         void onEntityClicked(BaseDTO entity);
-
         void onCalendarRequested(BaseDTO entity);
-
         void onEntityDetailRequested(BaseDTO entity, int type);
-
         void onDeleteTooltipRequired(int type);
-
         void onLinksTooltipRequired(int type);
-
         void onPhotoCaptureTooltipRequired(int type);
-
         void onVideoCaptureTooltipRequired(int type);
-
         void onSomeActionTooltipRequired(int type);
-
         void onMicrophoneTooltipRequired(int type);
-
         void onCalendarTooltipRequired(int type);
-
         void onNewsArticleRequested(BaseDTO entity);
-
         void onUpdateUser(UserDTO user);
         void onUpdateDailyThought(DailyThoughtDTO dailyThought);
         void onUpdateWeeklyMessage(WeeklyMessageDTO weeklyMessage);
         void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass);
         void onUpdateNews(NewsDTO news);
         void onUpdateCategory(CategoryDTO category);
-
-
-
-
     }
 
     private EntityListener mListener;
@@ -160,10 +129,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                     public void onAnimationEnded() {
                         if (h.bottomLayout.getVisibility() == View.GONE) {
                             h.bottomLayout.setVisibility(View.VISIBLE);
-                            //animateIn(h.bottomLayout, p);
+
                         } else {
                             h.bottomLayout.setVisibility(View.GONE);
-                       //     animateOut(h.bottomLayout, p);
+
                         }
                     }
                 });
@@ -180,20 +149,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             }
         });
 
-      /*  h.iconDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDeleteClicked(p);
-            }
-        });
-        h.iconDelete.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mListener.onDeleteTooltipRequired(type);
-                return false;
-            }
-        });*/
-        //
+
         h.iconLinks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

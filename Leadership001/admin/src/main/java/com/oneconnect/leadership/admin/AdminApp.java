@@ -27,10 +27,10 @@ public class AdminApp extends App {
         sb.append("######## ADMIN APP started\n");
         sb.append("#############################################\n");
         Log.d(TAG, sb.toString());
-        Twitter.initialize(this);
-
         FirebaseApp.initializeApp(this);
+        Twitter.initialize(this);
         Log.w(TAG, "onCreate: FirebaseApp initializeApp complete" );
+
     }
 
     @Override

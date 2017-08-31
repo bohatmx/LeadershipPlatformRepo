@@ -10,7 +10,7 @@
         android:layout_height="150dp"
         android:layout_below="@+id/image"
         android:scaleType="fitXY"
-        android:src="@drawable/black_white_hands" />
+        android:src="@drawable/tablet" />
 
     <TextView
         android:id="@+id/categoryText"

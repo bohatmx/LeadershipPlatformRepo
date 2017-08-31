@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -164,12 +165,17 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image, bookIcon, iconshar, uploadIcon, readIcon, imageUploadIcon, eBookMenu;
+        protected ImageView image, bookIcon, iconshar, uploadIcon, readIcon, imageUploadIcon, eBookMenu, iconDelete;
         protected Button btnPlay, btnUpload;
         protected RelativeLayout bottomLayout;
+        protected CheckBox checkBox;
 
         public EbookViewHolder(View itemView) {
             super(itemView);
+            checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
+            checkBox.setVisibility(View.GONE);
+            iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
+            iconDelete.setVisibility(View.GONE);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             btnPlay.setVisibility(View.GONE);
