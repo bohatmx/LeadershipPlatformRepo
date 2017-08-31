@@ -87,12 +87,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         final DailyThoughtDTO dt = mList.get(position);
         final DailyViewHolder dvh = (DailyViewHolder) holder;
-        //dvh.txtEvents.setText("" + (position + 1));
         dvh.txtTitle.setText(dt.getTitle());
-        /*if (dvh.txtTitle.getLineCount() > 3) {
-            dvh.txtTitle.setLines(3);
-            dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-        }*/
+
         dvh.txtSubtitle.setText(dt.getSubtitle());
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
