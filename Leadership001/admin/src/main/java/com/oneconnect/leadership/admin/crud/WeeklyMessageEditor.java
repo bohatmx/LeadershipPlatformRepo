@@ -96,6 +96,31 @@ public class WeeklyMessageEditor extends BaseBottomSheet
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        List<String> lis = new ArrayList<String>();
+        lis.add("Select Category");
+        //  Collections.sort(list);
+
+        for (CategoryDTO cat : list) {
+            lis.add(cat.getCategoryName());
+            category = cat;
+            ArrayAdapter<String> adapter;  adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+            catSpinner.setAdapter(adapter);
+            catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.i(TAG, "Spinner item selected: " + catSpinner.getSelectedItem().toString());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+
+
+
 
     }
 
@@ -304,12 +329,14 @@ public class WeeklyMessageEditor extends BaseBottomSheet
 
     public void getCategories() {
         // Log.d(LOG, "******* getCategories: ");
-        Catpresenter.getAllCategories();/*getCategories();*/
+      //  Catpresenter.getCategories(weeklyMessage.getCompanyID());
+        Catpresenter.getCategories("-KgsUcgfo7z1U9MXgd9i");
+       // Catpresenter.getAllCategories();/*getCategories();*/
     }
 
 
 
-    private void setCategorySpinner() {
+   /* private void setCategorySpinner() {
 
         List<String> list = new ArrayList<String>();
         list.add("Select Category");
@@ -333,7 +360,7 @@ public class WeeklyMessageEditor extends BaseBottomSheet
             }
         });
 
-    }
+    }*/
 
     private CategoryDTO category;
     private boolean isReadyToSend;

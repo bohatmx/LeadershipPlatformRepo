@@ -59,37 +59,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 listener.onCategorySelected(cat);
             }
         });
-      /*  if (cat.getCategoryName().equalsIgnoreCase("Executive Leadership")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.woman_screens));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Managerial Leadership")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.tablet));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Supervisory Leadership")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.room_screen));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Education Leadership")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.light_bulb));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Global Leadership")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.laptop4));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Local Leadership")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.laptop3));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Business")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.planning));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Life")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.woman_trees));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Success")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.mercedes_interior));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Physical Health")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.surfer));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Love")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.cute_toddler));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Technology")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.tablet));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Fitness")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.veg_flowers));
-        } else if (cat.getCategoryName().equalsIgnoreCase("Family")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.cute_toddler));
+        if (cat.getCategoryName().equalsIgnoreCase("Leadership")) {
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.leadership001));
+        }  else if (cat.getCategoryName().equalsIgnoreCase("Business")) {
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.business));
+        }  else if (cat.getCategoryName().equalsIgnoreCase("Family")) {
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.family));
         } else if (cat.getCategoryName().equalsIgnoreCase("Social")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.hand_signs));
-        }*/
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.social));
+        }
     }
 
     @Override

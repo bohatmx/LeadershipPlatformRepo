@@ -8,6 +8,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -33,6 +35,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +48,7 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
     CategoryAdapter adapter;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
+    TextView txtNone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,20 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(ctx, 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
+        txtNone = (TextView) findViewById(R.id.txtNone);
+        txtNone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(txtNone, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(CategoryActivity.this, SubscriberMainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
 
         getCachedCategories();
         getCategories();
@@ -79,7 +96,8 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
 
     public void getCategories() {
         Log.d(LOG, "******* getCategories: ");
-        presenter.getAllCategories();/*getCategories();*/
+       // presenter.getCategories("-KgsUcgfo7z1U9MXgd9i");
+        presenter.getAllCategories();
     }
 
     @Override
@@ -179,7 +197,20 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        Log.i(LOG, "onCategories: " + list.size());
+        this.categoryList = list;
+        Collections.sort(list);
+        adapter = new CategoryAdapter(list, ctx, new CategoryAdapter.CategoryAdapterListener() {
+            @Override
+            public void onCategorySelected(CategoryDTO category) {
+                Intent m = new Intent(CategoryActivity.this, SubscriberMainActivity.class);
+                m.putExtra("category", category);
+                startActivity(m);
+                //    finish();
+            }
+        });
 
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

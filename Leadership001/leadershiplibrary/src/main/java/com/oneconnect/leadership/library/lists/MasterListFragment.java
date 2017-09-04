@@ -98,12 +98,20 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
         }
     }
 
+    CategoryDTO category;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_weekly_master_class_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        if (getActivity().getIntent().getSerializableExtra("category") != null) {
+            category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
+            Log.i(LOG, "category: " + category.getCategoryName());
+        } else {
+            Log.i(LOG, "No Category");
+        }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -554,9 +562,25 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
         Log.i(LOG, "onWeeklyMasterclasses: " + list.size());
         this.weeklyMasterList = list;
+        if (category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
+       // list = getCategoryList(list, category.getCategoryName());
 //        Collections.sort(list);
         adapter = new MasterAdapter(ctx, list);
         recyclerView.setAdapter(adapter);
+    }
+    private List<WeeklyMasterClassDTO> getCategoryList(List<WeeklyMasterClassDTO> list, String typeName){
+        List<WeeklyMasterClassDTO> returnList = new ArrayList<>();
+        for(WeeklyMasterClassDTO weeklyMasterClassDTO : list){
+            if (weeklyMasterClassDTO.getCategory().getCategoryName() != null){
+                if(weeklyMasterClassDTO.getCategory().getCategoryName().equals(typeName)){
+                    returnList.add(weeklyMasterClassDTO);
+                }
+            }
+        }
+        return returnList;
+
     }
 
     @Override

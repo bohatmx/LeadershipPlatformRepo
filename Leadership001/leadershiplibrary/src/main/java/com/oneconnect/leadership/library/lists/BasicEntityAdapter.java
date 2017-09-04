@@ -150,13 +150,13 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         });
 
 
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        h.iconLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onLinksRequired(p);
             }
         });
-        h.iconLinks.setOnLongClickListener(new View.OnLongClickListener() {
+        h.iconLink.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 mListener.onLinksTooltipRequired(type);
@@ -331,16 +331,18 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.txtSubTitle.setVisibility(View.GONE);
         h.txtNumBlack.setVisibility(View.GONE);
         h.txtLinks.setVisibility(View.GONE);
+        h.txtupdate.setVisibility(View.GONE);
+        h.iconLink.setVisibility(View.GONE);
         h.iconShare.setVisibility(View.GONE);
         h.iconRate.setVisibility(View.GONE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
         h.iconLayout.setVisibility(View.VISIBLE);
        // h.iconDelete.setVisibility(View.VISIBLE);
         //h.iconLinks.setVisibility(View.VISIBLE);
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        h.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(h.iconUpdate, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUpdateCategory(p);
@@ -369,7 +371,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, android.R.drawable.ic_menu_send));
         h.iconVideo.setVisibility(View.GONE);
         h.iconCalendar.setVisibility(View.GONE);
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        /*h.iconLinks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
@@ -379,8 +381,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                     }
                 });
             }
-        });
+        });*/
         h.txtLinks.setVisibility(View.GONE);
+        h.txtupdate.setVisibility(View.GONE);
+        h.iconLink.setVisibility(View.GONE);
         h.iconRate.setVisibility(View.GONE);
         h.iconShare.setVisibility(View.GONE);
         h.iconDelete.setOnClickListener(new View.OnClickListener() {
@@ -399,10 +403,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.txtNumBlack.setVisibility(View.GONE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
 
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        h.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(h.iconUpdate, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUpdateUser(p);
@@ -477,10 +481,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         h.calLayout.setVisibility(View.VISIBLE);
 
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        h.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(h.iconUpdate, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUpdateDailyThought(p);
@@ -560,10 +564,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 });
             }
         });
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        h.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(h.iconUpdate, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUpdateNews(p);
@@ -697,10 +701,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             }
         });
 
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        h.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(h.iconUpdate, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUpdateWeeklyMessage(p);
@@ -779,10 +783,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 });
             }
         });
-        h.iconLinks.setOnClickListener(new View.OnClickListener() {
+        h.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(h.iconUpdate, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUpdateWeeklyMasterClass(p);
@@ -917,9 +921,9 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     public class EntityViewHolder extends RecyclerView.ViewHolder {
         protected TextView /*txtTitle,*/ txtSubTitle, txtDate,
                 txtNumBlack, txtNumBlue, txtNumGrey, txtNumGreen, txtNumRed,
-                txtPhotos, txtVideos, txtEvents, txtLinks, txtPodcasts;
+                txtPhotos, txtVideos, txtEvents, txtLinks, txtPodcasts, txtupdate;
 
-        protected ImageView iconCalendar, iconDelete, iconLinks,iconUpdate,iconShare,iconRate,
+        protected ImageView iconCalendar, iconDelete,iconUpdate,iconShare,iconRate, iconLink,
                 iconPhoto, iconVideo, iconLocation, iconMicrophone, imageView;
 
         protected View bottomLayout, frameLayout, linksLayout, iconLayout,
@@ -949,18 +953,22 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             txtPodcasts = (TextView) itemView.findViewById(R.id.txtMicrophone);
            // txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
+            txtupdate = (TextView) itemView.findViewById(R.id.txtupdate);
 
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
             iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
-            iconLinks = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
             iconPhoto = (ImageView) itemView.findViewById(R.id.iconCamera);
             iconVideo = (ImageView) itemView.findViewById(R.id.iconVideo);
             iconLocation = (ImageView) itemView.findViewById(R.id.iconLocation);
+            iconLink = (ImageView) itemView.findViewById(R.id.iconLink);
 
             //iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
+            iconShare.setVisibility(View.GONE);
             iconRate = (ImageView) itemView.findViewById(R.id.ratingBar);
+            iconRate.setVisibility(View.GONE);
 
             frameLayout = itemView.findViewById(R.id.frame);
             bottomLayout = itemView.findViewById(R.id.bottomLayout);

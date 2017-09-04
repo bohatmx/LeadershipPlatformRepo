@@ -158,6 +158,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(TAG, "Category spinner: " + catSpinner.getSelectedItem().toString());
              //   listener.onCategorySelected(category);
             }
 
@@ -473,6 +474,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         } else {
             dailyThought.setDateScheduled(selectedDate.getTime());
         }
+        category.setCategoryName(catSpinner.getSelectedItem().toString());
         dailyThought.setTitle(editTitle.getText().toString());
         dailyThought.setSubtitle(editSubtitle.getText().toString());
         dailyThought.setCategory(category);

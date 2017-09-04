@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.oneconnect.leadership.library.R;
@@ -49,6 +50,7 @@ import com.oneconnect.leadership.library.photo.PhotoUploadContract;
 import com.oneconnect.leadership.library.photo.PhotoUploadPresenter;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-public class ImageListActivity extends ListActivity/*AppCompatActivity*/ implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View,
+public class ImageListActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View,
         ActionMode.Callback{
 
     ListView imageListView;
@@ -83,11 +85,12 @@ public class ImageListActivity extends ListActivity/*AppCompatActivity*/ impleme
     private Snackbar snackbar;
     public int selectedItem = -1;
     private Object mActionMode;
+    TextView txtUpload, txtCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_image_list);
+        setContentView(R.layout.activity_image_list);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
       //  setSupportActionBar(toolbar);
 
@@ -185,24 +188,101 @@ public class ImageListActivity extends ListActivity/*AppCompatActivity*/ impleme
             }
         });*/
 
+        imageListView = (ListView) findViewById(R.id.imageListView);
+   //     imageListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        txtUpload = (TextView) findViewById(R.id.txtUpload);
+        txtCount = (TextView) findViewById(R.id.txtCount);
+
 
         getFilePaths();
 
     }
 
-    private void uploadSelectedImages(){
+    private void uploadSelectedImages(String path, List<String> selectedimages){
+        Log.i(LOG, "******* uploadSelectedImages ****");
 
-        imageListView.getCheckedItemCount();
-        if (mActionMode != null) {
-            /*return false;*/
+        PhotoDTO p = new PhotoDTO();
+
+        UserDTO u = SharedPrefUtil.getUser(getApplicationContext());
+        for (String path1 : selectedimages) {
+            path1 = path;
+           // showSnackbar("Uploading photo ...", "OK", Constants.CYAN);
+
+            // v.setCompanyName(u.getCompanyName());
+            // v.setCompanyID(u.getCompanyID());
+            p.setFilePath(path1);
+            File file = new File(path1);
+            p.setImageSize(file.length());
+            p.setBytes(file.length());
+            if (file.getName() != null) {
+                p.setCaption(file.getName());
+            } else {
+                p.setCaption("Leadership & Motivation");
+            }
+            switch (type) {
+                case ResponseBag.DAILY_THOUGHTS:
+                    p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+                    p.setTitle(dailyThought.getTitle());
+                    // p.setDescription(dailyThought.getTitle());
+                    break;
+                case ResponseBag.WEEKLY_MASTERCLASS:
+                    p.setWeeklyMasterClassID(weeklyMasterClass.getWeeklyMasterClassID());
+                    p.setTitle(weeklyMasterClass.getTitle());
+                    //p.setDescription(weeklyMasterClass.getTitle());
+                    break;
+                case ResponseBag.WEEKLY_MESSAGE:
+                    p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
+                    p.setTitle(weeklyMessage.getTitle());
+                    //p.setDescription(weeklyMessage.getTitle());
+                    break;
+                case ResponseBag.EBOOKS:
+                    p.seteBookID(eBook.geteBookID());
+                    p.setTitle(eBook.getStorageName());
+                    eBook.setPhotoUrl(p.getUrl());
+                    eBook.setPhotoID(p.getPhotoID());
+                    break;
+                case ResponseBag.PODCASTS:
+                    p.setPodcast(podcast);
+                    break;
+                case ResponseBag.VIDEOS:
+                    p.setVideo(video);
+                    break;
+                case ResponseBag.URLS:
+                    p.setUrlDTO(url);
+                    break;
+                case ResponseBag.NEWS:
+                    p.setNewsID(news.getNewsID());
+                    p.setTitle(news.getTitle());
+                    //p.setCaption(news.getBody());
+                    break;
+            }
+            if (type == ResponseBag.EBOOKS) {
+                eBookpresenter.uploadEbook(eBook);
+                return;
+            }
+            //openProgressSheet();
+            presenter.uploadPhoto(p);
         }
-        Log.i(LOG, "checked images: " + imageListView.getCheckedItemCount());
+
+
+        /*imageListView.getCheckedItemCount();
+        if (mActionMode != null) {
+            *//*return false;*//*
+        }
+        Log.i(LOG, "checked images: " + imageListView.getCheckedItemCount());*/
 
     }
 
 
     ArrayList<String> resultIAV;
-    ArrayList<String> selectedimages;
+    List<String> selectedimages;
+    boolean isChecked;
+    int checkAccumulator = 0;
+
+    public void countCheck(boolean isChecked) {
+        checkAccumulator += isChecked ? 1 : -1;
+    }
+
     public ArrayList<String> getFilePaths()
     {
         Log.i(LOG, "******getFilePaths********");
@@ -284,11 +364,37 @@ public class ImageListActivity extends ListActivity/*AppCompatActivity*/ impleme
                     //viewPhoto(path);
                 }
 
+                @Override
+                public void onCheckedItem(String path, int numberChecked) {
+                    selectedimages = new ArrayList<>();
+                    Log.i(LOG, numberChecked + "" + "\n" +"Image path: " + path);
+                    txtCount.setText(/*checkAccumulator*/numberChecked + "");
+                    //imageListView.getCheckedItemCount();
+                  //  String p;
+                    for(String p : selectedimages) {
+                        p = path;
+                        uploadSelectedImages(p, selectedimages);
+                    }
+                    txtUpload.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Util.flashOnce(txtUpload, 300, new Util.UtilAnimationListener() {
+                                @Override
+                                public void onAnimationEnded() {
+
+                                }
+                            });
+
+                        }
+                    });
+                }
+
+
             });
 
             imageListView.setAdapter(adapter);
-            imageListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            uploadSelectedImages();
+
+          //  uploadSelectedImages();
 
             ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, resultIAV);
            // setListAdapter(adapt);
@@ -363,6 +469,11 @@ public class ImageListActivity extends ListActivity/*AppCompatActivity*/ impleme
                     @Override
                     public void onViewPhoto(String path) {
                         //viewPhoto(path);
+                    }
+
+                    @Override
+                    public void onCheckedItem(String path, int numberChecked) {
+
                     }
 
                 });

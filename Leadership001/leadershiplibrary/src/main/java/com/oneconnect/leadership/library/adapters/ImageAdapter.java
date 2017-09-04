@@ -8,12 +8,14 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,6 +49,7 @@ public class ImageAdapter extends BaseAdapter/*ArrayAdapter<PhotoDTO>*/{
     public interface ImageAdapterListener {
         void onUploadPhoto(String path, int position);
         void onViewPhoto(String path);
+        void onCheckedItem(String path, int numberChecked);
     }
 
     @Override
@@ -86,9 +89,27 @@ public class ImageAdapter extends BaseAdapter/*ArrayAdapter<PhotoDTO>*/{
 
         final String path = paths.get(position);
         item.captiontxt.setText(path);
-        if (item.checkBox.isChecked())
+        CompoundButton.OnCheckedChangeListener checkListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                countCheck(isChecked);
+               // showSnackbar("Selected books: " + checkAccumulator + "", "Upload Selected","green");
+                //  holder.bookCounterTxt.setText(checkAccumulator + "");
+                Log.i(LOG, checkAccumulator + "" + "\n" +"Image path: " + path);
+                for (String p : paths) {
+                    p = path;
+                    listener.onCheckedItem(p, checkAccumulator);
+               //     listener.onUploadEbook(p);
 
-        {}
+                }
+            }
+        };
+
+        item.checkBox.setOnCheckedChangeListener(checkListener);
+       /* if (item.checkBox.isChecked())
+        {
+
+        }*/
         item.photoView.setImageBitmap(BitmapFactory.decodeFile(path));
 
         /*Glide.with(context)
@@ -101,9 +122,15 @@ public class ImageAdapter extends BaseAdapter/*ArrayAdapter<PhotoDTO>*/{
 
     }
 
+    int checkAccumulator = 0;
+    public void countCheck(boolean isChecked) {
+        checkAccumulator += isChecked ? 1 : -1;
+    }
+
     static class ImageViewHolder {
         protected ImageView photoView, shareIcon;
         protected TextView txtDate, shareTxt, captiontxt;
         protected CheckBox checkBox;
     }
+    static final String LOG = ImageAdapter.class.getSimpleName();
 }

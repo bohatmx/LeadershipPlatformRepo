@@ -100,6 +100,7 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     }
 
 
+    CategoryDTO category;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,6 +109,12 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
         view = inflater.inflate(R.layout.fragment_weekly_message_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        if (getActivity().getIntent().getSerializableExtra("category") != null) {
+            category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
+            Log.i(LOG, "category: " + category.getCategoryName());
+        } else {
+            Log.i(LOG, "No Category");
+        }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -316,9 +323,25 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
         Log.w(LOG, "onAllWeeklyMessages: " + list.size());
         this.weeklyMessageList = list;
+        if (category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
 //        Collections.sort(list);
         adapter = new WeeklyMessageAdapter(list, ctx);
         recyclerView.setAdapter(adapter);
+    }
+
+    private List<WeeklyMessageDTO> getCategoryList(List<WeeklyMessageDTO> list, String typeName){
+        List<WeeklyMessageDTO> returnList = new ArrayList<>();
+        for(WeeklyMessageDTO weeklyMessageDTO : list){
+            if (weeklyMessageDTO.getCategory().getCategoryName() != null){
+                if(weeklyMessageDTO.getCategory().getCategoryName().equals(typeName)){
+                    returnList.add(weeklyMessageDTO);
+                }
+            }
+        }
+        return returnList;
+
     }
 
     @Override
