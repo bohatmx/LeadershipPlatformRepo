@@ -248,9 +248,7 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     private void getDailyThoughts() {
         Log.d(LOG, "*********** fetching dailyThoughts ************");
-        /*if (dailyThought.getDailyThoughtID() != null) {*/
             presenter.getAllDailyThoughts();
-       /* }*/
     }
 
     static List<PageFragment> pageFragmentList;
