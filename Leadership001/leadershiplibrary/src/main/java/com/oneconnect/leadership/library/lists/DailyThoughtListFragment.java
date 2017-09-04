@@ -348,7 +348,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
         Log.w(LOG, "onAllDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        if (list != null) {
+        if (category != null) {
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);

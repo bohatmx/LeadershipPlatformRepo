@@ -106,10 +106,10 @@ public class AdminVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
 
-        vvh.iconUpdate.setOnClickListener(new View.OnClickListener() {
+        vvh.iconLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.iconUpdate, 300, new Util.UtilAnimationListener() {
+                Util.flashOnce(vvh.iconLink, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         listener.onUrlRequired(v);
@@ -317,11 +317,11 @@ public class AdminVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
    SeekBar videoSeekBar;*/
     public class AdminVideoViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName,count, txtLinks, txtMicrophone, txtVideo, txtCamera;
-        protected ImageView image, overflow, playbtn, pausebtn, iconMicrophone, iconVideo, iconCamera, iconUpdate, iconDelete;
+        protected ImageView image, overflow, playbtn, pausebtn, iconMicrophone, iconVideo, iconCamera, iconLink, iconDelete;
         protected Button btnPlay;
         protected VideoView videoView;
         protected SeekBar videoSeekBar;
-        protected RelativeLayout bottomLayout;
+        protected RelativeLayout bottomLayout, shareLayout;
 
 
         public AdminVideoViewHolder(View itemView) {
@@ -332,7 +332,9 @@ public class AdminVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtVideo = (TextView) itemView.findViewById(R.id.txtVideo);
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
-            iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            shareLayout = (RelativeLayout) itemView.findViewById(R.id.shareLayout);
+            shareLayout.setVisibility(View.GONE);
+            iconLink = (ImageView) itemView.findViewById(R.id.iconLink);
             iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
             iconVideo = (ImageView) itemView.findViewById(R.id.iconVideo);
             iconCamera = (ImageView) itemView.findViewById(R.id.iconCamera);

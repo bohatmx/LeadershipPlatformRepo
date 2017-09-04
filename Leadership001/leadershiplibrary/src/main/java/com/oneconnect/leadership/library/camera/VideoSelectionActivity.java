@@ -53,7 +53,6 @@ import java.util.regex.Pattern;
 public class VideoSelectionActivity extends AppCompatActivity implements VideoUploadContract.View {
 
     private RecyclerView recyclerView;
-    private FloatingActionButton fab;
     private Toolbar toolbar;
     private DailyThoughtDTO dailyThought;
     private WeeklyMessageDTO weeklyMessage;

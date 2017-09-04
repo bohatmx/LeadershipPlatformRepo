@@ -14,8 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-
-import com.google.android.gms.nearby.messages.internal.Update;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.crud.CrudContract;
@@ -95,10 +93,12 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
                         //update();
                         if (user != null){
                             update();
+                            finish();
                             return;
                         }
                         if (category!= null){
                             updateCategory();
+                            finish();
                             return;
                         }
                     }

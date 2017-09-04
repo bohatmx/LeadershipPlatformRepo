@@ -95,6 +95,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             type = SharedPrefUtil.getFragmentType(ctx);
         }
     }
+    CategoryDTO category;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +104,12 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
         view = inflater.inflate(R.layout.fragment_news_article, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        if (getActivity().getIntent().getSerializableExtra("category") != null) {
+            category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
+            Log.i(LOG, "category: " + category.getCategoryName());
+        } else {
+            Log.i(LOG, "No Category");
+        }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         photoRecyclerView = (RecyclerView) view.findViewById(R.id.photoRecyclerView);
@@ -235,6 +242,10 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     public void onAllNewsArticle(final List<NewsDTO> list) {
         Log.w(LOG, "onAllNewsArticle: " + list.size());
         this.newsArticletList= list;
+        //list = getCategoryList(list, category.getCategoryName());
+        /*if (category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }*/
         Collections.sort(list);
         adapter = new NewsArticleAdapter(ctx, list, new NewsArticleAdapter.NewsArticleListener() {
             @Override
@@ -275,6 +286,20 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
         });
         recyclerView.setAdapter(adapter);
     }
+
+    /*private List<NewsDTO> getCategoryList(List<NewsDTO> list, String typeName){
+        //DailyThoughtDTO dailyThoughtDTO = null;
+        List<NewsDTO> returnList = new ArrayList<>();
+        for(NewsDTO news : list){
+            if (NewsDTO.getCategory().getCategoryName() != null){
+                if(news.getCategory().getCategoryName().equals(typeName)){
+                    returnList.add(news);
+                }
+            }
+        }
+        return returnList;
+
+    }*/
 
     @Override
     public void onAllCategories(List<CategoryDTO> list) {

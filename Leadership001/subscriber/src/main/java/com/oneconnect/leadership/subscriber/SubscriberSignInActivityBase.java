@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.login.BaseLoginActivity;
-import com.twitter.sdk.android.core.Twitter;
+//import com.twitter.sdk.android.core.Twitter;
 
 import es.dmoral.toasty.Toasty;
 

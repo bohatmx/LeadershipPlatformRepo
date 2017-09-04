@@ -584,15 +584,15 @@ public class CrudActivity extends AppCompatActivity
 
             case R.id.nav_photos:
                 type = ResponseBag.PHOTOS;
-                Intent intent3 = new Intent(CrudActivity.this, ImageListActivity/*PhotoSelectionActivity*/.class);
+                Intent intent3 = new Intent(CrudActivity.this, /*ImageListActivity*/PhotoSelectionActivity.class);
                 startActivity(intent3);
                 break;
 
-            case R.id.nav_calender:
+            /*case R.id.nav_calender:
                 type = ResponseBag.CALENDAR_EVENTS;
                 Intent intent4 = new Intent(CrudActivity.this, CalendarActivity.class);
                 startActivity(intent4);
-                break;
+                break;*/
 
             case R.id.nav_sign_out:
                 FirebaseAuth.getInstance().signOut();
