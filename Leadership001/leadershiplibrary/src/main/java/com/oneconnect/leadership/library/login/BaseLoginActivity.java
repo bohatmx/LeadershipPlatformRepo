@@ -63,7 +63,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
         presenter = new LoginPresenter(this);
         fcmPresenter = new EndpointPresenter(this);
     }
-    public void startLogin() {
+    public void startSubscriberLogin() {
         Log.d(TAG, "startLogin: +++++++++++++++++++++++++++");
         AuthUI.IdpConfig googleIdp = new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
                 .setPermissions(Arrays.asList(Scopes.EMAIL, Scopes.PROFILE))
@@ -76,8 +76,45 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 googleIdp,
-                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(), new AuthUI.IdpConfig.Builder
-                                        (AuthUI.TWITTER_PROVIDER).build()))
+                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build() ))
+                        .build(),
+                REQUEST_SIGN_IN);
+    }
+
+    public void startAdminLogin() {
+        Log.d(TAG, "startLogin: +++++++++++++++++++++++++++");
+        AuthUI.IdpConfig googleIdp = new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
+                .setPermissions(Arrays.asList(Scopes.EMAIL, Scopes.PROFILE))
+                .build();
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)   //todo remove on release
+                        .setTheme(R.style.RedTheme)
+                        .setProviders(Arrays.asList(
+                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                googleIdp,
+                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
+                        .build(),
+                REQUEST_SIGN_IN);
+    }
+
+    public void startCorporateLogin() {
+        Log.d(TAG, "startLogin: +++++++++++++++++++++++++++");
+        AuthUI.IdpConfig googleIdp = new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
+                .setPermissions(Arrays.asList(Scopes.EMAIL, Scopes.PROFILE))
+                .build();
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)   //todo remove on release
+                        .setTheme(R.style.RedTheme)
+                        .setProviders(Arrays.asList(
+                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                googleIdp,
+                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
                         .build(),
                 REQUEST_SIGN_IN);
     }

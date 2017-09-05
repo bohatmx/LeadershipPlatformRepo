@@ -39,7 +39,7 @@ public class AdminSignInActivity extends BaseLoginActivity {
     }
     private void proceed() {
         if (firebaseAuth.getCurrentUser() == null) {
-            startLogin();
+            startAdminLogin();
         } else {
             startMain();
         }

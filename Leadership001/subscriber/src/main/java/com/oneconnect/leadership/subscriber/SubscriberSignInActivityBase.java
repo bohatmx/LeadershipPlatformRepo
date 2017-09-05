@@ -26,7 +26,7 @@ public class SubscriberSignInActivityBase extends BaseLoginActivity {
         type = UserDTO.SUBSCRIBER;
 
         if (firebaseAuth.getCurrentUser() == null) {
-            startLogin();
+            startSubscriberLogin();
         } else {
             Log.i(TAG, "onCreate: user already signed in. no need for toast");
             startMain();
