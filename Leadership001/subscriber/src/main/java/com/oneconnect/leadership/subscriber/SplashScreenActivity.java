@@ -55,7 +55,7 @@ public class SplashScreenActivity extends Activity {
             public void onAnimationEnd(Animation animation) {
                 imageView.startAnimation(animation_3);
                 finish();
-                Intent i = new Intent(getBaseContext(),SubscriberSignInActivityBase.class);
+                Intent i = new Intent(getBaseContext(),/*SubscriberSignInActivityBase*/SubscriberSignInActivity.class);
                 startActivity(i);
             }
 
