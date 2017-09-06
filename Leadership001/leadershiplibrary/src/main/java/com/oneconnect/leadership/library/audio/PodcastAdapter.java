@@ -50,9 +50,6 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
         final String path = paths.get(position);
         File file = new File(path);
         Log.w("PodcastAdapter", "onBindViewHolder: ".concat(path).concat(" size: ").concat(String.valueOf(file.length())) );
-        /*Bitmap thumb = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Audio.Thumbnails.MINI_KIND);
-        holder.image.setImageBitmap(thumb);*/
-       // holder.image.setImageDrawable(context.getDrawable(R.drawable.audios));
         int i = path.lastIndexOf("/");
         holder.txtFileName.setText(path.substring(i + 1));
         holder.btnUpload.setOnClickListener(new View.OnClickListener() {
@@ -67,14 +64,6 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
                 listener.onPlayAudioTapped(path);
             }
         });
-
-       /* holder.btnRec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(context,AudioRecordTest.class);
-                context.startActivity(i);
-            }
-        });*/
     }
 
     @Override
@@ -101,12 +90,7 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             controlLayout = (RelativeLayout) itemView.findViewById(R.id.controlLayout);
-           // controlLayout.setVisibility(View.GONE);
-          // btnRec = (Button) itemView.findViewById(R.id.btnRec);
-            //initialTime = (TextView) itemView.findViewById(R.id.initialTime);
-            //initialTime.setVisibility(View.GONE);
-            //finalTime = (TextView) itemView.findViewById(R.id.finalTime);
-           // finalTime.setVisibility(View.GONE);
+
         }
 
     }

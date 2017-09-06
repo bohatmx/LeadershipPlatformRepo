@@ -59,14 +59,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 listener.onCategorySelected(cat);
             }
         });
+
         if (cat.getCategoryName().equalsIgnoreCase("Leadership")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.leadership001));
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.coffee_phone));
         }  else if (cat.getCategoryName().equalsIgnoreCase("Business")) {
             cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.business));
         }  else if (cat.getCategoryName().equalsIgnoreCase("Family")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.family));
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.coffee_shop));
         } else if (cat.getCategoryName().equalsIgnoreCase("Social")) {
-            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.social));
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.soc));
         }
     }
 

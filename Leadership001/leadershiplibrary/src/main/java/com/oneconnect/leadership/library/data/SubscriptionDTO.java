@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class SubscriptionDTO  extends BaseDTO implements  Serializable {
     private String subscriptionTypeID, userID, clientID,
-             stringPaymentDate, subscriptionID;
+             stringPaymentDate, subscriptionID, subscriptionName;
     private long paymentDate;
     private double amount;
     private boolean active;
@@ -24,6 +24,18 @@ public class SubscriptionDTO  extends BaseDTO implements  Serializable {
         dateRegistered = new Date().getTime();
         stringDateRegistered = sdf.format(new Date());
         active = false;
+    }
+
+    public String getSubscriptionName() {
+        return subscriptionName;
+    }
+
+    public void setSubscriptionName(String subscriptionName) {
+        this.subscriptionName = subscriptionName;
+    }
+
+    public static SimpleDateFormat getSdf() {
+        return sdf;
     }
 
     public String getSubscriptionTypeID() {

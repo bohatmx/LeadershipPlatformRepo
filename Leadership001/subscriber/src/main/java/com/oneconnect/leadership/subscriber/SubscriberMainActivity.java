@@ -570,6 +570,11 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
 
     }
@@ -909,6 +914,11 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -1015,6 +1025,11 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     @Override
     public void onUpdateCategory(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
 
     }
 

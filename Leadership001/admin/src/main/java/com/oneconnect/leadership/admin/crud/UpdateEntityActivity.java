@@ -42,7 +42,7 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     private WeeklyMasterClassDTO masterClass;
     private WeeklyMessageDTO weeklyMessage;
     private NewsDTO news;
-
+    private SubscriptionDTO subscription;
     private TextInputEditText editTitle, editSubtitle;
     private RecyclerView recyclerView;
     private ImageView iconCamera, iconVideo, iconDate, iconURLs;
@@ -64,32 +64,32 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
         btn = (Button) findViewById(R.id.btn);
         editTitle = (TextInputEditText) findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) findViewById(R.id.editSubtitle);
-      //  spinner = (Spinner) findViewById(R.id.spinner);
-       // spinner.setVisibility(View.GONE);
 
         if (getIntent().getSerializableExtra("dailyThought") != null){
             dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
             editTitle.setText(dailyThought.getTitle());
             editSubtitle.setText(dailyThought.getSubtitle());
-          //  spinner.setSelection(dailyThought.getCategories().size());
         }
         if (getIntent().getSerializableExtra("masterClass") != null){
             masterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("masterClass");
             editTitle.setText(masterClass.getTitle());
             editSubtitle.setText(masterClass.getSubtitle());
-            //  spinner.setSelection(dailyThought.getCategories().size());
         }
         if (getIntent().getSerializableExtra("weeklyMessage") != null){
             weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
             editTitle.setText(weeklyMessage.getTitle());
             editSubtitle.setText(weeklyMessage.getSubtitle());
-            //  spinner.setSelection(dailyThought.getCategories().size());
         }
         if (getIntent().getSerializableExtra("news") != null){
             news = (NewsDTO) getIntent().getSerializableExtra("news");
             editTitle.setText(news.getTitle());
             editSubtitle.setText(news.getSubtitle());
-            //  spinner.setSelection(dailyThought.getCategories().size());
+        }
+
+        if (getIntent().getSerializableExtra("subscription") != null){
+            subscription = (SubscriptionDTO) getIntent().getSerializableExtra("subscription");
+            editTitle.setText(subscription.getSubscriptionType().getSubscriptionName());
+            editSubtitle.setText((int) subscription.getAmount());
         }
 
 
@@ -99,7 +99,6 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
                 Util.flashOnce(btn, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        //update();
                         if (dailyThought != null){
                             update();
                             return;
@@ -112,7 +111,8 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
                             update();
                             return;
                         }
-                        if (news != null){
+
+                        if (subscription != null){
                             update();
                             return;
                         }
@@ -163,7 +163,13 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
             finish();
             return;
         }
-
+        if (subscription != null) {
+            subscription.setSubscriptionName(editTitle.getText().toString());
+            subscription.setAmount(Double.parseDouble(editSubtitle.getText().toString()));
+            crudPresenter.updateSubscription(subscription);
+            finish();
+            return;
+        }
     }
 
     @Override
@@ -202,12 +208,22 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     }
 
     @Override
+    public void onSubscriptionUpdated(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onNewsUpdated(NewsDTO news) {
 
     }
 
     @Override
     public void onUserDeleted(UserDTO user) {
+
+    }
+
+    @Override
+    public void onSubscriptionDeleted(SubscriptionDTO subscription) {
 
     }
 

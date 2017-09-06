@@ -27,6 +27,7 @@ public class CrudContract {
     public interface Presenter {
         void addEntity(BaseDTO entity);
         void updateEntity(BaseDTO entity);
+        void updateSubscription(SubscriptionDTO subscription);
         void updateUser(UserDTO user);
         void updateDailyThought(DailyThoughtDTO dailyThought);
         void updateWeeklyMasterClass(WeeklyMasterClassDTO masterClass);
@@ -44,7 +45,9 @@ public class CrudContract {
         void deletePhoto(PhotoDTO photo);
         void deleteEbook(EBookDTO eBook);
         void deleteCategory(CategoryDTO category);
+        void deleteSubscription(SubscriptionDTO subscription);
         void getCategories(String companyID);
+        void getAllSubscriptions();
         void getCompanies(String companyID);
         void getDailyThoughts(String companyID);
         void getEbooks(String companyID);
@@ -69,8 +72,10 @@ public class CrudContract {
         void onDailyThoughtUpdated(DailyThoughtDTO dailyThought);
         void onWeeklyMasterClassUpdated(WeeklyMasterClassDTO masterClass);
         void onWeeklyMessageUpdated(WeeklyMessageDTO weeklyMessage);
+        void onSubscriptionUpdated(SubscriptionDTO subscription);
         void onNewsUpdated(NewsDTO news);
         void onUserDeleted(UserDTO user);
+        void onSubscriptionDeleted(SubscriptionDTO subscription);
         void onDailyThoughtDeleted(DailyThoughtDTO dailyThought);
         void onWeeklyMessageDeleted(WeeklyMessageDTO weeklyMessage);
         void onWeeklyMasterClassDeleted(WeeklyMasterClassDTO masterClass);
@@ -97,5 +102,6 @@ public class CrudContract {
         void onDevices(List<DeviceDTO> companyID);
         void onError(String message);
         void onCategoryUpdated(CategoryDTO category);
+
     }
 }

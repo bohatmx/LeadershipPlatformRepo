@@ -55,6 +55,7 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
     private CrudPresenter crudPresenter;
     Context ctx;
     private CategoryDTO category;
+    private SubscriptionDTO subscription;
 
 
     @Override
@@ -82,6 +83,12 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
             eLast.setVisibility(View.GONE);
             eMail.setVisibility(View.GONE);
             spinner.setVisibility(View.GONE);
+        }if (getIntent().getSerializableExtra("subscription") != null) {
+            subscription = (SubscriptionDTO) getIntent().getSerializableExtra("subscription");
+            eFirst.setText(subscription.getSubscriptionName());
+            eLast.setVisibility(View.GONE);
+            eMail.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
         }
 
         btn.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +97,6 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
                 Util.flashOnce(btn, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        //update();
                         if (user != null){
                             update();
                             finish();
@@ -98,6 +104,11 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
                         }
                         if (category!= null){
                             updateCategory();
+                            finish();
+                            return;
+                        }
+                        if (subscription!= null){
+                            updateSubscription();
                             finish();
                             return;
                         }
@@ -126,6 +137,27 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
         }
 
     }
+
+    private void updateSubscription() {
+        Log.i(LOG, "updating subscription");
+
+        if (TextUtils.isEmpty(eFirst.getText())) {
+            eFirst.setError("Enter subscription name");
+            return;
+        }
+        if (TextUtils.isEmpty(eLast.getText())) {
+            eLast.setError("Enter subscription Amount");
+            return;
+        }
+
+        if (subscription != null) {
+            subscription.setSubscriptionName(eFirst.getText().toString());
+            subscription.setAmount(eLast.getInputType());
+            crudPresenter.updateSubscription(subscription);
+            return;
+        }
+
+    }
     private void update() {
 
         if (TextUtils.isEmpty(eFirst.getText())) {
@@ -146,12 +178,6 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
             crudPresenter.updateUser(user);
             return;
         }
-       /* if (category != null) {
-            category.setCategoryName(eFirst.getText().toString());
-            crudPresenter.updateCategory(category);
-            return;
-        }*/
-
     }
     int userType;
 
@@ -236,12 +262,22 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
     }
 
     @Override
+    public void onSubscriptionUpdated(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onNewsUpdated(NewsDTO news) {
 
     }
 
     @Override
     public void onUserDeleted(UserDTO user) {
+
+    }
+
+    @Override
+    public void onSubscriptionDeleted(SubscriptionDTO subscription) {
 
     }
 

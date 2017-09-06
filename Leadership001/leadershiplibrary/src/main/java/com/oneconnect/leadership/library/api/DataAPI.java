@@ -482,6 +482,23 @@ public class DataAPI {
 
     }
 
+    public void updateSubscription(final SubscriptionDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(SUBSCRIPTION_TYPES)
+                .child(c.getSubscriptionID());
+        log("updateSubscription", ref);
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+
+    }
+
     public void addNews(final NewsDTO news, final DataListener listener) {
         final DatabaseReference ref = db.getReference(NEWS);
         log("addNews", ref);
@@ -1439,8 +1456,11 @@ public class DataAPI {
                 ref = db.getReference(NEWS)
                         .child(id).child(URLS);
                 break;
+            case ResponseBag.SUBSCRIPTIONS:
+                ref = db.getReference(SUBSCRIPTIONS)
+                        .child(id).child(URLS);
+                break;
 
-            //
             case ResponseBag.EBOOKS:
                 ref = db.getReference(EBOOKS).child(id).child(URLS);
                 break;
@@ -1467,6 +1487,12 @@ public class DataAPI {
                 }
             }
         });
+    }
+
+    public void deleteSubscription(final SubscriptionDTO subscription, final DataListener listener){
+        DatabaseReference ref = db.getReference(SUBSCRIPTIONS).child(subscription.getSubscriptionID());
+        ref.removeValue();
+        log("deleting subscription: ", ref);
     }
 
     public void deleteUser(final UserDTO user, final DataListener listener) {

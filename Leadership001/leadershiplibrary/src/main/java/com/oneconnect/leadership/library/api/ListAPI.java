@@ -223,7 +223,31 @@ public class ListAPI {
             }
         });
     }
+    public void getAllSubscriptions(final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.SUBSCRIPTIONS);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setSubscriptions(new ArrayList<SubscriptionDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        SubscriptionDTO p = shot.getValue(SubscriptionDTO.class);
+                        bag.getSubscriptions().add(p);
+                    }
+                }
+                listener.onResponse(bag);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
     public void getAllVideos(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -840,7 +864,6 @@ public class ListAPI {
                 }
                 ResponseBag bag = new ResponseBag();
                 bag.setWeeklyMessages(new ArrayList<WeeklyMessageDTO>());
-                // bag.setCategories(new ArrayList<CategoryDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         WeeklyMessageDTO dt = shot.getValue(WeeklyMessageDTO.class);
@@ -868,7 +891,6 @@ public class ListAPI {
                 }
                 ResponseBag bag = new ResponseBag();
                 bag.setWeeklyMasterClasses(new ArrayList<WeeklyMasterClassDTO>());
-                // bag.setCategories(new ArrayList<CategoryDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         WeeklyMasterClassDTO dt = shot.getValue(WeeklyMasterClassDTO.class);
@@ -896,7 +918,6 @@ public class ListAPI {
                 }
                 ResponseBag bag = new ResponseBag();
                 bag.setCalendarEvents(new ArrayList<CalendarEventDTO>());
-                // bag.setCategories(new ArrayList<CategoryDTO>());
                 if (dataSnapshot.getChildrenCount() > 0) {
                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         CalendarEventDTO dt = shot.getValue(CalendarEventDTO.class);

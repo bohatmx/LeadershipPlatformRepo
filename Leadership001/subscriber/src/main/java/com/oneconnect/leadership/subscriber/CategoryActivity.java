@@ -96,7 +96,6 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
 
     public void getCategories() {
         Log.d(LOG, "******* getCategories: ");
-       // presenter.getCategories("-KgsUcgfo7z1U9MXgd9i");
         presenter.getAllCategories();
     }
 
@@ -230,6 +229,11 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
 
     }
 

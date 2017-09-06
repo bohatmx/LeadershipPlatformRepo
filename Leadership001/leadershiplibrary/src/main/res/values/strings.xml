@@ -9,7 +9,7 @@
     <string name="seek_to_hint">Seconds</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login</string>
     <string name="title_activity_splash">Leadership</string>
     <string name="unknown_sign_in_response">Unknown sign in response</string>
     <string name="unknown_error">Unknown Error</string>
@@ -19,116 +19,83 @@
     <string name="staff_welcome">Welcome! The tools for Leadership have arrived</string>
     <string name="leader_welcome">Welcome! We need Leaders everywhere ...</string>
     <string name="platform_welcome">Leadership Platform Welcome</string>
-    <string name="title_activity_le_you_tube">LeYouTubeActivity</string>
-    <string name="title_activity_podcast_selection">PodcastSelectionActivity</string>
-
+    <string name="title_activity_le_you_tube">LeYouTube</string>
+    <string name="title_activity_podcast_selection">Podcast Selection</string>
     <string name="expand">expand</string>
     <string name="shrink">shrink</string>
     <string name="ellipse">...</string>
     <string name="tips">This is a custom TextView that can be expanded with a smooth transition animation,you can set the number of lines to expand,change its icon or text and so on\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
     <string name="action_media">Media</string>
     <string name="action_photo">Photo</string>
-    <string name="title_activity_le_exo_player">LeExoPlayerActivity</string>
+    <string name="title_activity_le_exo_player">LeExo Player</string>
 
     <string name="video">LEADERSHIP VIDEOS</string>
-
     <string name="audio">Audio</string>
-
     <string name="daily_thought">LEADERSHIP DAILY THOUGHTS</string>
-
     <string name="news_article">LEADERSHIP NEWS ARTICLES</string>
-
     <string name="weeky_master_class">LEADERSHIP WEEKLY MASTERCLASS</string>
-
     <string name="weekly_message">LEADERSHIP WEEKLY MESSAGES</string>
-
     <string name="photo">LEADERSHIP PHOTOS</string>
-
     <string name="podcast">LEADERSHIP PODCASTS</string>
-
     <string name="ebooks">LEADERSHIP EBOOKS</string>
-
     <string name="calendar_events">LEADERSHIP CALENDER EVENTS</string>
-
     <string name="Photographs">Photographs</string>
-
     <string name="text">Text</string>
-
     <string name="retry">Retry</string>
-
     <string name="selection_disabled">Disabled</string>
-
     <string name="selection_default">Default</string>
-
     <string name="selection_default_none">Default (none)</string>
-
     <string name="unexpected_intent_action">Unexpected intent action</string>
-
     <string name="enable_random_adaptation">Enable random adaptation</string>
-
     <string name="error_drm_not_supported">Protected content not supported on API levels below 18</string>
-
     <string name="error_drm_unsupported_scheme">This device does not support the required DRM scheme</string>
-
     <string name="error_drm_unknown">An unknown DRM error occurred</string>
-
     <string name="error_no_decoder">This device does not provide a decoder </string>
-
     <string name="error_no_secure_decoder">This device does not provide a secure decoder </string>
-
     <string name="error_querying_decoders">Unable to query device decoders</string>
-
     <string name="error_instantiating_decoder">Unable to instantiate decoder</string>
 
     <string name="error_unsupported_video">Media includes video tracks, but none are playable by this device</string>
-
     <string name="error_unsupported_audio">Media includes audio tracks, but none are playable by this device</string>
-
     <string name="storage_permission_denied">Permission to access storage was denied</string>
-
     <string name="sample_list_load_error">One or more sample lists failed to load</string>
     <string name="search_hint">Enter search ...</string>
     <string name="title_activity_media_list">MediaListActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_subscriber_drawer">SubscriberDrawerActivity</string>
-
+    <string name="title_activity_subscriber_drawer">Subscriber Drawer</string>
     <string name="sign_out">Sign Out</string>
-    <string name="title_activity_audio_player">AudioPlayerActivity</string>
+    <string name="title_activity_audio_player">Audio Player</string>
     <string name="title_category">Choose Your Topics</string>
     <string name="confirm_photo">Use Photo</string>
     <string name="confirm_video">Use Video</string>
     <string name="rating">Rating</string>
-    <string name="title_activity_daily_thought">DailyThoughtActivity</string>
-    <string name="title_activity_podcast">PodcastActivity</string>
-    <string name="title_activity_video">VideoActivity</string>
-    <string name="title_activity_e_book">eBookActivity</string>
-    <string name="title_activity_weekly_classes">WeeklyMasterClasses</string>
+    <string name="title_activity_daily_thought">Daily Thought</string>
+    <string name="title_activity_podcast">Podcast</string>
+    <string name="title_activity_video">Video</string>
+    <string name="title_activity_e_book">eBook</string>
+    <string name="title_activity_weekly_classes">Weekly MasterClasses</string>
     <string name="ebook_web_activity">Book</string>
-    <string name="title_activity_web_view">WebViewActivity</string>
-    <string name="title_activity_video_player">VideoPlayerActivity</string>
+    <string name="title_activity_web_view">WebView</string>
+    <string name="title_activity_video_player">Video Player</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity__podcast_list">Podcasts Attachments</string>
     <string name="title_activity_deep_link">Deep Link</string>
 
     <string name="title_activity_image_list">Images</string>
-    <!--VideoMenu-->
     <string name="share">Share</string>
     <string name="action_play_next">Play Next</string>
     <string name="action_calender">Calender</string>
     <string name="adding_calender_event_in_android">Add Calender Event</string>
-    <string name="title_activity_video_list">VideoListActivity</string>
-
+    <string name="title_activity_video_list">Video List</string>
     <string name="text_favorites">Favorites</string>
     <string name="text_schedules">Schedules</string>
     <string name="text_music">Music</string>
-    <string name="title_activity_podcast_player">PodcastPlayerActivity</string>
-    <string name="title_activity_full_photo">FullPhotoActivity</string>
+    <string name="title_activity_podcast_player">Podcast Player</string>
+    <string name="title_activity_full_photo">Full Photo</string>
     <string name="title_activity_my_android_app">Rating Activity</string>
-    title_acttitle_activity_image_listivity_image_list
     <!-- INVITES -->
     <string name="invitation_title">Leadership Platform</string>
     <string name="invitation_message">The world needs leaders</string>
@@ -142,7 +109,6 @@
     <string name="invitation_id_fmt" formatted="false">Invitation ID: %s</string>
 
     <!--To be deleted-->
-
     <string name="normal_layout">Username</string>
     <string name="wide_layout">Wide Layout</string>
     <string name="decimal_step_size">Decimal Step Size</string>
@@ -150,7 +116,6 @@
     <string name="library_implementation">Category</string>
     <string name="library_implementation_tinted">Library Implementation (Tinted)</string>
     <string name="action_about">About</string>
-
     <string name="about_title">About</string>
     <string name="about_name">MaterialRatingBar</string>
     <string name="about_version_format">Version %1$s</string>
