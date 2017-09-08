@@ -17,7 +17,7 @@ import com.oneconnect.leadership.admin.R;
 
 /**
  * <p>A fragment that shows a list of items as a modal bottom sheet.</p>
- * <p>You can show this modal bottom sheet from your activity like this:</p>
+ * <p>You can show this modal bottom sheet from your activity com.oneconnect.leadership.library.like this:</p>
  * <pre>
  *     UpdateFragment.newInstance(30).show(getSupportFragmentManager(), "dialog");
  * </pre>

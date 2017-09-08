@@ -528,7 +528,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
-            bottomLayout.setVisibility(View.GONE);
+            //bottomLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);
             deleteLayout.setVisibility(View.GONE);
