@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:title="Leadership News">
+            <menu>
+                <item
+                    android:id="@+id/nav_news_article"
+                    android:icon="@drawable/ic_info"
+                    android:title="Leadership News Articles" />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="single" >
+        <item android:title="Leadership Message">
+            <menu>
+                <item
+                    android:id="@+id/nav_daily_thought"
+                    android:icon="@drawable/ic_comment_black_24dp"
+                    android:title="Leadership Daily Thoughts" />
+                <item
+                    android:id="@+id/nav_master"
+                    android:icon="@drawable/ic_class_black_24dp"
+                    android:title="Leadership Weekly Master Classes" />
+                <item
+                    android:id="@+id/nav_weekly"
+                    android:icon="@drawable/ic_chat"
+                    android:title="Leadership Weekly Messages" />
+            </menu>
+        </item>
+    </group>
+
+    <item android:title="Leadership Events">
+        <menu>
+            <item
+                android:id="@+id/nav_calender_events"
+                android:icon="@drawable/ic_event_black_24dp"
+                android:title="Leadership Calendar Events" />
+        </menu>
+    </item>
+
+    <item android:title="Leadership Media">
+        <menu>
+            <!--<item
+                android:id="@+id/nav_photo"
+                android:icon="@drawable/ic_photo_black_24dp"
+                android:title="Photo" />-->
+            <item
+                android:id="@+id/nav_podcast"
+                android:icon="@drawable/ic_microphone"
+                android:title="Leadership Podcasts" />
+            <!--<item
+               android:id="@+id/nav_video"
+               android:icon="@drawable/ic_videocam"
+               android:title="Video" />-->
+        </menu>
+    </item>
+
+    <item android:title="Leadership Read">
+        <menu>
+            <item
+                android:id="@+id/nav_eBooks"
+                android:icon="@drawable/ic_library_books_black_24dp"
+                android:title="Leadership eBooks" />
+        </menu>
+    </item>
+
+    <item android:title="Company Porfile">
+        <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Company Profile"/>
+        </menu>
+    </item>
+
+    <item android:title="Sign out">
+        <menu>
+            <item
+                android:id="@+id/nav_sign_out"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Sign Out" />
+        </menu>
+    </item>
+
+</menu>

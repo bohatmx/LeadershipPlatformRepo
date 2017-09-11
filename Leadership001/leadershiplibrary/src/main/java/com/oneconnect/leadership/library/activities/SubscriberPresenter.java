@@ -112,6 +112,36 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     }
 
     @Override
+    public void getWeeklyMessageRating(final String weeklyMessageID) {
+        listAPI.getWeeklyMessageRating(weeklyMessageID, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onWeeklyMessageRatings(bag.getRatings());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
+    public void getWeeklyMasterClassRating(String weeklyMasterClassID) {
+        listAPI.getWeeklyMasterClassRating(weeklyMasterClassID, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onWeeklyMasterClassRatings(bag.getRatings());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
     public void getCategorisedWeeklyMessages(String categoryID) {
 
             listAPI.getCategorisedWeeklyMessages(categoryID, new ListAPI.DataListener() {
@@ -139,6 +169,26 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
             @Override
             public void onError(String messsage) {
                 view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
+    public void getCurrentUser(String email) {
+        dataAPI.getUserByEmail(email, new DataAPI.EmailQueryListener() {
+            @Override
+            public void onUserFoundByEmail(UserDTO user) {
+                view.onUserFound(user);
+            }
+
+            @Override
+            public void onUserNotFoundByEmail() {
+
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
             }
         });
     }

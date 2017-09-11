@@ -57,7 +57,7 @@ import java.util.List;
 
 public class NewArticleEditor extends BaseBottomSheet implements SheetContract.View, SubscriberContract.View {
     private NewsDTO article;
-    private TextInputEditText editTitle, editSubtitle;
+    private TextInputEditText editTitle, editSubtitle, editContent;
     private RecyclerView recyclerView;
     private ImageView iconCamera, iconVideo, iconDate, iconURLs;
     private View iconLayout;
@@ -88,12 +88,27 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }
 
     @Override
     public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
 
     }
 
@@ -295,6 +310,8 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
         editTitle.setHint("Enter news content");
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
         editSubtitle.setHint("Enter author name");
+        editContent = (TextInputEditText) view.findViewById(R.id.editContent);
+        editContent.setHint("Enter article content");
         btnDate = (Button) view.findViewById(R.id.btnDate);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -352,6 +369,10 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
             editTitle.setError(getString(R.string.enter_author_name));
             return;
         }
+        if (TextUtils.isEmpty(editContent.getText())) {
+            editContent.setError(getString(R.string.enter_article_content));
+            return;
+        }
         Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");
         if (article == null) {
             article = new NewsDTO();
@@ -378,6 +399,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
         }
         article.setTitle(editTitle.getText().toString());
         article.setSubtitle(editSubtitle.getText().toString());
+        article.setBody(editContent.getText().toString());
         article.setCategory(category);
 
         switch (type) {

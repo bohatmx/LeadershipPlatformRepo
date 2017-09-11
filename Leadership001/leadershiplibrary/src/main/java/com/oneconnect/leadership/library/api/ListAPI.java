@@ -853,6 +853,60 @@ public class ListAPI {
         });
     }
 
+    public void getWeeklyMessageRating(String weeklyMessageID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.RATINGS);
+        Query q = ref.orderByChild("weeklyMessageID").equalTo(weeklyMessageID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setRatings(new ArrayList<RatingDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        RatingDTO dt = shot.getValue(RatingDTO.class);
+                        bag.getRatings().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getWeeklyMasterClassRating(String weeklyMasterClassID, final DataListener listener){
+        DatabaseReference ref = db.getReference(DataAPI.RATINGS);
+        Query q = ref.orderByChild("weeklyMasterClassID").equalTo(weeklyMasterClassID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setRatings(new ArrayList<RatingDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        RatingDTO dt = shot.getValue(RatingDTO.class);
+                        bag.getRatings().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
     public void getCategorisedWeeklyMessages(String categoryID, final DataListener listener){
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MESSAGES);
         Query q = ref.orderByChild("categoryID").equalTo(categoryID);

@@ -56,6 +56,7 @@ public class CrudContract {
         void getPhotos(String companyID);
         void getPrices(String companyID);
         void getUsers(String companyID);
+        void getUser(String email);
         void getNews(String companyID);
         void getSubscriptions(String companyID);
         void getVideos(String companyID);
@@ -93,6 +94,7 @@ public class CrudContract {
         void onPodcasts(List<PodcastDTO> list);
         void onPhotos(List<PhotoDTO> list);
         void onPrices(List<PriceDTO> list);
+        void onUserFound(UserDTO user);
         void onUsers(List<UserDTO> list);
         void onNews(List<NewsDTO> list);
         void onSubscriptions(List<SubscriptionDTO> list);

@@ -134,9 +134,8 @@ public class UserEditorBottomSheet extends BaseBottomSheet {
         list.add(UserDTO.DESC_STAFF);
         list.add(UserDTO.DESC_SUBSCRIBER);
         list.add(UserDTO.DESC_LEADER);
-        list.add(UserDTO.DESC_GOLD);
-        list.add(UserDTO.DESC_PLATINUM);
-
+        list.add(UserDTO.DESC_PLATINUM_USER);
+        list.add(UserDTO.DESC_GOLD_USER);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 getActivity(),android.R.layout.simple_list_item_1,list);
@@ -158,10 +157,10 @@ public class UserEditorBottomSheet extends BaseBottomSheet {
                         userType = UserDTO.LEADER;
                         break;
                     case 4:
-                        userType = UserDTO.GOLD;
+                        userType = UserDTO.PLATINUM_USER;
                         break;
                     case 5:
-                        userType = UserDTO.PLATINUM;
+                        userType = UserDTO.GOLD_USER;
                         break;
                 }
             }

@@ -182,11 +182,11 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
 
     private void getPodcasts() {
         Log.d(LOG, "************** getPodcasts: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+       // if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllPodcasts();
-        } else {
+        /*} else {
             Log.d(LOG, "user is null");
-        }
+        }*/
 
     }
 
@@ -276,12 +276,27 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }
 
     @Override
     public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
 
     }
 

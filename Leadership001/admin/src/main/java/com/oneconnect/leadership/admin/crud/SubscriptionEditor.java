@@ -307,6 +307,11 @@ public class SubscriptionEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onUsers(List<UserDTO> list) {
 
     }

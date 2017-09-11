@@ -61,6 +61,7 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
     private TextView txtRatingValue, lblRateMe;
     private Button btnSubmit;
     protected EditText ratingCom;
+    TextView messageTxt;
     private RatingPresenter ratingPresenter;
     private CachePresenter cachePresenter;
     private Context ctx;
@@ -94,66 +95,79 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
         cachePresenter = new CachePresenter(this, ctx);
         ratingPresenter = new RatingPresenter(this);
 
+        messageTxt = (TextView) findViewById(R.id.messageTxt);
         //cachePresenter = new CachePresenter(this, ctx);
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
-                getSupportActionBar().setSubtitle(dailyThought.getTitle());
+                messageTxt.setText(dailyThought.getTitle());
+                //getSupportActionBar().setSubtitle(dailyThought.getTitle());
                 break;
             case ResponseBag.WEEKLY_MASTERCLASS:
                 weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
-                getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+                messageTxt.setText(weeklyMasterClass.getTitle());
+               // getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
-                getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                messageTxt.setText(weeklyMessage.getTitle());
+               // getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
                 break;
             case ResponseBag.EBOOKS:
                 eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
-                getSupportActionBar().setSubtitle(eBook.getStorageName());
+                messageTxt.setText(eBook.getStorageName());
+               // getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
             case ResponseBag.VIDEOS:
                 video = (VideoDTO) getIntent().getSerializableExtra("video");
-                getSupportActionBar().setSubtitle(video.getStorageName());
+                messageTxt.setText(video.getStorageName());
+              //  getSupportActionBar().setSubtitle(video.getStorageName());
                 break;
             case ResponseBag.PODCASTS:
                 podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
-                getSupportActionBar().setSubtitle(podcast.getStorageName());
+                messageTxt.setText(podcast.getStorageName());
+               // getSupportActionBar().setSubtitle(podcast.getStorageName());
                 break;
             case ResponseBag.URLS:
                 url = (UrlDTO) getIntent().getSerializableExtra("url");
-                getSupportActionBar().setSubtitle(url.getTitle());
+               // getSupportActionBar().setSubtitle(url.getTitle());
                 break;
         }
         if(getIntent().getSerializableExtra("dailyThought") != null){
              type = ResponseBag.DAILY_THOUGHTS;
             dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
-            getSupportActionBar().setSubtitle(dailyThought.getTitle());
+            messageTxt.setText(dailyThought.getTitle());
+          //  getSupportActionBar().setSubtitle(dailyThought.getTitle());
         }
         if(getIntent().getSerializableExtra("weeklyMasterClass") != null){
             type = ResponseBag.WEEKLY_MASTERCLASS;
             weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
-            getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+            messageTxt.setText(weeklyMasterClass.getTitle());
+           // getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
         }
         if(getIntent().getSerializableExtra("weeklyMessage") != null){
             type = ResponseBag.WEEKLY_MESSAGE;
             weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
-            getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+            messageTxt.setText(weeklyMessage.getTitle());
+           // getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
         }
         if(getIntent().getSerializableExtra("newsArticle") != null){
             type = ResponseBag.NEWS;
             news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
+            messageTxt.setText(news.getTitle());
         }
         if(getIntent().getSerializableExtra("eBook") != null){
             type = ResponseBag.EBOOKS;
             eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
-            getSupportActionBar().setSubtitle(eBook.getStorageName());
+            messageTxt.setText(eBook.getStorageName());
+           // getSupportActionBar().setSubtitle(eBook.getStorageName());
         }
         if(getIntent().getSerializableExtra("podcast") != null){
             type = ResponseBag.PODCASTS;
             podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
-            getSupportActionBar().setSubtitle(podcast.getStorageName());
+            messageTxt.setText(podcast.getStorageName());
+           // getSupportActionBar().setSubtitle(podcast.getStorageName());
         }
 
       //  addListenerOnRatingBar();
@@ -161,7 +175,14 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
 
         setup();
         getCachedRatings();
-        getRatings();
+        if (dailyThought != null) {
+            getDailyThoughtRatings();
+        } else if (weeklyMessage != null) {
+            getWeeklyMessageRatings();
+        } else if (weeklyMasterClass != null) {
+            getWeeklyMasterClassRatings();
+        }
+        //getRatings();
 
     }
     private ListAPI listAPI;
@@ -181,16 +202,36 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
         });
     }
 
+    private void getDailyThoughtRatings() {
+        Log.d(LOG, "************** getDailyThoughtRatings: " );
+        if (dailyThought.getDailyThoughtID() != null) {
+            presenter.getDailyThoughtsRating(dailyThought.getDailyThoughtID());
+        }
+    }
+
+    private void getWeeklyMessageRatings() {
+        Log.d(LOG, "************** getWeeklyMessageRatings: " );
+         if (weeklyMessage.getWeeklyMessageID() != null) {
+            presenter.getWeeklyMessageRating(weeklyMessage.getWeeklyMessageID());
+        }
+    }
+
+    private void getWeeklyMasterClassRatings() {
+        Log.d(LOG, "************** getWeeklyMasterClassRatings: " );
+        if (weeklyMasterClass.getWeeklyMasterClassID() != null) {
+            presenter.getWeeklyMasterClassRating(weeklyMasterClass.getWeeklyMasterClassID());
+        }
+    }
+
     private void getRatings() {
         Log.d(LOG, "************** getRatings: " );
-        presenter.getDailyThoughtsRating(dailyThought.getDailyThoughtID());
-        //presenter.getAllRatings();
-        /*if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllRatings();
-        } else {
-            Log.d(LOG, "user is null");
-        }*/
-
+        if (dailyThought.getDailyThoughtID() != null) {
+            presenter.getDailyThoughtsRating(dailyThought.getDailyThoughtID());
+        } else if (weeklyMessage.getWeeklyMessageID() != null) {
+            presenter.getWeeklyMessageRating(weeklyMessage.getWeeklyMessageID());
+        } else if (weeklyMasterClass.getWeeklyMasterClassID() != null) {
+            presenter.getWeeklyMasterClassRating(weeklyMasterClass.getWeeklyMasterClassID());
+        }
     }
 
     private void setup() {
@@ -349,6 +390,11 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
         Log.i(LOG,"onAllRatings: " + list.size());
         ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {
@@ -368,6 +414,40 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
     @Override
     public void onDailyThoughtRatings(List<RatingDTO> list) {
         Log.i(LOG,"onDailyThoughtRatings: " + list.size());
+        ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {
+            @Override
+            public void addListenerOnButton() {
+
+            }
+
+            @Override
+            public void addListenerOnRatingBar() {
+
+            }
+        });
+        recyclerView.setAdapter(ratingReviewAdapter);
+    }
+
+    @Override
+    public void onWeeklyMessageRatings(List<RatingDTO> list) {
+        Log.i(LOG,"onWeeklyMessageRatings: " + list.size());
+        ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {
+            @Override
+            public void addListenerOnButton() {
+
+            }
+
+            @Override
+            public void addListenerOnRatingBar() {
+
+            }
+        });
+        recyclerView.setAdapter(ratingReviewAdapter);
+    }
+
+    @Override
+    public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
+        Log.i(LOG,"onWeeklyMasterClassRatings: " + list.size());
         ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {
             @Override
             public void addListenerOnButton() {

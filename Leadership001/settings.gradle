@@ -1,1 +1,1 @@
-include ':subscriber', ':admin', ':leadershiplibrary', ':backend', ':internalapp'
+include ':subscriber', ':admin', ':leadershiplibrary', ':backend', ':internalapp', ':company'

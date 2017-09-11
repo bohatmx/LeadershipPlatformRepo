@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -134,7 +135,7 @@ public class AdminVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
 
 
-        vvh.iconVideo.setImageDrawable(ctx.getDrawable(R.drawable.books_stack));
+        vvh.iconVideo.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.books_stack)/*ctx.getDrawable(R.drawable.books_stack)*/);
         vvh.iconVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
