@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -30,6 +31,7 @@ import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
+import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
@@ -103,6 +105,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 showPopupMenu(v);
             }
         });
+
 
        /* if(dt.getRatings() != null){
             dvh.iconReview.setOnClickListener(new View.OnClickListener() {
@@ -532,13 +535,16 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public class DailyViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
-                txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
+
+        protected TextView txtEvents, txtDate, txtSubtitle, txtLinks, txtMicrophone,
+                txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
                 playIMG, pauseIMG, stopIMG, imageView, iconShare, iconReview;
+
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
-        protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
+        protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout,
+                photosLayout, podcastAdapterLayout, videoAdapterLayout,
                 photoAdapterLayout, urlAdapterLayout;
         protected Button btnPlay;
         protected ImageView ratingBar;

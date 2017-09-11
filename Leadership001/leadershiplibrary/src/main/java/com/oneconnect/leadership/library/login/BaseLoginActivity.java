@@ -229,6 +229,18 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                 Log.d(TAG, "onUserNotFoundByEmail: this is a leader, adding to app database ...");
                 presenter.addUser(u);
                 break;
+            case UserDTO.GOLD:
+                u.setEmail(email);
+                u.setUserType(type);
+                Log.d(TAG, "onUserNotFoundByEmail: this is a GOLD user, adding to app database ...");
+                presenter.addUser(u);
+                break;
+            case UserDTO.PLATINUM:
+                u.setEmail(email);
+                u.setUserType(type);
+                Log.d(TAG, "onUserNotFoundByEmail: this is a PLATINUM user, adding to app database ...");
+                presenter.addUser(u);
+                break;
             case UserDTO.COMPANY_STAFF:
                 Log.d(TAG, "onUserNotFoundByEmail: staff member not found, failing");
                 onLoginFailed();
@@ -277,18 +289,29 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                     d.setMessage(getString(R.string.welcome_platform));
                     d.setTitle(getString(R.string.platform_welcome));
                     break;
+
                 case UserDTO.COMPANY_STAFF:
                     d.setMessage(getString(R.string.staff_welcome));
                     d.setTitle(u.getCompanyName());
                     break;
+
                 case UserDTO.LEADER:
                     d.setMessage(getString(R.string.leader_welcome));
                     if (u.getCompanyName() != null) {
                         d.setTitle(u.getCompanyName());
-                    } else {
-                        d.setTitle(getString(R.string.platform_welcome));
                     }
                     break;
+
+                case UserDTO.GOLD:
+                    d.setMessage(getString(R.string.welcome_platform));
+                    d.setTitle(getString(R.string.platform_welcome));
+                    break;
+
+                case UserDTO.PLATINUM:
+                    d.setMessage(getString(R.string.welcome_platform));
+                    d.setTitle(getString(R.string.platform_welcome));
+                    break;
+
 
             }
             Log.d(TAG, "onFCMUserSaved: about to send welcome message");
@@ -336,6 +359,24 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                     FirebaseMessaging.getInstance().subscribeToTopic(
                             EndpointUtil.TOPIC_LEADER + user.getCompanyID());
                     Log.w(TAG, "################## ==> Subscribed to topic: leader"
+                            .concat(user.getCompanyID()));
+                }
+                break;
+
+            case UserDTO.GOLD:
+                if (user.getCompanyID() != null) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            EndpointUtil.TOPIC_GOLD + user.getCompanyID());
+                    Log.w(TAG, "################## ==> Subscribed to topic: Gold"
+                            .concat(user.getCompanyID()));
+                }
+                break;
+
+            case UserDTO.PLATINUM:
+                if (user.getCompanyID() != null) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            EndpointUtil.TOPIC_PLATINIM + user.getCompanyID());
+                    Log.w(TAG, "################## ==> Subscribed to topic: Platinum"
                             .concat(user.getCompanyID()));
                 }
                 break;

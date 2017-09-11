@@ -23,6 +23,7 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private boolean active;
     private long dateUpdated;
     private CategoryDTO category;
+    private UserDTO user;
     private HashMap<String, CategoryDTO> categories;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
@@ -31,10 +32,7 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,UrlDTO> urls;
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
-
-
-
-
+    private HashMap<String,UserDTO> users;
 
     public HashMap<String, RatingDTO> getRatings() {
         return ratings;
@@ -53,6 +51,14 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         this.calendarEvents = calendarEvents;
     }
 
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
     public HashMap<String, EBookDTO> getEbooks() {
         return ebooks;
     }
@@ -69,18 +75,25 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         this.podcasts = podcasts;
     }
 
+    public HashMap<String, UserDTO> getUsers() {
+        return users;
+    }
+
+    public void setUsers(HashMap<String, UserDTO> users) {
+        this.users = users;
+    }
 
     /*public List<VideoDTO> getVideoList() {
-        return videoList;
-    }
+            return videoList;
+        }
 
-    public void setVideoList(List<VideoDTO> videoList) {
-        this.videoList = videoList;
-    }
+        public void setVideoList(List<VideoDTO> videoList) {
+            this.videoList = videoList;
+        }
 
-    public List<PhotoDTO> getPhotoList() {
-        List<PhotoDTO> list = new ArrayList<>();
-        if (*//*photos*//*photoList != null) {
+        public List<PhotoDTO> getPhotoList() {
+            List<PhotoDTO> list = new ArrayList<>();
+            if (*//*photos*//*photoList != null) {
             for (PhotoDTO p: photoList*//*photos.values()*//*) {
                 list.add(p);
             }

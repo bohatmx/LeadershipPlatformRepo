@@ -170,23 +170,6 @@ public class SubscriberMainActivity extends AppCompatActivity
 
         usernametxt = (TextView) findViewById(R.id.usernametxt);
 
-       /* ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-
-        starButton.setOnAnimationEndListener(this);
-        starButton.setOnLikeListener(this);
-
-        likeButton.setOnLikeListener(this);
-        likeButton.setOnAnimationEndListener(this);
-
-        smileButton.setOnLikeListener(this);
-        smileButton.setOnAnimationEndListener(this);
-
-        thumbButton.setOnLikeListener(this);
-        thumbButton.setOnAnimationEndListener(this);
-
-        thumbButton.setLiked(true);*/
-
         usingCustomIcons();
 
         mPager = (ViewPager) findViewById(R.id.viewpager);

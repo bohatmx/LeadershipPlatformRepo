@@ -18,15 +18,23 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
     public static final int
             SUBSCRIBER = 1,
             COMPANY_STAFF = 2,
-            LEADER = 3;
+            LEADER = 3,
+            GOLD = 4,
+            PLATINUM = 5;
+
     private String userID, firstName, lastName,
             email, cellphone, password, uid,
             userDescription, clientID;
+
     private int userType;
+
     public static final String
             DESC_SUBSCRIBER = "Subscriber",
             DESC_STAFF = "Company Staff",
-            DESC_LEADER = "Leader";
+            DESC_LEADER = "Leader",
+            DESC_GOLD = "Gold",
+            DESC_PLATINUM = "Platinum";
+
     private HashMap<String, DeviceDTO> devices;
     private HashMap<String, SubscriptionDTO> subscriptions;       //null if user subscription via client
 
@@ -90,11 +98,21 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
             case SUBSCRIBER:
                 userDescription = DESC_SUBSCRIBER;
                 break;
+
             case LEADER:
                 userDescription = DESC_LEADER;
                 break;
+
             case COMPANY_STAFF:
                 userDescription = DESC_STAFF;
+                break;
+
+            case GOLD:
+                userDescription = DESC_GOLD;
+                break;
+
+            case PLATINUM:
+                userDescription = DESC_PLATINUM;
                 break;
         }
     }
