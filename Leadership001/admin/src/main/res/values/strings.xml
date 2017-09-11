@@ -13,11 +13,14 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="login_failed">Login failed</string>
     <string name="not_ok">Not OK</string>
-    <string name="platform_signin">Leadership Platform Sign In</string>
+    <string name="platform_signin">Sign In</string>
     <string name="success">Sign in succeeded. Welcome!</string>
     <string name="title_activity_crud">CrudActivity</string>
     <string name="enter_category_name">Enter Category Name</string>
+    <string name="enter_subscription_name">Enter Subscription Type</string>
+    <string name="enter_subscription_amount">Enter Subscription Amount</string>
     <string name="submit_the_category_data">Submit the Category Data</string>
+    <string name="submit_the_subscription">Submit Subscription</string>
     <string name="enter_title">Enter Title</string>
     <string name="enter_message">Enter message</string>
     <string name="enter_message_author">Enter message author</string>

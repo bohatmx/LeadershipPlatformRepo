@@ -251,6 +251,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     }
 
+    @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
     MiniPhotoAdapter miniPhotoAdapter;
 
     @Override
@@ -583,6 +588,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     }
 
     @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -689,6 +699,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onUpdateCategory(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
 
     }
 

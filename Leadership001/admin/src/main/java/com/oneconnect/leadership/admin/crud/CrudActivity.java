@@ -124,10 +124,6 @@ public class CrudActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Leadership Platform");
         getSupportActionBar().setSubtitle("Data Management");
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }*/
 
         setup();
 
@@ -417,6 +413,38 @@ public class CrudActivity extends AppCompatActivity
 
     }
 
+    private void startSubscriptionBottomSheet(final SubscriptionDTO subscription, int type) {
+
+        final SubscriptionEditor myBottomSheet = SubscriptionEditor.newInstance(subscription, type);
+        myBottomSheet.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                SubscriptionDTO m = (SubscriptionDTO) entity;
+                if (bag.getSubscriptions() == null) {
+                    bag.setSubscriptions(new ArrayList<SubscriptionDTO>());
+                }
+                bag.getSubscriptions().add(0, m);
+                setFragment();
+                myBottomSheet.dismiss();
+                showSnackbar(m.getSubscriptionName().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+
+            }
+
+            @Override
+            public void onDateRequired() {
+                Log.d(TAG, "onDateRequired: none needed");
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message, "bad", Constants.RED);
+            }
+        });
+        myBottomSheet.show(getSupportFragmentManager(), "SHEET_SUBSCRIPTION");
+
+    }
+
     private void startWeeklyMasterclassBottomSheet(final WeeklyMasterClassDTO weeklyMasterClass, int type) {
 
         weeklyMasterclassEditor =
@@ -542,10 +570,6 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.NEWS;
                 cachePresenter.getCacheNews();
                 break;
-            /*case R.id.nav_podcasts:
-                type = ResponseBag.PODCASTS;
-                cachePresenter.getCachePodcasts();
-                break;*/
             case R.id.nav_subscrip:
                 type = ResponseBag.SUBSCRIPTIONS;
                 cachePresenter.getCacheSubscriptions();
@@ -590,11 +614,6 @@ public class CrudActivity extends AppCompatActivity
                 startActivity(intent3);
                 break;
 
-            /*case R.id.nav_calender:
-                type = ResponseBag.CALENDAR_EVENTS;
-                Intent intent4 = new Intent(CrudActivity.this, CalendarActivity.class);
-                startActivity(intent4);
-                break;*/
 
             case R.id.nav_sign_out:
                 FirebaseAuth.getInstance().signOut();
@@ -629,6 +648,8 @@ public class CrudActivity extends AppCompatActivity
             case ResponseBag.WEEKLY_MASTERCLASS:
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
+                break;
+            case ResponseBag.SUBSCRIPTIONS:
                 break;
         }
     }
@@ -668,6 +689,14 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onWeeklyMessageUpdated(WeeklyMessageDTO weeklyMessage) {
 
+
+    }
+
+    @Override
+    public void onSubscriptionUpdated(SubscriptionDTO subscription) {
+        Intent intent= new Intent(this, UpdateUsersActivity.class);
+        intent.putExtra("subscription", subscription);
+        startActivity(intent);
     }
 
     @Override
@@ -678,6 +707,11 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onUserDeleted(UserDTO user) {
         Log.i(TAG, "onUserDeleted");
+    }
+
+    @Override
+    public void onSubscriptionDeleted(SubscriptionDTO subscription) {
+
     }
 
     @Override
@@ -767,6 +801,7 @@ public class CrudActivity extends AppCompatActivity
         Log.i(TAG, "onPayments " + list.size());
     }
 
+
     @Override
     public void onPodcasts(List<PodcastDTO> list) {
         Log.i(TAG, "onPodcasts " + list.size());
@@ -833,6 +868,7 @@ public class CrudActivity extends AppCompatActivity
         bag.setType(ResponseBag.SUBSCRIPTIONS);
         setFragment();
         cachePresenter.cacheSubscriptions(list);
+
     }
 
     @Override
@@ -1080,6 +1116,9 @@ public class CrudActivity extends AppCompatActivity
             case ResponseBag.WEEKLY_MASTERCLASS:
                 startWeeklyMasterclassBottomSheet(null, Constants.NEW_ENTITY);
                 break;
+            case ResponseBag.SUBSCRIPTIONS:
+                startSubscriptionBottomSheet(null, Constants.NEW_ENTITY);
+                break;
         }
 
     }
@@ -1146,6 +1185,12 @@ public class CrudActivity extends AppCompatActivity
     public void onDeleteCategory(CategoryDTO category) {
         Log.i(TAG, "onDeleteCategory");
         presenter.deleteCategory(category);
+    }
+
+    @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+        Log.i(TAG, "onDeleteSubscription");
+        presenter.deleteSubscription(subscription);
     }
 
     @Override
@@ -1571,6 +1616,13 @@ public class CrudActivity extends AppCompatActivity
     public void onUpdateCategory(CategoryDTO category) {
         Intent intent = new Intent(this, UpdateUsersActivity.class);
         intent.putExtra("category", category);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
+        Intent intent = new Intent(this, UpdateUsersActivity.class);
+        intent.putExtra("subscription", subscription);
         startActivity(intent);
     }
 

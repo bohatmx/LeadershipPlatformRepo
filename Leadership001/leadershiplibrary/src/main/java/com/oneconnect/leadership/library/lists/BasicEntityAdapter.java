@@ -28,6 +28,7 @@ import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -59,6 +60,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         void onDeleteVideo(VideoDTO video);
         void onDeleteEbook(EBookDTO eBook);
         void onDeleteCategory(CategoryDTO category);
+        void onDeleteSubscription(SubscriptionDTO subscription);
         void onLinksRequired(BaseDTO entity);
         void onPhotoCaptureRequested(BaseDTO entity);
         void onVideoCaptureRequested(BaseDTO entity);
@@ -81,6 +83,8 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         void onUpdateWeeklyMasterClass(WeeklyMasterClassDTO masterClass);
         void onUpdateNews(NewsDTO news);
         void onUpdateCategory(CategoryDTO category);
+        void onUpdateSubscription(SubscriptionDTO subscription);
+
     }
 
     private EntityListener mListener;
@@ -281,6 +285,9 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 setCategories(h, position, (CategoryDTO) p);
                 break;
 
+            case ResponseBag.SUBSCRIPTIONS:
+                setSubscription(h, position, (SubscriptionDTO) p);
+                break;
 
             case ResponseBag.NEWS:
                 setNews(h, position, (NewsDTO) p);
@@ -325,6 +332,43 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.iconLayout.setVisibility(View.GONE);
     }
 
+    private void setSubscription(final EntityViewHolder h, int position,final SubscriptionDTO p) {
+        h.txtTitle.setText(p.getSubscriptionName());
+        h.txtSubTitle.setVisibility(View.GONE);
+        h.txtDate.setVisibility(View.GONE);
+        h.txtNumBlack.setVisibility(View.GONE);
+        h.txtLinks.setVisibility(View.GONE);
+        h.txtupdate.setVisibility(View.GONE);
+        h.iconLink.setVisibility(View.GONE);
+        h.iconShare.setVisibility(View.GONE);
+        h.iconRate.setVisibility(View.GONE);
+        h.txtNumBlack.setText(String.valueOf(position + 1));
+        h.iconLayout.setVisibility(View.VISIBLE);
+        h.iconUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(h.iconUpdate, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onUpdateSubscription(p);
+                    }
+                });
+            }
+        });
+        h.iconDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Util.flashOnce(h.iconDelete, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        mListener.onDeleteSubscription(p);
+                    }
+                });
+            }
+        });
+    }
+
     private void setCategories(final EntityViewHolder h, int position,final CategoryDTO p) {
         h.txtTitle.setText(p.getCategoryName());
         h.txtDate.setVisibility(View.GONE);
@@ -337,8 +381,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.iconRate.setVisibility(View.GONE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
         h.iconLayout.setVisibility(View.VISIBLE);
-       // h.iconDelete.setVisibility(View.VISIBLE);
-        //h.iconLinks.setVisibility(View.VISIBLE);
         h.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -371,17 +413,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, android.R.drawable.ic_menu_send));
         h.iconVideo.setVisibility(View.GONE);
         h.iconCalendar.setVisibility(View.GONE);
-        /*h.iconLinks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Util.flashOnce(h.iconLinks, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-
-                    }
-                });
-            }
-        });*/
         h.txtLinks.setVisibility(View.GONE);
         h.txtupdate.setVisibility(View.GONE);
         h.iconLink.setVisibility(View.GONE);
@@ -429,7 +460,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
 
-            DailyThoughtDTO dtd = p;//mList.get(position);
+            DailyThoughtDTO dtd = p;
             List<PhotoDTO> urlList = new ArrayList<>();
 
             Map map = dtd.getPhotos();
@@ -444,7 +475,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                         .load(photoUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(h.imageView);
-                //h.captiontxt.setText(vDTO.getCaption());
 
 
             }
@@ -492,12 +522,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 });
             }
         });
-       /* if (p.getCalendarEvents() == null) {
-            h.txtEvents.setVisibility(View.GONE);
-        } else {
-            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
-            h.txtEvents.setVisibility(View.VISIBLE);
-        }*/
+
     }
 
     private void setNews(final EntityViewHolder h, int position,final NewsDTO p) {
@@ -512,7 +537,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
-            NewsDTO dtd = p;//mList.get(position);
+            NewsDTO dtd = p;
             List<PhotoDTO> urlList = new ArrayList<>();
 
             Map map = dtd.getPhotos();
@@ -527,7 +552,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                         .load(photoUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(h.imageView);
-                //h.captiontxt.setText(vDTO.getCaption());
 
 
             }
@@ -538,9 +562,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         if (p.getUrls() != null) {
             h.txtLinks.setText(String.valueOf(p.getUrls().size()));
         }
-        /*if (p.getPodcasts() != null) {
-            h.txtPodcasts.setText(String.valueOf(p.getPodcasts().size()));
-        }*/
+
         h.txtNumBlack.setVisibility(View.VISIBLE);
         h.txtNumBlack.setText(String.valueOf(position + 1));
         h.iconLocation.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_schedule));
@@ -575,12 +597,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 });
             }
         });
-       /* if (p.getCalendarEvents() == null) {
-            h.txtEvents.setVisibility(View.GONE);
-        } else {
-            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
-            h.txtEvents.setVisibility(View.VISIBLE);
-        }*/
+
     }
 
     private void setPodcast(final EntityViewHolder h, int position,final PodcastDTO p) {
@@ -627,15 +644,10 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 });
             }
         });
-        /*if (p.getCalendarEvents() == null) {
-            h.txtEvents.setVisibility(View.GONE);
-        } else {
-            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
-            h.txtEvents.setVisibility(View.VISIBLE);
-        }*/
     }
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     private void setWeeklyMessage(final EntityViewHolder h, int position,final WeeklyMessageDTO p) {
         Log.d("BasicEntityAdapter", "setWeeklyMessage: ".concat(GSON.toJson(p)));
         h.txtTitle.setText(p.getTitle());
@@ -649,7 +661,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
-            WeeklyMessageDTO dtd = p;//mList.get(position);
+            WeeklyMessageDTO dtd = p;
             List<PhotoDTO> urlList = new ArrayList<>();
 
             Map map = dtd.getPhotos();
@@ -664,7 +676,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                         .load(photoUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(h.imageView);
-                //h.captiontxt.setText(vDTO.getCaption());
 
 
             }
@@ -712,13 +723,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 });
             }
         });
-        /*if (p.getCalendarEvents() == null) {
-            h.txtEvents.setVisibility(View.GONE);
-        } else {
-            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
-            h.txtEvents.setVisibility(View.VISIBLE);
-        }*/
-
     }
 
     private void setWeeklyMasterclass(final EntityViewHolder h, int position,final WeeklyMasterClassDTO p) {
@@ -733,7 +737,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         if (p.getPhotos() != null) {
             h.txtPhotos.setText(String.valueOf(p.getPhotos().size()));
-            WeeklyMasterClassDTO dtd = p;//mList.get(position);
+            WeeklyMasterClassDTO dtd = p;
             List<PhotoDTO> urlList = new ArrayList<>();
 
             Map map = dtd.getPhotos();
@@ -794,12 +798,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
                 });
             }
         });
-       /* if (p.getCalendarEvents() == null) {
-            h.txtEvents.setVisibility(View.GONE);
-        } else {
-            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
-            h.txtEvents.setVisibility(View.VISIBLE);
-        }*/
 
     }
 
@@ -843,12 +841,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             }
         });
 
-        /*if (p.getCalendarEvents() == null) {
-            h.txtEvents.setVisibility(View.GONE);
-        } else {
-            h.txtEvents.setText(String.valueOf(p.getCalendarEvents().size()));
-            h.txtEvents.setVisibility(View.VISIBLE);
-        }*/
+
     }
 
     private void animateIn(View view, final BaseDTO entity) {
@@ -919,7 +912,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
     }
 
     public class EntityViewHolder extends RecyclerView.ViewHolder {
-        protected TextView /*txtTitle,*/ txtSubTitle, txtDate,
+        protected TextView txtSubTitle, txtDate,
                 txtNumBlack, txtNumBlue, txtNumGrey, txtNumGreen, txtNumRed,
                 txtPhotos, txtVideos, txtEvents, txtLinks, txtPodcasts, txtupdate;
 
@@ -928,7 +921,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
 
         protected View bottomLayout, frameLayout, linksLayout, iconLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
-        //protected TextView txtTitle;
         protected TextViewExpandableAnimation txtTitle;
 
         protected RelativeLayout titleLayout;
@@ -937,8 +929,7 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         public EntityViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.ImageView);
-            txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
-            //txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+            txtTitle = (TextViewExpandableAnimation) itemView.findViewById(R.id.txtTitle);
             txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
 
@@ -951,7 +942,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             txtPhotos = (TextView) itemView.findViewById(R.id.txtCamera);
             txtVideos = (TextView) itemView.findViewById(R.id.txtVideo);
             txtPodcasts = (TextView) itemView.findViewById(R.id.txtMicrophone);
-           // txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
             txtupdate = (TextView) itemView.findViewById(R.id.txtupdate);
 
@@ -964,7 +954,6 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             iconLocation = (ImageView) itemView.findViewById(R.id.iconLocation);
             iconLink = (ImageView) itemView.findViewById(R.id.iconLink);
 
-            //iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             iconShare.setVisibility(View.GONE);
             iconRate = (ImageView) itemView.findViewById(R.id.ratingBar);

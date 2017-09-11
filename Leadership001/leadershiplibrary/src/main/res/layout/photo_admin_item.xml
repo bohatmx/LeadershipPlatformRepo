@@ -16,7 +16,7 @@
         android:layout_height="250dp"
         android:scaleType="fitXY"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/bayscape" />
+        android:src="@drawable/coffee_screens" />
     <TextView
         android:layout_toRightOf="@+id/bookIcon"
         android:id="@+id/photoFileNametxt"

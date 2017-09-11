@@ -288,6 +288,21 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
+    public void updateSubscription(final SubscriptionDTO subscription) {
+        dataAPI.updateSubscription(subscription, new DataAPI.UpdateListener() {
+            @Override
+            public void onSuccess() {
+                view.onSubscriptionUpdated(subscription);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void updateUser(final UserDTO user) {
         dataAPI.updateUser(user, new DataAPI.UpdateListener() {
             @Override
@@ -539,6 +554,21 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
+    public void deleteSubscription(final SubscriptionDTO subscription) {
+        dataAPI.deleteSubscription(subscription, new DataAPI.DataListener() {
+            @Override
+            public void onResponse(String key) {
+                view.onSubscriptionDeleted(subscription);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void getCategories(String companyID) {
          listAPI.getCategories(companyID, new ListAPI.DataListener() {
              @Override
@@ -551,6 +581,21 @@ public class CrudPresenter implements CrudContract.Presenter {
                  view.onError(messsage);
              }
          });
+    }
+
+    @Override
+    public void getAllSubscriptions() {
+        listAPI.getAllSubscriptions(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onSubscriptions(bag.getSubscriptions());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
     }
 
     @Override

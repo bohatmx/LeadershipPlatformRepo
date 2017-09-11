@@ -24,6 +24,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -222,6 +223,11 @@ public class SubscriberDrawerActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -328,6 +334,11 @@ public class SubscriberDrawerActivity extends AppCompatActivity
 
     @Override
     public void onUpdateCategory(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
 
     }
 

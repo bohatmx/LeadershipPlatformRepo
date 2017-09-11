@@ -232,6 +232,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     }
 
     @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -338,6 +343,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onUpdateCategory(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
 
     }
 
@@ -485,6 +495,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
 
     }
 

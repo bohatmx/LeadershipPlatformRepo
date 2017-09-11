@@ -269,6 +269,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     }
 
     @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -375,6 +380,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     @Override
     public void onUpdateCategory(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
 
     }
 
@@ -510,6 +520,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
 
     }
 

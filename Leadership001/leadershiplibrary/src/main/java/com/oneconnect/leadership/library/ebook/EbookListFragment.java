@@ -464,6 +464,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     }
 
+    @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
     PodcastDTO podcast;
     @Override
     public void onLinksRequired(BaseDTO entity) {
@@ -609,6 +614,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onDataCached() {
 
     }
@@ -740,6 +750,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
 
     }
 

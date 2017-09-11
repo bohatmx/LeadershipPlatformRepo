@@ -43,6 +43,7 @@ public class SubscriberContract {
         void getAllStaff();
         void getAllLeaders();
         void getAllSubscribers();
+        void getAllSubscriptions();
         void getAllDailyThoughts();
         void getAllCategories();
         void getAllNewsArticle();
@@ -84,6 +85,7 @@ public class SubscriberContract {
         void onDailyThoughts(List<DailyThoughtDTO> list);
         void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list);
         void onAllDailyThoughts(List<DailyThoughtDTO> list);
+        void onAllSubscriptions(List<SubscriptionDTO> list);
         void onAllNewsArticle(List<NewsDTO> list);
         void onAllCategories(List<CategoryDTO> list);
         void onAllVideos(List<VideoDTO> list);

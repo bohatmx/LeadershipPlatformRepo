@@ -70,12 +70,9 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
             setupEntities();
         }
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_category_list, container, false);
         ctx = getActivity();
         presenter = new CrudPresenter(this);
@@ -83,12 +80,6 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
         txtCount = (TextView) view.findViewById(R.id.txtCount);
         iconAdd = (ImageView) view.findViewById(R.id.iconAdd);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        /*LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(llm);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        recyclerView.setHasFixedSize(true);*/
-        /*LinearLayoutManager lm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(lm);*/
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
         txtTitle.setText(stringTitle);
@@ -121,9 +112,7 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
 
             @Override
             public void onDeleteUser(UserDTO user) {
-               // Log.i(LOG, "onDeleteUser");
               mListener.onDeleteUser(user);
-               // presenter.deleteUser(user);
             }
 
             @Override
@@ -164,6 +153,11 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
             @Override
             public void onDeleteCategory(CategoryDTO category) {
                 mListener.onDeleteCategory(category);
+            }
+
+            @Override
+            public void onDeleteSubscription(SubscriptionDTO subscription) {
+                mListener.onDeleteSubscription(subscription);
             }
 
             @Override
@@ -275,6 +269,11 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
             @Override
             public void onUpdateCategory(CategoryDTO category) {
                 mListener.onUpdateCategory(category);
+            }
+
+            @Override
+            public void onUpdateSubscription(SubscriptionDTO subscription) {
+                mListener.onUpdateSubscription(subscription);
             }
         });
 
@@ -417,12 +416,22 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
     }
 
     @Override
+    public void onSubscriptionUpdated(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onNewsUpdated(NewsDTO news) {
 
     }
 
     @Override
     public void onUserDeleted(UserDTO user) {
+
+    }
+
+    @Override
+    public void onSubscriptionDeleted(SubscriptionDTO subscription) {
 
     }
 
@@ -495,6 +504,7 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
     public void onPayments(List<PaymentDTO> list) {
 
     }
+
 
     @Override
     public void onPodcasts(List<PodcastDTO> list) {

@@ -54,7 +54,8 @@ import java.util.List;
  * Use the {@link WeeklyMessageListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WeeklyMessageListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener {
+public class WeeklyMessageListFragment extends Fragment implements PageFragment,
+        SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener {
 
     //private WeeklyMessageAdapter.WeeklyMessageAdapterListener mListener;
     private WeeklyMessageListener mListener;
@@ -308,6 +309,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     }
 
     @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
 
     }
@@ -490,6 +496,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     }
 
     @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -596,6 +607,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     @Override
     public void onUpdateCategory(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
 
     }
 

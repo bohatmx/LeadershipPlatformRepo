@@ -13,7 +13,7 @@
             android:id="@+id/photoView"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:src="@drawable/bayscape"
+            android:src="@drawable/coffee_phone"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="fitXY"/>
 

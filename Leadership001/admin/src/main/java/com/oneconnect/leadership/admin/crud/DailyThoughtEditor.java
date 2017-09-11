@@ -149,6 +149,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
 
     }
@@ -161,8 +166,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
         List<String> lis = new ArrayList<String>();
         lis.add("Select Category");
-      //  Collections.sort(list);
-
         for (CategoryDTO cat : list) {
             lis.add(cat.getCategoryName());
             category = cat;
@@ -174,7 +177,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "Category spinner: " + catSpinner.getSelectedItem().toString());
-             //   listener.onCategorySelected(category);
+              listener.onCategorySelected(category);
             }
 
             @Override

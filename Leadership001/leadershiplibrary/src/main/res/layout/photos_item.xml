@@ -9,7 +9,7 @@
         android:id="@+id/photoView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/bayscape"
+        android:src="@drawable/coffee_phone"
         android:scaleType="fitXY"/>
 
     <TextView

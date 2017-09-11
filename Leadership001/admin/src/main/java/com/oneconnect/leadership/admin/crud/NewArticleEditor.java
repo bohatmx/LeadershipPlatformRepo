@@ -138,6 +138,11 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
     }
 
     @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
 
     }

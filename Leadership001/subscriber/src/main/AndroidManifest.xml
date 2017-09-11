@@ -38,6 +38,13 @@
 
         </activity>
         <activity
+            android:name=".SubscriberSignInActivity"
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
             android:name=".NotifHandlerActivity"
             android:label="@string/title_activity_notif_handler"
             android:theme="@style/AppTheme.NoActionBar" />

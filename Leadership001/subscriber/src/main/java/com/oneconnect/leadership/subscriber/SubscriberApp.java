@@ -28,7 +28,6 @@ public class SubscriberApp extends Application {
         sb.append("#############################################\n");
         Log.d(TAG, sb.toString());
         Twitter.initialize(this);
-
         FirebaseApp.initializeApp(this);
         Log.w(TAG, "onCreate: FirebaseApp initializeApp complete" );
     }

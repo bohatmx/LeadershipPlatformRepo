@@ -315,6 +315,11 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
 
     }

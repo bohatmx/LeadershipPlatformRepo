@@ -1,7 +1,6 @@
 package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,14 +59,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 listener.onCategorySelected(cat);
             }
         });
+
         if (cat.getCategoryName().equalsIgnoreCase("Leadership")) {
-            cvh.homeImage.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.leadership001)/*ctx.getDrawable(R.drawable.leadership001)*/);
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.coffee_phone));
         }  else if (cat.getCategoryName().equalsIgnoreCase("Business")) {
-            cvh.homeImage.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.business)/*ctx.getDrawable(R.drawable.business)*/);
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.business));
         }  else if (cat.getCategoryName().equalsIgnoreCase("Family")) {
-            cvh.homeImage.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.family)/*ctx.getDrawable(R.drawable.family)*/);
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.coffee_shop));
         } else if (cat.getCategoryName().equalsIgnoreCase("Social")) {
-            cvh.homeImage.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.social)/*ctx.getDrawable(R.drawable.social)*/);
+            cvh.homeImage.setImageDrawable(ctx.getDrawable(R.drawable.soc));
         }
     }
 

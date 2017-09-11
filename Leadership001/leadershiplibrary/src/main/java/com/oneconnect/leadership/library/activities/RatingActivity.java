@@ -488,6 +488,11 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
     }
 
     @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
     public void onAllNewsArticle(List<NewsDTO> list) {
 
     }

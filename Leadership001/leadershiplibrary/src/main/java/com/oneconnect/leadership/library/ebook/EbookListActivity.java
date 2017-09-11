@@ -552,6 +552,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onDeleteSubscription(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
     public void onLinksRequired(BaseDTO entity) {
 
     }
@@ -658,6 +663,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
     @Override
     public void onUpdateCategory(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onUpdateSubscription(SubscriptionDTO subscription) {
 
     }
 
@@ -793,6 +803,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
 
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
 
     }
 
