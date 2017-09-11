@@ -211,11 +211,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
     private void getEBooks() {
         Log.d(LOG, "************** getEBooks: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+      //  if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenterEbook.getAllEBooks();
-        } else {
-            Log.d(LOG, "user is null");
-        }
+       // } else {
+       //     Log.d(LOG, "user is null");
+       // }
 
     }
 
@@ -1120,12 +1120,27 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }
 
     @Override
     public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
 
     }
 

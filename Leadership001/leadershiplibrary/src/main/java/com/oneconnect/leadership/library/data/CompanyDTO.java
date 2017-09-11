@@ -13,7 +13,8 @@ import java.util.Date;
 
 public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<CompanyDTO> {
     private String  email,
-    countryID, address;
+    countryID, address, companyLogoUrl;
+    private int primaryColor, secondaryColor;
 
     public CompanyDTO() {
     }
@@ -120,4 +121,27 @@ public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<Com
         this.companyName = companyName;
     }
 
+    public String getCompanyLogoUrl() {
+        return companyLogoUrl;
+    }
+
+    public void setCompanyLogoUrl(String companyLogoUrl) {
+        this.companyLogoUrl = companyLogoUrl;
+    }
+
+    public int getPrimaryColor() {
+        return primaryColor;
+    }
+
+    public void setPrimaryColor(int primaryColor) {
+        this.primaryColor = primaryColor;
+    }
+
+    public int getSecondaryColor() {
+        return secondaryColor;
+    }
+
+    public void setSecondaryColor(int secondaryColor) {
+        this.secondaryColor = secondaryColor;
+    }
 }

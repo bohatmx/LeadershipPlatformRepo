@@ -297,6 +297,11 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onUsers(List<UserDTO> list) {
 
     }

@@ -15,6 +15,12 @@
             android:layout_width="match_parent"
             android:layout_height="120dp">
 
+            <TextView
+                android:text="message text goes here, so a user can see the full quote/message they are about to comment on."
+                android:id="@+id/messageTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </android.support.v7.widget.Toolbar>
 
 
@@ -55,6 +61,7 @@
             android:layout_below="@+id/ratingBar"
             android:id="@+id/ratingCom"
             android:layout_width="match_parent"
+            android:textColor="@color/black"
             android:inputType="textMultiLine"
             android:layout_height="wrap_content"
             android:hint="Enter comment"/>

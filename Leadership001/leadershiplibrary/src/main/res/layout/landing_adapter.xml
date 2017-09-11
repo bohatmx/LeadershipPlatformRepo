@@ -14,6 +14,7 @@
         android:src="@drawable/woman_in_field" />
 
     <TextView
+        android:layout_marginLeft="15dp"
         android:id="@+id/categoryText"
         style="@style/TextStyleWhiteSmallNormal"
         android:padding="8dp"

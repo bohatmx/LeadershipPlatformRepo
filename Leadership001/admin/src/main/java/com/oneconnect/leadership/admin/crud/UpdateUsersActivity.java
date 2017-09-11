@@ -331,6 +331,11 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onUsers(List<UserDTO> list) {
 
     }

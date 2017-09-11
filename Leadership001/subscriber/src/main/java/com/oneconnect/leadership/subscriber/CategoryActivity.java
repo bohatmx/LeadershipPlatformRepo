@@ -49,6 +49,7 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     TextView txtNone;
+    UserDTO userDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +98,13 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
     public void getCategories() {
         Log.d(LOG, "******* getCategories: ");
        // presenter.getCategories("-KgsUcgfo7z1U9MXgd9i");
-        presenter.getAllCategories();
+       // presenter.getAllCategories();
+        if (userDTO != null) {
+            presenter.getCategories(userDTO.getCompanyID());
+        } else {
+            presenter.getAllCategories();
+           // Log.i(LOG, "user is currently null");
+        }
     }
 
     @Override
@@ -186,12 +193,27 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+        userDTO = user;
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }
 
     @Override
     public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
 
     }
 

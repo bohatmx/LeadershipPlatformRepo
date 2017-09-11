@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -95,8 +96,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         long miliSecs = Util.getMiliseconds(sb.toString());
         String formatedDate = Util.getFormattedDate(miliSecs);
         dvh.txtDate.setText(formatedDate);
-        dvh.iconCamera.setImageDrawable(ctx.getDrawable(R.drawable.ic_photo_black_24dp));
-        dvh.iconUpdate.setImageDrawable(ctx.getDrawable(R.drawable.ic_link_black_24dp));
+        dvh.iconCamera.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_photo_black_24dp)/*ctx.getDrawable(R.drawable.ic_photo_black_24dp)*/);
+      //  dvh.iconUpdate.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_link_black_24dp)/*ctx.getDrawable(R.drawable.ic_link_black_24dp)*/);
         dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -421,7 +422,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if (dt.getUrls() != null) {
             dvh.txtLinks.setText("" + dt.getUrls().size());
-            dvh.iconUpdate.setOnClickListener(new View.OnClickListener() {
+            dvh.iconLink/*iconUpdate*/.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (dvh.urlAdapterLayout.getVisibility() == View.GONE){
@@ -534,12 +535,12 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public class DailyViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
-        protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
+        protected ImageView iconCalendar, /*iconUpdate*/iconLink, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
                 playIMG, pauseIMG, stopIMG, imageView, iconShare, iconReview;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
-                photoAdapterLayout, urlAdapterLayout;
+                photoAdapterLayout, urlAdapterLayout, updateLayout;
         protected Button btnPlay;
         protected ImageView ratingBar;
         protected EditText ratingCom;
@@ -564,6 +565,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             bottomLayout.setVisibility(View.GONE);
+            updateLayout = (RelativeLayout) itemView.findViewById(R.id.updateLayout);
+            updateLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);
             deleteLayout.setVisibility(View.GONE);
@@ -592,7 +595,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             iconCamera = (ImageView) itemView.findViewById(R.id.iconCamera);
 
-            iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+         //   iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            iconLink = (ImageView) itemView.findViewById(R.id.iconLink);
             //
             imageRecyclerView = (RecyclerView) itemView.findViewById(R.id.imageRecyclerView);
             imageRecyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));

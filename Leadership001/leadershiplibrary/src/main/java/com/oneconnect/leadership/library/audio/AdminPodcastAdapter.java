@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.audio;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -100,7 +101,7 @@ public class AdminPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 });
             }
         });
-        pvh.iconMicrophone.setImageDrawable(ctx.getDrawable(R.drawable.books_stack));
+        pvh.iconMicrophone.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.books_stack)/*ctx.getDrawable(R.drawable.books_stack)*/);
         pvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

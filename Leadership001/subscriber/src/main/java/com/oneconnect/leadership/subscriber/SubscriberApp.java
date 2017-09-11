@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
 import com.crashlytics.android.Crashlytics;
+import com.twitter.sdk.android.core.Twitter;
 //import com.twitter.sdk.android.core.Twitter;
 
 import io.fabric.sdk.android.Fabric;
@@ -26,7 +27,7 @@ public class SubscriberApp extends Application {
         sb.append("######## SUBSCRIBER APP started");
         sb.append("#############################################\n");
         Log.d(TAG, sb.toString());
-      //  Twitter.initialize(this);
+        Twitter.initialize(this);
 
         FirebaseApp.initializeApp(this);
         Log.w(TAG, "onCreate: FirebaseApp initializeApp complete" );

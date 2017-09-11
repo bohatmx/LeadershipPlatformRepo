@@ -112,12 +112,14 @@ public class CrudActivity extends AppCompatActivity
     private DailyThoughtEditor dailyThoughtEditor;
     private WeeklyMessageEditor weeklyMessageEditor;
     private WeeklyMasterclassEditor weeklyMasterclassEditor;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crud);
         Log.d(TAG, "onCreate: ************************");
+        firebaseAuth = FirebaseAuth.getInstance();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Leadership Platform");
@@ -641,7 +643,8 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onUserCreated(UserDTO user) {
         Log.i(TAG, "onUserCreated: ######### CREATED: ".concat(GSON.toJson(user)));
-        presenter.getUsers(this.user.getCompanyID());
+       // presenter.getUsers(this.user.getCompanyID());
+        presenter.getUsers(user.getCompanyID());
         showSnackbar(user.getFullName().concat(" has been added"), getString(R.string.ok_label), "green");
     }
 
@@ -795,6 +798,13 @@ public class CrudActivity extends AppCompatActivity
     }
 
     @Override
+    public void onUserFound(UserDTO u) {
+        Log.i(TAG, "**** onUserFound ****");
+        user = u;
+        presenter.getDailyThoughts(user.getCompanyID());
+    }
+
+    @Override
     public void onUsers(List<UserDTO> list) {
         Log.i(TAG, "onUsers " + list.size());
         bag = new ResponseBag();
@@ -874,7 +884,15 @@ public class CrudActivity extends AppCompatActivity
         bag.setType(ResponseBag.CATEGORIES);
         setFragment();
         //refresh anyway
-        presenter.getCategories(user.getCompanyID());
+        if (user != null) {
+            presenter.getCategories(user.getCompanyID());
+        } else {
+            Log.i(TAG, "user is nul, fetching user...");
+            presenter.getUser(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }
+           /* (FirebaseAuth.getInstance().getCurrentUser().getEmail() != null) {
+                usernametxt.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        }*/
 
     }
 
@@ -886,7 +904,11 @@ public class CrudActivity extends AppCompatActivity
         Collections.sort(bag.getDailyThoughts());
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
-        presenter.getDailyThoughts(user.getCompanyID());
+        if (user != null) {
+            presenter.getDailyThoughts(user.getCompanyID());
+        } else {
+            presenter.getUser(firebaseAuth.getCurrentUser().getEmail());
+        }
     }
 
     @Override
@@ -896,7 +918,9 @@ public class CrudActivity extends AppCompatActivity
         bag.seteBooks(list);
         bag.setType(ResponseBag.EBOOKS);
         setFragment();
-        presenter.getEbooks(user.getCompanyID());
+        if (user != null) {
+            presenter.getEbooks(user.getCompanyID());
+        }
     }
 
     @Override
@@ -906,7 +930,9 @@ public class CrudActivity extends AppCompatActivity
         bag.setNews(list);
         bag.setType(ResponseBag.NEWS);
         setFragment();
-        presenter.getNews(user.getCompanyID());
+        if (user != null) {
+            presenter.getNews(user.getCompanyID());
+        }
     }
 
     @Override
@@ -916,7 +942,9 @@ public class CrudActivity extends AppCompatActivity
         bag.setPodcasts(list);
         bag.setType(ResponseBag.PODCASTS);
         setFragment();
-        presenter.getPodcasts(user.getCompanyID());
+        if (user != null) {
+            presenter.getPodcasts(user.getCompanyID());
+        }
     }
 
     @Override
@@ -926,7 +954,9 @@ public class CrudActivity extends AppCompatActivity
         bag.setVideos(list);
         bag.setType(ResponseBag.VIDEOS);
         setFragment();
-        presenter.getVideos(user.getCompanyID());
+        if (user != null) {
+            presenter.getVideos(user.getCompanyID());
+        }
     }
 
     @Override
@@ -936,7 +966,9 @@ public class CrudActivity extends AppCompatActivity
         bag.setPrices(list);
         bag.setType(ResponseBag.PRICES);
         setFragment();
-        presenter.getPrices(user.getCompanyID());
+        if (user != null) {
+            presenter.getPrices(user.getCompanyID());
+        }
     }
 
     @Override
@@ -946,7 +978,9 @@ public class CrudActivity extends AppCompatActivity
         bag.setSubscriptions(list);
         bag.setType(ResponseBag.SUBSCRIPTIONS);
         setFragment();
-        presenter.getSubscriptions(user.getCompanyID());
+        if (user != null) {
+            presenter.getSubscriptions(user.getCompanyID());
+        }
     }
 
     @Override
@@ -957,7 +991,10 @@ public class CrudActivity extends AppCompatActivity
         Collections.sort(bag.getUsers());
         bag.setType(ResponseBag.USERS);
         setFragment();
-        presenter.getUsers(user.getCompanyID());
+        if (user != null) {
+            presenter.getUsers(user.getCompanyID());
+        } else {Log.i(TAG, "user is null");
+        }
     }
 
     @Override
@@ -967,7 +1004,9 @@ public class CrudActivity extends AppCompatActivity
         bag.setWeeklyMasterClasses(list);
         bag.setType(ResponseBag.WEEKLY_MASTERCLASS);
         setFragment();
-        presenter.getWeeklyMasterclasses(user.getCompanyID());
+        if (user != null) {
+            presenter.getWeeklyMasterclasses(user.getCompanyID());
+        }
     }
 
     @Override
@@ -977,7 +1016,9 @@ public class CrudActivity extends AppCompatActivity
         bag.setWeeklyMessages(list);
         bag.setType(ResponseBag.WEEKLY_MESSAGE);
         setFragment();
-        presenter.getWeeklyMessages(user.getCompanyID());
+        if (user != null) {
+            presenter.getWeeklyMessages(user.getCompanyID());
+        }
     }
 
     @Override

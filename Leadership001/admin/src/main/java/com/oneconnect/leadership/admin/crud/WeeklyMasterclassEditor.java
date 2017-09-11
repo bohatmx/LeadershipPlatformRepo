@@ -83,12 +83,27 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
     }
 
     @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }
 
     @Override
     public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
 
     }
 
