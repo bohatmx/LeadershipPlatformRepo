@@ -1,11 +1,10 @@
-package com.oneconnect.leadership.admin.crud;
+package com.oneconnect.leadership.library.editors;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,8 @@ import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oneconnect.leadership.admin.R;
+//import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.activities.SheetContract;
 import com.oneconnect.leadership.library.activities.SheetPresenter;
@@ -49,14 +49,11 @@ import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by aubreymalabie on 3/18/17.
@@ -177,7 +174,9 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(TAG, "Category spinner: " + catSpinner.getSelectedItem().toString());
-              listener.onCategorySelected(category);
+                if (category != null) {
+                //   listener.onCategorySelected(category);
+                }
             }
 
             @Override
@@ -357,7 +356,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
           bottomSheetListener.onError(message);
     }
 
-    static DailyThoughtEditor newInstance(DailyThoughtDTO dailyThought, int type) {
+    public static DailyThoughtEditor newInstance(DailyThoughtDTO dailyThought, int type) {
         DailyThoughtEditor f = new DailyThoughtEditor();
         Bundle args = new Bundle();
         args.putInt("type", type);
@@ -479,8 +478,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         if (dailyThought == null) {
             dailyThought = new DailyThoughtDTO();
             UserDTO me = SharedPrefUtil.getUser(getActivity());
-            dailyThought.setCompanyID(me.getCompanyID());
-            dailyThought.setCompanyName(me.getCompanyName());
+            if (me != null) {
+                dailyThought.setCompanyID(me.getCompanyID());
+                dailyThought.setCompanyName(me.getCompanyName());
+            } //else if (user)
+
             dailyThought.setActive(true);
             dailyThought.setJournalUserID(me.getUserID());
             dailyThought.setJournalUserName(me.getFullName());

@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.flask.colorpicker.slider.AlphaSlider;
 import com.flask.colorpicker.slider.LightnessSlider;
+import com.oneconnect.leadership.library.util.Util;
 
 import es.dmoral.toasty.Toasty;
 
@@ -29,6 +31,7 @@ public class ColorPickerActivity extends AppCompatActivity {
     ColorPickerView color_picker_view;
     LightnessSlider v_lightness_slider;
     AlphaSlider v_alpha_slider;
+    CheckBox colorBox1, colorBox2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +44,35 @@ public class ColorPickerActivity extends AppCompatActivity {
         color_picker_view = (ColorPickerView) findViewById(R.id.color_picker_view);
         v_lightness_slider = (LightnessSlider) findViewById(R.id.v_lightness_slider);
         v_alpha_slider = (AlphaSlider) findViewById(R.id.v_alpha_slider);
+        colorBox1 = (CheckBox) findViewById(R.id.colorBox1);
+        colorBox2 = (CheckBox) findViewById(R.id.colorBox2);
 
+        colorBox1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(colorBox1, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        color_picker_view.getSelectedColor();
+                    }
+                });
+            }
+        });
+
+        colorBox2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.flashOnce(colorBox2, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        color_picker_view.getSelectedColor();
+                    }
+                });
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

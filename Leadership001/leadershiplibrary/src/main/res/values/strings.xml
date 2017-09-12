@@ -123,4 +123,14 @@
     <string name="about_github"><a href="https://github.com/DreaminginCodeZH/MaterialRatingBar">View on GitHub</a></string>
     <string name="title_activity_category">Choose Topic</string>
 
+    <!-- -->
+    <string name="enter_thought">Enter Thought</string>
+    <string name="enter_thought_author">Enter thought author</string>
+    <string name="enter_news_content">Enter news content</string>
+    <string name="enter_class_message">Enter class message</string>
+    <string name="enter_author_name">Enter author name</string>
+    <string name="enter_article_content">Enter article content</string>
+    <string name="enter_news">Enter News</string>
+    <string name="enter_subtitle">Enter Subtitle</string>
+
 </resources>

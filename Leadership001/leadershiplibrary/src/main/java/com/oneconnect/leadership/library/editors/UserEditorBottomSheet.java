@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.crud;
+package com.oneconnect.leadership.library.editors;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.oneconnect.leadership.admin.R;
+//import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.UserDTO;
@@ -34,7 +35,7 @@ public class UserEditorBottomSheet extends BaseBottomSheet {
     private CrudPresenter crudPresenter;
 
 
-    static UserEditorBottomSheet newInstance(UserDTO user, int type) {
+    public static UserEditorBottomSheet newInstance(UserDTO user, int type) {
         UserEditorBottomSheet f = new UserEditorBottomSheet();
         Bundle args = new Bundle();
         args.putInt("type",type);
