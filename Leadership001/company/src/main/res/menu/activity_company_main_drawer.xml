@@ -65,11 +65,11 @@
         </menu>
     </item>
 
-    <item android:title="Company Porfile">
+    <item android:title="Company Profile">
         <menu>
             <item
                 android:id="@+id/nav_profile"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_person"
                 android:title="Company Profile"/>
         </menu>
     </item>

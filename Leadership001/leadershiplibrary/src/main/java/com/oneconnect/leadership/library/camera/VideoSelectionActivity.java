@@ -162,41 +162,46 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                 MediaStore.Video.Media.DISPLAY_NAME
         };
         Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-        try {
-            cursor.moveToFirst();
-            do {
+      //  if (cursor != null) {
+            try {
+                cursor.moveToFirst();
+                do {
 
-                Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
-                String path =  cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
-                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
-                Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
-                localVideos.add(new LocalVideo(duration,path));
-                videoItemHashSet.add(path);
-            } while (cursor.moveToNext());
+                    if (cursor != null) {
+                        Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
+                        String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                        long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
+                        Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
+                        localVideos.add(new LocalVideo(duration, path));
+                        videoItemHashSet.add(path);
+                    }
 
-            cursor.close();
-        } catch (Exception e) {
-            Log.e(TAG, "getVideosOnDevice: ", e);
-        }
-        downloadedList = new ArrayList<>(videoItemHashSet);
-        for (String id : downloadedList) {
-            Log.e(TAG, "getVideosOnDevice: ".concat(id));
-        }
+                } while (cursor.moveToNext());
 
-        VideoAdapter adapter = new VideoAdapter(downloadedList, this, new VideoAdapter.VideoAdapterListener() {
-            @Override
-            public void onPlayVideoTapped(String path) {
-                  playVideo(path);
+                cursor.close();
+            } catch (Exception e) {
+                Log.e(TAG, "getVideosOnDevice: ", e);
+            }
+            downloadedList = new ArrayList<>(videoItemHashSet);
+            for (String id : downloadedList) {
+                Log.e(TAG, "getVideosOnDevice: ".concat(id));
             }
 
-            @Override
-            public void onUploadVideoTapped(String path) {
-                confirmUpload(path);
+            VideoAdapter adapter = new VideoAdapter(downloadedList, this, new VideoAdapter.VideoAdapterListener() {
+                @Override
+                public void onPlayVideoTapped(String path) {
+                    playVideo(path);
+                }
 
-            }
+                @Override
+                public void onUploadVideoTapped(String path) {
+                    confirmUpload(path);
 
-        });
-        recyclerView.setAdapter(adapter);
+                }
+
+            });
+            recyclerView.setAdapter(adapter);
+       // }
     }
 
     @Override

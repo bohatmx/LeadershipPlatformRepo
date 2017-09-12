@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -59,6 +60,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     private VideoDTO video;
     private PodcastDTO podcast;
     private UrlDTO url;
+    private UserDTO user;
     private int type;
     private Snackbar snackbar;
     private PodcastUploadPresenter presenter;
@@ -128,6 +130,11 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             type = ResponseBag.URLS;
             url = (UrlDTO) getIntent().getSerializableExtra("url");
             getSupportActionBar().setSubtitle(url.getTitle());
+        }
+        if (getIntent().getSerializableExtra("user") != null) {
+            type = ResponseBag.USERS;
+            user = (UserDTO) getIntent().getSerializableExtra("user");
+            getSupportActionBar().setSubtitle(user.getCompanyName());
         }
 
 
@@ -215,8 +222,13 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         showSnackbar("Uploading podcast ...", "OK", Constants.CYAN);
         PodcastDTO v = new PodcastDTO();
         UserDTO u = SharedPrefUtil.getUser(getApplicationContext());
+        if (user != null){
+            v.setCompanyName(user.getCompanyName());
+            v.setCompanyID(user.getCompanyID());
+        } else if (u.getCompanyName() != null) {
         v.setCompanyName(u.getCompanyName());
         v.setCompanyID(u.getCompanyID());
+        }
         v.setFilePath(path);
         File file = new File(path);
         v.setPodcastSize(file.length());
