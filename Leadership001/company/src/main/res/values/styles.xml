@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/red_900</item>
         <item name="android:itemTextAppearance">@style/TextAppearance</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
