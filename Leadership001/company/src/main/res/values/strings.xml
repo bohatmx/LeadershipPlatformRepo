@@ -4,4 +4,10 @@
     <string name="success">Welcome! Thanks for signing in</string>
     <string name="signin_failed">Sign in failed. Try again</string>
     <string name="title_activity_company_main">CompanyMainActivity</string>
+    <string name="title_activity_company_drawer">CompanyDrawerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

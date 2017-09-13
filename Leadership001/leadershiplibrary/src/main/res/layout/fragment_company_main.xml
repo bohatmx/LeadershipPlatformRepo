@@ -1,0 +1,248 @@
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.oneconnect.leadership.library.lists.CompanyMainFragment">
+
+        <!--<android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/mon_margin">
+                    <ImageView
+                        android:id="@+id/companyLogo"
+                        android:scaleType="centerInside"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/leadership_logo"/>
+                </RelativeLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>-->
+
+        <ScrollView
+            android:layout_below="@id/appBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/companyTitle"
+                    style="@style/Title2TextStyleBlack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Company Name" />
+
+
+                <LinearLayout
+                    android:layout_below="@+id/companyTitle"
+                    android:id="@+id/layout0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/mon_margin"
+                        android:layout_weight="1"
+                        app:cardElevation="@dimen/mon_divider_small">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/mon_margin">
+
+                            <TextView
+                                android:id="@+id/companyThoughts"
+                                style="@style/Title3TextStyleBlack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="507"
+                                android:textColor="@color/indigo_500"
+                                android:textSize="36sp" />
+
+                            <TextView
+                                style="@style/Title3TextStyleBlack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/companyThoughts"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="Thoughts"
+                                android:textColor="@color/grey_600" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_comment_black_24dp" />
+
+                        </RelativeLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/mon_margin"
+                        android:layout_weight="1"
+                        app:cardElevation="@dimen/mon_divider_small">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/mon_margin">
+
+                            <TextView
+                                android:id="@+id/companyVideos"
+                                style="@style/Title3TextStyleBlue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="770"
+                                android:textColor="@color/pink_700"
+                                android:textSize="36sp" />
+
+                            <TextView
+                                style="@style/Title3TextStyleBlack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/companyVideos"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="Videos"
+                                android:textColor="@color/grey_600" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_videocam" />
+
+                        </RelativeLayout>
+
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout1"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/layout0"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/mon_margin"
+                        android:layout_weight="1"
+                        app:cardElevation="@dimen/mon_divider_small">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/mon_margin">
+
+                            <TextView
+                                android:id="@+id/companyUsers"
+                                style="@style/Title3TextStyleRed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="1000"
+                                android:textColor="@color/orange_900"
+                                android:textSize="36sp" />
+
+                            <TextView
+                                style="@style/Title3TextStyleBlack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/companyUsers"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="Users"
+                                android:textColor="@color/grey_600" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_people" />
+
+                        </RelativeLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/mon_margin"
+                        android:layout_weight="1"
+                        app:cardElevation="@dimen/mon_divider_small">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/mon_margin">
+
+                            <TextView
+                                android:id="@+id/companyPodcasts"
+                                style="@style/Title3TextStyleGreen"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="50"
+                                android:textSize="36sp" />
+
+                            <TextView
+                                style="@style/Title3TextStyleBlack"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/companyPodcasts"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="@dimen/mon_wide"
+                                android:text="Podcasts"
+                                android:textColor="@color/grey_600" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_microphone" />
+
+                        </RelativeLayout>
+
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+            </RelativeLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
