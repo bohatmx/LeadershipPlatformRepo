@@ -156,7 +156,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setLogo(R.drawable.leadership_logo);
+        toolbar.setLogo(R.drawable.harmony);
 
         ctx = getApplicationContext();
         activity = this;
