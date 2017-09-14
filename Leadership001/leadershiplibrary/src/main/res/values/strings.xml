@@ -133,5 +133,6 @@
     <string name="enter_article_content">Enter article content</string>
     <string name="enter_news">Enter News</string>
     <string name="enter_subtitle">Enter Subtitle</string>
+    <string name="success">Welcome! Thanks for signing in</string>
 
 </resources>

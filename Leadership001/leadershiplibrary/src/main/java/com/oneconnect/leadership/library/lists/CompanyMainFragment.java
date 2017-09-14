@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.ColorPickerActivity;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
@@ -340,6 +342,20 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         presenter.getPodcasts(user.getCompanyID());
         presenter.getVideos(user.getCompanyID());
         presenter.getUsers(user.getCompanyID());
+
+        editFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Util.flashOnce(editFab, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                        Intent intent = new Intent(ctx, ColorPickerActivity.class);
+                        intent.putExtra("user", user);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
        /* card4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -518,9 +534,12 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         companyPodcasts = (TextView) view.findViewById(R.id.companyPodcasts);
        // companyLogo = (ImageView) view.findViewById(R.id.companyLogo);
         companyTitle = (TextView) view.findViewById(R.id.companyTitle);
+        editFab = (FloatingActionButton) view.findViewById(R.id.editFab);
 
         return view;
     }
+
+    FloatingActionButton editFab;
 
 
     @Override

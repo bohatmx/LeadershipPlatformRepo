@@ -35,7 +35,7 @@
             tools:replace="android:value" />
 
         <activity
-            android:name=".ColorPickerActivity"
+            android:name="com.oneconnect.leadership.library.activities.ColorPickerActivity"
             android:label="@string/color_picker"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

@@ -30,14 +30,14 @@
         </item>
     </group>
 
-    <item android:title="Leadership Events">
+    <!--<item android:title="Leadership Events">
         <menu>
             <item
                 android:id="@+id/nav_calender_events"
                 android:icon="@drawable/ic_event_black_24dp"
                 android:title="Leadership Calendar Events" />
         </menu>
-    </item>
+    </item>-->
 
     <item android:title="Leadership Media">
         <menu>

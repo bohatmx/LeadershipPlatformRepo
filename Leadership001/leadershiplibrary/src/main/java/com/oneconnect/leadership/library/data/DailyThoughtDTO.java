@@ -17,7 +17,7 @@ import java.util.List;
 public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparable<DailyThoughtDTO> {
 
     private String dailyThoughtID,
-            text;
+            text, dailyThoughtDescription;
     private String
             stringDateUpdated, html;
     private boolean active;
@@ -32,8 +32,28 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
 
+    public static final int INTERNAL_DAILY_THOUGHT = 1, GLOBAL_DAILY_THOUGHT = 2;
 
+    public static final String DESC_INTERNAL_DAILY_THOUGHT = "Internal Daily Thought",
+                               DESC_GLOBAL_DAILY_THOUGHT = "Global Daily Thought";
 
+    private int dailyThoughtType;
+
+    public int getDailyThoughtType() {
+        return dailyThoughtType;
+    }
+
+    public void setDailyThoughtType(int dailyThoughtType) {
+        this.dailyThoughtType = dailyThoughtType;
+        switch (dailyThoughtType) {
+            case INTERNAL_DAILY_THOUGHT:
+                dailyThoughtDescription = DESC_INTERNAL_DAILY_THOUGHT;
+                break;
+            case GLOBAL_DAILY_THOUGHT:
+                dailyThoughtDescription = DESC_GLOBAL_DAILY_THOUGHT;
+                break;
+        }
+    }
 
 
     public HashMap<String, RatingDTO> getRatings() {
@@ -69,30 +89,6 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         this.podcasts = podcasts;
     }
 
-
-    /*public List<VideoDTO> getVideoList() {
-        return videoList;
-    }
-
-    public void setVideoList(List<VideoDTO> videoList) {
-        this.videoList = videoList;
-    }
-
-    public List<PhotoDTO> getPhotoList() {
-        List<PhotoDTO> list = new ArrayList<>();
-        if (*//*photos*//*photoList != null) {
-            for (PhotoDTO p: photoList*//*photos.values()*//*) {
-                list.add(p);
-            }
-        }
-        return list*//*photos*//*;
-        *//*return photoList;*//*
-    }
-
-    public void setPhotoList(List<PhotoDTO> photoList) {
-        this.photoList = photoList;
-    }
-*/
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;
     }
@@ -259,5 +255,13 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
 
     public void setCategory(CategoryDTO category) {
         this.category = category;
+    }
+
+    public String getDailyThoughtDescription() {
+        return dailyThoughtDescription;
+    }
+
+    public void setDailyThoughtDescription(String dailyThoughtDescription) {
+        this.dailyThoughtDescription = dailyThoughtDescription;
     }
 }
