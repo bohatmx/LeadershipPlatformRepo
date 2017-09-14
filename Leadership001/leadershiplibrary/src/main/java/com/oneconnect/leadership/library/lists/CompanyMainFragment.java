@@ -540,5 +540,13 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         mListener = null;
     }
 
+    int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
+
     static final String TAG = CompanyMainFragment.class.getSimpleName();
 }

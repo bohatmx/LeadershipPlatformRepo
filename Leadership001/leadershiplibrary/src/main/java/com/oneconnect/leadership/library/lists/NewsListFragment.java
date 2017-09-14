@@ -741,5 +741,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     public interface NewsArticleListener {
         void onNewsArticleTapped(NewsDTO article);
     }
+    int primaryColor, primaryDarkColor;
 
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 }

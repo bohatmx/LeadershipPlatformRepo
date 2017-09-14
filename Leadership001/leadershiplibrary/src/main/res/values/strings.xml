@@ -84,7 +84,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity__podcast_list">Podcasts Attachments</string>
     <string name="title_activity_deep_link">Deep Link</string>
-
+    <string name="title_activity_theme">ThemeChooser</string>
     <string name="title_activity_image_list">Images</string>
     <string name="share">Share</string>
     <string name="action_play_next">Play Next</string>

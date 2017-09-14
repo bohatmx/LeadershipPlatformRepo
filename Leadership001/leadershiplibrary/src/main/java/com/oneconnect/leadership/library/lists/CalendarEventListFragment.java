@@ -159,6 +159,13 @@ public class CalendarEventListFragment extends Fragment implements PageFragment,
     }
 
     String pageTitle;
+    int primaryColor, primaryDarkColor;
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
+
     @Override
     public String getTitle() {
         return pageTitle;

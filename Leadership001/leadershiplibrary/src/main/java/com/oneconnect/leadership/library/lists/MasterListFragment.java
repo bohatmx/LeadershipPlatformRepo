@@ -638,5 +638,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
         this.pageTitle = pageTitle;
     }
 
+    int primaryColor, primaryDarkColor;
 
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 }

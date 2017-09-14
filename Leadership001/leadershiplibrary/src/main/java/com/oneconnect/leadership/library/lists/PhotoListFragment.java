@@ -648,6 +648,13 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
     public interface PhotoListener {
         void onPhotoTapped(PhotoDTO photo);
     }
+    int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 
     static final String LOG = PhotoListFragment.class.getSimpleName();
 }

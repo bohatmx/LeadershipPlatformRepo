@@ -229,13 +229,13 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                 Log.d(TAG, "onUserNotFoundByEmail: this is a leader, adding to app database ...");
                 presenter.addUser(u);
                 break;
-            case UserDTO.GOLD:
+            case UserDTO.PLATINUM_USER:
                 u.setEmail(email);
                 u.setUserType(type);
                 Log.d(TAG, "onUserNotFoundByEmail: this is a GOLD user, adding to app database ...");
                 presenter.addUser(u);
                 break;
-            case UserDTO.PLATINUM:
+            case UserDTO.GOLD_USER:
                 u.setEmail(email);
                 u.setUserType(type);
                 Log.d(TAG, "onUserNotFoundByEmail: this is a PLATINUM user, adding to app database ...");
@@ -302,12 +302,12 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                     }
                     break;
 
-                case UserDTO.GOLD:
+                case UserDTO.PLATINUM_USER:
                     d.setMessage(getString(R.string.welcome_platform));
                     d.setTitle(getString(R.string.platform_welcome));
                     break;
 
-                case UserDTO.PLATINUM:
+                case UserDTO.GOLD_USER:
                     d.setMessage(getString(R.string.welcome_platform));
                     d.setTitle(getString(R.string.platform_welcome));
                     break;
@@ -363,7 +363,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                 }
                 break;
 
-            case UserDTO.GOLD:
+            case UserDTO.PLATINUM_USER:
                 if (user.getCompanyID() != null) {
                     FirebaseMessaging.getInstance().subscribeToTopic(
                             EndpointUtil.TOPIC_GOLD + user.getCompanyID());
@@ -372,7 +372,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                 }
                 break;
 
-            case UserDTO.PLATINUM:
+            case UserDTO.GOLD_USER:
                 if (user.getCompanyID() != null) {
                     FirebaseMessaging.getInstance().subscribeToTopic(
                             EndpointUtil.TOPIC_PLATINIM + user.getCompanyID());

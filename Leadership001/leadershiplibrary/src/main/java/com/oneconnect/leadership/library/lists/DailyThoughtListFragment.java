@@ -768,4 +768,12 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         void onDailyThoughtTapped(DailyThoughtDTO dailyThought);
     }
 
+    int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
+
 }

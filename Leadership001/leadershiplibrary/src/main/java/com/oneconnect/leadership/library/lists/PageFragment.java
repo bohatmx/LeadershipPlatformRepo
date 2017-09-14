@@ -5,6 +5,7 @@ package com.oneconnect.leadership.library.lists;
  */
 
 public interface PageFragment {
+    void setThemeColors(int var1, int var2);
     String getTitle();
     void setPageTitle(String pageTitle);
 }

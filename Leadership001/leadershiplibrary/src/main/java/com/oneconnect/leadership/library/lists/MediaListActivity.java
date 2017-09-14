@@ -426,5 +426,13 @@ public class MediaListActivity extends AppCompatActivity implements
         }
     }
 
+    int primaryColor, primaryDarkColor;
+
+    /*@Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }*/
+
     private List<PageFragment> pageFragments = new ArrayList<>();
 }

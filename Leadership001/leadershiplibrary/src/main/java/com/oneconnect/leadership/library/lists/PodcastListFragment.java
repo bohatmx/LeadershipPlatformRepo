@@ -648,4 +648,12 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public interface PodcastListener {
         void onPodcastTapped(PodcastDTO podcast);
     }
+
+    int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 }

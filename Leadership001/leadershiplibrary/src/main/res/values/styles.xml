@@ -159,7 +159,7 @@
         <item name="colorAccent">@color/pink_700</item>
     </style>
 
-    <style name="GreenTheme" parent="FirebaseUI">
+    <style name="GreenTheme" parent="MainTheme">
         <item name="colorPrimary">@color/material_green_500</item>
         <item name="colorPrimaryDark">@color/material_green_700</item>
         <item name="colorAccent">@color/material_purple_a700</item>
@@ -169,7 +169,7 @@
         <item name="android:windowBackground">@color/material_green_50</item>
     </style>
 
-    <style name="RedTheme" parent="FirebaseUI">
+    <style name="RedTheme" parent="MainTheme">
         <item name="colorPrimary">@color/red_500</item>
         <item name="colorPrimaryDark">@color/red_800</item>
         <item name="colorAccent">@color/blue_500</item>
@@ -844,5 +844,312 @@
         <style name="day_of_week_label_condensed" />
 
 
+        <style name="MainTheme" parent="Theme.AppCompat.Light.NoActionBar">
+            <item name="colorPrimary">@color/blue_700</item>
+            <item name="colorPrimaryDark">@color/blue_900</item>
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        </style>
+        <style name="BlueThemeOne" parent="FirebaseUI">
+            <item name="colorPrimary">@color/blue_700</item>
+            <item name="colorPrimaryDark">@color/blue_900</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        </style>
 
-</resources>
+        <style name="BlueGrayTheme" parent="FirebaseUI">
+            <item name="colorPrimary">@color/blue_gray_500</item>
+            <item name="colorPrimaryDark">@color/blue_gray_800</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        </style>
+
+        <style name="PopupMenu" parent="FirebaseUI">
+            <item name="android:fontFamily">sans-serif-light</item>
+            <item name="android:background">@color/light_blue_400</item>
+            <item name="android:textColor">@color/white</item>
+        </style>
+
+        <style name="RobotoTextStyle" parent="android:Widget.Holo.TextView">
+            <item name="android:fontFamily">sans-serif-light</item>
+        </style>
+
+        <style name="ThemeNoActionBar" parent="MainTheme">
+            <item name="colorPrimary">@color/indigo_500</item>
+            <item name="colorPrimaryDark">@color/indigo_700</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+            <item name="android:fontFamily">sans-serif-thin</item>
+        </style>
+
+
+        <style name="TealTheme" parent="Theme.AppCompat.Light.NoActionBar">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/teal_800</item>
+            <item name="colorPrimaryDark">@color/teal_900</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="PinkTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/pink_800</item>
+            <item name="colorPrimaryDark">@color/pink_900</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="IndigoTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/indigo_500</item>
+            <item name="colorPrimaryDark">@color/indigo_700</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="CyanTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/cyan_800</item>
+            <item name="colorPrimaryDark">@color/cyan_900</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="OrangeTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/orange_800</item>
+            <item name="colorPrimaryDark">@color/orange_900</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        </style>
+
+        <style name="LimeTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/lime_600</item>
+            <item name="colorPrimaryDark">@color/lime_900</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="LightGreenTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/green_lite_700</item>
+            <item name="colorPrimaryDark">@color/green_lite_600</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="AmberTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/amber_500</item>
+            <item name="colorPrimaryDark">@color/amber_900</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="GreyTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/grey_600</item>
+            <item name="colorPrimaryDark">@color/grey_800</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="BrownTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/brown_600</item>
+            <item name="colorPrimaryDark">@color/brown_900</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="PurpleTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/purple_500</item>
+            <item name="colorPrimaryDark">@color/purple_800</item>
+            <item name="android:popupMenuStyle">@style/PopupMenu</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+
+
+        <style name="MasterTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="android:textViewStyle">@style/RobotoTextStyle</item>
+            <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        </style>
+
+        <style name="NoActionBarTheme" parent="MainTheme">
+            <item name="android:windowTitleStyle">@style/actionBarStyle</item>
+            <item name="colorPrimary">@color/blue</item>
+            <item name="colorPrimaryDark">@color/background_floating_material_dark</item>
+        </style>
+
+        <style name="ProjectManagerTheme" parent="MainTheme">
+            <item name="colorPrimary">@color/grey</item>
+            <item name="colorPrimaryDark">@color/background_material_dark</item>
+        </style>
+
+        <style name="LanguageTheme" parent="MainTheme">
+            <item name="colorPrimary">@color/grey</item>
+            <item name="colorPrimaryDark">@color/background_material_dark</item>
+        </style>
+
+        <style name="ReporterTheme" parent="MainTheme">
+            <item name="colorPrimary">@color/absa_red</item>
+            <item name="colorPrimaryDark">@color/background_material_dark</item>
+        </style>
+
+        <style name="ExecTheme" parent="MainTheme">
+            <item name="colorPrimary">@color/orange</item>
+            <item name="colorPrimaryDark">@color/background_material_dark</item>
+        </style>
+
+
+        <style name="RobotoSpinnerTextStyle" parent="android:Widget.Holo.Light.TextView.SpinnerItem">
+            <item name="android:fontFamily">sans-serif-light</item>
+        </style>
+
+        <style name="RobotoSpinnerDropDownStyle" parent="android:Widget.Holo.Light.TextView.SpinnerItem">
+            <item name="android:fontFamily">sans-serif-light</item>
+        </style>
+
+        <style name="mgStyle">
+            <item name="android:backgroundDimEnabled">true</item>
+            <item name="android:cacheColorHint">@android:color/transparent</item>
+            <item name="android:windowBackground">@android:color/transparent</item>
+        </style>
+
+
+
+        <style name="Title0TextStyleBlue" parent="@android:style/TextAppearance.Large">
+            <item name="android:textColor">@color/navy_blue</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textSize">40sp</item>
+        </style>
+
+        <style name="Title0TextStyleGreen" parent="@android:style/TextAppearance.Large">
+            <item name="android:textColor">@color/green</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:padding">5dp</item>
+            <item name="android:textSize">40sp</item>
+        </style>
+
+        <style name="Title0TextStyleRed" parent="@android:style/TextAppearance.Large">
+            <item name="android:textColor">@color/maroon</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textSize">40sp</item>
+        </style>
+
+
+        <style name="Title3TextStyleWhite" parent="@android:style/TextAppearance.Medium">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textSize">18sp</item>
+        </style>
+
+
+
+        <style name="ButtonGrey" parent="@android:style/TextAppearance.Small">
+            <!-- <item name="android:textColor">@color/white</item> -->
+            <item name="android:textStyle">normal</item>
+            <item name="android:background">@color/grey</item>
+        </style>
+
+
+
+        <style name="ButtonDelete" parent="@android:style/TextAppearance.Small">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:textStyle">normal</item>
+        </style>
+
+        <style name="TextStyleSmallWhite" parent="@android:style/TextAppearance.Small">
+            <item name="android:textStyle">normal</item>
+            <item name="android:textSize">10sp</item>
+            <item name="android:textColor">@color/white</item>
+        </style>
+
+
+
+        <style name="RedCircle" parent="@android:style/TextAppearance.Small">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:gravity">center</item>
+            <item name="android:background">@drawable/xred_oval</item>
+        </style>
+
+
+        <style name="GreenCircle" parent="@android:style/TextAppearance.Small">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:gravity">center</item>
+            <item name="android:background">@drawable/xgreen_oval</item>
+        </style>
+
+
+
+        <style name="BlackCircleLarge" parent="@android:style/TextAppearance.Medium">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:gravity">center</item>
+            <item name="android:background">@drawable/xblack_oval_large</item>
+        </style>
+
+
+
+        <style name="GreyCircle" parent="@android:style/TextAppearance.Small">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:gravity">center</item>
+            <item name="android:background">@drawable/xgrey_oval</item>
+
+        </style>
+
+
+
+        <style name="OrangeCircle" parent="@android:style/TextAppearance.Small">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:gravity">center</item>
+            <item name="android:background">@drawable/xorange_oval</item>
+        </style>
+
+
+        <style name="OrangeCircleLarge" parent="@android:style/TextAppearance.Small">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:gravity">center</item>
+            <item name="android:background">@drawable/xorange_oval_large</item>
+        </style>
+
+        <style name="BlueCircleLarge" parent="@android:style/TextAppearance.Medium">
+            <item name="android:textColor">@color/white</item>
+            <item name="android:gravity">center</item>
+            <item name="android:background">@drawable/xblue_oval_large</item>
+        </style>
+
+
+        <style name="GreenTheme.NoActionBar">
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>
+        </style>
+
+        <style name="GreenTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <style name="GreenTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    </resources>
+

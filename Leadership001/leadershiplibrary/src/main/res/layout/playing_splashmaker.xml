@@ -26,6 +26,6 @@
         android:id="@+id/imageView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/leadership_icon1" />
+        android:src="@drawable/leadership_logo" />
 
 </RelativeLayout>

@@ -110,4 +110,12 @@ public class LinksListFragment extends Fragment implements PageFragment{
     public interface UrlListener {
         void onUrlTapped(UrlDTO url);
     }
+
+    int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 }

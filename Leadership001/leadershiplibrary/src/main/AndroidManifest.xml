@@ -35,7 +35,10 @@
         <service
             android:name=".services.VideoUploaderService"
             android:exported="false" />
-
+        <activity
+            android:name=".activities.ThemeSelectorActivity"
+            android:label="@string/title_activity_theme"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".video.LeYouTubePlayerActivity" />
         <activity
             android:name=".activities.SubscriberDrawerActivity"

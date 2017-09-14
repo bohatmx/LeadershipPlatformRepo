@@ -570,4 +570,12 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
     public void onCategoryUpdated(CategoryDTO category) {
 
     }
+
+    /*int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }*/
 }

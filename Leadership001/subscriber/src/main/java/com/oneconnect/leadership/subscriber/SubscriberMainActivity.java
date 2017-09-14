@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -30,9 +32,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +50,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mikepenz.community_material_typeface_library.CommunityMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -87,15 +90,13 @@ import com.oneconnect.leadership.library.lists.VideoListFragment;
 import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
 import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.ThemeChooser;
 import com.oneconnect.leadership.subscriber.services.SubscriberMessagingService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 import com.oneconnect.leadership.library.like.OnAnimationEndListener;
 import com.oneconnect.leadership.library.like.OnLikeListener;
@@ -126,7 +127,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private FloatingActionButton fab;
-    DailyThoughtListFragment dailyThoughtListFragment;
+    private DailyThoughtListFragment dailyThoughtListFragment;
 
     private Context ctx;
     private String page;
@@ -136,7 +137,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private UserDTO user;
     private TextView usernametxt;
     PagerSlidingTabStrip strip;
-    CategoryDTO category;
+    private CategoryDTO category;
 
     //Bottom Navigation
     private TextView textFavorites;
@@ -144,20 +145,13 @@ public class SubscriberMainActivity extends AppCompatActivity
     private TextView textMusic;
     //
     private DailyThoughtDTO dailyThought;
-
-    @Bind(R.id.star_button)
-    LikeButton starButton;
-    @Bind(R.id.heart_button)
-    LikeButton likeButton;
-    @Bind(R.id.thumb_button)
-    LikeButton thumbButton;
-    @Bind(R.id.smile_button)
-    LikeButton smileButton;
+    int themeDarkColor, themePrimaryColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        ThemeChooser.setTheme(this);
         setContentView(R.layout.activity_subscriber_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -167,11 +161,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         page = getIntent().getStringExtra("page");
-
         usernametxt = (TextView) findViewById(R.id.usernametxt);
-
-        usingCustomIcons();
-
         mPager = (ViewPager) findViewById(R.id.viewpager);
         //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -179,6 +169,21 @@ public class SubscriberMainActivity extends AppCompatActivity
         strip.setVisibility(View.VISIBLE);
         strip.setTextColor(GRAY);
          setup();
+
+        Resources.Theme theme = getTheme();
+        TypedValue typedValue = new TypedValue();
+        theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+        themeDarkColor = typedValue.data;
+        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        themePrimaryColor = typedValue.data;
+        strip.setBackgroundColor(themeDarkColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(themeDarkColor);
+            window.setNavigationBarColor(themeDarkColor);
+        }
 
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
@@ -242,14 +247,6 @@ public class SubscriberMainActivity extends AppCompatActivity
             usernametxt.setVisibility(View.GONE);
         }*/
 
-    }
-    public void usingCustomIcons() {
-
-        //shown when the button is in its default state or when unLiked.
-       // smileButton.setUnlikeDrawable(new BitmapDrawable(getResources(), new IconicsDrawable(this, CommunityMaterial.Icon.cmd_emoticon).colorRes(android.R.color.darker_gray).sizeDp(25).toBitmap()));
-
-        //shown when the button is liked!
-        //smileButton.setLikeDrawable(new BitmapDrawable(getResources(), new IconicsDrawable(this, CommunityMaterial.Icon.cmd_emoticon).colorRes(android.R.color.holo_purple).sizeDp(25).toBitmap()));
     }
 
     private void getDailyThoughts() {
