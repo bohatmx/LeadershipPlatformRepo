@@ -23,6 +23,7 @@ import static com.google.android.gms.common.Scopes.PROFILE;
 public class SharedPrefUtil {
     public static final String TAG = SharedPrefUtil.class.getSimpleName();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    static final String THEME = "theme";
 
     public static void saveCloudMsgToken(String token, Context ctx) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -41,6 +42,26 @@ public class SharedPrefUtil {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
         String token = sp.getString("token", null);
         return token;
+    }
+
+    public static int getThemeSelection(Context ctx) {
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(ctx);
+        int j = sp.getInt(THEME, -1);
+        Log.i(TAG, "#### theme retrieved: " + j);
+        return j;
+    }
+
+    public static void setThemeSelection(Context ctx, int theme) {
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(ctx);
+
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putInt(THEME, theme);
+        ed.commit();
+
+        Log.w(TAG, "#### theme saved: " + theme);
+
     }
 
     public static void saveFragmentType(int type, Context ctx) {

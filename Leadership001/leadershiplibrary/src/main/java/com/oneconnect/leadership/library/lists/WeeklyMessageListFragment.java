@@ -635,4 +635,12 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     public void setPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
     }
+
+    int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 }

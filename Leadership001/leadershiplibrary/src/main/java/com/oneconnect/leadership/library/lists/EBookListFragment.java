@@ -812,4 +812,12 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     public interface EBookListener {
         void onEBookTapped(EBookDTO eBook);
     }
+
+    int primaryColor, primaryDarkColor;
+
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 }

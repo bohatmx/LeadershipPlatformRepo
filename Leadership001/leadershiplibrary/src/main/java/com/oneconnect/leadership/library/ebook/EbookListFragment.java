@@ -398,6 +398,12 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
         super.onDetach();
         mListener = null;
     }
+    int primaryColor, primaryDarkColor;
+    @Override
+    public void setThemeColors(int primaryColor, int primaryDarkColor) {
+        this.primaryColor = primaryColor;
+        this.primaryDarkColor = primaryDarkColor;
+    }
 
     @Override
     public String getTitle() {

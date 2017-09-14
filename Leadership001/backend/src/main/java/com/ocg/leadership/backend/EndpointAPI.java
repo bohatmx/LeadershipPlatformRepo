@@ -211,7 +211,7 @@ public class EndpointAPI {
 
                 try {
                     ofy().save().entity(messaage).now();
-                    log.log(Level.WARNING, "Looks like the message has been saved...Yay!");
+                    log.log(Level.WARNING, "Looks com.oneconnect.leadership.library.like the message has been saved...Yay!");
                     fcm.setMessage("Things are just fine and dandy! message saved");
                 } catch (Exception e) {
                     log.log(Level.SEVERE, "Error saving message: ", e);
@@ -280,7 +280,7 @@ public class EndpointAPI {
 
                 try {
                     ofy().save().entity(message).now();
-                    log.log(Level.WARNING, "Looks like the message has been saved OK...Yay!");
+                    log.log(Level.WARNING, "Looks com.oneconnect.leadership.library.like the message has been saved OK...Yay!");
                     fcm.setMessage("Things are just fine and dandy! message saved");
                 } catch (Exception e) {
                     log.log(Level.SEVERE, "Error saving message: ", e);

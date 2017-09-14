@@ -8,4 +8,5 @@
     tools:context="com.oneconnect.leadership.admin.NotifHandlerActivity"
     tools:showIn="@layout/activity_notif_handler">
 
+
 </android.support.constraint.ConstraintLayout>

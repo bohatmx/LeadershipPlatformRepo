@@ -2,21 +2,28 @@ package com.oneconnect.leadership.library.util;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.ActionBar;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Environment;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.ocg.backend.endpointAPI.model.FCMUserDTO;
+import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.UserDTO;
 
 import org.apache.commons.io.FileUtils;
@@ -51,6 +58,24 @@ public class Util {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
+
+    }
+
+    public static void setCustomActionBarNoAction(final Context ctx,
+                                                  ActionBar actionBar, String text, Drawable image) {
+        actionBar.setDisplayShowCustomEnabled(true);
+
+        LayoutInflater inflator = (LayoutInflater)
+                ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.tw__activity_oauth, null);
+        TextView txt = (TextView) v.findViewById(R.id.action_help);
+        final ImageView logo = (ImageView) v.findViewById(R.id.action_help);
+        txt.setText(text);
+        //
+        logo.setImageDrawable(image);
+        actionBar.setCustomView(v);
+        actionBar.setTitle("");
+
 
     }
 
@@ -274,8 +299,8 @@ public class Util {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    if (listener != null)
-                        listener.onAnimationEnded();
+                    /*if (listener != null)
+                        listener.onAnimationEnded();*/
                 }
 
                 @Override

@@ -1,20 +1,21 @@
 package com.oneconnect.leadership.subscriber;
 
 import android.*;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -24,7 +25,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,32 +39,21 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.facebook.share.internal.LikeButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oneconnect.leadership.library.activities.DailyThoughtActivity;
-import com.oneconnect.leadership.library.activities.MasterActivity;
-import com.oneconnect.leadership.library.activities.PhotoActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
-import com.oneconnect.leadership.library.activities.VideoActivity;
 import com.oneconnect.leadership.library.activities.eBookActivity;
-import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
-import com.oneconnect.leadership.library.adapters.NewsArticleAdapter;
-import com.oneconnect.leadership.library.adapters.WeeklyMessageAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
@@ -83,7 +72,6 @@ import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
-import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -94,26 +82,26 @@ import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.lists.EBookListFragment;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.lists.MasterListFragment;
-import com.oneconnect.leadership.library.lists.MediaListActivity;
 import com.oneconnect.leadership.library.lists.NewsListFragment;
 import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
 import com.oneconnect.leadership.library.lists.VideoListFragment;
 import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
-import com.oneconnect.leadership.library.login.BaseLoginActivity;
 import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.ThemeChooser;
 import com.oneconnect.leadership.subscriber.services.SubscriberMessagingService;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import com.oneconnect.leadership.library.like.OnAnimationEndListener;
+import com.oneconnect.leadership.library.like.OnLikeListener;
+
 import static android.graphics.Color.GRAY;
-import static android.graphics.Color.RED;
 
 
 public class SubscriberMainActivity extends AppCompatActivity
@@ -123,7 +111,8 @@ public class SubscriberMainActivity extends AppCompatActivity
         CalendarEventListFragment.CalendarEventListener,
         PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
         PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
-        NewsListFragment.NewsArticleListener{
+        NewsListFragment.NewsArticleListener, OnLikeListener,
+        OnAnimationEndListener {
 
 
     private WeeklyMessageDTO weeklyMessage;
@@ -138,7 +127,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private FloatingActionButton fab;
-    DailyThoughtListFragment dailyThoughtListFragment;
+    private DailyThoughtListFragment dailyThoughtListFragment;
 
     private Context ctx;
     private String page;
@@ -148,7 +137,7 @@ public class SubscriberMainActivity extends AppCompatActivity
     private UserDTO user;
     private TextView usernametxt;
     PagerSlidingTabStrip strip;
-    CategoryDTO category;
+    private CategoryDTO category;
 
     //Bottom Navigation
     private TextView textFavorites;
@@ -156,11 +145,13 @@ public class SubscriberMainActivity extends AppCompatActivity
     private TextView textMusic;
     //
     private DailyThoughtDTO dailyThought;
+    int themeDarkColor, themePrimaryColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        ThemeChooser.setTheme(this);
         setContentView(R.layout.activity_subscriber_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -170,11 +161,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         page = getIntent().getStringExtra("page");
-
         usernametxt = (TextView) findViewById(R.id.usernametxt);
-
-      //  user = SharedPrefUtil.getUser(ctx);
-
         mPager = (ViewPager) findViewById(R.id.viewpager);
         //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -182,6 +169,21 @@ public class SubscriberMainActivity extends AppCompatActivity
         strip.setVisibility(View.VISIBLE);
         strip.setTextColor(GRAY);
          setup();
+
+        Resources.Theme theme = getTheme();
+        TypedValue typedValue = new TypedValue();
+        theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+        themeDarkColor = typedValue.data;
+        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        themePrimaryColor = typedValue.data;
+        strip.setBackgroundColor(themeDarkColor);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(themeDarkColor);
+            window.setNavigationBarColor(themeDarkColor);
+        }
 
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
@@ -226,6 +228,7 @@ public class SubscriberMainActivity extends AppCompatActivity
                 case ResponseBag.PHOTOS:
                     break;
                 case ResponseBag.VIDEOS:
+                    cachePresenter.getCacheVideos();
                     break;
                 case ResponseBag.PAYMENTS:
                     break;
@@ -305,38 +308,36 @@ public class SubscriberMainActivity extends AppCompatActivity
 
     private void setUpViewPager() {
         setMenuDestination();
-
         pageFragmentList = new ArrayList<>();
 
-        newsListFragment = NewsListFragment.newInstance();
         dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
+        newsListFragment = NewsListFragment.newInstance();
         masterListFragment = MasterListFragment.newInstance();
         weeklyMessageListFragment = WeeklyMessageListFragment.newInstance();
-        calendarEventListFragment = CalendarEventListFragment.newInstance();
+        //calendarEventListFragment = CalendarEventListFragment.newInstance();
         //photoListFragment = PhotoListFragment.newInstance(new HashMap<String, PhotoDTO>());
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
-        //videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
+        videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
         eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
 
-        newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
         dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
+        newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
         masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
         weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
-        calendarEventListFragment.setPageTitle(ctx.getString(R.string.calendar_events));
+        //calendarEventListFragment.setPageTitle(ctx.getString(R.string.calendar_events));
         //photoListFragment.setPageTitle(ctx.getString(R.string.photo));
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
-        //videoListFragment.setPageTitle(ctx.getString(R.string.video));
+        videoListFragment.setPageTitle(ctx.getString(R.string.video));
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
 
-
-        pageFragmentList.add(newsListFragment);
         pageFragmentList.add(dailyThoughtListFragment);
+        pageFragmentList.add(newsListFragment);
         pageFragmentList.add(masterListFragment);
         pageFragmentList.add(weeklyMessageListFragment);
-        pageFragmentList.add(calendarEventListFragment);
+        //pageFragmentList.add(calendarEventListFragment);
         //pageFragmentList.add(photoListFragment);
         pageFragmentList.add(podcastListFragment);
-       // pageFragmentList.add(videoListFragment);
+        pageFragmentList.add(videoListFragment);
         pageFragmentList.add(eBookListFragment);
 
 
@@ -368,23 +369,26 @@ public class SubscriberMainActivity extends AppCompatActivity
             Log.e(LOG, "PagerAdapter failed", e);
             if (page != null) {
 
-                if (page.equalsIgnoreCase("Leadership News Article")) {
-                    mPager.setCurrentItem(0);
+                if (page.equalsIgnoreCase("Leadership Article")) {
+                    mPager.setCurrentItem(1);
                 }
                 if (page.equalsIgnoreCase("Leadership Daily Thoughts")) {
-                    mPager.setCurrentItem(1);
+                    mPager.setCurrentItem(0);
                 }
                 if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
                     mPager.setCurrentItem(2);
                 }
-                if (page.equalsIgnoreCase("Leadership Weekly Message")) {
+                if (page.equalsIgnoreCase("Top Leadership thought")) {
                     mPager.setCurrentItem(3);
                 }
-                if (page.equalsIgnoreCase("Leadership Calendar Event")) {
+               /* if (page.equalsIgnoreCase("Leadership Calendar Event")) {
+                    mPager.setCurrentItem(4);
+                }*/
+                if (page.equalsIgnoreCase("Leadership Podcasts")) {
                     mPager.setCurrentItem(4);
                 }
 
-                if (page.equalsIgnoreCase("Leadership Podcasts")) {
+                if (page.equalsIgnoreCase("Leadership Videos")) {
                     mPager.setCurrentItem(5);
                 }
                 if (page.equalsIgnoreCase("Leadership eBooks")) {
@@ -404,14 +408,15 @@ public class SubscriberMainActivity extends AppCompatActivity
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 drawer.closeDrawers();
-                if (item.getItemId() == R.id.nav_news_article) {
+                if (item.getItemId() == R.id.nav_daily_thought) {
                     mPager.setCurrentItem(0, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_daily_thought) {
+                if (item.getItemId() == R.id.nav_news_article) {
                     mPager.setCurrentItem(1, true);
                     return true;
                 }
+
                 if (item.getItemId() == R.id.nav_master) {
                     mPager.setCurrentItem(2, true);
                     return true;
@@ -420,22 +425,22 @@ public class SubscriberMainActivity extends AppCompatActivity
                     mPager.setCurrentItem(3, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_calender_events) {
+                 /*  if (item.getItemId() == R.id.nav_calender_events) {
                     mPager.setCurrentItem(4, true);
                     return true;
                 }
-               /* if (item.getItemId() == R.id.nav_photo) {
+             if (item.getItemId() == R.id.nav_photo) {
                     mPager.setCurrentItem(5, true);
                     return true;
                 }*/
                 if (item.getItemId() == R.id.nav_podcast) {
+                    mPager.setCurrentItem(4, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_video) {
                     mPager.setCurrentItem(5, true);
                     return true;
                 }
-                /*if (item.getItemId() == R.id.nav_video) {
-                    mPager.setCurrentItem(7, true);
-                    return true;
-                }*/
                 if (item.getItemId() == R.id.nav_eBooks) {
                     mPager.setCurrentItem(6, true);
                     return true;
@@ -1091,6 +1096,21 @@ public class SubscriberMainActivity extends AppCompatActivity
     @Override
     public void onNewsArticleTapped(NewsDTO article) {
 
+    }
+
+    @Override
+    public void onAnimationEnd(com.oneconnect.leadership.library.like.LikeButton likeButton) {
+        Log.d(TAG, "Animation End for %s" + likeButton);
+    }
+
+    @Override
+    public void liked(com.oneconnect.leadership.library.like.LikeButton likeButton) {
+        Toast.makeText(this, "Liked!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void unLiked(com.oneconnect.leadership.library.like.LikeButton likeButton) {
+        Toast.makeText(this, "Disliked!", Toast.LENGTH_SHORT).show();
     }
 
    /* @Override

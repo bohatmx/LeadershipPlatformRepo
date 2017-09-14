@@ -169,6 +169,7 @@ public class CrudActivity extends AppCompatActivity
                 case ResponseBag.PHOTOS:
                     break;
                 case ResponseBag.VIDEOS:
+                    cachePresenter.getCacheVideos();
                     break;
                 case ResponseBag.PAYMENTS:
                     break;
@@ -227,11 +228,11 @@ public class CrudActivity extends AppCompatActivity
                 cal.set(year, month, day);
                 Date d = cal.getTime();
                 switch (sheetType) {
-                    case ResponseBag.NEWS:
-                        newArticleEditor.setSelectedDate(d);
-                        break;
                     case ResponseBag.DAILY_THOUGHTS:
                         dailyThoughtEditor.setSelectedDate(d);
+                        break;
+                    case ResponseBag.NEWS:
+                        newArticleEditor.setSelectedDate(d);
                         break;
                     case ResponseBag.WEEKLY_MESSAGE:
                         weeklyMessageEditor.setSelectedDate(d);
@@ -559,10 +560,6 @@ public class CrudActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.nav_categories:
-                type = ResponseBag.CATEGORIES;
-                cachePresenter.getCacheCategories();
-                break;
             case R.id.nav_daily:
                 type = ResponseBag.DAILY_THOUGHTS;
                 cachePresenter.getCacheDailyThoughts();
@@ -584,7 +581,10 @@ public class CrudActivity extends AppCompatActivity
                 type = ResponseBag.WEEKLY_MESSAGE;
                 cachePresenter.getCacheWeeklyMessages();
                 break;
-
+            case R.id.nav_categories:
+                type = ResponseBag.CATEGORIES;
+                cachePresenter.getCacheCategories();
+                break;
             case R.id.nav_users:
                 type = ResponseBag.USERS;
                 cachePresenter.getCacheUsers();
@@ -1317,13 +1317,13 @@ public class CrudActivity extends AppCompatActivity
         Intent m = new Intent(this, VideoSelectionActivity.class);
         m.putExtra("type", type);
         switch (type) {
-            case ResponseBag.NEWS:
-                article = (NewsDTO) base;
-                m.putExtra("newsArticle", article);
-                break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) base;
                 m.putExtra("dailyThought", dailyThought);
+                break;
+            case ResponseBag.NEWS:
+                article = (NewsDTO) base;
+                m.putExtra("newsArticle", article);
                 break;
             case ResponseBag.WEEKLY_MASTERCLASS:
                 weeklyMasterClass = (WeeklyMasterClassDTO) base;

@@ -5,22 +5,26 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_news_article"
-            android:icon="@drawable/ic_info"
-            android:tint="@color/blue_500"
-            android:title="Leadership News Articles" />
-        <item
             android:id="@+id/nav_daily"
             android:icon="@drawable/ic_create"
             android:title="Leadership Daily Thought" />
+
         <item
-            android:id="@+id/nav_weekly_message"
-            android:icon="@drawable/ic_chat"
-            android:title="Leadership Weekly Message" />
+            android:id="@+id/nav_news_article"
+            android:icon="@drawable/ic_info"
+            android:tint="@color/blue_500"
+            android:title="Leadership Articles" />
+
         <item
             android:id="@+id/nav_weekly_master"
             android:icon="@drawable/ic_create"
             android:title="Leadership Weekly MasterClass" />
+
+        <item
+            android:id="@+id/nav_weekly_message"
+            android:icon="@drawable/ic_chat"
+            android:title="Top Leadership Thoughts" />
+
 
     </group>
 

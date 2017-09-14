@@ -36,7 +36,7 @@ public class EndpointUtil {
     private static EndpointAPI endpointAPI = null;
 
     public static final int COMPANY = 1, SUBSCRIBERS = 2, LEADERS = 3, ADMINS = 4,
-            DAILY_THOUGHT = 5, WEEKLY_MASTERCLASS = 6;
+            DAILY_THOUGHT = 5, WEEKLY_MASTERCLASS = 6, GOLD = 7, PLATINUM = 8;
 
     public interface FCMListener {
         void onResponse(FCMResponseDTO response);
@@ -86,6 +86,18 @@ public class EndpointUtil {
                 companyID, LEADERS, payLoad, listener);
         t.execute();
     }
+    public static void sendGoldMessage(String companyID, PayLoad payLoad, FCMListener listener) {
+        TopicMessageTask t = new TopicMessageTask(
+                companyID, GOLD, payLoad, listener);
+        t.execute();
+    }
+
+    public static void sendPlatinumMessage(String companyID, PayLoad payLoad, FCMListener listener) {
+        TopicMessageTask t = new TopicMessageTask(
+                companyID, PLATINUM, payLoad, listener);
+        t.execute();
+    }
+
     static class SaveUserTask extends AsyncTask<Void, Void, FCMResponseDTO> {
 
         FCMUserDTO user;
@@ -276,6 +288,16 @@ public class EndpointUtil {
                         fcm = endpointAPI.sendTopicMessage(
                                 topicKey, payLoad).execute();
                         break;
+                    case GOLD:
+                        topicKey = TOPIC_GOLD.concat(id);
+                        fcm = endpointAPI.sendTopicMessage(
+                                topicKey, payLoad).execute();
+                        break;
+                    case PLATINUM:
+                        topicKey = TOPIC_PLATINIM.concat(id);
+                        fcm = endpointAPI.sendTopicMessage(
+                                topicKey, payLoad).execute();
+                        break;
                     default:
                         fcm.setStatusCode(99);
                         Log.e(TAG, "doInBackground: invalid message" );
@@ -311,7 +333,9 @@ public class EndpointUtil {
             TOPIC_MASTERCLASS = "master_class",
             TOPIC_COMPANY = "company",
             TOPIC_LEADER = "leader",
-            TOPIC_GENERAL = "general";
+            TOPIC_GENERAL = "general",
+            TOPIC_GOLD = "Gold",
+            TOPIC_PLATINIM = "Platinum";
 
     static class SendEmailTask extends AsyncTask<Void, Void, EmailResponseDTO> {
 

@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -20,14 +22,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +45,7 @@ import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.activities.ThemeSelectorActivity;
 import com.oneconnect.leadership.library.activities.eBookActivity;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
@@ -82,6 +89,7 @@ import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.ThemeChooser;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.util.ArrayList;
@@ -123,7 +131,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     private DailyThoughtDTO dailyThought;
     int currentIndex;
     static List<PageFragment> pageFragmentList;
-
+    int themeDarkColor, themePrimaryColor, logo;
     private Toolbar toolbar;
     Context ctx;
     CardView card1, card2, card3, card4;
@@ -136,29 +144,51 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     private int type;
     NavigationView navigationView;
     private PagerAdapter adapter;
+    private CompanyMainActivity activity;
+    private ActionBar ab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-       // firebaseAuth = FirebaseAuth.getInstance();
+        ThemeChooser.setTheme(this);
         setContentView(R.layout.activity_company_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.leadership_logo);
+
         ctx = getApplicationContext();
+        activity = this;
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+       // ab = getSupportActionBar();
+        //ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+//        ab.setDisplayHomeAsUpEnabled(true);
 
         page = getIntent().getStringExtra("page");
-
         mPager = (ViewPager) findViewById(R.id.viewpager);
-        //PagerTitleStrip strip = (PagerTitleStrip) mPager.findViewById(com.oneconnect.leadership.library.R.id.pager_title_strip);
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        Resources.Theme theme = getTheme();
+        TypedValue typedValue = new TypedValue();
+        theme.resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+        themeDarkColor = typedValue.data;
+        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
+        themePrimaryColor = typedValue.data;
+        strip.setBackgroundColor(themeDarkColor);
 
         strip.setVisibility(View.VISIBLE);
         strip.setTextColor(GRAY);
+        strip.setBackgroundColor(themeDarkColor);
         setup();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(themeDarkColor);
+            window.setNavigationBarColor(themeDarkColor);
+        }
 
         presenter = new SubscriberPresenter(this);
         crudPresenter = new CrudPresenter(this);
@@ -255,6 +285,14 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
         //videoListFragment.setPageTitle(ctx.getString(R.string.video));
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
+
+        companyMainFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        masterListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        podcastListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        eBookListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
 
 
         pageFragmentList.add(companyMainFragment);
@@ -644,9 +682,48 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         datePickerDialog.show();
     }*/
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.company_drawer, menu);
+        return true;
+    }
 
+    static boolean logOff;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+         int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+  /*      if (id == R.id.cancel_action) {
+            SharedPrefUtil.clearProfile(ctx);
+            Intent intent = new Intent(SubscriberMainActivity.this, SubscriberSignInActivityBase.class);
+            startActivity(intent);
+            logOff = true;
+            finish();
+            return true;
+        }
+        if (id == R.id.action_media) {
+            Intent intent = new Intent(SubscriberMainActivity.this, MediaListActivity.class);
+            startActivity(intent);
+            return true;
+        }*/
+
+        if (id == R.id.action_settings){
+            Intent w = new Intent(CompanyMainActivity.this, ThemeSelectorActivity.class);
+            w.putExtra("darkColor", themeDarkColor);
+            startActivityForResult(w, THEME_REQUESTED);
+            return true;
+        }
+        return true;
+    }
     Snackbar snackbar;
-
+    static final int THEME_REQUESTED = 8075;
     public void showSnackbar(String title, String action, String color) {
         snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(Color.parseColor(color));
@@ -1077,5 +1154,19 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     @Override
     public void onEBookTapped(EBookDTO eBook) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "### onActivityResult requestCode: " + requestCode + " result: " + resultCode);
+        switch(requestCode) {
+            case THEME_REQUESTED:
+                if (resultCode == RESULT_OK){
+                    finish();
+                    Intent intent = new Intent(this, CompanyMainActivity.class);
+                    startActivity(intent);
+                }
+                break;
+        }
     }
 }

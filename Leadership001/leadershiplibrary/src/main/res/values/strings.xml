@@ -36,9 +36,9 @@
     <string name="audio">Audio</string>
     <string name="company_profile">COMPANY PROFILE</string>
     <string name="daily_thought">LEADERSHIP DAILY THOUGHTS</string>
-    <string name="news_article">LEADERSHIP NEWS ARTICLES</string>
+    <string name="news_article">LEADERSHIP ARTICLES</string>
     <string name="weeky_master_class">LEADERSHIP WEEKLY MASTERCLASS</string>
-    <string name="weekly_message">LEADERSHIP WEEKLY MESSAGES</string>
+    <string name="weekly_message">TOP LEADERSHIP THOUGHT</string>
     <string name="photo">LEADERSHIP PHOTOS</string>
     <string name="podcast">LEADERSHIP PODCASTS</string>
     <string name="ebooks">LEADERSHIP EBOOKS</string>
@@ -84,7 +84,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity__podcast_list">Podcasts Attachments</string>
     <string name="title_activity_deep_link">Deep Link</string>
-
+    <string name="title_activity_theme">ThemeChooser</string>
     <string name="title_activity_image_list">Images</string>
     <string name="share">Share</string>
     <string name="action_play_next">Play Next</string>

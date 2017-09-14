@@ -76,5 +76,21 @@ public class App extends Application {
         MultiDex.install(this);
     }
 
+    public final static int THEME_BLUE = 20;
+    public final static int THEME_INDIGO = 1;
+    public final static int THEME_RED = 2,
+            THEME_TEAL = 3,
+            THEME_BLUE_GRAY = 4,
+            THEME_ORANGE = 5,
+            THEME_PINK = 6,
+            THEME_CYAN = 7,
+            THEME_GREEN = 8,
+            THEME_LIGHT_GREEN = 9,
+            THEME_LIME = 10,
+            THEME_AMBER = 11,
+            THEME_GREY = 12,
+            THEME_BROWN = 14,
+            THEME_PURPLE = 15;
+
 }
 

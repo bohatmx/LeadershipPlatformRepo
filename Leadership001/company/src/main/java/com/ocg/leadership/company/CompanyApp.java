@@ -36,5 +36,7 @@ public class CompanyApp extends Application {
         MultiDex.install(this);
     }
 
+
+
     static final String TAG = CompanyApp.class.getSimpleName();
 }
