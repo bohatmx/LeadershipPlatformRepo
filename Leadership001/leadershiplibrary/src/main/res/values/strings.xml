@@ -42,6 +42,7 @@
     <string name="photo">LEADERSHIP PHOTOS</string>
     <string name="podcast">LEADERSHIP PODCASTS</string>
     <string name="ebooks">LEADERSHIP EBOOKS</string>
+    <string name="users">LEADERSHIP STAFF</string>
     <string name="calendar_events">LEADERSHIP CALENDER EVENTS</string>
     <string name="Photographs">Photographs</string>
     <string name="text">Text</string>
@@ -133,5 +134,6 @@
     <string name="enter_article_content">Enter article content</string>
     <string name="enter_news">Enter News</string>
     <string name="enter_subtitle">Enter Subtitle</string>
+    <string name="title_activity_user">UserActivity</string>
 
 </resources>

@@ -102,6 +102,7 @@ import com.oneconnect.leadership.library.like.OnAnimationEndListener;
 import com.oneconnect.leadership.library.like.OnLikeListener;
 
 import static android.graphics.Color.GRAY;
+import static android.graphics.Color.WHITE;
 
 
 public class SubscriberMainActivity extends AppCompatActivity
@@ -167,7 +168,7 @@ public class SubscriberMainActivity extends AppCompatActivity
         strip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
         strip.setVisibility(View.VISIBLE);
-        strip.setTextColor(GRAY);
+        strip.setTextColor(WHITE);
          setup();
 
         Resources.Theme theme = getTheme();

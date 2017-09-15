@@ -46,6 +46,7 @@ import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.activities.ThemeSelectorActivity;
+import com.oneconnect.leadership.library.activities.UserActivity;
 import com.oneconnect.leadership.library.activities.eBookActivity;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
@@ -84,6 +85,7 @@ import com.oneconnect.leadership.library.lists.NewsListFragment;
 import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
+import com.oneconnect.leadership.library.lists.UserListFragment;
 import com.oneconnect.leadership.library.lists.VideoListFragment;
 import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
 import com.oneconnect.leadership.library.util.Constants;
@@ -98,12 +100,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.graphics.Color.GRAY;
+import static android.graphics.Color.WHITE;
 
 public class CompanyMainActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener,
         SubscriberContract.View, CrudContract.View, CacheContract.View, MasterListFragment.WeeklyMasterClassListener,
         WeeklyMessageListFragment.WeeklyMessageListener, PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
         PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
-        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener {
+        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener {
 
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -115,6 +118,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     WeeklyMessageListFragment weeklyMessageListFragment;
     PhotoListFragment photoListFragment;
     CalendarEventListFragment calendarEventListFragment;
+    UserListFragment userListFragment;
     NewsListFragment newsListFragment;
     private VideoListFragment videoListFragment;
     private CompanyMainFragment companyMainFragment;
@@ -179,7 +183,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         strip.setBackgroundColor(themeDarkColor);
 
         strip.setVisibility(View.VISIBLE);
-        strip.setTextColor(GRAY);
+        strip.setTextColor(WHITE);
         strip.setBackgroundColor(themeDarkColor);
         setup();
 
@@ -274,6 +278,8 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
         //videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
         eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
+        userListFragment = UserListFragment.newInstance(new HashMap<String, UserDTO>());
+
 
         companyMainFragment.setPageTitle(ctx.getString(R.string.company_profile));
         newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
@@ -285,6 +291,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
         //videoListFragment.setPageTitle(ctx.getString(R.string.video));
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
+        userListFragment.setPageTitle(ctx.getString(R.string.users));
 
         companyMainFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
@@ -293,7 +300,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         podcastListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         eBookListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-
+        userListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
 
         pageFragmentList.add(companyMainFragment);
         pageFragmentList.add(newsListFragment);
@@ -305,6 +312,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         pageFragmentList.add(podcastListFragment);
         // pageFragmentList.add(videoListFragment);
         pageFragmentList.add(eBookListFragment);
+        pageFragmentList.add(userListFragment);
 
 
         try {
@@ -358,6 +366,10 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
                 }
                 if (page.equalsIgnoreCase("Leadership eBooks")) {
                     mPager.setCurrentItem(6);
+                }
+
+                if (page.equalsIgnoreCase("Leadership Staff")) {
+                    mPager.setCurrentItem(7);
                 }
 
             }
@@ -483,6 +495,11 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         startActivity(intent);
     }
 
+    @Override
+    public void onUsersTapped(UserDTO user) {
+
+    }
+
     /**
      * Adapter to manage fragments in view pager
      */
@@ -556,6 +573,10 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
                 }*/
                 if (item.getItemId() == R.id.nav_eBooks) {
                     mPager.setCurrentItem(6, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_users) {
+                    mPager.setCurrentItem(7, true);
                     return true;
                 }
                 if (item.getItemId() == R.id.nav_share) {
@@ -685,7 +706,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.company_drawer, menu);
+       // getMenuInflater().inflate(R.menu.company_drawer, menu);
         return true;
     }
 
@@ -759,7 +780,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
             mPager.setCurrentItem(3, true);
             return true;
         }else if (id == R.id.nav_podcast) {
-            Intent intent = new Intent(/*SubscriberMainActivity*/CompanyMainActivity.this, PodcastActivity.class);
+            Intent intent = new Intent(CompanyMainActivity.this, PodcastActivity.class);
             startActivity(intent);
             return true;
 
@@ -768,8 +789,14 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
             startActivity(intent);
             return true;
 
-        }*/ else if (id == R.id.nav_eBooks) {
-            Intent intent = new Intent(/*SubscriberMainActivity*/CompanyMainActivity.this, eBookActivity.class);
+        }*/
+        else if (id == R.id.nav_eBooks) {
+            Intent intent = new Intent(CompanyMainActivity.this, eBookActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (id == R.id.nav_users) {
+            Intent intent = new Intent(CompanyMainActivity.this, UserActivity.class);
             startActivity(intent);
             return true;
         }
