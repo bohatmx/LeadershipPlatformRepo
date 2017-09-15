@@ -2,7 +2,12 @@ package com.oneconnect.leadership.library.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -13,6 +18,8 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+
+import java.util.Random;
 
 import static com.google.android.gms.common.Scopes.PROFILE;
 
@@ -180,5 +187,67 @@ public class SharedPrefUtil {
         }
         return gson.fromJson(json, PodcastDTO.class);
     }
+    public static void setCityImages(Context ctx, CityImages images) {
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(ctx);
 
+        SharedPreferences.Editor ed = sp.edit();
+        String json = gson.toJson(images);
+        ed.putString(CITY_IMAGES, json);
+        ed.commit();
+
+        Log.w(LOG, "#### cityImages saved: " + json);
+
+    }
+    static Random random = new Random(System.currentTimeMillis());
+
+    public static CityImages getCityImages(Context ctx) {
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(ctx);
+        String json = sp.getString(CITY_IMAGES, null);
+        if (json == null) {
+            Log.e(LOG, "#### cityImages NOT retrieved");
+            return null;
+        }
+        CityImages cityImages = gson.fromJson(json, CityImages.class);
+//        Log.i(LOG, "#### cityImages retrieved: " + cityImages.getImageResourceIDs().length);
+        return cityImages;
+    }
+
+    static int lastIndex;
+    public static Bitmap getRandomCityImage(Context ctx) {
+        CityImages cityImages = getCityImages(ctx);
+        int index = random.nextInt(cityImages.getImageResourceIDs().length - 1);
+//        Log.w(LOG,"getRandomCityImage index: " + index + " lastIndex: " + lastIndex);
+        if (lastIndex != 0) {
+            while (index != lastIndex) {
+                index = random.nextInt(cityImages.getImageResourceIDs().length - 1);
+            }
+        }
+        int id = cityImages.getImageResourceIDs() [index];
+        Drawable drawable = ContextCompat.getDrawable(ctx, id);
+        BitmapDrawable bd = (BitmapDrawable)drawable;
+        Bitmap k = getResizedBitmap(bd.getBitmap(), 560, 380);
+        return k;
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+// recreate the new Bitmap
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
+    }
+
+    static final String  CITY_IMAGES = "cityImages";
+    static final String LOG = SharedPrefUtil.class.getSimpleName();
 }

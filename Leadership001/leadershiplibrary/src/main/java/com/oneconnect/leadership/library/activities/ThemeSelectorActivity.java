@@ -250,7 +250,7 @@ public class ThemeSelectorActivity extends AppCompatActivity {
 
     }
 
-    boolean themeChanged = true;
+    boolean themeChanged;
 
     private void changeToTheme(int theme) {
         SharedPrefUtil.setThemeSelection(ctx, theme);

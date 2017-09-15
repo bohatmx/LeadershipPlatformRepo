@@ -210,12 +210,32 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
 
     @Override
     public void getAllStaff() {
+        listAPI.getAllStaff(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onUsers(bag.getUsers());
+            }
 
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
     }
 
     @Override
     public void getAllLeaders() {
+       /* listAPI.getAllLeaders(new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onAllLeaders(bag.getLeaders());
+            }
 
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });*/
     }
 
     @Override

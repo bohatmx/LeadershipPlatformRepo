@@ -18,10 +18,13 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
 
-       <!-- <provider
+        <!--
+            <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1234"
-            android:exported="true" /> -->
+            android:exported="true" />
+        -->
+
 
         <!-- SERVICES -->
         <service android:name=".services.LeadershipInstanceIDService">
@@ -35,10 +38,11 @@
         <service
             android:name=".services.VideoUploaderService"
             android:exported="false" />
+
         <activity
             android:name=".activities.ThemeSelectorActivity"
             android:label="@string/title_activity_theme"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".video.LeYouTubePlayerActivity" />
         <activity
             android:name=".activities.SubscriberDrawerActivity"
@@ -87,6 +91,10 @@
         <activity
             android:name=".activities.ImageListActivity"
             android:label="@string/title_activity_image_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.UserActivity"
+            android:label="@string/title_activity_user"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -69,8 +69,13 @@
         <menu>
             <item
                 android:id="@+id/nav_company_profile"
-                android:icon="@drawable/ic_person"
+                android:icon="@drawable/ic_clipboard"
                 android:title="Company Profile"/>
+
+            <item
+                android:id="@+id/nav_users"
+                android:icon="@drawable/ic_person"
+                android:title="Company Staff" />
         </menu>
     </item>
 
