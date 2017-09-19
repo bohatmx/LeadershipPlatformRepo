@@ -95,6 +95,14 @@
         <activity
             android:name=".activities.UserActivity"
             android:label="@string/title_activity_user"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.CreateCompanyActivity"
+            android:label="@string/title_activity_create_company"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.FullArticleActivity"
+            android:label="@string/title_activity_full_article"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -237,6 +237,11 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
     }
 
     @Override
+    public void onCompanyCreated(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }

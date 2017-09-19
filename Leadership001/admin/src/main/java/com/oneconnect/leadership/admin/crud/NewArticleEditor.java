@@ -264,6 +264,11 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onEntityDeleted() {
 
     }
@@ -298,7 +303,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.new_article_editor, container, false);
         btn = (Button) view.findViewById(R.id.btn);
-        btn.setText("SUBMIT NEWS");
+        btn.setText("SUBMIT ARTICLE");
         catSpinner = (Spinner) view.findViewById(R.id.Catspinner);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,7 +312,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
             }
         });
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
-        editTitle.setHint("Enter news content");
+        editTitle.setHint("Enter article title");
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
         editSubtitle.setHint("Enter author name");
         editContent = (TextInputEditText) view.findViewById(R.id.editContent);

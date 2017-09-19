@@ -1,7 +1,9 @@
 package com.oneconnect.leadership.library.camera;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +70,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     ImageView image1, image2;
     SearchView searchView = null;
     ArrayList<String> downloadedList;
+    public static final int PERMISSIONS_REQUEST = 113;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,10 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         presenter = new VideoUploadPresenter(this);
         image1 = (ImageView) findViewById(R.id.image1);
         image2 = (ImageView) findViewById(R.id.image2);
+
+        check();
+
+
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
@@ -131,6 +139,24 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         getVideosOnDevice();
     }
 
+    private void check() {
+        Log.w(TAG, "check: PERMISSIONS_REQUEST" );
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CALENDAR,
+                            Manifest.permission.WRITE_CALENDAR,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST);
+            return;
+
+        }
+        // proceed();
+    }
+
     private void setup() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -169,11 +195,15 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
 
                     if (cursor != null) {
                         Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
+                        if (cursor != null && cursor.moveToFirst()) {
                         String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                         long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
                         Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
                         localVideos.add(new LocalVideo(duration, path));
                         videoItemHashSet.add(path);
+                        } else {
+                            Log.e(TAG, "**** no videos found on device and we not crashing ****");
+                        }
                     }
 
                 } while (cursor.moveToNext());

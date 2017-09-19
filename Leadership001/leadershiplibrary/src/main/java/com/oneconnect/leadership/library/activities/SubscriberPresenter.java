@@ -82,6 +82,26 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     }
 
     @Override
+    public void getCompany(String companyID) {
+        dataAPI.getCompany(companyID, new DataAPI.CompanyQueryListener() {
+            @Override
+            public void onCompanyFound(CompanyDTO company) {
+                view.onCompanyFound(company);
+            }
+
+            @Override
+            public void onCompanyNotFound() {
+                view.onError("Company not found");
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void getAllCompanyDailyThoughts(String companyID) {
         listAPI.getAllCompanyDailyThoughts(companyID, new ListAPI.DataListener() {
             @Override

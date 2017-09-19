@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".AdminApp"
@@ -123,11 +125,16 @@
             android:label="@string/title_activity_photo_selection"
             android:parentActivityName=".crud.CrudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.oneconnect.leadership.library.activities.CreateCompanyActivity"
+            android:label="@string/title_activity_create_company"
+            android:parentActivityName=".crud.CrudActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name="com.oneconnect.leadership.library.audio.AudioRecordTest"
             android:label="@string/title_activity_record"
             android:parentActivityName=".crud.CrudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -174,6 +181,7 @@
             android:name="com.oneconnect.leadership.library.activities.ImageListActivity"
             android:label="@string/title_activity_image_list"
             android:theme="@style/AppTheme.NoActionBar" />
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"

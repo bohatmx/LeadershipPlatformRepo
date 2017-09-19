@@ -15,6 +15,7 @@ public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<Com
     private String  email,
     countryID, address, companyLogoUrl;
     private int primaryColor, secondaryColor;
+    private PhotoDTO photo;
 
     public CompanyDTO() {
     }
@@ -143,5 +144,13 @@ public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<Com
 
     public void setSecondaryColor(int secondaryColor) {
         this.secondaryColor = secondaryColor;
+    }
+
+    public PhotoDTO getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(PhotoDTO photo) {
+        this.photo = photo;
     }
 }

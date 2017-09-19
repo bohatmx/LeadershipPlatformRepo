@@ -35,6 +35,7 @@ public class CrudContract {
         void updateNews(NewsDTO news);
         void updateCategory(CategoryDTO category);
         void createUser(UserDTO user);
+        void createCompany(CompanyDTO company);
         void deleteUser(UserDTO user);
         void deleteDailyThought(DailyThoughtDTO dailyThought);
         void deleteWeeklyMessage(WeeklyMessageDTO weeklyMessage);
@@ -69,6 +70,7 @@ public class CrudContract {
         void onEntityAdded(String key);
         void onEntityUpdated();
         void onUserCreated(UserDTO user);
+        void onCompanyCreated(CompanyDTO company);
         void onUserUpdated(UserDTO user);
         void onDailyThoughtUpdated(DailyThoughtDTO dailyThought);
         void onWeeklyMasterClassUpdated(WeeklyMasterClassDTO masterClass);

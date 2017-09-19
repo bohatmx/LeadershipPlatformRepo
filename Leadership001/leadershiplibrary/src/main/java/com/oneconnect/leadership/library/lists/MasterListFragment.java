@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -59,6 +60,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     private CachePresenter cachePresenter;
     private UserDTO user;
     private MasterListener masterListener;
+    private FirebaseAuth firebaseAuth;
 
     public interface MasterListener {
         void onWeeklyMasterClassesTapped(WeeklyMasterClassDTO master);
@@ -106,6 +108,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
         view = inflater.inflate(R.layout.fragment_weekly_master_class_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
             category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
             Log.i(LOG, "category: " + category.getCategoryName());
@@ -128,11 +131,12 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     public void getWeeklyMasterClasses() {
         Log.d(LOG, "************** getWeeklyMasterClasses: " );
-//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllWeeklyMasterClasses();
- //       } else {
-  //          Log.d(LOG, "user is null");
-   //     }
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }  else {
+            presenter.getWeeklyMasterclasses(user.getCompanyID());
+        }
+          //  presenter.getAllWeeklyMasterClasses();
     }
 
     private void getCachedWeeklyMasterClasses() {
@@ -450,7 +454,8 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company master classes");
+        presenter.getWeeklyMasterclasses(user.getCompanyID());
     }
 
     @Override
@@ -620,6 +625,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 

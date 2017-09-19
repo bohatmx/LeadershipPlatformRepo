@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -70,6 +71,7 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     private List<WeeklyMessageDTO> weeklyMessageList = new ArrayList<>();
     private View view;
     private WeeklyMessageListener weeklyListener;
+    private FirebaseAuth firebaseAuth;
 
 
     public WeeklyMessageListFragment() {
@@ -110,6 +112,7 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
         view = inflater.inflate(R.layout.fragment_weekly_message_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
             category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
             Log.i(LOG, "category: " + category.getCategoryName());
@@ -146,11 +149,12 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     private void getWeeklyMessages() {
         Log.d(LOG, "************** getWeeklyMessages: " );
-      //  if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllWeeklyMessages();
-      //  } else {
-      //      Log.d(LOG, "user is null");
-      //  }
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }  else {
+            presenter.getWeeklyMessages(user.getCompanyID());
+        }
+         //   presenter.getAllWeeklyMessages();
     }
 
 
@@ -260,7 +264,8 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company weekly messages");
+        presenter.getWeeklyMessages(user.getCompanyID());
     }
 
     @Override
@@ -427,11 +432,23 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     @Override
     public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
-
+        Log.w(LOG, "onWeeklyMessages: " + list.size());
+        this.weeklyMessageList = list;
+        if (category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
+//        Collections.sort(list);
+        adapter = new WeeklyMessageAdapter(list, ctx);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 

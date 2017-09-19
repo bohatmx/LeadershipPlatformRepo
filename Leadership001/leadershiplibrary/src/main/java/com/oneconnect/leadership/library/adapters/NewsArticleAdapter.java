@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.FullArticleActivity;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -55,7 +56,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public interface NewsArticleListener{
-        void onThoughtClicked(int position);
+        void onArticleSelected(NewsDTO newsArticle);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
@@ -163,16 +164,22 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
+                listener.onArticleSelected(dt);
+                /*Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
+                       if (dt.getBody() != null) {
+                        Intent intent = new Intent(ctx, FullArticleActivity.class);
+                           intent.putExtra("newsArticle", dt);
+                           ctx.startActivity(intent);
+                       }
+                        *//* if (dvh.bottomLayout.getVisibility() == View.GONE){
                             dvh.bottomLayout.setVisibility(View.VISIBLE);
                         }else{
                             dvh.bottomLayout.setVisibility(View.GONE);
-                        }
+                        }*//*
                     }
-                });
+                });*/
             }
         });
         if (dt.getPhotos() != null) {
@@ -586,6 +593,6 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    static final String LOG = DailyThoughtAdapter.class.getSimpleName();
+    static final String LOG = NewsArticleAdapter.class.getSimpleName();
 }
 

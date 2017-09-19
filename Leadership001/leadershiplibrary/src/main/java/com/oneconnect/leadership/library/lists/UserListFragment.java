@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -59,6 +60,7 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
     private RecyclerView recyclerView;
     private Context ctx;
     private int type;
+    private FirebaseAuth firebaseAuth;
 
     public interface UserListListener {
         void onUsersTapped(UserDTO user);
@@ -104,9 +106,16 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
         view = inflater.inflate(R.layout.fragment_user_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
+
+        if (getActivity().getIntent().getSerializableExtra("user") != null) {
+            user = (UserDTO) getActivity().getIntent().getSerializableExtra("user");
+            Log.i(TAG, "user: " + user.getFullName());
+        }
+
 
         getCachedUsers();
         getUsers();
@@ -117,7 +126,12 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
     public void getUsers() {
         Log.d(TAG, "************** getUsers: " );
          //   presenter.getUsers(user.getCompanyID());
-        presenter.getAllStaff();
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+            /*presenter.getAllStaff();*/
+        }  else {
+            presenter.getUsers(user.getCompanyID());
+        }
 
     }
 
@@ -431,7 +445,10 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
+    public void onUserFound(UserDTO u) {
+       // user = u;
+        Log.i(TAG, "*** onUserFound ***" + u.getFullName());
+        presenter.getUsers(u.getCompanyID());
 
     }
 
@@ -613,6 +630,11 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 

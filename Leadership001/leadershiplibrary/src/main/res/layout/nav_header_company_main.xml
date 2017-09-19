@@ -10,6 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="#be1d2c"
+    android:id="@+id/nav_header_layout"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
@@ -21,12 +22,12 @@
         android:visibility="gone"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@drawable/harmony" />
-
 
 </LinearLayout>

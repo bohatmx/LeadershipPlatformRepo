@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
@@ -72,6 +73,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private Spinner catSpinner;
     private SubscriberPresenter Catpresenter;
     private CachePresenter cachePresenter;
+    private RadioButton internalButton, globalButton;
 
    List<CategoryDTO> categoryList;
     private CategoryDTO category;
@@ -277,6 +279,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onEntityDeleted() {
 
     }
@@ -400,6 +407,9 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 bottomSheetListener.onDateRequired();
             }
         });
+        internalButton = (RadioButton) view.findViewById(R.id.internalButton);
+        globalButton = (RadioButton) view.findViewById(R.id.globalButton);
+
 
       //  getCachedCategories();
         getCategories();
@@ -498,6 +508,14 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         dailyThought.setTitle(editTitle.getText().toString());
         dailyThought.setSubtitle(editSubtitle.getText().toString());
         dailyThought.setCategory(category);
+        if (internalButton.isChecked()) {
+            dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT);
+            dailyThought.setDailyThoughtType(DailyThoughtDTO.INTERNAL_DAILY_THOUGHT);
+        }
+        if (globalButton.isChecked()) {
+            dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT);
+            dailyThought.setDailyThoughtType(DailyThoughtDTO.GLOBAL_DAILY_THOUGHT);
+        }
 
 
         switch (type) {

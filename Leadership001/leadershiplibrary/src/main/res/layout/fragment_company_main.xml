@@ -7,6 +7,12 @@
         android:layout_height="match_parent"
         tools:context="com.oneconnect.leadership.library.lists.CompanyMainFragment">
 
+        <Switch
+            android:checked="false"
+            android:padding="@dimen/mon_padding"
+            android:id="@+id/simpleSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_below="@id/appBar"
@@ -67,6 +73,7 @@
                                 android:textColor="@color/grey_600" />
 
                             <ImageView
+                                android:id="@+id/thoughtIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_comment_black_24dp" />
@@ -110,6 +117,7 @@
                                 android:textColor="@color/grey_600" />
 
                             <ImageView
+                                android:id="@+id/videoIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_videocam" />
@@ -162,6 +170,7 @@
                                 android:textColor="@color/grey_600" />
 
                             <ImageView
+                                android:id="@+id/userIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_people" />
@@ -204,6 +213,7 @@
                                 android:textColor="@color/grey_600" />
 
                             <ImageView
+                                android:id="@+id/podcastIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_microphone" />

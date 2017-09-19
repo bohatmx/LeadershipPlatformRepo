@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -68,6 +69,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
+    private FirebaseAuth firebaseAuth;
 
 
     public DailyThoughtListFragment() {
@@ -116,6 +118,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
        view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
             category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
             Log.i(LOG, "category: " + category.getCategoryName());
@@ -146,11 +149,12 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     public void getDailyThoughts() {
         Log.d(LOG, "************** getDailyThoughts: " );
-//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllDailyThoughts();
-  //      } else {
-   //         Log.d(LOG, "user is null");
-    //    }
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }  else {
+            presenter.getDailyThoughts(user.getCompanyID());
+        }
+         //   presenter.getAllDailyThoughts();
     }
 
     private void getCachedDailyThoughts() {
@@ -220,7 +224,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company DailyThoughts");
+        presenter.getDailyThoughts(user.getCompanyID());
     }
 
     @Override
@@ -257,7 +262,9 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        list = getCategoryList(list, category.getCategoryName());
+        if (category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
@@ -509,6 +516,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 

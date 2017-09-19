@@ -7,7 +7,7 @@
                 <item
                     android:id="@+id/nav_news_article"
                     android:icon="@drawable/ic_info"
-                    android:title="Leadership News Articles" />
+                    android:title="Leadership Articles" />
             </menu>
         </item>
     </group>

@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -68,6 +71,8 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     public static final String TAG = PodcastListFragment.class.getSimpleName();
+    private FirebaseAuth firebaseAuth;
+
     public PodcastListFragment() {
         // Required empty public constructor
     }
@@ -120,8 +125,8 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         view =  inflater.inflate(R.layout.fragment_podcast_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
-
-        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        firebaseAuth = FirebaseAuth.getInstance();
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
 
@@ -132,11 +137,12 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     public void getPodcasts() {
         Log.d(LOG, "************** getPodcasts: " );
-     //   if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllPodcasts();
-    //    } else {
-    //        Log.d(LOG, "user is null");
-    //    }
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }  else {
+            presenter.getPodcasts(user.getCompanyID());
+        }
+         //   presenter.getAllPodcasts();
     }
 
     private void getCachedPodcasts() {
@@ -273,7 +279,8 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company podcasts");
+        presenter.getPodcasts(user.getCompanyID());
     }
 
     @Override
@@ -361,10 +368,12 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         Log.i(LOG, "onAllPodcasts: " + list.size());
         this.podcasts = list;
 //        Collections.sort(list);
-        adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
+        adapter = new PodcastAdapter(podcasts, ctx, new PodcastAdapter.PodcastAdapterListener() {
             @Override
-            public void onPlayClicked(int position) {
-
+            public void onPlayClicked(PodcastDTO podcast) {
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -394,11 +403,13 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void onPodcasts(List<PodcastDTO> list) {
         Log.i(LOG, "onPodcasts: " + list.size());
         this.podcasts = list;
-        Collections.sort(list);
+//        Collections.sort(list);
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
             @Override
-            public void onPlayClicked(int position) {
-
+            public void onPlayClicked(PodcastDTO podcast) {
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -452,6 +463,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 

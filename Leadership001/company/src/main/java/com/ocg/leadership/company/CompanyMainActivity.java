@@ -17,6 +17,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -36,6 +37,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -151,6 +154,8 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     private CompanyMainActivity activity;
     private ActionBar ab;
 
+    String themeColor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +166,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setLogo(R.drawable.harmony);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         ctx = getApplicationContext();
         activity = this;
@@ -181,6 +187,14 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         theme.resolveAttribute(R.attr.colorPrimary, typedValue, true);
         themePrimaryColor = typedValue.data;
         strip.setBackgroundColor(themeDarkColor);
+
+        if (getIntent().getSerializableExtra("themeColor") != null) {
+            /*themeColor*/themeColor = (String) getIntent().getSerializableExtra("themeColor");
+        } else {
+            Log.i(TAG, "*** themeColor not found ***");
+        }
+
+
 
         strip.setVisibility(View.VISIBLE);
         strip.setTextColor(WHITE);
@@ -248,7 +262,18 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());*/
         }
+
+        if (getIntent().getSerializableExtra("user") != null) {
+            user = (UserDTO) getIntent().getSerializableExtra("user");
+            presenter.getCompany(user.getCompanyID());
+        } else {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }
+
+
     }
+
+    LinearLayout nav_header_layout;
 
     private void setup() {
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -261,6 +286,14 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         navigationView.setNavigationItemSelectedListener(this);
 
         setUpViewPager();
+
+       /* if (getIntent().getSerializableExtra("user") != null) {
+            type = ResponseBag.USERS;
+            user = (UserDTO) getIntent().getSerializableExtra("user");
+            getSupportActionBar().setSubtitle(user.getFullName() + user.getUserDescription());
+        } else {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }*/
     }
 
     private void setUpViewPager() {
@@ -293,15 +326,18 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
         userListFragment.setPageTitle(ctx.getString(R.string.users));
 
-        companyMainFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        masterListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        podcastListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        eBookListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        userListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        /*Color.parseColor(themeColor);*/
+        if (themeColor != null) {
+            companyMainFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+            newsListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+            dailyThoughtListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+            masterListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+            weeklyMessageListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+            podcastListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+            eBookListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+            userListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
 
+        }
         pageFragmentList.add(companyMainFragment);
         pageFragmentList.add(newsListFragment);
         pageFragmentList.add(dailyThoughtListFragment);
@@ -617,96 +653,10 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     }
     private static final int REQUEST_INVITE = 321;
 
-   /* private void startUserBottomSheet(final UserDTO user, int type) {
-
-        final UserEditorBottomSheet myBottomSheet =
-                UserEditorBottomSheet.newInstance(user, type);
-        myBottomSheet.setCrudPresenter(presenter);
-        myBottomSheet.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
-            @Override
-            public void onWorkDone(BaseDTO entity) {
-                UserDTO m = (UserDTO) entity;
-                if (bag.getUsers() == null) {
-                    bag.setUsers(new ArrayList<UserDTO>());
-                }
-                bag.getUsers().add(0, m);
-              //  setFragment();
-                myBottomSheet.dismiss();
-                showSnackbar(m.getFullName().concat(" is being added/updated"), getString(R
-                        .string.ok_label), "green");
-
-            }
-
-            @Override
-            public void onDateRequired() {
-                Log.d(TAG, "onDateRequired: date not required");
-            }
-
-            @Override
-            public void onError(String message) {
-                showSnackbar(message, "bad", Constants.RED);
-            }
-        });
-        myBottomSheet.show(getSupportFragmentManager(), "SHEET_USER");
-
-    }
-
-    private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
-
-        dailyThoughtEditor = DailyThoughtEditor.newInstance(thought, type);
-        dailyThoughtEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
-            @Override
-            public void onWorkDone(BaseDTO entity) {
-                DailyThoughtDTO m = (DailyThoughtDTO) entity;
-                if (bag.getDailyThoughts() == null) {
-                    bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
-                }
-                bag.getDailyThoughts().add(0, m);
-               // setFragment();
-                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
-                        .string.ok_label), "green");
-
-            }
-
-            @Override
-            public void onDateRequired() {
-                getDate(ResponseBag.DAILY_THOUGHTS);
-            }
-
-            @Override
-            public void onError(String message) {
-                showSnackbar(message, "bad", Constants.RED);
-            }
-        });
-
-        dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
-
-    }
-
-    private void getDate(final int sheetType) {
-        final java.util.Calendar cal = java.util.Calendar.getInstance();
-        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                cal.set(year, month, day);
-                Date d = cal.getTime();
-                switch (sheetType) {
-                    case ResponseBag.DAILY_THOUGHTS:
-                        dailyThoughtEditor.setSelectedDate(d);
-                        break;
-                }
-            }
-        }, cal.get(java.util.Calendar.YEAR),
-                cal.get(java.util.Calendar.MONTH),
-                cal.get(java.util.Calendar.DAY_OF_MONTH));
-
-        datePickerDialog.show();
-    }*/
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.company_drawer, menu);
+      //  getMenuInflater().inflate(R.menu.company_drawer, menu);
         return true;
     }
 
@@ -894,6 +844,11 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     }
 
     @Override
+    public void onCompanyCreated(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }
@@ -979,8 +934,13 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
-
+    public void onUserFound(UserDTO u) {
+        Log.i(TAG, "*** onUserFound ***" + u.getEmail());
+        user = u;
+        Intent intent = new Intent(this, CompanyMainActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -1131,6 +1091,28 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
 
+    }
+
+    String hexColor;
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+            Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
+        if (company.getPrimaryColor() != 0) {
+            Log.i(TAG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+          //  final int companyColor = Integer.parseInt(hexColor);
+
+            toolbar.setBackgroundColor(Color.parseColor(hexColor)/*Integer.parseInt(hexColor)*//*company.getPrimaryColor()*/);
+            strip.setBackgroundColor(Color.parseColor(hexColor));
+          //  navigationView.setBackgroundColor(Color.parseColor(hexColor));
+           /* Intent intent = new Intent(this, CompanyMainActivity.class);
+            intent.putExtra("themeColor", hexColor);
+            startActivity(intent);*/
+        }
+        /*if (company.getCompanyLogoUrl()!= null) {
+            toolbar.setLogo(company.getCompanyLogoUrl());
+        }*/
     }
 
     @Override

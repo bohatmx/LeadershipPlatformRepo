@@ -125,6 +125,12 @@ public class DataAPI {
         void onError(String message);
     }
 
+    public interface CreateCompanyListener {
+        void onCompanyCreated(CompanyDTO company);
+        void onCompanyAlreadyExists(CompanyDTO company);
+        void onError(String message);
+    }
+
     public interface OnSignedIn {
         void onSuccess(FirebaseUser user);
 
@@ -148,6 +154,18 @@ public class DataAPI {
 
         void onUserNotFoundByEmail();
 
+        void onError(String message);
+    }
+
+    public interface CompanyEmailQueryListener {
+        void onCompanyFoundByEmail(CompanyDTO company);
+        void onCompanyNotFoundByEmail();
+        void onError(String message);
+    }
+
+    public interface CompanyQueryListener {
+        void onCompanyFound(CompanyDTO company);
+        void onCompanyNotFound();
         void onError(String message);
     }
 
@@ -186,6 +204,27 @@ public class DataAPI {
             }
         });
 
+    }
+
+    public void createCompany(final CompanyDTO company,
+                           final CreateCompanyListener listener) {
+        Log.d(TAG, "createCompany: starting to create company: " + company.getCompanyName());
+        addCompany(company, new CreateCompanyListener() {
+            @Override
+            public void onCompanyCreated(CompanyDTO company) {
+                listener.onCompanyCreated(company);
+            }
+
+            @Override
+            public void onCompanyAlreadyExists(CompanyDTO company) {
+                listener.onError("Company already exists");
+            }
+
+            @Override
+            public void onError(String message) {
+                listener.onError(message);
+            }
+        });
 
     }
 
@@ -302,6 +341,71 @@ public class DataAPI {
 
     }
 
+    public void getCompanyByEmail(final String email, final CompanyEmailQueryListener listener) {
+        Log.d(TAG, "################## getCompanyByEmail: find company by email: " + email);
+        DatabaseReference companyRef = db.getReference(COMPANIES);
+        Query q = companyRef.orderByChild("email").equalTo(email);
+        log("getCompanyByEmail", companyRef);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, "onDataChange: getCompany: dataSnapshot:" + dataSnapshot);
+
+                if (dataSnapshot.getChildren() == null || dataSnapshot.getChildrenCount() == 0) {
+                    Log.e(TAG, "onDataChange: getCompany: no companies found for email: " + email);
+                    listener.onCompanyNotFoundByEmail();
+                    return;
+                }
+                Log.w(TAG, "onDataChange: getCompay: companies found by email "
+                        + dataSnapshot.getChildrenCount());
+
+                for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                    CompanyDTO u = shot.getValue(CompanyDTO.class);
+                    listener.onCompanyFoundByEmail(u);
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+
+    }
+
+    public void getCompany(final String companyID, final CompanyQueryListener listener) {
+        Log.d(TAG, "####### getCompany: find company by companyID: " + companyID);
+        DatabaseReference compRef = db.getReference(COMPANIES);
+        Query q = compRef.orderByChild("companyID").equalTo(companyID);
+        log("getCompany", compRef);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, "onDataChange: getCompany: dataSnapshot:" + dataSnapshot);
+                if (dataSnapshot.getChildren() == null || dataSnapshot.getChildrenCount() == 0) {
+                    Log.e(TAG, "onDataChange: getCompany: no company found for companyID: " + companyID);
+                    listener.onCompanyNotFound();
+                    return;
+                }
+                Log.w(TAG, "onDataChange: getCompany: company found by companyID: " + dataSnapshot.getChildrenCount());
+
+                for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                    CompanyDTO com = shot.getValue(CompanyDTO.class);
+                    listener.onCompanyFound(com);
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+
+
     public void getUserByUid(final String uid, final OnDataRead listener) {
         Log.d(TAG, "########### getUser: get user by uid: " + uid);
         final long start = System.currentTimeMillis();
@@ -342,6 +446,40 @@ public class DataAPI {
 
     }
 
+    public void addCompany(final CompanyDTO comp, final CreateCompanyListener listener){
+        getCompanyByEmail(comp.getEmail(), new CompanyEmailQueryListener() {
+            @Override
+            public void onCompanyFoundByEmail(CompanyDTO company) {
+                listener.onCompanyAlreadyExists(company);
+            }
+
+            @Override
+            public void onCompanyNotFoundByEmail() {
+                Log.w(TAG, "addCompany: onCompanyNotFoundByEmail: now add the new company to database");
+                DatabaseReference compRef = db.getReference(COMPANIES);
+                log("addCompany", compRef);
+                compRef.push().setValue(comp, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            databaseReference.child("companyID").setValue(databaseReference.getKey());
+                            Log.i(TAG, "********* onComplete: company added to firebase: " + comp.getEmail());
+                            comp.setCompanyID(databaseReference.getKey());
+                            listener.onCompanyCreated(comp);
+                        } else {
+                            listener.onError(databaseError.getMessage());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                listener.onError(message);
+            }
+        });
+    }
+
     public void addUser(final UserDTO c, final AddUserListener listener) {
         getUserByEmail(c.getEmail(), new EmailQueryListener() {
             @Override
@@ -380,6 +518,23 @@ public class DataAPI {
 
     }
 
+    public void updateCompany(final CompanyDTO c, final UpdateListener listener) {
+        DatabaseReference ref = db.getReference(COMPANIES)
+                .child(c.getCompanyID());
+        log("updateCompany", ref);
+        ref.setValue(c, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    listener.onSuccess();
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+
+    }
+
     public void updateDailyThought(final DailyThoughtDTO c, final UpdateListener listener) {
         DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
                 .child(c.getDailyThoughtID());
@@ -396,6 +551,8 @@ public class DataAPI {
         });
 
     }
+
+
 
     public void updateWeeklyMessage(final WeeklyMessageDTO c, final UpdateListener listener) {
         DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)

@@ -81,8 +81,10 @@ public class NewsArticleActivity extends AppCompatActivity implements
         ft.commit();
     }
 
+
+
     @Override
-    public void onThoughtClicked(int position) {
+    public void onArticleSelected(NewsDTO newsArticle) {
 
     }
 

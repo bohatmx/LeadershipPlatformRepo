@@ -333,7 +333,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                             miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
                                 @Override
-                                public void onPlayClicked(int position) {
+                                public void onPlayClicked(PodcastDTO podcast) {
 
                                 }
 

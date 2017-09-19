@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -94,6 +95,11 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
 
     @Override
     public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onCompanyCreated(CompanyDTO company) {
 
     }
 
@@ -334,6 +340,12 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
 
     }
 
+    private void startColorPicker(UserDTO user) {
+        Intent intent = new Intent(ctx, ColorPickerActivity.class);
+        intent.putExtra("user", user);
+        ctx.startActivity(intent);
+    }
+
     @Override
     public void onUserFound(final UserDTO user) {
         Log.i(TAG, "*** onUserFound ***" +"\n" + "FullName: " + user.getFullName());
@@ -343,19 +355,25 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         presenter.getVideos(user.getCompanyID());
         presenter.getUsers(user.getCompanyID());
 
-        editFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Util.flashOnce(editFab, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, ColorPickerActivity.class);
-                        intent.putExtra("user", user);
-                        startActivity(intent);
-                    }
-                });
-            }
-        });
+          /*startColorPicker(user);*/
+
+          editFab.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                  Intent intent = new Intent(ctx, ColorPickerActivity.class);
+                  intent.putExtra("user", user);
+                  ctx.startActivity(intent);
+                 // startColorPicker(user);
+                 /* Util.flashOnce(editFab, 300, new Util.UtilAnimationListener() {
+                      @Override
+                      public void onAnimationEnded() {
+                          startColorPicker(user);
+                      }
+                  });*/
+              }
+          });
+
+
        /* card4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -446,15 +464,19 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
     }
 
     View view;
-    Context ctx;
+    private Context ctx;
     CardView card1, card2, card3, card4;
     TextView companyThoughts, companyVideos, companyUsers, companyPodcasts, companyTitle;
-    ImageView companyLogo;
+    ImageView companyLogo, thoughtIcon, videoIcon, userIcon, podcastIcon;
     CrudPresenter presenter;
     private FirebaseAuth firebaseAuth;
     ResponseBag bag;
     private DailyThoughtEditor dailyThoughtEditor;
     private DatePickerDialog datePickerDialog;
+    private UserDTO user;
+    private int themeColor;
+    private Switch simpleSwitch;
+    Boolean switchState;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -465,66 +487,87 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         firebaseAuth = FirebaseAuth.getInstance();
        // toolbar = (Toolbar) findViewById(R.id.toolbar);
        // setSupportActionBar(toolbar);
-        ctx = getApplicationContext();
+        ctx = getActivity();
        // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 
         presenter = new CrudPresenter(this);
 
+       /* if (getActivity().getIntent().getSerializableExtra("themeColor") != null) {
+            themeColor = (int) getActivity().getIntent().getSerializableExtra("themeColor");
+        } else {
+            Log.i(TAG, "*** themeColor not found ***");
+        }*/
+
+        if (getActivity().getIntent().getSerializableExtra("user") != null) {
+            user = (UserDTO) getActivity().getIntent().getSerializableExtra("user");
+            Log.i(TAG, "user: " + user.getFullName());
+        } else {
+            presenter.getUser(firebaseAuth.getCurrentUser().getEmail());
+        }
+
         presenter.getUser(firebaseAuth.getCurrentUser().getEmail());
+
+        simpleSwitch = (Switch) view.findViewById(R.id.simpleSwitch);
+        switchState = simpleSwitch.isChecked();
         card1 = (CardView) view.findViewById(R.id.card1);
 
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card1, 300, new Util.UtilAnimationListener() {
+                mListener.onThoughtsSelected();
+                /* Util.flashOnce(card1, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onThoughtsSelected();
                         //startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
                     }
-                });
+                });*/
             }
         });
         card2 = (CardView) view.findViewById(R.id.card2);
         card2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card2, 300, new Util.UtilAnimationListener() {
+                mListener.onVideosSelected();
+                /*Util.flashOnce(card2, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onVideosSelected();
-                        /*Intent intent = new Intent(ctx, VideoSelectionActivity.class);
-                        startActivity(intent);*/
+                        *//*Intent intent = new Intent(ctx, VideoSelectionActivity.class);
+                        startActivity(intent);*//*
                     }
-                });
+                });*/
             }
         });
         card3 = (CardView) view.findViewById(R.id.card3);
         card3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card3, 300, new Util.UtilAnimationListener() {
+                mListener.onUsersSelected();
+                /*Util.flashOnce(card3, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUsersSelected();
                         //startUserBottomSheet(null, Constants.NEW_ENTITY);
                     }
-                });
+                });*/
             }
         });
         card4 = (CardView) view.findViewById(R.id.card4);
         card4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card4, 300, new Util.UtilAnimationListener() {
+                mListener.onPodcastsSelected();
+                /*Util.flashOnce(card4, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mListener.onPodcastsSelected();
-                       /* Intent intent = new Intent(CompanyMainActivity.this, PodcastSelectionActivity.class);
+                       *//* Intent intent = new Intent(CompanyMainActivity.this, PodcastSelectionActivity.class);
                         intent.putExtra("user", user);
-                        startActivity(intent);*/
+                        startActivity(intent);*//*
                     }
-                });
+                });*/
             }
         });
 
@@ -535,9 +578,38 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
        // companyLogo = (ImageView) view.findViewById(R.id.companyLogo);
         companyTitle = (TextView) view.findViewById(R.id.companyTitle);
         editFab = (FloatingActionButton) view.findViewById(R.id.editFab);
+        thoughtIcon = (ImageView) view.findViewById(R.id.thoughtIcon);
+        videoIcon = (ImageView) view.findViewById(R.id.videoIcon);
+        userIcon = (ImageView) view.findViewById(R.id.userIcon);
+        podcastIcon = (ImageView) view.findViewById(R.id.podcastIcon);
+        if (themeColor != 0) {
+            thoughtIcon.setColorFilter(themeColor);
+            videoIcon.setColorFilter(themeColor);
+            userIcon.setColorFilter(themeColor);
+            podcastIcon.setColorFilter(themeColor);
+        }
+        /*editFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ctx, ColorPickerActivity.class);
+                startActivity(intent);
+            }
+        });*/
+
 
         return view;
     }
+
+    /*public void getNewsArticle() {
+        Log.d(TAG, "************** getNewsArticles: " );
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }  else {
+            presenter.getNews(user.getCompanyID());
+        }
+        *//*presenter.getAllNewsArticle();*//*
+
+    }*/
 
     FloatingActionButton editFab;
 

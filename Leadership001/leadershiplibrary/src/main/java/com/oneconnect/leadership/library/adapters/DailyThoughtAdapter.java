@@ -344,7 +344,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
                         @Override
-                        public void onPlayClicked(int position) {
+                        public void onPlayClicked(PodcastDTO podcast) {
 
                         }
 

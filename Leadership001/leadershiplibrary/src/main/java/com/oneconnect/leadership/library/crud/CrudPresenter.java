@@ -414,6 +414,26 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
+    public void createCompany(CompanyDTO company) {
+        dataAPI.createCompany(company, new DataAPI.CreateCompanyListener() {
+            @Override
+            public void onCompanyCreated(CompanyDTO company) {
+                view.onCompanyCreated(company);
+            }
+
+            @Override
+            public void onCompanyAlreadyExists(CompanyDTO company) {
+                view.onCompanyCreated(company);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void deleteUser(final UserDTO user) {
         dataAPI.deleteUser(user, new DataAPI.DataListener() {
             @Override

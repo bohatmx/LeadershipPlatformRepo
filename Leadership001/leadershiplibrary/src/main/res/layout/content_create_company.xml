@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.oneconnect.leadership.library.activities.CreateCompanyActivity"
+    tools:showIn="@layout/activity_create_company">
+    <RelativeLayout
+        android:id="@+id/lay1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_200">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/coffee_screens"
+                android:id="@+id/companyLogoIMG"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"/>
+        </RelativeLayout>
+    </RelativeLayout>
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/lay1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <EditText
+                    android:padding="@dimen/mon_padding"
+                    android:layout_centerHorizontal="true"
+                    android:hint="Enter Company Name"
+                    android:id="@+id/companyName"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+            <EditText
+                android:layout_below="@+id/companyName"
+                android:padding="@dimen/mon_padding"
+                android:layout_centerHorizontal="true"
+                android:hint="Enter Company Email"
+                android:id="@+id/companyEmail"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+            <EditText
+                android:layout_below="@+id/companyEmail"
+                android:padding="@dimen/mon_padding"
+                android:layout_centerHorizontal="true"
+                android:hint="Enter Company Address"
+                android:id="@+id/companyAddress"
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+            <!--<TextView
+                android:padding="@dimen/mon_padding"
+                android:layout_centerHorizontal="true"
+                style="@style/Title3TextStyleBlack"
+                android:text="Set Company Colors:"
+                android:layout_below="@+id/companyAddress"
+                android:id="@+id/companyColorsTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:padding="@dimen/mon_padding"
+                style="@style/Title4TextStyleBlue"
+                android:id="@+id/primaryColorText"
+                android:layout_below="@+id/companyColorsTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Primary Color: "/>
+
+            <TextView
+                android:padding="@dimen/mon_padding"
+                android:background="@color/grey"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/companyColorsTxt"
+                android:id="@+id/txtColor1"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:margin="@dimen/mon_padding"
+                android:background="@color/grey"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="15dp"
+                android:layout_below="@+id/txtColor1"
+                android:id="@+id/txtColor2"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+
+
+            <TextView
+                android:padding="@dimen/mon_padding"
+                style="@style/Title4TextStyleBlue"
+                android:id="@+id/secondaryColorText"
+                android:layout_below="@+id/primaryColorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Secondary Color: "/>-->
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/createCompanyBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/scrollView"
+        android:text="Create Company"
+        android:textColor="@color/white"
+        style="@style/ButtonNavyBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>
