@@ -327,17 +327,25 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         userListFragment.setPageTitle(ctx.getString(R.string.users));
 
         /*Color.parseColor(themeColor);*/
-        if (themeColor != null) {
-            companyMainFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
-            newsListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
-            dailyThoughtListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
-            masterListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
-            weeklyMessageListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
-            podcastListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
-            eBookListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
-            userListFragment.setThemeColors(Color.parseColor(themeColor)/*themePrimaryColor*/, themeDarkColor);
+        /*if (themeColor != null) {
+            companyMainFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+            newsListFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+            dailyThoughtListFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+            masterListFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+            weeklyMessageListFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+            podcastListFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+            eBookListFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+            userListFragment.setThemeColors(Color.parseColor(themeColor)*//*themePrimaryColor*//*, themeDarkColor);
+        }*/
+        companyMainFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        masterListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        podcastListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        eBookListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        userListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
 
-        }
         pageFragmentList.add(companyMainFragment);
         pageFragmentList.add(newsListFragment);
         pageFragmentList.add(dailyThoughtListFragment);
