@@ -659,6 +659,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onError(String message) {
 
     }

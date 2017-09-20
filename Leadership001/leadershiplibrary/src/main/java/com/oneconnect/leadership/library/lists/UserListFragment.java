@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -61,7 +59,7 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
     private RecyclerView recyclerView;
     private Context ctx;
     private int type;
-    public SearchView search;
+
     public interface UserListListener {
         void onUsersTapped(UserDTO user);
     }
@@ -104,11 +102,9 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_list, container, false);
-        search = view.findViewById(R.id.search);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
-        search.setOnQueryTextListener(listener);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
 
@@ -117,81 +113,7 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
         return view;
 
     }
-    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextChange(String query) {
-            query = query.toLowerCase();
 
-            final List<UserDTO> filteredList = new ArrayList<>();
-
-            for (int i = 0; i < userList.size(); i++) {
-
-                final String text = userList.get(i).getFirstName().toLowerCase();
-                if (text.contains(query)) {
-
-                    filteredList.add(userList.get(i));
-                }
-
-            }
-
-            setRecyclerView(filteredList);
-            return true;
-
-        }
-
-        public boolean onQueryTextSubmit(String query) {
-            return false;
-        }
-    };
-
-    private void setRecyclerView(List<UserDTO> users) {
-
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        search.setOnQueryTextListener(listener);
-
-
-        mAdapter = new UserListAdapter(users,ctx,
-                new UserListAdapter.IconListener() {
-
-
-                    @Override
-                    public void onTakePicture(UserDTO user) {
-                        Toast.makeText(getActivity(), "Member has no images",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onGallery(UserDTO user) {
-                        Toast.makeText(getActivity(), "Member has no Gallery",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onLocation(UserDTO user) {
-                        Toast.makeText(getActivity(), "Member's location is unknown",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPhone(UserDTO user) {
-                        Toast.makeText(getActivity(), "Member has no cellphone number",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onDriverLogs(UserDTO driver) {
-                        Toast.makeText(getActivity(), "Member has no Logs",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        recyclerView.setAdapter(mAdapter);
-
-    }
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     public void getUsers() {
         Log.d(TAG, "************** getUsers: " );
          //   presenter.getUsers(user.getCompanyID());

@@ -69,7 +69,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private View iconLayout;
     private Button btn, btnDate;
     private Date selectedDate;
-    private Spinner catSpinner, bSpinner;
+    private Spinner catSpinner;
     private SubscriberPresenter Catpresenter;
     private CachePresenter cachePresenter;
 
@@ -382,7 +382,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_thought_editor, container, false);
         btn = (Button) view.findViewById(R.id.btn);
-       catSpinner = (Spinner) view.findViewById(R.id.Catspinner);
+        catSpinner = (Spinner) view.findViewById(R.id.Catspinner);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -453,27 +453,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     }
 
-  /*  private void setTypeSpinner() {
-        List<String> list = new ArrayList<String>();
-        list.add("Select Group");
-        list.add("Private");
-        list.add("Public");
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
-        bSpinner.setAdapter(adapter);
-        bSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-    }*/
 
     private boolean isReadyToSend;
     private void send() {
@@ -493,12 +472,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             bottomSheetListener.onError("Choose a category");
             return;
         }
-
-      /*  if(bSpinner == null) {
-            isReadyToSend = true;
-            bottomSheetListener.onError("Choose a group");
-            return;
-        }*/
 
         Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");
 
@@ -525,8 +498,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         dailyThought.setTitle(editTitle.getText().toString());
         dailyThought.setSubtitle(editSubtitle.getText().toString());
         dailyThought.setCategory(category);
-        //dailyThought.setGroup(bSpinner.getSelectedItem().toString());
-
 
 
         switch (type) {

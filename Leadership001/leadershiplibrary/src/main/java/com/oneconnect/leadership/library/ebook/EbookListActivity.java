@@ -967,6 +967,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserDeleted(UserDTO user) {
 
     }

@@ -180,6 +180,11 @@ public class SubscriptionEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onCompanyCreated(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }

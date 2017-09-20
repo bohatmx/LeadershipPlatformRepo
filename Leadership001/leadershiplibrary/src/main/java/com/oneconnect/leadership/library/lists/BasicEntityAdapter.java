@@ -919,11 +919,11 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
         protected ImageView iconCalendar, iconDelete,iconUpdate,iconShare,iconRate, iconLink,
                 iconPhoto, iconVideo, iconLocation, iconMicrophone, imageView;
 
-        protected View bottomLayout, frameLayout, linksLayout, iconLayout,
+        protected View bottomLayout, /*frameLayout,*/ linksLayout, iconLayout,
                 photosLayout, videosLayout, micLayout, calLayout;
         protected TextViewExpandableAnimation txtTitle;
 
-        protected RelativeLayout titleLayout;
+        protected RelativeLayout titleLayout, frameLayout;
 
 
         public EntityViewHolder(View itemView) {
@@ -959,7 +959,8 @@ public class BasicEntityAdapter extends RecyclerView.Adapter<BasicEntityAdapter.
             iconRate = (ImageView) itemView.findViewById(R.id.ratingBar);
             iconRate.setVisibility(View.GONE);
 
-            frameLayout = itemView.findViewById(R.id.frame);
+           //frameLayout = itemView.findViewById(R.id.frame);
+            frameLayout = (RelativeLayout) itemView.findViewById(R.id.frame);
             bottomLayout = itemView.findViewById(R.id.bottomLayout);
             titleLayout = (RelativeLayout) itemView.findViewById(R.id.titleLayout);
             linksLayout = itemView.findViewById(R.id.linksLayout);

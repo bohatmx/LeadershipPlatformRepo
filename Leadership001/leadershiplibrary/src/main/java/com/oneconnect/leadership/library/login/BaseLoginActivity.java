@@ -200,7 +200,6 @@ public abstract class BaseLoginActivity extends AppCompatActivity
             }
         });
         snackbar.show();
-
     }
 
     @Override

@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.activities.CreateCompanyActivity;
 import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
@@ -534,9 +535,12 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        /*int id = item.getItemId();
+        int id = item.getItemId();
         switch (id) {
-            case R.id.action_daily:
+            case R.id.action_new_company:
+                Intent intent = new Intent(CrudActivity.this, CreateCompanyActivity.class);
+                startActivity(intent);
+            /*case R.id.action_daily:
                 cachePresenter.getCacheDailyThoughts();
                 break;
             case R.id.action_news:
@@ -550,8 +554,8 @@ public class CrudActivity extends AppCompatActivity
                 break;
             case R.id.action_help:
                 Toasty.warning(this, "Under construction", Toast.LENGTH_SHORT, true).show();
-                break;
-        }*/
+                break;*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -668,6 +672,11 @@ public class CrudActivity extends AppCompatActivity
        // presenter.getUsers(this.user.getCompanyID());
         presenter.getUsers(user.getCompanyID());
         showSnackbar(user.getFullName().concat(" has been added"), getString(R.string.ok_label), "green");
+    }
+
+    @Override
+    public void onCompanyCreated(CompanyDTO company) {
+        showSnackbar("companyCreated: " + company.getCompanyName(), "DISMISS", "green");
     }
 
     @Override

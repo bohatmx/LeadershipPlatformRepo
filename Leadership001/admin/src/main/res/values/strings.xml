@@ -47,4 +47,5 @@
     <string name="title_activity_image_list">Image Selector</string>
     <string name="title_news">News Articles</string>
     <string name="title_activity_update_dialog">UpdateDialog</string>
+    <string name="title_activity_create_company">CreateCompanyActivity</string>
 </resources>

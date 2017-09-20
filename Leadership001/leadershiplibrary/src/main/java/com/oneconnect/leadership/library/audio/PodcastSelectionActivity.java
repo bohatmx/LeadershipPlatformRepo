@@ -1,7 +1,9 @@
 package com.oneconnect.leadership.library.audio;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -68,10 +71,12 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     ImageView image1, image2;
     SearchView searchView = null;
     ArrayList<String> downloadedList;
+    public static final int PERMISSIONS_REQUEST = 113;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, " *** onCreate ***");
         setContentView(R.layout.activity_podcast_selection);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,6 +84,8 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new PodcastUploadPresenter(this);
         image2 = (ImageView) findViewById(R.id.image2);
+
+        check();
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
@@ -140,6 +147,24 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
 
         setup();
         getPodcastsOnDevice();
+    }
+
+    private void check() {
+        Log.w(TAG, "check: PERMISSIONS_REQUEST" );
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CALENDAR,
+                            Manifest.permission.WRITE_CALENDAR,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST);
+            return;
+
+        }
+        // proceed();
     }
 
     public void getPodcastsOnDevice() {
@@ -217,6 +242,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                 })
                 .show();
     }
+
 
     private void uploadPodcast(String path) {
         showSnackbar("Uploading podcast ...", "OK", Constants.CYAN);

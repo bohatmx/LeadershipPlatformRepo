@@ -768,6 +768,11 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onDataCached() {
 
     }

@@ -14,16 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/nav_header_company_main"
+            android:fitsSystemWindows="true"
+            app:itemTextColor="@color/black"
+            app:itemIconTint="@color/black"
+            app:menu="@menu/activity_company_main_drawer" />
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:itemTextColor="@color/black"
-        app:itemIconTint="@color/black"
-        app:headerLayout="@layout/nav_header_company_main"
-        app:menu="@menu/activity_company_main_drawer" />
+
 
 </android.support.v4.widget.DrawerLayout>

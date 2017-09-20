@@ -66,14 +66,15 @@ public class ThemeSelectorActivity extends AppCompatActivity {
         indigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(indigo, 300, new Util.UtilAnimationListener() {
+                changeToTheme(App.THEME_INDIGO);
+               /* Util.flashOnce(indigo, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
 
                         changeToTheme(App.THEME_INDIGO);
 
                     }
-                });
+                });*/
             }
 
         });

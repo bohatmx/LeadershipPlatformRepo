@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.FullArticleActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
@@ -65,6 +68,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     private View view;
     private Context ctx;
+    private FirebaseAuth firebaseAuth;
 
     NewsArticleAdapter adapter;
     private List<NewsDTO> newsArticletList = new ArrayList<>();
@@ -104,6 +108,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
         view = inflater.inflate(R.layout.fragment_news_article, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
             category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
             Log.i(LOG, "category: " + category.getCategoryName());
@@ -132,7 +137,12 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     public void getNewsArticle() {
         Log.d(LOG, "************** getNewsArticles: " );
-        presenter.getAllNewsArticle();
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }  else {
+            presenter.getNews(user.getCompanyID());
+        }
+        /*presenter.getAllNewsArticle();*/
 
     }
 
@@ -203,7 +213,8 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company Articles");
+        presenter.getNews(user.getCompanyID());
     }
 
     @Override
@@ -268,9 +279,13 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
         }*/
         Collections.sort(list);
         adapter = new NewsArticleAdapter(ctx, list, new NewsArticleAdapter.NewsArticleListener() {
-            @Override
-            public void onThoughtClicked(int position) {
-
+           @Override
+            public void onArticleSelected(NewsDTO newsArticle) {
+               if (newsArticle.getBody() != null) {
+                   Intent intent = new Intent(ctx, FullArticleActivity.class);
+                   intent.putExtra("newsArticle", newsArticle);
+                   ctx.startActivity(intent);
+               }
             }
 
             @Override
@@ -393,8 +408,12 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
         Collections.sort(list);
         adapter = new NewsArticleAdapter(ctx, list, new NewsArticleAdapter.NewsArticleListener() {
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onArticleSelected(NewsDTO newsArticle) {
+                if (newsArticle.getBody() != null) {
+                    Intent intent = new Intent(ctx, FullArticleActivity.class);
+                    intent.putExtra("newsArticle", newsArticle);
+                    ctx.startActivity(intent);
+                }
             }
 
             @Override
@@ -453,6 +472,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 
@@ -707,8 +731,9 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     }
 
+
     @Override
-    public void onThoughtClicked(int position) {
+    public void onArticleSelected(NewsDTO newsArticle) {
 
     }
 

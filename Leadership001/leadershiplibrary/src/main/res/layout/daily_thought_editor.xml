@@ -74,11 +74,39 @@ app:cardElevation="@dimen/mon_padding">
             android:textColor="@color/pink_700" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/radioLayout"
+        android:layout_below="@+id/t0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/internalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_below="@+id/internalButton"
+            android:text="Internal Thought"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:layout_alignParentEnd="true"
+            android:id="@+id/globalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_alignParentEnd="true"
+            android:text="Global Thought"
+            android:layout_below="@+id/globalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 
     <Button
         android:id="@+id/btn"
         style="?attr/borderlessButtonStyle"
-        android:layout_below="@+id/t0"
+        android:layout_below="@+id/radioLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

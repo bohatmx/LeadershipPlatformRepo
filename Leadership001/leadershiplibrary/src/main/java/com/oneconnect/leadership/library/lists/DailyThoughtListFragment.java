@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +50,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link DailyThoughtListFragment} interface
+ * to handle interaction events.
+ * Use the {@link DailyThoughtListFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
@@ -93,18 +100,19 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             type = SharedPrefUtil.getFragmentType(ctx);
         }
     }
-    private DailyThoughtDTO thought;
+
     private View view;
     private Context ctx;
 
     DailyThoughtAdapter adapter;
     private List<DailyThoughtDTO> dailyThoughtList = new ArrayList<>();
 
-    public SearchView search;
+
     CategoryDTO category;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
        view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
@@ -115,14 +123,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             Log.i(LOG, "No Category");
         }
 
-
-        search = view.findViewById(R.id.search);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         photoRecyclerView = (RecyclerView) view.findViewById(R.id.photoRecyclerView);
-
-
-        search.setOnQueryTextListener(listener);
-
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
@@ -139,87 +141,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
         return view;
     }
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
-
-    private void setRecyclerView(List<DailyThoughtDTO> thought) {
-
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        search.setOnQueryTextListener(listener);
-
-
-        mAdapter = new DailyThoughtAdapter(ctx, thought, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-
-
-                    @Override
-                    public void onThoughtClicked(int position) {
-
-                    }
-
-                    @Override
-                    public void onPhotoRequired(PhotoDTO photo) {
-
-                    }
-
-                    @Override
-                    public void onVideoRequired(VideoDTO video) {
-
-                    }
-
-                    @Override
-                    public void onPodcastRequired(PodcastDTO podcast) {
-
-                    }
-
-                    @Override
-                    public void onUrlRequired(UrlDTO url) {
-
-                    }
-
-                    @Override
-                    public void onPhotosRequired(List<PhotoDTO> list) {
-
-                    }
-                });
-        recyclerView.setAdapter(mAdapter);
-
-    }
-
-    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextChange(String query) {
-            query = query.toLowerCase();
-
-            final List<DailyThoughtDTO> filteredList = new ArrayList<>();
-
-            for (int i = 0; i < dailyThoughtList.size(); i++) {
-
-                final String text = dailyThoughtList.get(i).getSubtitle().toLowerCase();
-                if (text.contains(query)) {
-
-                    filteredList.add(dailyThoughtList.get(i));
-                }
-
-            }
-
-            setRecyclerView(filteredList);
-            return true;
-
-        }
-
-        public boolean onQueryTextSubmit(String query) {
-            return false;
-        }
-    };
     private UserDTO user;
 
     public void getDailyThoughts() {
         Log.d(LOG, "************** getDailyThoughts: " );
+//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllDailyThoughts();
-
+  //      } else {
+   //         Log.d(LOG, "user is null");
+    //    }
     }
 
     private void getCachedDailyThoughts() {

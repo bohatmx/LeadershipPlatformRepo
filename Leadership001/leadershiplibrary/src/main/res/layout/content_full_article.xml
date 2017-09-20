@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.oneconnect.leadership.library.activities.FullArticleActivity"
+    tools:showIn="@layout/activity_full_article">
+    <android.support.v7.widget.CardView
+        android:id="@+id/article_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:padding="@dimen/mon_padding"
+                android:layout_centerHorizontal="true"
+                style="@style/Title2TextStyleBlack"
+                android:text="Leadership Title"
+                android:id="@+id/articleTitleTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_below="@+id/articleTitleTxt"
+                android:text="Leadership subtitle"
+                style="@style/Title3TextStyleBlack"
+                android:padding="@dimen/mon_padding"
+                android:id="@+id/articleSubTitleTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+    <ScrollView
+        android:layout_below="@+id/article_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:padding="@dimen/mon_padding"
+                    style="@style/TextAppearance.AppCompat"
+                    android:text="First of all, just getting to the theater presents difficulties. Leaving a home equipped with a TV and a video recorder isn't an attractive idea on a humid, cold, or rainy night. Even if the weather cooperates, there is still a thirty-minute drive to the theater down a congested highway, followed by the hassle of looking for a parking space. And then there are the lines. After hooking yourself to the end of a human chain, you worry about whether there will be enough tickets, whether you will get seats together, and whether many people will sneak into the line ahead of"
+                    android:id="@+id/bodyTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+
+    </ScrollView>
+
+</RelativeLayout>

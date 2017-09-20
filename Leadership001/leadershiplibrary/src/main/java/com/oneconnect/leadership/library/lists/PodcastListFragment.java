@@ -1,7 +1,6 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +16,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -364,12 +362,9 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         this.podcasts = list;
 //        Collections.sort(list);
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
-
             @Override
-            public void onPlayClicked(PodcastDTO podcast) {
-                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
-                intent.putExtra("podcast", podcast);
-                ctx.startActivity(intent);
+            public void onPlayClicked(int position) {
+
             }
 
             @Override
@@ -401,12 +396,9 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         this.podcasts = list;
         Collections.sort(list);
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
-
             @Override
-            public void onPlayClicked(PodcastDTO podcast) {
-                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
-                intent.putExtra("podcast", podcast);
-                ctx.startActivity(intent);
+            public void onPlayClicked(int position) {
+
             }
 
             @Override
