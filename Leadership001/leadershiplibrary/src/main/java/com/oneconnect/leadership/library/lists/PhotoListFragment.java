@@ -631,11 +631,6 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
-    public void onCompanyFound(CompanyDTO company) {
-
-    }
-
-    @Override
     public void onError(String message) {
 
     }

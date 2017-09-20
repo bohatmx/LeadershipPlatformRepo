@@ -597,10 +597,6 @@ public class CalendarEventListFragment extends Fragment implements PageFragment,
 
     }
 
-    @Override
-    public void onCompanyFound(CompanyDTO company) {
-
-    }
 
     @Override
     public void onError(String message) {

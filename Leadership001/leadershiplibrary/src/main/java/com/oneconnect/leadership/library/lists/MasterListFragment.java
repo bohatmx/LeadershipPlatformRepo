@@ -629,11 +629,6 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     }
 
     @Override
-    public void onCompanyFound(CompanyDTO company) {
-
-    }
-
-    @Override
     public void onError(String message) {
 
     }

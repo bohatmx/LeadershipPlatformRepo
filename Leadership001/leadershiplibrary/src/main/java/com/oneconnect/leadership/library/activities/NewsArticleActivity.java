@@ -89,6 +89,11 @@ public class NewsArticleActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onThoughtClicked(int position) {
+
+    }
+
+    @Override
     public void onPhotoRequired(PhotoDTO photo) {
 
     }

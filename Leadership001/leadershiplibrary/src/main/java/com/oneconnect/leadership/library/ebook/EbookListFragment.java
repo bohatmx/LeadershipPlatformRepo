@@ -941,10 +941,7 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     }
 
-    @Override
-    public void onCompanyFound(CompanyDTO company) {
 
-    }
 
     @Override
     public void onError(String message) {

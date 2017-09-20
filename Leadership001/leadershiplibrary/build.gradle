@@ -122,6 +122,8 @@ dependencies {
     compile 'com.github.piasy:rxandroidaudio:1.5.0'
     compile 'com.github.piasy:AudioProcessor:1.5.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.QuadFlask:colorpicker:0.0.13'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
     testCompile 'junit:junit:4.12'
 }
 

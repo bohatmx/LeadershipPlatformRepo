@@ -289,6 +289,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             }
 
             @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
             public void onPhotoRequired(PhotoDTO photo) {
                 /*photoAdapter = new PhotoAdapter(dailyThoughtList)*/
             }
@@ -417,6 +422,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             }
 
             @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
             public void onPhotoRequired(PhotoDTO photo) {
 
             }
@@ -475,10 +485,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     }
 
-    @Override
-    public void onCompanyFound(CompanyDTO company) {
 
-    }
 
     @Override
     public void onDataCached() {
@@ -734,6 +741,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onArticleSelected(NewsDTO newsArticle) {
+
+    }
+
+    @Override
+    public void onThoughtClicked(int position) {
 
     }
 

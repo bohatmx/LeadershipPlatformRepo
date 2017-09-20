@@ -110,7 +110,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public interface PodcastAdapterListener {
-        void onPlayClicked(int position);
+        void onPlayClicked(PodcastDTO podcast);
         void onPodcastRequired(PodcastDTO podcast);
     }
 

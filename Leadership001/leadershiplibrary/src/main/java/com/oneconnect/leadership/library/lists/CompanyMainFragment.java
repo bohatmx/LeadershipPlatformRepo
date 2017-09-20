@@ -96,6 +96,11 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
     }
 
     @Override
+    public void onCompanyCreated(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }
@@ -205,8 +210,8 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
                 bag.getUsers().add(0, m);
                 //  setFragment();
                 myBottomSheet.dismiss();
-                showSnackbar(m.getFullName().concat(" is being added/updated"), getString(R
-                        .string.ok_label), "green");
+                showSnackbar(m.getFullName().concat(" is being added/updated"),
+                        getString(R.string.ok_label), "green");
 
             }
 
@@ -399,6 +404,11 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
 
     @Override
     public void onCategoryUpdated(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
 
     }
 

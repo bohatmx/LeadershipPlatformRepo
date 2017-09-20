@@ -508,11 +508,6 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
-    public void onCompanyFound(CompanyDTO company) {
-
-    }
-
-    @Override
     public void onError(String message) {
 
     }

@@ -113,6 +113,7 @@
     <!--To be deleted-->
     <string name="normal_layout">Username</string>
     <string name="wide_layout">Wide Layout</string>
+    <string name="title_activity_full_article">Article</string>
     <string name="decimal_step_size">Decimal Step Size</string>
     <string name="framework_implementation">Comments made</string>
     <string name="library_implementation">Category</string>
@@ -124,7 +125,8 @@
     <string name="about_credit">Zhang Hai 2016</string>
     <string name="about_github"><a href="https://github.com/DreaminginCodeZH/MaterialRatingBar">View on GitHub</a></string>
     <string name="title_activity_category">Choose Topic</string>
-
+    <string name="alert_color">colour</string>
+    <string name="success">Welcome! Thanks for signing in</string>
     <!-- -->
     <string name="enter_thought">Enter Thought</string>
     <string name="enter_thought_author">Enter thought author</string>

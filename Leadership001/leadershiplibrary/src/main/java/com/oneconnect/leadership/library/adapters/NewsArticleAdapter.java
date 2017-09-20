@@ -55,6 +55,8 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public interface NewsArticleListener{
+        void onArticleSelected(NewsDTO newsArticle);
+
         void onThoughtClicked(int position);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);

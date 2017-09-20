@@ -592,10 +592,6 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
 
     }
 
-    @Override
-    public void onCompanyFound(CompanyDTO company) {
-
-    }
 
     @Override
     public void onDataCached() {

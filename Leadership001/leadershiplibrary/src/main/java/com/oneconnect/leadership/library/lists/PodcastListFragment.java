@@ -362,8 +362,10 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         this.podcasts = list;
 //        Collections.sort(list);
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
             @Override
-            public void onPlayClicked(int position) {
+            public void onPlayClicked(PodcastDTO podcast) {
 
             }
 
@@ -396,8 +398,10 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         this.podcasts = list;
         Collections.sort(list);
         adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
             @Override
-            public void onPlayClicked(int position) {
+            public void onPlayClicked(PodcastDTO podcast) {
 
             }
 
