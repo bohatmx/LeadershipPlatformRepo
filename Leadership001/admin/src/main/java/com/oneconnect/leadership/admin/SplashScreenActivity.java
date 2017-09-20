@@ -20,7 +20,7 @@ public class SplashScreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.playing_splashmaker);
+        setContentView(R.layout.admin_splashmaker);
 
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         final Animation animation_1 = AnimationUtils.loadAnimation(getBaseContext(),R.anim.rotate);

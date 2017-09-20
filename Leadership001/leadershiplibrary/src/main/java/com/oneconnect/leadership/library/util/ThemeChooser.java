@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.oneconnect.leadership.library.App;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.activities.LeadershipApplication;
 
 public class ThemeChooser {
 

@@ -140,11 +140,6 @@ public class SubscriberMainActivity extends AppCompatActivity
     PagerSlidingTabStrip strip;
     private CategoryDTO category;
 
-    //Bottom Navigation
-    private TextView textFavorites;
-    private TextView textSchedules;
-    private TextView textMusic;
-    //
     private DailyThoughtDTO dailyThought;
     int themeDarkColor, themePrimaryColor;
 

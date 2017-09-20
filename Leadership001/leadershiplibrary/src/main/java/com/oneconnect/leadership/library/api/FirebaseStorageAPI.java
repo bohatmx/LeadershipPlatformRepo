@@ -44,6 +44,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ThumbnailDTO;
+import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.Util;
 
@@ -79,7 +80,7 @@ public class FirebaseStorageAPI extends Activity {
 
     public static final String STORAGE_URL = "gs://leadershipplatform-158316.appspot.com",
             PHOTOS = "photos/", VIDEOS = "videos/", THUMBNAILS = "thumbnails/", PODCASTS = "podcasts/",
-            EBOOKS = "ebooks/";
+            EBOOKS = "ebooks/", USERS = "users/";
     public static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1;
 
     public FirebaseStorageAPI() {
@@ -305,7 +306,6 @@ public class FirebaseStorageAPI extends Activity {
             listener.onError("Unable to upload the photo file");
         }
     }
-
     private String getThumbNailPath(String imagePath, Bitmap bmp){
         FileOutputStream out = null;
         File pictureNameThumbNail = null;
@@ -765,6 +765,90 @@ public class FirebaseStorageAPI extends Activity {
             }
         });
 
+    }
+
+    private void addUserPhotoToFirebase(final UserDTO user,
+                                    UploadTask.TaskSnapshot taskSnapshot,
+                                    final StorageListener listener) {
+        Log.d(TAG, ".........adding UserDTO to firebase  ...: "
+                + GSON.toJson(user));
+        user.setUrl(taskSnapshot.getDownloadUrl().toString());
+       // user.setDate(new Date().getTime());
+        user.setFilePath(null);
+        user.setUserID(null);
+        dataAPI.addUserPhoto(user, new DataAPI.DataListener() {
+            @Override
+            public void onResponse(final String key) {
+                user.setUserID(key);
+                Log.w(TAG, "dataAPI addUserPhoto onResponse: ".concat(key).concat(" - adding UserDTO to entity ...") );
+                dataAPI.addUserPhoto(user, new DataAPI.DataListener() {
+                    @Override
+                    public void onResponse(String k) {
+                        listener.onResponse(key);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        listener.onError(message);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(String message) {
+                listener.onError(message);
+            }
+        });
+
+    }
+
+    public void uploadUserPhoto(final UserDTO user,
+                            final StorageListener listener) {
+        //checkFileWriteExternalStoragePermission();
+        Log.d(TAG, "###### uploadPhoto: ".concat(user.getFilePath())
+                .concat("\n").concat(GSON.toJson(user)));
+        final File f = new File(user.getFilePath());
+        if (!f.exists()) {
+            listener.onError("Cannot find file for upload");
+            return;
+        }
+        StorageReference photoReference = storageReference.child(PHOTOS
+                + "/"
+                + user.getFilePath().concat(" ").concat(sdf.format(new Date())));
+        try {
+            photoReference.putStream(new FileInputStream(f)).addOnSuccessListener(
+                    new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.i(TAG, "onSuccess: photo uploaded to firebase storage");
+                            ThumbnailDTO thumbnailDTO = new ThumbnailDTO();
+                            final int THUMBSIZE = 64;
+                            //Bitmap thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(photo.getFilePath()),
+                            //        THUMBSIZE, THUMBSIZE);
+                            //thumbnailDTO.setFilePath(getThumbNailPath(photo.getFilePath(), thumbImage));
+                            thumbnailDTO.setFilePath(Util.compressImage(user.getFilePath()));
+                            //uploadThumbnailForPhoto(thumbnailDTO, user, taskSnapshot, listener);
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e(TAG, "### onProgress: bytes transferred: "
+                            + getSize(taskSnapshot.getBytesTransferred())
+                            + " from total " + getSize(f.length()));
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    listener.onError("Photo file upload failed");
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, "uploadPhoto: we fell down", e);
+            FirebaseCrash.report(new Exception("Photo file upload failed: ".concat(user.getTitle())));
+            listener.onError("Unable to upload the photo file");
+        }
     }
 
 }

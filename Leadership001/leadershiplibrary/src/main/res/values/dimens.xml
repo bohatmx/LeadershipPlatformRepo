@@ -3,7 +3,7 @@
 
     <dimen name="activity_vertical_margin">16dip</dimen>
     <dimen name="activity_hotizontal_margin">16dip</dimen>
-
+    <dimen name="mon_16">16dp</dimen>
     <dimen name="date_picker_component_width">270dip</dimen>
     <dimen name="selected_calendar_layout_height">155dip</dimen>
     <dimen name="done_label_size">14sp</dimen>

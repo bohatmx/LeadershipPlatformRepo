@@ -343,8 +343,10 @@ public class PodcastPlayerActivity extends AppCompatActivity {
                     }
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
                         @Override
-                        public void onPlayClicked(int position) {
+                        public void onPlayClicked(PodcastDTO podcast) {
 
                         }
 
@@ -536,46 +538,35 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         pausebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pausebtn, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mediaPlayer.pause();
                         pausebtn.setVisibility(View.GONE);
                         playbtn.setVisibility(View.VISIBLE);
                         stopbtn.setVisibility(View.VISIBLE);
-                    }
-                });
             }
         });
 
         stopbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(stopbtn, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mediaPlayer.stop();
                       //  mediaPlayer.reset();
                         stopbtn.setVisibility(View.GONE);
                         pausebtn.setVisibility(View.GONE);
                         playbtn.setVisibility(View.VISIBLE);
-                    }
-                });
             }
         });
 
         playbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(playbtn, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mediaPlayer.start();
                         playbtn.setVisibility(View.GONE);
                         pausebtn.setVisibility(View.VISIBLE);
                         stopbtn.setVisibility(View.VISIBLE);
-                    }
-                });
+
             }
         });
 

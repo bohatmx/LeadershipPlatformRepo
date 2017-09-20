@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.adapters;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +119,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.DataOb
         holder.iconTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+               // Log.e(LOG, "No Pictures Available");
                 listener.onTakePicture(m);
 
             }
@@ -127,8 +128,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.DataOb
         holder.iconGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                listener.onGallery(m);
+              //  Log.e(LOG, "No Gallery Available");
+              listener.onGallery(m);
 
             }
         });
@@ -136,6 +137,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.DataOb
         holder.iconLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // Log.e(LOG, "No current location Available");
                 listener.onLocation(m);
             }
         });
@@ -143,12 +145,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.DataOb
         holder.iconPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // Log.e(LOG, "No Numbers Available");
                 listener.onPhone(m);
             }
         });
         holder.iconLogs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // Log.e(LOG, "No Logs Available");
                 listener.onDriverLogs(m);
             }
         });
@@ -162,7 +166,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.DataOb
         void onDriverLogs(UserDTO driver);
 
     }
-
 
     private void animateIn(View view) {
         view.setVisibility(View.VISIBLE);
@@ -178,5 +181,5 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.DataOb
         return users.size();
     }
 
-
+    static final String LOG = UserListAdapter.class.getSimpleName();
 }

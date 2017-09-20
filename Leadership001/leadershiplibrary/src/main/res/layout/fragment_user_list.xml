@@ -24,7 +24,7 @@
                 <SearchView
                     android:layout_width="match_parent"
                     android:id="@+id/search"
-                    android:queryHint="Search for Driver"
+                    android:queryHint="Search for Members"
                     android:layout_height="wrap_content">
                 </SearchView>
 

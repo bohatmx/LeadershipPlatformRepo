@@ -17,7 +17,7 @@ import java.util.List;
 public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparable<DailyThoughtDTO> {
 
     private String dailyThoughtID,
-            text;
+            text, group;
     private String
             stringDateUpdated, html;
     private boolean active;
@@ -272,5 +272,13 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
 
     public void setCategory(CategoryDTO category) {
         this.category = category;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

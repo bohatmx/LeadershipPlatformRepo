@@ -75,7 +75,7 @@
         <menu>
             <item
                 android:id="@+id/nav_invite"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_share"
                 android:title="Invite Friends"/>
         </menu>
     </item>

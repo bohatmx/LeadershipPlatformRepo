@@ -931,7 +931,25 @@ public class DataAPI {
             }
         });
     }
-
+    public void addUserPhoto(final UserDTO user, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(USERS);
+        log("adduserPhoto", ref);
+        ref.push().setValue(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError,
+                                   final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: user photo added: "
+                            + user.getFilePath());
+                    user.setUserID(responseRef.getKey());
+                    responseRef.child("userID").setValue(responseRef.getKey());
+                    listener.onResponse(responseRef.getKey());
+                } else {
+                    listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
     public void addPhoto(final PhotoDTO photo, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PHOTOS);
         log("addPhoto", ref);
@@ -1075,7 +1093,7 @@ public class DataAPI {
 
     public void addPhotoToEntity(final PhotoDTO photo, final DataListener listener) {
         if (photo.getDailyThoughtID() == null && photo.getWeeklyMasterClassID() == null
-                && photo.getWeeklyMessageID() == null && photo.getPodcastID() == null && photo.getNewsID() == null)  {
+                && photo.getWeeklyMessageID() == null && photo.getPodcastID() == null && photo.getNewsID() == null && photo.getUserID()== null)  {
             listener.onResponse("No entity to add to");
             return;
 
@@ -1116,6 +1134,26 @@ public class DataAPI {
             });
 
         }
+
+        if (photo.getUserID() != null) {
+            DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
+                    .child(photo.getUserID()).child(PHOTOS);
+            log("addPhotoToEntity", ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to DailyThought: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+
         if (photo.getWeeklyMessageID() != null) {
             DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
                     .child(photo.getWeeklyMessageID()).child(PHOTOS);

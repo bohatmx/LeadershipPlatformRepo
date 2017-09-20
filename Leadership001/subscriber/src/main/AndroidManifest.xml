@@ -13,7 +13,7 @@
     <application
         android:name=".SubscriberApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_beacon"
+        android:icon="@drawable/leadership_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">

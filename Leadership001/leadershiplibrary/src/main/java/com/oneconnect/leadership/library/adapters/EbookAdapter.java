@@ -100,16 +100,11 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         vvh.eBookMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(vvh.fileName, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (vvh.bottomLayout.getVisibility() == View.GONE) {
-                            vvh.bottomLayout.setVisibility(View.VISIBLE);
-                        } else {
-                            vvh.bottomLayout.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                if (vvh.bottomLayout.getVisibility() == View.GONE) {
+                    vvh.bottomLayout.setVisibility(View.VISIBLE);
+                } else {
+                    vvh.bottomLayout.setVisibility(View.GONE);
+                }
 
             }
         });

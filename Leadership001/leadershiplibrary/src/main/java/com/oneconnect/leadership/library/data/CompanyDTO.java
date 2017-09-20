@@ -16,6 +16,7 @@ public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<Com
     countryID, address, companyLogoUrl;
     private int primaryColor, secondaryColor;
 
+
     public CompanyDTO() {
     }
 

@@ -57,15 +57,8 @@ import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CompanyMainFragment.CompanyFragmentListener} interface
- * to handle interaction events.
- * Use the {@link CompanyMainFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class CompanyMainFragment extends Fragment  implements PageFragment, CrudContract.View/*, CacheContract.View*/{
+public class CompanyMainFragment extends Fragment  implements PageFragment, CrudContract.View{
+
     private CompanyFragmentListener mListener;
 
     String pageTitle;
@@ -252,7 +245,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
             }
         });
 
-        dailyThoughtEditor.show(getFragmentManager()/*getSupportFragmentManager()*/, "SHEET_DAILY_THOUGHT");
+        dailyThoughtEditor.show(getFragmentManager(), "SHEET_DAILY_THOUGHT");
 
     }
 
@@ -402,6 +395,11 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
 
     }
 
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
+
+    }
+
     public interface CompanyFragmentListener {
         void onThoughtsSelected();
         void onVideosSelected();
@@ -464,7 +462,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
                     @Override
                     public void onAnimationEnded() {
                         mListener.onThoughtsSelected();
-                        //startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+                        startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
                     }
                 });
             }
@@ -477,8 +475,8 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
                     @Override
                     public void onAnimationEnded() {
                         mListener.onVideosSelected();
-                        /*Intent intent = new Intent(ctx, VideoSelectionActivity.class);
-                        startActivity(intent);*/
+                        Intent intent = new Intent(ctx, VideoSelectionActivity.class);
+                        startActivity(intent);
                     }
                 });
             }
@@ -491,7 +489,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
                     @Override
                     public void onAnimationEnded() {
                         mListener.onUsersSelected();
-                        //startUserBottomSheet(null, Constants.NEW_ENTITY);
+                        startUserBottomSheet(null, Constants.NEW_ENTITY);
                     }
                 });
             }

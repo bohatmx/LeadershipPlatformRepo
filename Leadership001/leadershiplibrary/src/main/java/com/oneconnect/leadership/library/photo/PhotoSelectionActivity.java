@@ -1,13 +1,16 @@
 package com.oneconnect.leadership.library.photo;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +31,7 @@ import com.oneconnect.leadership.library.api.ListAPI;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
 import com.oneconnect.leadership.library.audio.PodcastListActivity;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
+import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
@@ -70,6 +74,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     private EBookDTO eBook;
     private PodcastDTO podcast;
     private NewsDTO news;
+    private UserDTO user;
+    private CompanyDTO company;
     private VideoDTO video;
     private UrlDTO url;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -125,6 +131,14 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
                 getSupportActionBar().setSubtitle(news.getTitle());
                 break;
+            case ResponseBag.USERS:
+                user = (UserDTO) getIntent().getSerializableExtra("user");
+                getSupportActionBar().setSubtitle(user.getFirstName());
+                break;
+            case ResponseBag.COMPANIES:
+                company = (CompanyDTO) getIntent().getSerializableExtra("company");
+                getSupportActionBar().setSubtitle(company.getCompanyLogoUrl());
+                break;
         }
         if (getIntent().getSerializableExtra("eBook") != null) {
             type = 3;
@@ -151,8 +165,16 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
             getSupportActionBar().setSubtitle(news.getTitle());
         }
-
-
+        if (getIntent().getSerializableExtra("user") != null) {
+            type = ResponseBag.USERS;
+            user = (UserDTO) getIntent().getSerializableExtra("user");
+            getSupportActionBar().setSubtitle(user.getFirstName());
+        }
+        if (getIntent().getSerializableExtra("company") != null) {
+            type = ResponseBag.COMPANIES;
+            company = (CompanyDTO) getIntent().getSerializableExtra("company");
+            getSupportActionBar().setSubtitle(company.getCompanyLogoUrl());
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(this);
@@ -180,19 +202,39 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             }
         });
 
-       // setUp();
+       setUp();
         //walkdir(Environment.getExternalStorageDirectory());
-        getFilePaths();
+        //getFilePaths();
         getAllPhotos();
     }
 
     private void setUp() {
 
-
+        ActivityCompat.requestPermissions(PhotoSelectionActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted and now can proceed
+                   //a sample method called
+                    getFilePaths();
+                } else {
 
-
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(PhotoSelectionActivity.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            // add other cases for more permissions
+        }
+    }
 
     /*public void walkdir(File dir) {
         String pdfPattern = ".jpg";
@@ -447,6 +489,12 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 eBook.setPhotoUrl(p.getUrl());
                 eBook.setPhotoID(p.getPhotoID());
                 break;
+            case ResponseBag.USERS:
+                p.setUserID(user.getUserID());
+                p.setTitle(user.getFirstName());
+                p.setPhotoID(p.getPhotoID());
+                p.setTitle(user.getFilePath());
+                break;
             case ResponseBag.PODCASTS:
                 p.setPodcast(podcast);
                 break;
@@ -461,12 +509,20 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 p.setTitle(news.getTitle());
                 //p.setCaption(news.getBody());
                 break;
+            case ResponseBag.COMPANIES:
+                p.setCompanyID(company.getCompanyID());
+                p.setTitle(company.getCompanyName());
+                //p.setCaption(news.getBody());
+                break;
         }
         if (type == ResponseBag.EBOOKS) {
             eBookpresenter.uploadEbook(eBook);
             return;
         }
-        //openProgressSheet();
+        if (type == ResponseBag.USERS) {
+            presenter.uploadUserPhoto(user);
+            return;
+        }
         presenter.uploadPhoto(p);
     }
 
@@ -489,6 +545,10 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
                 p.setTitle(weeklyMessage.getTitle());
                 //p.setDescription(weeklyMessage.getTitle());
+                break;
+            case ResponseBag.USERS:
+                p.setUserID(user.getUserID());
+                p.setTitle(user.getFirstName());
                 break;
             case ResponseBag.EBOOKS:
                 p.seteBookID(eBook.geteBookID());
@@ -513,6 +573,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         }
         if (type == ResponseBag.EBOOKS) {
             eBookpresenter.uploadEbook(eBook);
+            return;
+        }
+
+        if (type == ResponseBag.USERS) {
+            presenter.uploadUserPhoto(user);
             return;
         }
         fbs.addExistingPhotoToFirebase(p, new FirebaseStorageAPI.StorageListener() {
@@ -579,6 +644,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     @Override
     public void onPhotoUploaded(String key) {
+
+    }
+
+    @Override
+    public void onPhotoUserUploaded(String key) {
 
     }
 

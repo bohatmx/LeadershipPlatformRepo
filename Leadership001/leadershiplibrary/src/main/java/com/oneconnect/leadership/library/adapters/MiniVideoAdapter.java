@@ -65,14 +65,9 @@ public class MiniVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         vvh.vidFileNametxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.vidFileNametxt, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
-                        intent.putExtra("video", v);
-                        ctx.startActivity(intent);
-                    }
-                });
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("video", v);
+                ctx.startActivity(intent);
             }
         });
         try {

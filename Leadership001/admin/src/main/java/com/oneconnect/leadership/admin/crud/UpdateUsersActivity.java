@@ -18,6 +18,7 @@ import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -243,6 +244,11 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
 
     @Override
     public void onCategoryUpdated(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
 
     }
 

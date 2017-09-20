@@ -323,7 +323,7 @@ public class CrudActivity extends AppCompatActivity
             @Override
             public void onWorkDone(BaseDTO entity) {
                 DailyThoughtDTO m = (DailyThoughtDTO) entity;
-                if (bag.getDailyThoughts() == null) {
+               if (bag.getDailyThoughts() == null) {
                     bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
                 }
                 bag.getDailyThoughts().add(0, m);
@@ -1362,6 +1362,11 @@ public class CrudActivity extends AppCompatActivity
                 ebook = (EBookDTO) base;
                 intent.putExtra("eBook", ebook);
                 break;
+            case ResponseBag.USERS:
+                user = (UserDTO) base;
+                intent.putExtra("user", user);
+                break;
+
         }
         startActivity(intent);
     }

@@ -16,7 +16,7 @@
         android:name=".AdminApp"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@drawable/ic_clipboard"
+        android:icon="@drawable/leadership_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -63,6 +63,7 @@
             android:label="@string/title_activity_crud"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".calendar.CalendarActivity"
             android:label="@string/title_activity_calendar"

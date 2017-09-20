@@ -1,7 +1,9 @@
 package com.oneconnect.leadership.library.photo;
 
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
+import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.UserDTO;
 
 /**
  * Created by Nkululeko on 2017/05/11.
@@ -36,4 +38,26 @@ public class PhotoUploadPresenter implements PhotoUploadContract.Presenter {
             }
         });
     }
+
+    @Override
+    public void uploadUserPhoto(UserDTO user) {
+        api.uploadUserPhoto(user, new FirebaseStorageAPI.StorageListener() {
+            @Override
+            public void onResponse(String key) {
+                view.onPhotoUserUploaded(key);
+            }
+
+            @Override
+            public void onProgress(long transferred, long size) {
+                view.onProgress(transferred, size);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+
 }

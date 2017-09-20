@@ -31,7 +31,7 @@
     <string name="action_media">Media</string>
     <string name="action_photo">Photo</string>
     <string name="title_activity_le_exo_player">LeExo Player</string>
-
+    <string name="thoughts">CREATE LEADERSHIP THOUGHTS</string>
     <string name="video">LEADERSHIP VIDEOS</string>
     <string name="audio">Audio</string>
     <string name="company_profile">COMPANY PROFILE</string>
@@ -43,6 +43,8 @@
     <string name="podcast">LEADERSHIP PODCASTS</string>
     <string name="ebooks">LEADERSHIP EBOOKS</string>
     <string name="users">LEADERSHIP STAFF</string>
+    <string name="alert_color">Alert Colour</string>
+    <string name="optional">Optional</string>
     <string name="calendar_events">LEADERSHIP CALENDER EVENTS</string>
     <string name="Photographs">Photographs</string>
     <string name="text">Text</string>
@@ -135,5 +137,6 @@
     <string name="enter_news">Enter News</string>
     <string name="enter_subtitle">Enter Subtitle</string>
     <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_user_profile">UserProfileActivity</string>
 
 </resources>

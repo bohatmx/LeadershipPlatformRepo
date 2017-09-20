@@ -22,6 +22,7 @@ import com.oneconnect.leadership.library.cache.CategoryCache;
 import com.oneconnect.leadership.library.cache.SubscriptionCache;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
@@ -428,6 +429,11 @@ public class SubscriptionEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onCategoryUpdated(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
 
     }
 

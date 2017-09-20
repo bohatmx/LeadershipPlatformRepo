@@ -163,16 +163,11 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                        }else{
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                }else{
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                }
             }
         });
         if (dt.getPhotos() != null) {
@@ -332,50 +327,40 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         dvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.txtSubtitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                            if (dvh.txtSubtitle.getLineCount() > 3) {
-                                dvh.txtSubtitle.setLines(7);
-                            }
-                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
-                            //   dvh.txtTitle.setText(dvh.txtTitle.getText());
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                            if (dvh.txtSubtitle.getLineCount() > 3) {
-                                dvh.txtSubtitle.setLines(3);
-                                dvh.txtSubtitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }
-                        }
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                    if (dvh.txtSubtitle.getLineCount() > 3) {
+                        dvh.txtSubtitle.setLines(7);
                     }
-                });
+                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
+                    //   dvh.txtTitle.setText(dvh.txtTitle.getText());
+                } else {
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                    if (dvh.txtSubtitle.getLineCount() > 3) {
+                        dvh.txtSubtitle.setLines(3);
+                        dvh.txtSubtitle.setEllipsize(TextUtils.TruncateAt.END);
+                    }
+                }
             }
         });
 
         dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.txtTitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                            if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(7);
-                            }
-                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
-                         //   dvh.txtTitle.setText(dvh.txtTitle.getText());
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                            if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(3);
-                                dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }
-                        }
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                    if (dvh.txtTitle.getLineCount() > 3) {
+                        dvh.txtTitle.setLines(7);
                     }
-                });
+                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
+                    //   dvh.txtTitle.setText(dvh.txtTitle.getText());
+                } else {
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                    if (dvh.txtTitle.getLineCount() > 3) {
+                        dvh.txtTitle.setLines(3);
+                        dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
+                    }
+                }
             }
         });
 
@@ -428,12 +413,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         dvh.iconShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.iconShare, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        shareIt();
-                    }
-                });
+                shareIt();
             }
         });
     }
@@ -467,13 +447,11 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void shareIt() {
         //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     MediaController mediaController;

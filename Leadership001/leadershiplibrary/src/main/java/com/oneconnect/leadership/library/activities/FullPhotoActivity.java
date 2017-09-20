@@ -25,7 +25,7 @@ public class FullPhotoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_full_photo);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.leadership_logo);
+        toolbar.setLogo(R.drawable.harmony);
 
         ctx = getApplicationContext();
 

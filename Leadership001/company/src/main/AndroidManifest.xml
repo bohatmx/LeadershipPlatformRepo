@@ -4,20 +4,23 @@
     package="com.ocg.leadership.company">
 
     <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth" />
-
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".CompanyApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_business_black_48dp"
+        android:icon="@drawable/harmony"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_business_black_48dp"
-        android:theme="@style/RedTheme"
+        android:roundIcon="@drawable/harmony"
+        android:theme="@style/CommuterTheme"
         tools:replace="android:theme">
 
         <activity
@@ -39,16 +42,26 @@
         <activity
             android:name=".CompanySigninActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/CommuterTheme" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
         <activity
             android:name=".ColorPickerActivity"
             android:label="@string/color_picker"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/CommuterTheme" />
         <activity
             android:name=".CompanyMainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/CommuterTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -63,31 +76,51 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.RatingActivity"
+            android:label="@string/title_activity_my_android_app"
+            android:parentActivityName=".CompanyMainActivity"
+            android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.audio.PodcastSelectionActivity"
             android:label="@string/title_activity_podcast_selection"
-            android:parentActivityName=".CompanyMainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".CompanyMainActivity"/>
         <activity
             android:name="com.oneconnect.leadership.library.audio.PodcastListActivity"
             android:label="@string/title_activity__podcast_list"
-            android:parentActivityName="com.oneconnect.leadership.library.audio.PodcastSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName="com.oneconnect.leadership.library.audio.PodcastSelectionActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.camera.VideoSelectionActivity"
             android:label="@string/app_name"
             android:parentActivityName=".CompanyMainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.camera.VideoListActivity"
             android:label="@string/title_activity_video_list"
             android:parentActivityName="com.oneconnect.leadership.library.camera.VideoSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/CommuterTheme" />
         <activity
             android:name=".CompanyDrawerActivity"
             android:label="@string/title_activity_company_drawer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/CommuterTheme"></activity>
+
+        <activity
+            android:name="com.oneconnect.leadership.library.camera.CameraActivity"
+            android:label="@string/title_activity_camera"
+            android:parentActivityName=".CompanyMainActivity"/>
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity2"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+
+        <activity
+            android:name="com.oneconnect.leadership.library.photo.PhotoSelectionActivity"
+            android:label="@string/title_activity_photo_selection"
+            android:parentActivityName=".CompanyMainActivity" />
 
 
     </application>

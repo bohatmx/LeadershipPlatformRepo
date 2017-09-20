@@ -30,6 +30,7 @@ import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
@@ -55,7 +56,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     MiniVideoAdapter miniVideoAdapter;
     UrlAdapter urlAdapter;
     private int type;
-
 
     public interface DailyThoughtAdapterlistener{
         void onThoughtClicked(int position);
@@ -89,7 +89,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final DailyThoughtDTO dt = mList.get(position);
         final DailyViewHolder dvh = (DailyViewHolder) holder;
         dvh.txtTitle.setText(dt.getTitle());
-
+        dvh.profile.setText(dt.getCompanyName());
         dvh.txtSubtitle.setText(dt.getSubtitle());
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
@@ -104,27 +104,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 showPopupMenu(v);
             }
         });
-
-       /* if(dt.getRatings() != null){
-            dvh.iconReview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Util.flashOnce(dvh.iconReview, 300, new Util.UtilAnimationListener() {
-                        @Override
-                        public void onAnimationEnded() {
-                            DailyThoughtDTO dt = mList.get(position);
-                            List<RatingDTO> ratingList = new ArrayList<>();
-                            Map map = dt.getRatings();
-                            RatingDTO rDTO;
-                            for (Object value : map.values()) {
-                                rDTO = (RatingDTO) value;
-                                ratingList.add(rDTO);
-                            }
-                        }
-                    });
-                }
-            });
-        }*/
 
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
@@ -183,16 +162,11 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                        }else{
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                }else{
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                }
             }
         });
         if (dt.getPhotos() != null) {
@@ -343,8 +317,10 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
                         @Override
-                        public void onPlayClicked(int position) {
+                        public void onPlayClicked(PodcastDTO podcast) {
 
                         }
 
@@ -361,62 +337,47 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.ratingBar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, RatingActivity.class);
-                        //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
-                        intent.putExtra("dailyThought", dt);
-                        ctx.startActivity(intent);
-                    }
-                });
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
+                intent.putExtra("dailyThought", dt);
+                ctx.startActivity(intent);
             }
         });
         dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.txtTitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                        dvh.bottomLayout.setVisibility(View.VISIBLE);
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
                           /* if (dvh.txtTitle.getLineCount() > 3) {
                                dvh.txtTitle.setLines(5);
                            }*/
-                        } else {
-                         dvh.bottomLayout.setVisibility(View.GONE);
+                } else {
+                    dvh.bottomLayout.setVisibility(View.GONE);
                            /* if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(3);
                                 dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
                             }*/
 
-                        }
-                    }
-                });
+                }
             }
         });
 
         dvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.txtSubtitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
                           /* if (dvh.txtTitle.getLineCount() > 3) {
                                dvh.txtTitle.setLines(5);
                            }*/
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
+                } else {
+                    dvh.bottomLayout.setVisibility(View.GONE);
                            /* if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(3);
                                 dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
                             }*/
 
-                        }
-                    }
-                });
+                }
             }
         });
 
@@ -466,12 +427,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dvh.iconShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.iconShare, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        shareIt();
-                    }
-                });
+                shareIt();
             }
         });
     }
@@ -497,7 +453,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int i = menuItem.getItemId();
             if (i == R.id.share) {
                 shareIt();
-              //  dynamicShare();
                 return true;
             }
             return false;
@@ -516,13 +471,11 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void shareIt() {
         //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     MediaController mediaController;
@@ -549,7 +502,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         //
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         //protected TextViewExpandableAnimation txtTitle;
-        protected TextView txtTitle;
+        protected TextView txtTitle,profile;
 
         public DailyViewHolder(View itemView) {
             super(itemView);
@@ -557,6 +510,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ratingCom = (EditText) itemView.findViewById(R.id.ratingCom);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+            profile = (TextView) itemView.findViewById(R.id.profile);
             //txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
@@ -564,7 +518,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
-            bottomLayout.setVisibility(View.GONE);
+            //bottomLayout.setVisibility(View.GONE);
             updateLayout = (RelativeLayout) itemView.findViewById(R.id.updateLayout);
             updateLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);

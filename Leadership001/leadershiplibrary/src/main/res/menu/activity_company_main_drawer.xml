@@ -4,10 +4,16 @@
     <group android:checkableBehavior="single">
         <item android:title="Leadership News">
             <menu>
+
                 <item
-                    android:id="@+id/nav_news_article"
-                    android:icon="@drawable/ic_info"
-                    android:title="Leadership News Articles" />
+                    android:id="@+id/nav_daily_thought"
+                    android:icon="@drawable/ic_comment_black_24dp"
+                    android:title="Leadership Daily Thoughts" />
+                <item
+                    android:id="@+id/nav_create_thought"
+                    android:icon="@drawable/ic_create"
+                    android:title="Create Leadership Thoughts" />
+
             </menu>
         </item>
     </group>
@@ -15,9 +21,9 @@
         <item android:title="Leadership Message">
             <menu>
                 <item
-                    android:id="@+id/nav_daily_thought"
-                    android:icon="@drawable/ic_comment_black_24dp"
-                    android:title="Leadership Daily Thoughts" />
+                    android:id="@+id/nav_news_article"
+                    android:icon="@drawable/ic_info"
+                    android:title="Leadership Articles" />
                 <item
                     android:id="@+id/nav_master"
                     android:icon="@drawable/ic_class_black_24dp"
@@ -25,19 +31,19 @@
                 <item
                     android:id="@+id/nav_weekly"
                     android:icon="@drawable/ic_chat"
-                    android:title="Leadership Weekly Messages" />
+                    android:title="Top Leadership Thoughts" />
             </menu>
         </item>
     </group>
 
-    <item android:title="Leadership Events">
+    <!--<item android:title="Leadership Events">
         <menu>
             <item
                 android:id="@+id/nav_calender_events"
                 android:icon="@drawable/ic_event_black_24dp"
                 android:title="Leadership Calendar Events" />
         </menu>
-    </item>
+    </item>-->
 
     <item android:title="Leadership Media">
         <menu>
@@ -49,10 +55,10 @@
                 android:id="@+id/nav_podcast"
                 android:icon="@drawable/ic_microphone"
                 android:title="Leadership Podcasts" />
-            <!--<item
+            <item
                android:id="@+id/nav_video"
                android:icon="@drawable/ic_videocam"
-               android:title="Video" />-->
+               android:title="Leadership Videos" />
         </menu>
     </item>
 

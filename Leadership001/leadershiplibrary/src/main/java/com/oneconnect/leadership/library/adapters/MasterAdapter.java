@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.oneconnect.leadership.library.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.oneconnect.leadership.library.activities.FullPhotoActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -57,7 +58,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
     public interface MasterAdapterListener{
-       void onMasterClicked(int position);
+        void onMasterClicked(int position);
     }
 
     public MasterAdapter(Context ctx, List<WeeklyMasterClassDTO> mList){
@@ -82,6 +83,10 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             dvh.txtTitle.setLines(3);
             dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
         }*/
+        if(dt.getCompanyName() != null){
+            dvh.profile.setText(dt.getCompanyName());
+        }
+
         dvh.txtSubtitle.setText(dt.getSubtitle());
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
@@ -89,33 +94,23 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String formatedDate = Util.getFormattedDate(miliSecs);
         dvh.txtDate.setText(formatedDate);
         dvh.iconCamera.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_photo_black_24dp)/*ctx.getDrawable(R.drawable.ic_photo_black_24dp)*/);
-      //  dvh.iconUpdate.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_link_black_24dp)/*ctx.getDrawable(R.drawable.ic_link_black_24dp)*/);
+        //  dvh.iconUpdate.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_link_black_24dp)/*ctx.getDrawable(R.drawable.ic_link_black_24dp)*/);
 
         dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                Util.flashOnce(dvh.iconCalendar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        showPopupMenu(v);
-                    }
-                });
+                showPopupMenu(v);
             }
         });
 
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                        }else{
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                }else{
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -124,51 +119,46 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Util.flashOnce(dvh.iconVideo, 300, new Util.UtilAnimationListener() {
+                    if (dvh.videoAdapterLayout.getVisibility() == View.GONE){
+                        dvh.videoAdapterLayout.setVisibility(View.VISIBLE);
+                        dvh.videoRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        dvh.videoAdapterLayout.setVisibility(View.GONE);
+                        dvh.videoRecyclerView.setVisibility(View.GONE);
+                    }
+
+                    WeeklyMasterClassDTO dtd = mList.get(position);
+                    List<VideoDTO> videoList = new ArrayList<>();
+                    Map map = dtd.getVideos();
+                    VideoDTO vDTO;
+                    for (Object value : map.values()) {
+                        vDTO = (VideoDTO) value;
+                        videoList.add(vDTO);
+                    }
+
+                    miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
                         @Override
-                        public void onAnimationEnded() {
-                            if (dvh.videoAdapterLayout.getVisibility() == View.GONE){
-                                dvh.videoAdapterLayout.setVisibility(View.VISIBLE);
-                                dvh.videoRecyclerView.setVisibility(View.VISIBLE);
-                            } else {
-                                dvh.videoAdapterLayout.setVisibility(View.GONE);
-                                dvh.videoRecyclerView.setVisibility(View.GONE);
-                            }
+                        public void onStart() {
 
-                            WeeklyMasterClassDTO dtd = mList.get(position);
-                            List<VideoDTO> videoList = new ArrayList<>();
-                            Map map = dtd.getVideos();
-                            VideoDTO vDTO;
-                            for (Object value : map.values()) {
-                                vDTO = (VideoDTO) value;
-                                videoList.add(vDTO);
-                            }
+                        }
 
-                            miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
-                                @Override
-                                public void onStart() {
+                        @Override
+                        public void onPause() {
 
-                                }
+                        }
 
-                                @Override
-                                public void onPause() {
+                        @Override
+                        public void onStop() {
 
-                                }
+                        }
+                    });
 
-                                @Override
-                                public void onStop() {
+                    dvh.videoRecyclerView.setAdapter(miniVideoAdapter);
+                    dvh.btnPlay.setVisibility(View.GONE);
 
-                                }
-                            });
-
-                            dvh.videoRecyclerView.setAdapter(miniVideoAdapter);
-                            dvh.btnPlay.setVisibility(View.GONE);
-
-                            dvh.btnPlay.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                }
-                            });
+                    dvh.btnPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                         }
                     });
                 }
@@ -176,6 +166,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
+
             WeeklyMasterClassDTO dtd = mList.get(position);
             List<PhotoDTO> urlList = new ArrayList<>();
 
@@ -191,50 +182,54 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .load(photoUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(dvh.imageView);
+                //   dvh.captiontxt.setText(vDTO.getCaption());
+
+
             }
             dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Util.flashOnce(dvh.iconCamera, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-
-                        if (dvh.photoAdapterLayout.getVisibility() == View.GONE){
-                            dvh.photoAdapterLayout.setVisibility(View.VISIBLE);
-                            dvh.imageRecyclerView.setVisibility(View.VISIBLE);
-                        } else {
-                            dvh.photoAdapterLayout.setVisibility(View.GONE);
-                            dvh.imageRecyclerView.setVisibility(View.GONE);
-                        }
-
-                        WeeklyMasterClassDTO dtd = mList.get(position);
-                        List<PhotoDTO> urlList = new ArrayList<>();
-
-                        Map map = dtd.getPhotos();
-                        PhotoDTO vDTO;
-                        String photoUrl;
-                        for (Object value : map.values()) {
-                            vDTO = (PhotoDTO) value;
-                            photoUrl = vDTO.getUrl();
-                            urlList.add(vDTO);
-
-                            Glide.with(ctx)
-                                    .load(photoUrl)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .into(dvh.photoView);
-                            dvh.captiontxt.setText(vDTO.getCaption());
-
-                        }
-
-                        miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                            @Override
-                            public void onPhotoClicked(PhotoDTO photo) {
-
-                            }
-                        });
-                        dvh.imageRecyclerView.setAdapter(miniPhotoAdapter);
+                    if (dvh.photoAdapterLayout.getVisibility() == View.GONE){
+                        dvh.photoAdapterLayout.setVisibility(View.VISIBLE);
+                        dvh.imageRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        dvh.photoAdapterLayout.setVisibility(View.GONE);
+                        dvh.imageRecyclerView.setVisibility(View.GONE);
                     }
-                });
+
+                    WeeklyMasterClassDTO dtd = mList.get(position);
+                    List<PhotoDTO> urlList = new ArrayList<>();
+
+                    Map map = dtd.getPhotos();
+                    PhotoDTO vDTO;
+                    String photoUrl;
+                    for (Object value : map.values()) {
+                        vDTO = (PhotoDTO) value;
+                        photoUrl = vDTO.getUrl();
+                        urlList.add(vDTO);
+
+                        Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.photoView);
+                        dvh.captiontxt.setText(vDTO.getCaption());
+
+                        /*Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.imageView);
+                        dvh.captiontxt.setText(vDTO.getCaption());*/
+
+
+                    }
+
+                    miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                        @Override
+                        public void onPhotoClicked(PhotoDTO photo) {
+
+                        }
+                    });
+                    dvh.imageRecyclerView.setAdapter(miniPhotoAdapter);
                 }
             });
         }
@@ -244,9 +239,6 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
 
-                    Util.flashOnce(dvh.iconMicrophone, 300, new Util.UtilAnimationListener() {
-                        @Override
-                        public void onAnimationEnded() {
                             if (dvh.podcastAdapterLayout.getVisibility() == View.GONE){
                                 dvh.podcastAdapterLayout.setVisibility(View.VISIBLE);
                                 dvh.podcastRecyclerView.setVisibility(View.VISIBLE);
@@ -302,38 +294,33 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 dvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Util.flashOnce(dvh.pauseIMG, 300, new Util.UtilAnimationListener() {
-                                            @Override
-                                            public void onAnimationEnded() {
                                                 mediaPlayer.pause();
                                                 dvh.pauseIMG.setVisibility(View.GONE);
                                                 dvh.playIMG.setVisibility(View.VISIBLE);
                                                 dvh.stopIMG.setVisibility(View.VISIBLE);
-                                            }
-                                        });
+
                                     }
                                 });
 
                                 dvh.stopIMG.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Util.flashOnce(dvh.stopIMG, 300, new Util.UtilAnimationListener() {
-                                            @Override
-                                            public void onAnimationEnded() {
+
                                                 mediaPlayer.stop();
                                                 dvh.playIMG.setVisibility(View.VISIBLE);
                                                 dvh.pauseIMG.setVisibility(View.GONE);
                                                 dvh.stopIMG.setVisibility(View.GONE);
-                                            }
-                                        });
+
                                     }
                                 });
                                 //
                             }
 
                             miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
                                 @Override
-                                public void onPlayClicked(int position) {
+                                public void onPlayClicked(PodcastDTO podcast) {
 
                                 }
 
@@ -346,16 +333,12 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                         }
                     });
-                }
-            });
         }
 
         dvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.txtSubtitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         if (dvh.bottomLayout.getVisibility() == View.GONE){
                             dvh.bottomLayout.setVisibility(View.VISIBLE);
                           /* if (dvh.txtTitle.getLineCount() > 3) {
@@ -370,30 +353,25 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                         }
                     }
-                });
-            }
+
+
         });
 
         dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.txtTitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
                             /*if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(5);
                             }*/
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
+                } else {
+                    dvh.bottomLayout.setVisibility(View.GONE);
                            /* if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(3);
                                 dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
                             }*/
-                        }
-                    }
-                });
+                }
             }
         });
 
@@ -402,9 +380,6 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             dvh.iconLink/*iconUpdate*/.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Util.flashOnce(dvh.iconLink, 300, new Util.UtilAnimationListener() {
-                        @Override
-                        public void onAnimationEnded() {
                             if (dvh.urlAdapterLayout.getVisibility() == View.GONE){
                                 dvh.urlAdapterLayout.setVisibility(View.VISIBLE);
                                 dvh.urlRecyclerView.setVisibility(View.VISIBLE);
@@ -432,8 +407,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             });
 
                             dvh.urlRecyclerView.setAdapter(urlAdapter);
-                        }
-                    });
+
                 }
             });
         }
@@ -441,15 +415,18 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.ratingBar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         Intent intent = new Intent(ctx, RatingActivity.class);
                         //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
                         intent.putExtra("weeklyMasterClass", dt);
                         ctx.startActivity(intent);
-                    }
-                });
+            }
+        });
+
+        dvh.iconShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareIt();
             }
         });
     }
@@ -475,12 +452,6 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             int i = menuItem.getItemId();
             if (i == R.id.share) {
                 shareIt();
-             /*   Util.flashOnce(, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        shareIt();
-                    }
-                });*/
 
                 return true;
             }
@@ -489,13 +460,11 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
     private void shareIt() {
         //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     @Override
@@ -504,8 +473,8 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
     public class MasterViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
-                txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt;
-        protected ImageView iconCalendar, /*iconUpdate*/iconLink, iconDelete, iconMicrophone, iconVideo,
+                txtVideo, txtCamera, captiontxt, podcastfileName, urlTxt,profile;
+        protected ImageView iconCalendar, iconShare,iconLink, iconDelete, iconMicrophone, iconVideo,
                 iconCamera, photoView, playIMG, pauseIMG, stopIMG, imageView;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
@@ -529,7 +498,6 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
-            bottomLayout.setVisibility(View.GONE);
             updateLayout = (RelativeLayout) itemView.findViewById(R.id.updateLayout);
             updateLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
@@ -537,10 +505,12 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             deleteLayout.setVisibility(View.GONE);
             iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
+            profile = (TextView) itemView.findViewById(R.id.profile);
             txtMicrophone = (TextView) itemView.findViewById(R.id.txtMicrophone);
             txtVideo = (TextView) itemView.findViewById(R.id.txtVideo);
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+            iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
             videoFileName.setVisibility(View.GONE);*/
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);
@@ -556,7 +526,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             iconCamera = (ImageView) itemView.findViewById(R.id.iconCamera);
 
-         //   iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            //   iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
             iconLink = (ImageView) itemView.findViewById(R.id.iconLink);
             //
             imageRecyclerView = (RecyclerView) itemView.findViewById(R.id.imageRecyclerView);

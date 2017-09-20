@@ -55,6 +55,14 @@ app:cardElevation="@dimen/mon_padding">
 
         </Spinner>
 
+       <!-- <Spinner
+            android:id="@+id/Bspinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Catspinner">
+
+        </Spinner> -->
+
         <Button
             android:id="@+id/btnDate"
             style="?attr/borderlessButtonStyle"

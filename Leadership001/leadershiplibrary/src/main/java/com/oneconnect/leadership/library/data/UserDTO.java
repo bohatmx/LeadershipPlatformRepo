@@ -32,8 +32,10 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
             DESC_PLATINUM_USER = "Platinum",
             DESC_GOLD_USER = "Gold";
     private HashMap<String, DeviceDTO> devices;
-    private HashMap<String, SubscriptionDTO> subscriptions;       //null if user subscription via client
-
+    private HashMap<String, SubscriptionDTO> subscriptions;
+    private HashMap<String, PhotoDTO> photos;
+    //null if user subscription via client
+    private String filePath, storageName,url, stringDate;
     public UserDTO() {
 
     }
@@ -239,4 +241,43 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
         this.companyName = companyName;
     }
 
+    public HashMap<String, PhotoDTO> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(HashMap<String, PhotoDTO> photos) {
+        this.photos = photos;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getStorageName() {
+        return storageName;
+    }
+
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getStringDate() {
+        return stringDate;
+    }
+
+    public void setStringDate(String stringDate) {
+        this.stringDate = stringDate;
+    }
 }

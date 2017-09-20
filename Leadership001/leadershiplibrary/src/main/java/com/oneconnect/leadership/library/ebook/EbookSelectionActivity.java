@@ -1053,6 +1053,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     }
 
     @Override
+    public void onPhotoUserUploaded(String key) {
+
+    }
+
+    @Override
     public void onProgress(long transferred, long size) {
 
     }

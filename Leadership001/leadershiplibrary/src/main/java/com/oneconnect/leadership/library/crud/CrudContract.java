@@ -105,5 +105,6 @@ public class CrudContract {
         void onError(String message);
         void onCategoryUpdated(CategoryDTO category);
 
+        void onLinksRequired(BaseDTO entity);
     }
 }

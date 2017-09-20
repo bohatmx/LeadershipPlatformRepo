@@ -623,6 +623,11 @@ public class ImageListActivity extends AppCompatActivity implements PhotoUploadC
     }
 
     @Override
+    public void onPhotoUserUploaded(String key) {
+
+    }
+
+    @Override
     public void onEbookUpdated(String key) {
 
     }

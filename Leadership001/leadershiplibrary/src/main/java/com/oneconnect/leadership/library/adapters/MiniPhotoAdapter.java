@@ -50,17 +50,9 @@ public class MiniPhotoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         pvh.photoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pvh.photoView, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, FullPhotoActivity.class);
-                        intent.putExtra("photo", p);
-                        ctx.startActivity(intent);
-                        /*Intent intent = new Intent(ctx, FullPhotoActivity.class);
-                        intent.putExtra("photo", p);
-                        ctx.startActivity(intent);*/
-                    }
-                });
+                Intent intent = new Intent(ctx, FullPhotoActivity.class);
+                intent.putExtra("photo", p);
+                ctx.startActivity(intent);
             }
         });
 

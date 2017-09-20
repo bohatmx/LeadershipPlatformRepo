@@ -571,6 +571,11 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
 
     }
 
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
+
+    }
+
     /*int primaryColor, primaryDarkColor;
 
     @Override

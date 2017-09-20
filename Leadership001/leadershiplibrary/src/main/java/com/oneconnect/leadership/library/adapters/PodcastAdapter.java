@@ -110,7 +110,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public interface PodcastAdapterListener {
-        void onPlayClicked(int position);
+        void onPlayClicked(PodcastDTO podcast);
         void onPodcastRequired(PodcastDTO podcast);
     }
 
@@ -140,91 +140,66 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.ratingBar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, RatingActivity.class);
-                        //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
-                        intent.putExtra("podcast", v);
-                        ctx.startActivity(intent);
-                    }
-                });
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
+                intent.putExtra("podcast", v);
+                ctx.startActivity(intent);
             }
         });
 
         pvh.audio_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.audio_card, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
-                        intent.putExtra("podcast", v);
-                        ctx.startActivity(intent);
-                    }
-                });
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("podcast", v);
+                ctx.startActivity(intent);
             }
         });
         pvh.fileName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
                         Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                         intent.putExtra("podcast", v);
                         ctx.startActivity(intent);
-                    }
-                });
+
             }
         });
 
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pvh.playIMG, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        mediaPlayer = new MediaPlayer();
-                        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        pvh.playIMG.setVisibility(View.GONE);
-                        pvh.pauseIMG.setVisibility(View.VISIBLE);
-                        pvh.stopIMG.setVisibility(View.VISIBLE);
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                pvh.playIMG.setVisibility(View.GONE);
+                pvh.pauseIMG.setVisibility(View.VISIBLE);
+                pvh.stopIMG.setVisibility(View.VISIBLE);
 
-                        try {
-                            mediaPlayer.setDataSource(podcastURL);
-                        } catch (IllegalArgumentException e) {
-                            Log.e(LOG, "You might not set the URI correctly!");
-                        } catch (SecurityException e) {
-                            Log.e(LOG, "You might not set the URI correctly!");
-                        } catch (IllegalStateException e) {
-                            Log.e(LOG, "You might not set the URI correctly!");
-                        } catch (IOException e) {
-                            Log.e(LOG, e.getMessage());
-                        }
-                        try {
-                            mediaPlayer.prepare();
-                        } catch (IllegalStateException e) {
-                            Log.e(LOG, "You might not set the URI correctly!");
-                        } catch (IOException e) {
-                            Log.e(LOG, "You might not set the URI correctly!");
-                        }
-                        mediaPlayer.start();
-                    }
-                });
-
+                try {
+                    mediaPlayer.setDataSource(podcastURL);
+                } catch (IllegalArgumentException e) {
+                    Log.e(LOG, "You might not set the URI correctly!");
+                } catch (SecurityException e) {
+                    Log.e(LOG, "You might not set the URI correctly!");
+                } catch (IllegalStateException e) {
+                    Log.e(LOG, "You might not set the URI correctly!");
+                } catch (IOException e) {
+                    Log.e(LOG, e.getMessage());
+                }
+                try {
+                    mediaPlayer.prepare();
+                } catch (IllegalStateException e) {
+                    Log.e(LOG, "You might not set the URI correctly!");
+                } catch (IOException e) {
+                    Log.e(LOG, "You might not set the URI correctly!");
+                }
+                mediaPlayer.start();
             }
         });
 
         pvh.headerpic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                Util.flashOnce(seekBar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        showPopupMenu(v);
-                    }
-                });
+                showPopupMenu(v);
 
             }
         });
@@ -298,30 +273,20 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pvh.pauseIMG, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        mediaPlayer.pause();
-                        pvh.pauseIMG.setVisibility(View.GONE);
-                        pvh.playIMG.setVisibility(View.VISIBLE);
-                        pvh.stopIMG.setVisibility(View.VISIBLE);
-                    }
-                });
+                mediaPlayer.pause();
+                pvh.pauseIMG.setVisibility(View.GONE);
+                pvh.playIMG.setVisibility(View.VISIBLE);
+                pvh.stopIMG.setVisibility(View.VISIBLE);
             }
         });
 
         pvh.stopIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pvh.stopIMG, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        mediaPlayer.stop();
-                        pvh.playIMG.setVisibility(View.VISIBLE);
-                        pvh.pauseIMG.setVisibility(View.GONE);
-                        pvh.stopIMG.setVisibility(View.GONE);
-                    }
-                });
+                mediaPlayer.stop();
+                pvh.playIMG.setVisibility(View.VISIBLE);
+                pvh.pauseIMG.setVisibility(View.GONE);
+                pvh.stopIMG.setVisibility(View.GONE);
             }
         });
     }
@@ -360,13 +325,11 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void shareIt() {
         //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
     private TextView  initTimetxt, finalTimetxt;
     private SeekBar seekbar;

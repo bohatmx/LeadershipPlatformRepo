@@ -2,31 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="240dp"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#be1d2c"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:background="@color/blue_600"
+    android:theme="@style/CommuterTheme">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/mon_wide"
+        android:src="@drawable/folder" />
 
     <TextView
-        android:id="@+id/usernametxt"
-        android:layout_width="wrap_content"
+        android:id="@+id/owner_name"
+        android:layout_below="@id/imageView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="email@gmail.com"
-        android:visibility="gone"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:text="AftaRobot Owner"
+        android:textColor="@color/black" />
 
-    <ImageView
-        android:id="@+id/imageView"
+    <TextView
+        android:id="@+id/owner_email"
+        android:textStyle="bold"
+        android:layout_below="@id/owner_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/harmony" />
+        android:text="owner Name"
+        android:textColor="@color/black"/>
 
 
 </LinearLayout>

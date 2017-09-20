@@ -14,8 +14,8 @@
         app:pstsTextAllCaps="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        app:pstsDividerColor="@color/green"
-        app:pstsIndicatorColor="#be1d2c"
+        app:pstsDividerColor="@color/blue_600"
+        app:pstsIndicatorColor="@color/blue_600"
         app:pstsUnderlineColor="@color/blue_gray_100"
         app:pstsTabPaddingLeftRight="14dp"
         />

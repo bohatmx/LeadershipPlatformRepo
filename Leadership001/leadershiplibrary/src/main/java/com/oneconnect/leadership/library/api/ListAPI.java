@@ -53,6 +53,30 @@ public class ListAPI {
         void onError(String messsage);
     }
 
+    public void getDailyThoughtsByUser(String userID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
+        Query q = ref.orderByChild("userID").equalTo(userID);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
     public void getDailyThoughts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
