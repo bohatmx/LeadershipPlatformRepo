@@ -37,7 +37,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +46,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
-import com.oneconnect.leadership.library.activities.ColorPickerActivity;
+import com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -88,6 +87,7 @@ import com.oneconnect.leadership.library.lists.CompanyMainFragment;
 import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.lists.EBookListFragment;
 import com.oneconnect.leadership.library.lists.MasterListFragment;
+import com.oneconnect.leadership.library.lists.MyDailyThoughtList;
 import com.oneconnect.leadership.library.lists.NewsListFragment;
 import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
@@ -116,7 +116,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         SubscriberContract.View, CrudContract.View, CacheContract.View, MasterListFragment.WeeklyMasterClassListener,
         WeeklyMessageListFragment.WeeklyMessageListener, PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
         PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
-        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener {
+        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener, MyDailyThoughtList.MyDailyThoughtListener {
 
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -126,6 +126,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     private PodcastListFragment podcastListFragment;
     MasterListFragment masterListFragment;
     WeeklyMessageListFragment weeklyMessageListFragment;
+    MyDailyThoughtList myDailyThoughtList;
     PhotoListFragment photoListFragment;
     CalendarEventListFragment calendarEventListFragment;
     UserListFragment userListFragment;
@@ -157,11 +158,10 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     private DailyThoughtEditor dailyThoughtEditor;
     private DatePickerDialog datePickerDialog;
     private int type;
-    NavigationView navigationView;
+    NavigationView navigationView, platinum_nav_view, goldNavigationView, platinum_admin_user_nav_view;
     private PagerAdapter adapter;
     private CompanyMainActivity activity;
     private ActionBar ab;
-    String themeColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,25 +198,6 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         strip.setTextColor(WHITE);
         strip.setBackgroundColor(themeDarkColor);
         setup();
-
-        /*if (getIntent().getSerializableExtra("themeColor") != null) {
-            themeColor = (String) getIntent().getSerializableExtra("themeColor");
-            toolbar.setBackgroundColor(Color.parseColor(hexColor)*//*Integer.parseInt(hexColor)*//**//*company.getPrimaryColor()*//*);
-            strip.setBackgroundColor(Color.parseColor(hexColor));
-            nav_layout.setBackgroundColor(Color.parseColor(hexColor));
-        }*/
-                        /*themeColor*//*themeColor = (String) getIntent().getSerializableExtra("themeColor");
-                    } else {
-                        Log.i(TAG, "*** themeColor not found ***");
-                    }
-
-        if (getIntent().getSerializableExtra("user") != null) {
-                        user = (UserDTO) getIntent().getSerializableExtra("user");
-                        presenter.getCompanyProfile(user.getCompanyID());
-
-                    } /*else {
-                        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-                    }*/
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -281,8 +262,6 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         }
     }
 
-    LinearLayout nav_layout;
-
     private void setup() {
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -292,35 +271,101 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
 
-        TextView username = header.findViewById(R.id.owner_name);
-        TextView email = header.findViewById(R.id.owner_email);
-        nav_layout = (LinearLayout) header.findViewById(R.id.nav_layout);
-
-        email.setText(user.getEmail());
-        username.setText(user.getFullName());
         if (user != null) {
             Log.d(TAG, "onCreate: " + user.getFullName() + " usertype: "
                     + user.getUserType() + " " + user.getUserDescription());
             getSupportActionBar().setSubtitle(user.getFullName());
-            View hdr = navigationView.getHeaderView(0);
+            if (user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_USER)) {
+               // navigationView.setVisibility(View.GONE);
+                platinum_nav_view = (NavigationView) findViewById(R.id.platinum_nav_view);
+                platinum_nav_view.setNavigationItemSelectedListener(this);
+                View header1 = platinum_nav_view.getHeaderView(0);
+
+                TextView username1 = header1.findViewById(R.id.owner_name);
+                TextView email1 = header1.findViewById(R.id.owner_email);
+
+                setUpPlatinumUserViewPager();
+            } else if (user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER)) {
+                // navigationView.setVisibility(View.GONE);
+                goldNavigationView = (NavigationView) findViewById(R.id.gold_nav_view);
+                goldNavigationView.setNavigationItemSelectedListener(this);
+                View header1 = goldNavigationView.getHeaderView(0);
+
+                TextView username1 = header1.findViewById(R.id.owner_name);
+                TextView email1 = header1.findViewById(R.id.owner_email);
+
+                setUpGoldUserViewPager();
+            }else if(user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN)) {
+                platinum_admin_user_nav_view = (NavigationView) findViewById(R.id.platinum_admin_user_nav_view);
+                platinum_admin_user_nav_view.setNavigationItemSelectedListener(this);
+                View header = platinum_admin_user_nav_view.getHeaderView(0);
+
+                TextView username = header.findViewById(R.id.owner_name);
+                TextView email = header.findViewById(R.id.owner_email);
+
+                email.setText(user.getEmail());
+                username.setText(user.getFullName());
+                setUpViewPager();
+            }else if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
+                platinum_admin_user_nav_view = (NavigationView) findViewById(R.id.platinum_admin_user_nav_view);
+                platinum_admin_user_nav_view.setNavigationItemSelectedListener(this);
+                View header = platinum_admin_user_nav_view.getHeaderView(0);
+
+                TextView username = header.findViewById(R.id.owner_name);
+                TextView email = header.findViewById(R.id.owner_email);
+
+                email.setText(user.getEmail());
+                username.setText(user.getFullName());
+                setUpViewPager();
+            }
+           /* View hdr = navigationView.getHeaderView(0);
             TextView txt = hdr.findViewById(R.id.owner_name);
-            txt.setText(user.getFullName());
+            txt.setText(user.getFullName());*/
         } else {
             Log.e(TAG, "onCreate: --------- user not found on disk");
             finish();
         }
-        setUpViewPager();
-        imageView = header.findViewById(R.id.imageView);
+
+     /*   if(user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN))
+        {
+            setUpViewPager();
+        }else
+            if(user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER))
+            {
+            setUpGoldUserViewPager();
+        }else
+            if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_USER)) {
+                navigationView.setVisibility(View.GONE);
+                platinum_nav_view = (NavigationView) findViewById(R.id.platinum_nav_view);
+                platinum_nav_view.setNavigationItemSelectedListener(this);
+                View header1 = platinum_nav_view.getHeaderView(0);
+
+                TextView username1 = header1.findViewById(R.id.owner_name);
+                TextView email1 = header1.findViewById(R.id.owner_email);
+
+                setUpPlatinumUserViewPager();
+        }
+        if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+            View header = navigationView.getHeaderView(0);
+
+            TextView username = header.findViewById(R.id.owner_name);
+            TextView email = header.findViewById(R.id.owner_email);
+
+            email.setText(user.getEmail());
+            username.setText(user.getFullName());
+            setUpViewPager();
+        } */
+
+     /*   imageView = header.findViewById(R.id.imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pickGalleryOrCamera(base);
             }
-        });
+        }); */
     }
     private BaseDTO base;
     private void setUpViewPager() {
@@ -333,6 +378,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
         masterListFragment = MasterListFragment.newInstance();
         weeklyMessageListFragment = WeeklyMessageListFragment.newInstance();
+        myDailyThoughtList = myDailyThoughtList.newInstance();
         // calendarEventListFragment = CalendarEventListFragment.newInstance();
         //photoListFragment = PhotoListFragment.newInstance(new HashMap<String, PhotoDTO>());
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
@@ -345,6 +391,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
         masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
         weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
+        myDailyThoughtList.setPageTitle(ctx.getString(R.string.my_thought));
         //   calendarEventListFragment.setPageTitle(ctx.getString(R.string.calendar_events));
         //photoListFragment.setPageTitle(ctx.getString(R.string.photo));
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
@@ -353,6 +400,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         userListFragment.setPageTitle(ctx.getString(R.string.users));
 
         dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        myDailyThoughtList.setThemeColors(themePrimaryColor, themeDarkColor);
         newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         masterListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
@@ -363,6 +411,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         videoListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
 
         pageFragmentList.add(dailyThoughtListFragment);
+        pageFragmentList.add(myDailyThoughtList);
         pageFragmentList.add(newsListFragment);
         pageFragmentList.add(masterListFragment);
         pageFragmentList.add(weeklyMessageListFragment);
@@ -405,40 +454,249 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
                 if (page.equalsIgnoreCase("Leadership Daily Thoughts")) {
                     mPager.setCurrentItem(0);
                 }
-
-                if (page.equalsIgnoreCase("Leadership News Article")) {
+                if (page.equalsIgnoreCase("My Leadership Thoughts")) {
                     mPager.setCurrentItem(1);
                 }
 
-                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
+                if (page.equalsIgnoreCase("Leadership News Article")) {
                     mPager.setCurrentItem(2);
                 }
-                if (page.equalsIgnoreCase("Top Leadership Thoughts")) {
+
+                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
                     mPager.setCurrentItem(3);
+                }
+                if (page.equalsIgnoreCase("Top Leadership Thoughts")) {
+                    mPager.setCurrentItem(4);
                 }
                 /*if (page.equalsIgnoreCase("Leadership Calendar Event")) {
                     mPager.setCurrentItem(5);
                 }*/
                 if (page.equalsIgnoreCase("Leadership Podcasts")) {
-                    mPager.setCurrentItem(4);
-                }
-                if (page.equalsIgnoreCase("Leadership Videos")) {
                     mPager.setCurrentItem(5);
                 }
-                if (page.equalsIgnoreCase("Leadership eBooks")) {
+                if (page.equalsIgnoreCase("Leadership Videos")) {
                     mPager.setCurrentItem(6);
                 }
-                if (page.equalsIgnoreCase("Company Profile")) {
+                if (page.equalsIgnoreCase("Leadership eBooks")) {
                     mPager.setCurrentItem(7);
                 }
-                if (page.equalsIgnoreCase("Leadership Staff")) {
+                if (page.equalsIgnoreCase("Company Profile")) {
                     mPager.setCurrentItem(8);
+                }
+                if (page.equalsIgnoreCase("Leadership Staff")) {
+                    mPager.setCurrentItem(9);
                 }
 
             }
         }
 
     }
+
+    private void setUpGoldUserViewPager() {
+        setMenuDestination();
+
+        pageFragmentList = new ArrayList<>();
+
+        newsListFragment = NewsListFragment.newInstance();
+        dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
+        masterListFragment = MasterListFragment.newInstance();
+        weeklyMessageListFragment = WeeklyMessageListFragment.newInstance();
+        myDailyThoughtList = myDailyThoughtList.newInstance();
+        podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
+        videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
+        eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
+
+        newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
+        dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
+        masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
+        weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
+        myDailyThoughtList.setPageTitle(ctx.getString(R.string.my_thought));
+        podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
+        videoListFragment.setPageTitle(ctx.getString(R.string.video));
+        eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
+
+        dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        myDailyThoughtList.setThemeColors(themePrimaryColor, themeDarkColor);
+        newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        masterListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        podcastListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        eBookListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        videoListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+
+        pageFragmentList.add(dailyThoughtListFragment);
+        pageFragmentList.add(myDailyThoughtList);
+        pageFragmentList.add(newsListFragment);
+        pageFragmentList.add(masterListFragment);
+        pageFragmentList.add(weeklyMessageListFragment);
+        pageFragmentList.add(podcastListFragment);
+        pageFragmentList.add(videoListFragment);
+        pageFragmentList.add(eBookListFragment);
+
+
+        try {
+            adapter = new PagerAdapter(getSupportFragmentManager());
+            mPager.setAdapter(adapter);
+            strip.setViewPager(mPager);
+            mPager.setPageTransformer(true, new DepthPageTransformer());
+            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    currentIndex = position;
+                    PageFragment pf = pageFragmentList.get(position);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            mPager.setCurrentItem(currentIndex);
+        } catch (Exception e) {
+            Log.e(TAG, "PagerAdapter failed", e);
+            if (page != null) {
+                if (page.equalsIgnoreCase("Leadership Daily Thoughts")) {
+                    mPager.setCurrentItem(0);
+                }
+                if (page.equalsIgnoreCase("My Leadership Thoughts")) {
+                    mPager.setCurrentItem(1);
+                }
+
+                if (page.equalsIgnoreCase("Leadership News Article")) {
+                    mPager.setCurrentItem(2);
+                }
+
+                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
+                    mPager.setCurrentItem(3);
+                }
+                if (page.equalsIgnoreCase("Top Leadership Thoughts")) {
+                    mPager.setCurrentItem(4);
+                }
+                if (page.equalsIgnoreCase("Leadership Podcasts")) {
+                    mPager.setCurrentItem(5);
+                }
+                if (page.equalsIgnoreCase("Leadership Videos")) {
+                    mPager.setCurrentItem(6);
+                }
+                if (page.equalsIgnoreCase("Leadership eBooks")) {
+                    mPager.setCurrentItem(7);
+                }
+
+            }
+        }
+
+    }
+
+    private void setUpPlatinumUserViewPager() {
+       // setMenuDestination();
+        setPlatinumMenuDestination();
+
+        pageFragmentList = new ArrayList<>();
+
+        newsListFragment = NewsListFragment.newInstance();
+        dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
+        masterListFragment = MasterListFragment.newInstance();
+        weeklyMessageListFragment = WeeklyMessageListFragment.newInstance();
+        myDailyThoughtList = myDailyThoughtList.newInstance();
+        podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
+        videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
+        eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
+
+        newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
+        dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
+        masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
+        weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
+        myDailyThoughtList.setPageTitle(ctx.getString(R.string.my_thought));
+        podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
+        videoListFragment.setPageTitle(ctx.getString(R.string.video));
+        eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
+
+        dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        myDailyThoughtList.setThemeColors(themePrimaryColor, themeDarkColor);
+        newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        masterListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        podcastListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        eBookListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        videoListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+
+        pageFragmentList.add(dailyThoughtListFragment);
+        pageFragmentList.add(myDailyThoughtList);
+        pageFragmentList.add(newsListFragment);
+        pageFragmentList.add(masterListFragment);
+        pageFragmentList.add(weeklyMessageListFragment);
+        pageFragmentList.add(podcastListFragment);
+        pageFragmentList.add(videoListFragment);
+        pageFragmentList.add(eBookListFragment);
+
+
+        try {
+            adapter = new PagerAdapter(getSupportFragmentManager());
+            mPager.setAdapter(adapter);
+            strip.setViewPager(mPager);
+            mPager.setPageTransformer(true, new DepthPageTransformer());
+            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    currentIndex = position;
+                    PageFragment pf = pageFragmentList.get(position);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            mPager.setCurrentItem(currentIndex);
+        } catch (Exception e) {
+            Log.e(TAG, "PagerAdapter failed", e);
+            if (page != null) {
+                if (page.equalsIgnoreCase("Leadership Daily Thoughts")) {
+                    mPager.setCurrentItem(0);
+                }
+                if (page.equalsIgnoreCase("My Leadership Thoughts")) {
+                    mPager.setCurrentItem(1);
+                }
+
+                if (page.equalsIgnoreCase("Leadership News Article")) {
+                    mPager.setCurrentItem(2);
+                }
+
+                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
+                    mPager.setCurrentItem(3);
+                }
+                if (page.equalsIgnoreCase("Top Leadership Thoughts")) {
+                    mPager.setCurrentItem(4);
+                }
+                if (page.equalsIgnoreCase("Leadership Podcasts")) {
+                    mPager.setCurrentItem(5);
+                }
+                if (page.equalsIgnoreCase("Leadership Videos")) {
+                    mPager.setCurrentItem(6);
+                }
+                if (page.equalsIgnoreCase("Leadership eBooks")) {
+                    mPager.setCurrentItem(7);
+                }
+
+            }
+        }
+
+    }
+
+
+
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Select Images")
@@ -647,69 +905,50 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         }
     }
 
-    private void setMenuDestination() {
+    private void setPlatinumMenuDestination() {
+        Menu menu = platinum_nav_view.getMenu();
 
-        Menu menu = navigationView.getMenu();
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        platinum_nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                drawer.closeDrawers();
+                //drawer.closeDrawers();
                 if (item.getItemId() == R.id.nav_daily_thought) {
                     mPager.setCurrentItem(0, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_news_article) {
+                if (item.getItemId() == R.id.nav_create_thought) {
                     mPager.setCurrentItem(1, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_create) {
+                    Intent intent = new Intent(CompanyMainActivity.this, CreateDailyThoughtActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_news_article) {
+                    mPager.setCurrentItem(2, true);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.nav_master) {
-                    mPager.setCurrentItem(2, true);
-                    return true;
-                }
-                if (item.getItemId() == R.id.nav_weekly) {
                     mPager.setCurrentItem(3, true);
                     return true;
                 }
-                /*if (item.getItemId() == R.id.nav_calender_events) {
-                    mPager.setCurrentItem(5, true);
-                    return true;
-                }*/
-               /* if (item.getItemId() == R.id.nav_photo) {
-                    mPager.setCurrentItem(5, true);
-                    return true;
-                }*/
-                if (item.getItemId() == R.id.nav_podcast) {
+                if (item.getItemId() == R.id.nav_weekly) {
                     mPager.setCurrentItem(4, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_video) {
+                if (item.getItemId() == R.id.nav_podcast) {
                     mPager.setCurrentItem(5, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_eBooks) {
+                if (item.getItemId() == R.id.nav_video) {
                     mPager.setCurrentItem(6, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_company_profile) {
+                if (item.getItemId() == R.id.nav_eBooks) {
                     mPager.setCurrentItem(7, true);
-                    return true;
-                }
-                if (item.getItemId() == R.id.nav_users) {
-                    mPager.setCurrentItem(8, true);
-                    return true;
-                }
-                if (item.getItemId() == R.id.nav_share) {
-                    onInviteClicked();
-                    /*Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
-                            .setMessage(getString(R.string.invitation_message))
-                            .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-                            .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
-                            .setCallToActionText(getString(R.string.invitation_cta))
-                            .build();
-                    //startActivity(intent);
-                    startActivityForResult(intent, REQUEST_INVITE);*/
                     return true;
                 }
 
@@ -721,6 +960,294 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
                     return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    private void setMenuDestination() {
+
+        Menu menu = navigationView.getMenu();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                drawer.closeDrawers();
+                if (user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_USER)) {
+                    if (item.getItemId() == R.id.nav_daily_thought) {
+                        mPager.setCurrentItem(0, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_create_thought) {
+                        mPager.setCurrentItem(1, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_create) {
+                        Intent intent = new Intent(CompanyMainActivity.this, CreateDailyThoughtActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_news_article) {
+                        mPager.setCurrentItem(2, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_master) {
+                        mPager.setCurrentItem(3, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_weekly) {
+                        mPager.setCurrentItem(4, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_podcast) {
+                        mPager.setCurrentItem(5, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_video) {
+                        mPager.setCurrentItem(6, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_eBooks) {
+                        mPager.setCurrentItem(7, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_sign_out) {
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(CompanyMainActivity.this, CompanySigninActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                    return true;
+
+                }
+                if (user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER)) {
+                    if (item.getItemId() == R.id.nav_daily_thought) {
+                        mPager.setCurrentItem(0, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_create_thought) {
+                        mPager.setCurrentItem(1, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_create) {
+                        // mPager.setCurrentItem(3, true);
+                        Intent intent = new Intent(CompanyMainActivity.this, CreateDailyThoughtActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_news_article) {
+                        mPager.setCurrentItem(2, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_master) {
+                        mPager.setCurrentItem(3, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_weekly) {
+                        mPager.setCurrentItem(4, true);
+                        return true;
+                    }
+                /*if (item.getItemId() == R.id.nav_calender_events) {
+                    mPager.setCurrentItem(5, true);
+                    return true;
+                }*/
+               /* if (item.getItemId() == R.id.nav_photo) {
+                    mPager.setCurrentItem(5, true);
+                    return true;
+                }*/
+                    if (item.getItemId() == R.id.nav_podcast) {
+                        mPager.setCurrentItem(5, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_video) {
+                        mPager.setCurrentItem(6, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_eBooks) {
+                        mPager.setCurrentItem(7, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_share) {
+                        onInviteClicked();
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_sign_out) {
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(CompanyMainActivity.this, CompanySigninActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                    return true;
+
+                }
+
+                if (user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
+                    if (item.getItemId() == R.id.nav_daily_thought) {
+                        mPager.setCurrentItem(0, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_create_thought) {
+                        mPager.setCurrentItem(1, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_create) {
+                        // mPager.setCurrentItem(3, true);
+                        Intent intent = new Intent(CompanyMainActivity.this, CreateDailyThoughtActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_news_article) {
+                        mPager.setCurrentItem(2, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_master) {
+                        mPager.setCurrentItem(3, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_weekly) {
+                        mPager.setCurrentItem(4, true);
+                        return true;
+                    }
+                /*if (item.getItemId() == R.id.nav_calender_events) {
+                    mPager.setCurrentItem(5, true);
+                    return true;
+                }*/
+               /* if (item.getItemId() == R.id.nav_photo) {
+                    mPager.setCurrentItem(5, true);
+                    return true;
+                }*/
+                    if (item.getItemId() == R.id.nav_podcast) {
+                        mPager.setCurrentItem(5, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_video) {
+                        mPager.setCurrentItem(6, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_eBooks) {
+                        mPager.setCurrentItem(7, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_company_profile) {
+                        mPager.setCurrentItem(8, true);
+                        item.setVisible(false);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_users) {
+                        mPager.setCurrentItem(9, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_share) {
+                        onInviteClicked();
+                    /*Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
+                            .setMessage(getString(R.string.invitation_message))
+                            .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                            .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                            .setCallToActionText(getString(R.string.invitation_cta))
+                            .build();
+                    //startActivity(intent);
+                    startActivityForResult(intent, REQUEST_INVITE);*/
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_sign_out) {
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(CompanyMainActivity.this, CompanySigninActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                    return true;
+                }
+
+                if (user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN)) {
+                    if (item.getItemId() == R.id.nav_daily_thought) {
+                        mPager.setCurrentItem(0, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_create_thought) {
+                        mPager.setCurrentItem(1, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_create) {
+                        // mPager.setCurrentItem(3, true);
+                        Intent intent = new Intent(CompanyMainActivity.this, CreateDailyThoughtActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_news_article) {
+                        mPager.setCurrentItem(2, true);
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_master) {
+                        mPager.setCurrentItem(3, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_weekly) {
+                        mPager.setCurrentItem(4, true);
+                        return true;
+                    }
+                /*if (item.getItemId() == R.id.nav_calender_events) {
+                    mPager.setCurrentItem(5, true);
+                    return true;
+                }*/
+               /* if (item.getItemId() == R.id.nav_photo) {
+                    mPager.setCurrentItem(5, true);
+                    return true;
+                }*/
+                    if (item.getItemId() == R.id.nav_podcast) {
+                        mPager.setCurrentItem(5, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_video) {
+                        mPager.setCurrentItem(6, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_eBooks) {
+                        mPager.setCurrentItem(7, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_company_profile) {
+                        mPager.setCurrentItem(8, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_users) {
+                        mPager.setCurrentItem(9, true);
+                        return true;
+                    }
+                    if (item.getItemId() == R.id.nav_share) {
+                        onInviteClicked();
+                    /*Intent intent = new AppInviteInvitation.IntentBuilder(getString(com.oneconnect.leadership.library.R.string.invitation_title))
+                            .setMessage(getString(R.string.invitation_message))
+                            .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                            .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                            .setCallToActionText(getString(R.string.invitation_cta))
+                            .build();
+                    //startActivity(intent);
+                    startActivityForResult(intent, REQUEST_INVITE);*/
+                        return true;
+                    }
+
+                    if (item.getItemId() == R.id.nav_sign_out) {
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(CompanyMainActivity.this, CompanySigninActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    }
+                }
+                return true;
             }
         });
     }
@@ -760,29 +1287,6 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
             startActivityForResult(w, THEME_REQUESTED);
             return true;
         }
-        if (id == R.id.action_internal){
-            type = Constants.INTERNAL_DATA;
-            Intent intent = new Intent(this, CompanyMainActivity.class);
-            intent.putExtra("type", type);
-            intent.putExtra("themeColor", hexColor);
-            startActivity(intent);
-            finish();
-
-        }
-        if (id == R.id.action_external) {
-            type = Constants.EXTERNAL_DATA;
-            Intent intent = new Intent(this, CompanyMainActivity.class);
-            intent.putExtra("type", type);
-            intent.putExtra("themeColor", hexColor);
-            startActivity(intent);
-            finish();
-        }
-        if (id ==  R.id.action_color_picker) {
-            Intent intent = new Intent(this, ColorPickerActivity.class);
-            intent.putExtra("user", user);
-            intent.putExtra("darkColor", THEME_REQUESTED);
-            startActivityForResult(intent, THEME_REQUESTED);
-        }
         return true;
     }
     Snackbar snackbar;
@@ -805,6 +1309,8 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+
+        if (user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_USER)) {
 
         if (id == R.id.nav_daily_thought) {
             mPager.setCurrentItem(0, true);
@@ -836,16 +1342,50 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
             startActivity(intent);
             return true;
         }
-        else if (id == R.id.nav_users) {
-            Intent intent = new Intent(CompanyMainActivity.this, UserActivity.class);
+
+
+        }
+        if (user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
+            if (id == R.id.nav_daily_thought) {
+                mPager.setCurrentItem(0, true);
+                return true;
+            }
+            else if (id == R.id.nav_create_thought) {
+                mPager.setCurrentItem(1, true);
+                return true;
+
+            } else if (id == R.id.nav_master) {
+                mPager.setCurrentItem(2, true);
+                return true;
+
+            } else if (id == R.id.nav_weekly_message) {
+                mPager.setCurrentItem(3, true);
+                return true;
+            }else if (id == R.id.nav_podcast) {
+                Intent intent = new Intent(CompanyMainActivity.this, PodcastActivity.class);
+                startActivity(intent);
+                return true;
+
+            } /*else if (id == R.id.nav_video) {
+            Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
             startActivity(intent);
             return true;
+        }*/
+            else if (id == R.id.nav_eBooks) {
+                Intent intent = new Intent(CompanyMainActivity.this, eBookActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            else if (id == R.id.nav_users) {
+                Intent intent = new Intent(CompanyMainActivity.this, UserActivity.class);
+                startActivity(intent);
+                return true;
+            }
         }
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+
         /*return false;*/
     }
 
@@ -1025,38 +1565,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     }
 
     @Override
-    public void onUserFound(UserDTO u) {
-        Log.i(TAG, "*** onUserFound ***" + u.getEmail());
-                user = u;
-                Intent intent = new Intent(this, CompanyMainActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
-                finish();
-    }
-
-    String hexColor;
-
-    @Override
-    public void onCompanyFound(CompanyDTO company) {
-        Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
-           //     if (company.getPrimaryColor() != 0) {
-                        Log.i(TAG, "*** converting primary color to a hex color ***");
-                        hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
-                      //  final int companyColor = Integer.parseInt(hexColor);
-                    toolbar.setBackgroundColor(Color.parseColor(hexColor)/*Integer.parseInt(hexColor)*//*company.getPrimaryColor()*/);
-                    strip.setBackgroundColor(Color.parseColor(hexColor));
-                    nav_layout.setBackgroundColor(Color.parseColor(hexColor));
-                    themeColor = hexColor;
-                      //  navigationView.setBackgroundColor(Color.parseColor(hexColor));
-                               /* Intent intent = new Intent(this, CompanyMainActivity.class);
-             intent.putExtra("themeColor", hexColor);
-             startActivity(intent);*/
-      //                              } else {
-      //              Log.i(TAG, "failing to get company color");
-      //          }
-                /*if (company.getCompanyLogoUrl()!= null) {
-             toolbar.setLogo(company.getCompanyLogoUrl());
-         }*/
+    public void onUserFound(UserDTO user) {
 
     }
 
@@ -1081,6 +1590,11 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }
@@ -1092,6 +1606,11 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
 
@@ -1271,10 +1790,9 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         switch(requestCode) {
             case THEME_REQUESTED:
                 if (resultCode == RESULT_OK){
-                    presenter.getCompanyProfile(user.getCompanyID());
-                   // finish();
-                   // Intent intent = new Intent(this, CompanyMainActivity.class);
-                    //startActivity(intent);
+                    finish();
+                    Intent intent = new Intent(this, CompanyMainActivity.class);
+                    startActivity(intent);
                 }
                 break;
 
