@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -42,6 +43,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
@@ -106,6 +108,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     DailyThoughtAdapter adapter;
     private List<DailyThoughtDTO> dailyThoughtList = new ArrayList<>();
+    FirebaseAuth firebaseAuth;
 
 
     CategoryDTO category;
@@ -116,11 +119,15 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
        view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
             category = (CategoryDTO) getActivity().getIntent().getSerializableExtra("category");
             Log.i(LOG, "category: " + category.getCategoryName());
         } else {
             Log.i(LOG, "No Category");
+        }
+        if (getActivity().getIntent().getSerializableExtra("type") != null) {
+            type = (int) getActivity().getIntent().getSerializableExtra("type");
         }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -146,11 +153,19 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     public void getDailyThoughts() {
         Log.d(LOG, "************** getDailyThoughts: " );
-//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllDailyThoughts();
-  //      } else {
-   //         Log.d(LOG, "user is null");
-    //    }
+        switch (type) {
+            case Constants.INTERNAL_DATA:
+                if (user == null) {
+                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                }  else {
+                    presenter.getDailyThoughts(user.getCompanyID());
+                }
+                break;
+            case Constants.EXTERNAL_DATA:
+                presenter.getAllDailyThoughts();
+                break;
+        }
+
     }
 
     private void getCachedDailyThoughts() {
@@ -220,6 +235,13 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onUserFound(UserDTO user) {
+        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company DailyThoughts");
+        presenter.getDailyThoughts(user.getCompanyID());
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 
@@ -257,7 +279,9 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        list = getCategoryList(list, category.getCategoryName());
+        if (category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
@@ -304,7 +328,9 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onAllCompanyDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        list = getCategoryList(list, category.getCategoryName());
+        if (category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override

@@ -37,6 +37,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.ColorPickerActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -159,6 +161,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     private PagerAdapter adapter;
     private CompanyMainActivity activity;
     private ActionBar ab;
+    String themeColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +198,25 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         strip.setTextColor(WHITE);
         strip.setBackgroundColor(themeDarkColor);
         setup();
+
+        /*if (getIntent().getSerializableExtra("themeColor") != null) {
+            themeColor = (String) getIntent().getSerializableExtra("themeColor");
+            toolbar.setBackgroundColor(Color.parseColor(hexColor)*//*Integer.parseInt(hexColor)*//**//*company.getPrimaryColor()*//*);
+            strip.setBackgroundColor(Color.parseColor(hexColor));
+            nav_layout.setBackgroundColor(Color.parseColor(hexColor));
+        }*/
+                        /*themeColor*//*themeColor = (String) getIntent().getSerializableExtra("themeColor");
+                    } else {
+                        Log.i(TAG, "*** themeColor not found ***");
+                    }
+
+        if (getIntent().getSerializableExtra("user") != null) {
+                        user = (UserDTO) getIntent().getSerializableExtra("user");
+                        presenter.getCompanyProfile(user.getCompanyID());
+
+                    } /*else {
+                        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                    }*/
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -259,6 +281,8 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         }
     }
 
+    LinearLayout nav_layout;
+
     private void setup() {
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -274,6 +298,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
 
         TextView username = header.findViewById(R.id.owner_name);
         TextView email = header.findViewById(R.id.owner_email);
+        nav_layout = (LinearLayout) header.findViewById(R.id.nav_layout);
 
         email.setText(user.getEmail());
         username.setText(user.getFullName());
@@ -735,6 +760,29 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
             startActivityForResult(w, THEME_REQUESTED);
             return true;
         }
+        if (id == R.id.action_internal){
+            type = Constants.INTERNAL_DATA;
+            Intent intent = new Intent(this, CompanyMainActivity.class);
+            intent.putExtra("type", type);
+            intent.putExtra("themeColor", hexColor);
+            startActivity(intent);
+            finish();
+
+        }
+        if (id == R.id.action_external) {
+            type = Constants.EXTERNAL_DATA;
+            Intent intent = new Intent(this, CompanyMainActivity.class);
+            intent.putExtra("type", type);
+            intent.putExtra("themeColor", hexColor);
+            startActivity(intent);
+            finish();
+        }
+        if (id ==  R.id.action_color_picker) {
+            Intent intent = new Intent(this, ColorPickerActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("darkColor", THEME_REQUESTED);
+            startActivityForResult(intent, THEME_REQUESTED);
+        }
         return true;
     }
     Snackbar snackbar;
@@ -977,7 +1025,38 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
+    public void onUserFound(UserDTO u) {
+        Log.i(TAG, "*** onUserFound ***" + u.getEmail());
+                user = u;
+                Intent intent = new Intent(this, CompanyMainActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                finish();
+    }
+
+    String hexColor;
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+        Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
+           //     if (company.getPrimaryColor() != 0) {
+                        Log.i(TAG, "*** converting primary color to a hex color ***");
+                        hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+                      //  final int companyColor = Integer.parseInt(hexColor);
+                    toolbar.setBackgroundColor(Color.parseColor(hexColor)/*Integer.parseInt(hexColor)*//*company.getPrimaryColor()*/);
+                    strip.setBackgroundColor(Color.parseColor(hexColor));
+                    nav_layout.setBackgroundColor(Color.parseColor(hexColor));
+                    themeColor = hexColor;
+                      //  navigationView.setBackgroundColor(Color.parseColor(hexColor));
+                               /* Intent intent = new Intent(this, CompanyMainActivity.class);
+             intent.putExtra("themeColor", hexColor);
+             startActivity(intent);*/
+      //                              } else {
+      //              Log.i(TAG, "failing to get company color");
+      //          }
+                /*if (company.getCompanyLogoUrl()!= null) {
+             toolbar.setLogo(company.getCompanyLogoUrl());
+         }*/
 
     }
 
@@ -1192,9 +1271,10 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         switch(requestCode) {
             case THEME_REQUESTED:
                 if (resultCode == RESULT_OK){
-                    finish();
-                    Intent intent = new Intent(this, CompanyMainActivity.class);
-                    startActivity(intent);
+                    presenter.getCompanyProfile(user.getCompanyID());
+                   // finish();
+                   // Intent intent = new Intent(this, CompanyMainActivity.class);
+                    //startActivity(intent);
                 }
                 break;
 

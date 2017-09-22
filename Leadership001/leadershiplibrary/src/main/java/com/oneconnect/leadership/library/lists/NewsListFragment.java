@@ -42,6 +42,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
@@ -116,6 +117,10 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             Log.i(LOG, "No Category");
         }
 
+        if (getActivity().getIntent().getSerializableExtra("type") != null) {
+            type = (int) getActivity().getIntent().getSerializableExtra("type");
+        }
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         photoRecyclerView = (RecyclerView) view.findViewById(R.id.photoRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -137,11 +142,19 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
     public void getNewsArticle() {
         Log.d(LOG, "************** getNewsArticles: " );
-        if (user == null) {
-            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-        }  else {
-            presenter.getNews(user.getCompanyID());
+        switch (type) {
+            case Constants.INTERNAL_DATA:
+                if (user == null) {
+                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                }  else {
+                    presenter.getNews(user.getCompanyID());
+                }
+                break;
+            case Constants.EXTERNAL_DATA:
+                presenter.getAllNewsArticle();
+                break;
         }
+
         /*presenter.getAllNewsArticle();*/
 
     }
@@ -215,6 +228,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     public void onUserFound(UserDTO user) {
         Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company Articles");
         presenter.getNews(user.getCompanyID());
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+
     }
 
     @Override

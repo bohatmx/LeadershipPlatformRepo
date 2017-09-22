@@ -63,6 +63,7 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
     CompanyPresenter companyPresenter;
     Button updateBTN;
     private FirebaseAuth firebaseAuth;
+    int themeDarkColor;
 
 
     @Override
@@ -76,6 +77,8 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
         firebaseAuth = FirebaseAuth.getInstance();
 
         companyPresenter = new CompanyPresenter(this);
+
+        themeDarkColor = getIntent().getIntExtra("darkColor", R.color.absa_red);
 
         layout = (RelativeLayout) findViewById(R.id.layout);
         color_picker_view = (ColorPickerView) findViewById(R.id.color_picker_view);
@@ -258,9 +261,25 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
 
     }
 
+    boolean themeChanged;
+
     @Override
     public void onCompanyUpdated(CompanyDTO company) {
-        showSnackbar(company.getCompanyName() + " colors updated ", "DISMISS", "green");
+       // showSnackbar(company.getCompanyName() + " colors updated ", "DISMISS", "green");
+        Toasty.success(ctx, "color updated", Toast.LENGTH_SHORT, true).show();
+        themeChanged = true;
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.e(TAG, "%%% onBackPressed, themeChanged: " + themeChanged);
+        if (themeChanged) {
+            setResult(RESULT_OK);
+        } else {
+            setResult(RESULT_CANCELED);
+        }
+        finish();
     }
 
     @Override

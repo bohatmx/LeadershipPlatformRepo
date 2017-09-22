@@ -190,6 +190,11 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }

@@ -39,6 +39,7 @@ public class SubscriberContract {
         void getCategorisedWeeklyMessages(String categoryID);
         void getCategorisedWeeklyMasterClasses(String categoryID);
         void getCurrentUser(String email);
+        void getCompanyProfile(String companyID);
         void getCategorisedCalenderEvents();
         void getAllStaff();
         void getAllLeaders();
@@ -76,6 +77,7 @@ public class SubscriberContract {
         void onEntityUpdated();
         void onUserCreated(UserDTO user);
         void onUserFound(UserDTO user);
+        void onCompanyFound(CompanyDTO company);
         void onAllRatings(List<RatingDTO> list);
         void onDailyThoughtRatings(List<RatingDTO> list);
         void onWeeklyMessageRatings(List<RatingDTO> list);

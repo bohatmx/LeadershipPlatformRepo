@@ -40,6 +40,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
@@ -119,6 +120,9 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
         } else {
             Log.i(LOG, "No Category");
         }
+        if (getActivity().getIntent().getSerializableExtra("type") != null) {
+            type = (int) getActivity().getIntent().getSerializableExtra("type");
+        }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -149,11 +153,23 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     private void getWeeklyMessages() {
         Log.d(LOG, "************** getWeeklyMessages: " );
-        if (user == null) {
+        switch (type) {
+            case Constants.INTERNAL_DATA:
+                if (user == null) {
+                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                }  else {
+                    presenter.getWeeklyMessages(user.getCompanyID());
+                }
+                break;
+            case Constants.EXTERNAL_DATA:
+                presenter.getAllWeeklyMessages();
+                break;
+        }
+        /*if (user == null) {
             presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
         }  else {
             presenter.getWeeklyMessages(user.getCompanyID());
-        }
+        }*/
          //   presenter.getAllWeeklyMessages();
     }
 
@@ -266,6 +282,11 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     public void onUserFound(UserDTO user) {
         Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company weekly messages");
         presenter.getWeeklyMessages(user.getCompanyID());
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+
     }
 
     @Override

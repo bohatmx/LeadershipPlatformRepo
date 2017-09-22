@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -98,12 +99,16 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
 
     }
 
+    private FirebaseAuth firebaseAuth;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
+
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
@@ -116,9 +121,13 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
 
     public void getUsers() {
         Log.d(TAG, "************** getUsers: " );
+        if (user == null) {
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }  else {
+            presenter.getUsers(user.getCompanyID());
+        }
          //   presenter.getUsers(user.getCompanyID());
-        presenter.getAllStaff();
-
+       // presenter.getAllStaff();
     }
 
     private void getCachedUsers() {
@@ -432,6 +441,11 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 
