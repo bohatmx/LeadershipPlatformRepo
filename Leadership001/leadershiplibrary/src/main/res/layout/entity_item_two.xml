@@ -94,12 +94,24 @@
                     android:textColor="@color/black"
                     android:textSize="9sp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ivUserProfilePhoto"
+                    android:layout_toRightOf="@+id/ivUserProfilePhoto"
+                    android:text="My Company"
+                    android:id="@+id/compName"
+                    android:visibility="gone"
+                    android:gravity="fill_vertical"
+                    android:textColor="@color/grey_700"
+                    android:textSize="7sp" />
+
                 <ImageView
                     android:id="@+id/ImageView"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_marginTop="5dp"
-                    android:layout_below="@+id/ivUserProfilePhoto"
+                    android:layout_below="@+id/compName"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:scaleType="fitXY"

@@ -91,17 +91,24 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dvh.txtTitle.setText(dt.getTitle());
         dvh.profile.setText(dt.getCompanyName());
         dvh.txtSubtitle.setText(dt.getSubtitle());
+        if (dt.getJournalUserName() != null) {
+            dvh.compName.setText(dt.getJournalUserName());
+        }
+        else{
+            dvh.compName.setVisibility(View.GONE);
+        }
+
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
         long miliSecs = Util.getMiliseconds(sb.toString());
         String formatedDate = Util.getFormattedDate(miliSecs);
         dvh.txtDate.setText(formatedDate);
         dvh.iconCamera.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_photo_black_24dp)/*ctx.getDrawable(R.drawable.ic_photo_black_24dp)*/);
-      //  dvh.iconUpdate.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_link_black_24dp)/*ctx.getDrawable(R.drawable.ic_link_black_24dp)*/);
         dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopupMenu(v);
+
             }
         });
 
@@ -502,15 +509,17 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         //
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         //protected TextViewExpandableAnimation txtTitle;
-        protected TextView txtTitle,profile;
+        protected TextView txtTitle,profile, compName;
 
         public DailyViewHolder(View itemView) {
             super(itemView);
             ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
             ratingCom = (EditText) itemView.findViewById(R.id.ratingCom);
+            compName = (TextView) itemView.findViewById(R.id.compName);
+            profile = (TextView) itemView.findViewById(R.id.profile);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-            profile = (TextView) itemView.findViewById(R.id.profile);
+
             //txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);

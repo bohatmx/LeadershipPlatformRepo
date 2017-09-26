@@ -75,10 +75,44 @@
                 android:id="@+id/t0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivUserProfilePhoto"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/folder"
+                    android:layout_marginRight="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ivUserProfilePhoto"
+                    android:text="John Smith"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/profile"
+                    android:textStyle="bold"
+                    android:gravity="fill_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ivUserProfilePhoto"
+                    android:layout_toRightOf="@+id/ivUserProfilePhoto"
+                    android:text="My Company"
+                    android:id="@+id/compName"
+                    android:visibility="gone"
+                    android:gravity="fill_vertical"
+                    android:textColor="@color/grey_700"
+                    android:textSize="7sp" />
+
                 <ImageView
                     android:id="@+id/ImageView"
                     android:layout_width="match_parent"
+                    android:layout_below="@+id/compName"
                     android:layout_height="160dp"
+                    android:paddingTop="@dimen/appbar_padding_top"
                     android:src="@drawable/woman_in_field"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"

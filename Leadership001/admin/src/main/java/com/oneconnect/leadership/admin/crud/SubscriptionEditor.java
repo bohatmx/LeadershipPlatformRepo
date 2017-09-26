@@ -285,6 +285,11 @@ public class SubscriptionEditor extends BaseBottomSheet implements SheetContract
 
     }
 
+    @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
 
     @Override
     public void onEbooks(List<EBookDTO> list) {

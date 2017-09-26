@@ -6,6 +6,11 @@
         android:orderInCategory="100"
         android:title="Create New Company"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_thought_approval"
+        android:orderInCategory="100"
+        android:title="Pending Daily Thoughts"
+        app:showAsAction="never"/>
     <!--<item
         android:id="@+id/action_news"
         android:icon="@drawable/ic_favorite_red"

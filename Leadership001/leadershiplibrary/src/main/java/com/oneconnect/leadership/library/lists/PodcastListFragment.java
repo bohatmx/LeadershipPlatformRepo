@@ -297,6 +297,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

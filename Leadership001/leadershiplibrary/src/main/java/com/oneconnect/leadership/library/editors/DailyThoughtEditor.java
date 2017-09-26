@@ -1,9 +1,15 @@
 package com.oneconnect.leadership.library.editors;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +19,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,9 +33,14 @@ import com.oneconnect.leadership.library.activities.SheetPresenter;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.CategoryAdapter;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.CategoryCache;
+import com.oneconnect.leadership.library.camera.CameraActivity;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
+import com.oneconnect.leadership.library.crud.CrudPresenter;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
@@ -40,11 +53,15 @@ import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
+import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.links.LinksActivity;
+import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
+import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
@@ -55,11 +72,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.oneconnect.leadership.library.ebook.EbookListFragment.REQUEST_LINKS;
+
 /**
  * Created by aubreymalabie on 3/18/17.
  */
 
-public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View, SubscriberContract.View, CacheContract.View, CategoryAdapter.CategoryAdapterListener {
+public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View,
+        SubscriberContract.View, CacheContract.View, CategoryAdapter.CategoryAdapterListener {
     private DailyThoughtDTO dailyThought;
 
 
@@ -72,8 +95,9 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private Spinner catSpinner;
     private SubscriberPresenter Catpresenter;
     private CachePresenter cachePresenter;
+    private RadioButton internalButton, globalButton;
 
-   List<CategoryDTO> categoryList;
+    List<CategoryDTO> categoryList;
     private CategoryDTO category;
 
     @Override
@@ -117,6 +141,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
 
     }
 
@@ -387,6 +416,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             @Override
             public void onClick(View v) {
                 send();
+
             }
         });
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
@@ -400,13 +430,15 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 bottomSheetListener.onDateRequired();
             }
         });
-
+        internalButton = (RadioButton) view.findViewById(R.id.internalButton);
+        globalButton = (RadioButton) view.findViewById(R.id.globalButton);
       //  getCachedCategories();
         getCategories();
 
 
         return view;
     }
+
     public void getCategories() {
         Log.d(TAG, "******* getAllCategories: ");
         Catpresenter.getAllCategories();
@@ -481,11 +513,13 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             if (me != null) {
                 dailyThought.setCompanyID(me.getCompanyID());
                 dailyThought.setCompanyName(me.getCompanyName());
+
+                dailyThought.setActive(true);
+                dailyThought.setJournalUserID(me.getUserID());
+                dailyThought.setJournalUserName(me.getFirstName() + " " + me.getLastName());
             } //else if (user)
 
-            dailyThought.setActive(true);
-            dailyThought.setJournalUserID(me.getUserID());
-            dailyThought.setJournalUserName(me.getFullName());
+
         }
         if (selectedDate == null) {
             isReadyToSend = true;
@@ -498,7 +532,15 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         dailyThought.setTitle(editTitle.getText().toString());
         dailyThought.setSubtitle(editSubtitle.getText().toString());
         dailyThought.setCategory(category);
-
+        if (internalButton.isChecked()) {
+                     dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT);
+                    dailyThought.setDailyThoughtType(DailyThoughtDTO.INTERNAL_DAILY_THOUGHT);
+                  }
+              if (globalButton.isChecked()) {
+                      dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT);
+                       dailyThought.setDailyThoughtType(DailyThoughtDTO.GLOBAL_DAILY_THOUGHT);
+                  }
+        dailyThought.setStatus("pending");
 
         switch (type) {
             case Constants.NEW_ENTITY:
@@ -533,7 +575,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Override
-    public void onCategorySelected(CategoryDTO cat) {
-        category = cat;
+    public void onCategorySelected(CategoryDTO category) {
+        this.category = category;
     }
 }

@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.session.MediaController;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -17,17 +16,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.activities.RatingActivity;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
@@ -39,25 +43,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import es.dmoral.toasty.Toasty;
+
 /**
- * Created by Kurisani on 2017/06/26.
+ * Created by Kurisani on 2017/09/21.
  */
 
-public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ApprovalThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<NewsDTO> mList;
+    private List<DailyThoughtDTO> mList;
     private Context ctx;
-    private NewsArticleListener listener;
+    private ApprovalThoughtAdapterlistener listener;
     MiniPhotoAdapter miniPhotoAdapter;
     MiniPodcastAdapter miniPodcastAdapter;
     MiniVideoAdapter miniVideoAdapter;
     UrlAdapter urlAdapter;
+    private int type;
 
-
-    public interface NewsArticleListener{
-        void onArticleSelected(NewsDTO newsArticle);
-
+    public interface ApprovalThoughtAdapterlistener{
         void onThoughtClicked(int position);
+        void onThoughtSelected(DailyThoughtDTO dailyThought);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
@@ -66,7 +71,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
-    public NewsArticleAdapter(Context ctx, List<NewsDTO> mList, NewsArticleListener listener) {
+    public ApprovalThoughtAdapter(Context ctx, List<DailyThoughtDTO> mList, ApprovalThoughtAdapterlistener listener) {
         this.ctx = ctx;
         this.mList = mList;
         this.listener = listener;
@@ -74,8 +79,8 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_entity, parent, false);
-        return new NewsViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.entity_item, parent, false);
+        return new DailyViewHolder(v);
     }
 
     static final SimpleDateFormat sd1 = new SimpleDateFormat(" dd-MM-yyyy HH:mm");
@@ -85,16 +90,17 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        final NewsDTO dt = mList.get(position);
-        final NewsViewHolder dvh = (NewsViewHolder) holder;
-        //dvh.txtEvents.setText("" + (position + 1));
+        final DailyThoughtDTO dt = mList.get(position);
+        final DailyViewHolder dvh = (DailyViewHolder) holder;
         dvh.txtTitle.setText(dt.getTitle());
-        if (dvh.txtTitle.getLineCount() > 3) {
-            dvh.txtTitle.setLines(3);
-            dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-        }
         dvh.profile.setText(dt.getCompanyName());
         dvh.txtSubtitle.setText(dt.getSubtitle());
+        if (dt.getJournalUserName() != null) {
+            dvh.compName.setText(dt.getJournalUserName());
+        }
+        else{
+            dvh.compName.setVisibility(View.GONE);
+        }
 
         StringBuilder sb = new StringBuilder(dt.getStringDateRegistered());
         sb.deleteCharAt(sb.indexOf(","));
@@ -102,13 +108,39 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String formatedDate = Util.getFormattedDate(miliSecs);
         dvh.txtDate.setText(formatedDate);
         dvh.iconCamera.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_photo_black_24dp)/*ctx.getDrawable(R.drawable.ic_photo_black_24dp)*/);
-        dvh.iconUpdate.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_link_black_24dp)/*ctx.getDrawable(R.drawable.ic_link_black_24dp)*/);
-        dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopupMenu(v);
+        dvh.iconCalendar.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.pending));
+
+        if (dt.getStatus() != null) {
+            if (dt.getStatus().equalsIgnoreCase("pending")) {
+                dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toasty.warning(ctx,"You Thought is still pending", Toast.LENGTH_LONG,true).show();
+                    }
+                });
+
+            } else if (dt.getStatus().equalsIgnoreCase("approved")) {
+                dvh.iconCalendar.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.approved));
+                dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toasty.success(ctx, "You Thought is approved", Toast.LENGTH_LONG, true).show();
+                    }
+                });
+
+            } else if (dt.getStatus().equalsIgnoreCase("declined")) {
+                dvh.iconCalendar.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.declined));
+                dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toasty.error(ctx,"You Thought is declined",Toast.LENGTH_LONG,true).show();
+                    }
+                });
+
             }
-        });
+        }
+
+
 
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
@@ -123,7 +155,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         dvh.videoRecyclerView.setVisibility(View.GONE);
                     }
 
-                    NewsDTO dtd = mList.get(position);
+                    DailyThoughtDTO dtd = mList.get(position);
                     List<VideoDTO> videoList = new ArrayList<>();
                     Map map = dtd.getVideos();
                     VideoDTO vDTO = new VideoDTO();
@@ -167,21 +199,17 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                        }else{
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                }else{
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                }
             }
         });
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
-            NewsDTO dtd = mList.get(position);
+
+            DailyThoughtDTO dtd = mList.get(position);
             List<PhotoDTO> urlList = new ArrayList<>();
 
             Map map = dtd.getPhotos();
@@ -196,8 +224,10 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         .load(photoUrl)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(dvh.imageView);
-            }
+                //   dvh.captiontxt.setText(vDTO.getCaption());
 
+
+            }
             dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -209,7 +239,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         dvh.imageRecyclerView.setVisibility(View.GONE);
                     }
 
-                    NewsDTO dtd = mList.get(position);
+                    DailyThoughtDTO dtd = mList.get(position);
                     List<PhotoDTO> urlList = new ArrayList<>();
 
                     Map map = dtd.getPhotos();
@@ -226,6 +256,13 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
 
+                        /*Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.imageView);
+                        dvh.captiontxt.setText(vDTO.getCaption());*/
+
+
                     }
 
                     miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
@@ -238,7 +275,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
         }
-       /* if (dt.getPodcasts() != null) {
+        if (dt.getPodcasts() != null) {
             dvh.txtMicrophone.setText("" + dt.getPodcasts().size());
             dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -250,7 +287,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         dvh.podcastAdapterLayout.setVisibility(View.GONE);
                         dvh.podcastRecyclerView.setVisibility(View.GONE);
                     }
-                    NewsDTO dtd = mList.get(position);
+                    DailyThoughtDTO dtd = mList.get(position);
                     List<PodcastDTO> podcastList = new ArrayList<>();
                     Map map = dtd.getPodcasts();
                     PodcastDTO vDTO;
@@ -317,8 +354,10 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
                         @Override
-                        public void onPlayClicked(int position) {
+                        public void onPlayClicked(PodcastDTO podcast) {
 
                         }
 
@@ -331,63 +370,57 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
 
-        }*/
+        }
+        dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
+                intent.putExtra("dailyThought", dt);
+                ctx.startActivity(intent);
+            }
+        });
+        dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                          /* if (dvh.txtTitle.getLineCount() > 3) {
+                               dvh.txtTitle.setLines(5);
+                           }*/
+                } else {
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                           /* if (dvh.txtTitle.getLineCount() > 3) {
+                                dvh.txtTitle.setLines(3);
+                                dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
+                            }*/
+
+                }
+            }
+        });
 
         dvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.txtSubtitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                            if (dvh.txtSubtitle.getLineCount() > 3) {
-                                dvh.txtSubtitle.setLines(7);
-                            }
-                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
-                            //   dvh.txtTitle.setText(dvh.txtTitle.getText());
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                            if (dvh.txtSubtitle.getLineCount() > 3) {
-                                dvh.txtSubtitle.setLines(3);
-                                dvh.txtSubtitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }
-                        }
-                    }
-                });
-            }
-        });
-
-        dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Util.flashOnce(dvh.txtTitle, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                            if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(7);
-                            }
-                            /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
-                         //   dvh.txtTitle.setText(dvh.txtTitle.getText());
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                            if (dvh.txtTitle.getLineCount() > 3) {
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                          /* if (dvh.txtTitle.getLineCount() > 3) {
+                               dvh.txtTitle.setLines(5);
+                           }*/
+                } else {
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                           /* if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(3);
                                 dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }
-                        }
-                    }
-                });
+                            }*/
+
+                }
             }
         });
-
-
 
         if (dt.getUrls() != null) {
             dvh.txtLinks.setText("" + dt.getUrls().size());
-            dvh.iconUpdate.setOnClickListener(new View.OnClickListener() {
+            dvh.iconLink/*iconUpdate*/.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (dvh.urlAdapterLayout.getVisibility() == View.GONE){
@@ -398,7 +431,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         dvh.urlRecyclerView.setVisibility(View.GONE);
                     }
 
-                    NewsDTO dtd = mList.get(position);
+                    DailyThoughtDTO dtd = mList.get(position);
                     Map map = dtd.getUrls();
                     UrlDTO vDTO;
                     final List<UrlDTO> urlList = new ArrayList<>();
@@ -428,16 +461,10 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
 
-
         dvh.iconShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.iconShare, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        shareIt();
-                    }
-                });
+                shareIt();
             }
         });
     }
@@ -446,7 +473,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         PopupMenu popup = new PopupMenu(ctx, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_dailythought, popup.getMenu());
-        popup.setOnMenuItemClickListener(new NewsArticleAdapter.MyMenuItemClickListener());
+       // popup.setOnMenuItemClickListener(new ApprovalThoughtAdapterlistener.MyMenuItemClickListener());
         popup.show();
     }
 
@@ -469,15 +496,23 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+   /* String myDynamicLink = "https://vfb7b.app.goo.gl/tobR";
+    private void dynamicShare(){
+    Intent sendIntent = new Intent();
+    String msg = "Hey, check this out: " + myDynamicLink;
+    sendIntent.setAction(Intent.ACTION_SEND);
+    sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
+    sendIntent.setType("text/plain");
+    ctx.startActivity(sendIntent);
+}*/
+
     private void shareIt() {
         //sharing implementation here
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "Leadership Platform");
-        String sAux = "\nLet me recommend you this application\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=com.minisass&hl=en \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        ctx.startActivity(Intent.createChooser(i, "choose one"));
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        ctx.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     MediaController mediaController;
@@ -487,35 +522,44 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mList == null ? 0 : mList.size();
     }
 
-    public class NewsViewHolder extends RecyclerView.ViewHolder {
-        protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
-                txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt, profile, compName;
-        protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG, imageView, iconShare;
+    public class DailyViewHolder extends RecyclerView.ViewHolder {
+        protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
+                txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
+        protected ImageView iconCalendar, /*iconUpdate*/iconLink, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
+                playIMG, pauseIMG, stopIMG, imageView, iconShare, iconReview;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
-                photoAdapterLayout, urlAdapterLayout;
+                photoAdapterLayout, urlAdapterLayout, updateLayout;
         protected Button btnPlay;
+        protected ImageView ratingBar;
+        protected EditText ratingCom;
         //video
         /*protected VideoView videoView;*/
         //
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
+        //protected TextViewExpandableAnimation txtTitle;
+        protected TextView txtTitle,profile, compName;
 
-
-        public NewsViewHolder(View itemView) {
+        public DailyViewHolder(View itemView) {
             super(itemView);
+            ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
+            ratingCom = (EditText) itemView.findViewById(R.id.ratingCom);
             compName = (TextView) itemView.findViewById(R.id.compName);
             profile = (TextView) itemView.findViewById(R.id.profile);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
+
+            //txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
+            txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
-            //iconCalendar.setVisibility(View.GONE);
+            iconCalendar.setVisibility(View.VISIBLE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             //bottomLayout.setVisibility(View.GONE);
+            updateLayout = (RelativeLayout) itemView.findViewById(R.id.updateLayout);
+            updateLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);
             deleteLayout.setVisibility(View.GONE);
@@ -525,10 +569,11 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             txtVideo = (TextView) itemView.findViewById(R.id.txtVideo);
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
-            /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
-
-            videoFileName.setVisibility(View.GONE);*/
             imageView = (ImageView) itemView.findViewById(R.id.ImageView);
+            iconReview = (ImageView) itemView.findViewById(R.id.iconReview);
+            /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
+            videoFileName.setVisibility(View.GONE);*/
+
 
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);
             pauseIMG = (ImageView)itemView.findViewById(R.id.pauseIMG);
@@ -543,15 +588,17 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             iconCamera = (ImageView) itemView.findViewById(R.id.iconCamera);
 
-            iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            //   iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            iconLink = (ImageView) itemView.findViewById(R.id.iconLink);
             //
             imageRecyclerView = (RecyclerView) itemView.findViewById(R.id.imageRecyclerView);
-            imageRecyclerView.setVisibility(View.GONE);
+            imageRecyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
+            imageRecyclerView.setVisibility(View.GONE);/*
             LinearLayoutManager llm = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
             imageRecyclerView.setLayoutManager(llm);
             imageRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
             imageRecyclerView.setHasFixedSize(true);
-            //
+            *///
 
             videoRecyclerView = (RecyclerView) itemView.findViewById(R.id.videoRecyclerView);
             videoRecyclerView.setVisibility(View.GONE);
@@ -592,6 +639,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+
+
     static final String LOG = DailyThoughtAdapter.class.getSimpleName();
 }
-

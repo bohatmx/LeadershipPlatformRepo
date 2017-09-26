@@ -48,4 +48,5 @@
     <string name="title_news">News Articles</string>
     <string name="title_activity_update_dialog">UpdateDialog</string>
     <string name="title_activity_create_company">CreateCompanyActivity</string>
+    <string name="title_activity_pending">Thought Approval</string>
 </resources>

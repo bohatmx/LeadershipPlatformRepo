@@ -43,6 +43,7 @@
     <string name="podcast">LEADERSHIP PODCASTS</string>
     <string name="ebooks">LEADERSHIP EBOOKS</string>
     <string name="users">LEADERSHIP STAFF</string>
+    <string name="my_thought">MY LEADERSHIP THOUGHT</string>
     <string name="calendar_events">LEADERSHIP CALENDER EVENTS</string>
     <string name="Photographs">Photographs</string>
     <string name="text">Text</string>
@@ -137,5 +138,7 @@
     <string name="enter_news">Enter News</string>
     <string name="enter_subtitle">Enter Subtitle</string>
     <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_thought_approval">ThoughtApprovalActivity</string>
+    <string name="title_activity_create_daily_thought">CreateDailyThoughtActivity</string>
 
 </resources>

@@ -634,6 +634,21 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
+    public void getPendingDailyThoughts(String status) {
+        listAPI.getPendingDailyThoughts(status, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onPendingDailyThoughts(bag.getDailyThoughts());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
     public void getDailyThoughts(String companyID) {
         listAPI.getDailyThoughts(companyID, new ListAPI.DataListener() {
             @Override

@@ -11,4 +11,8 @@
     <string name="welcome">Leadership Platform welcomes you!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_photo_selection">PhoTO Selection</string>
+    <string name ="declined">You Thought has been declined!</string>
+    <string name ="pending"> You Thought is still pending!</string>
+    <string name ="approved">  You Thought is approved!</string>
 </resources>
+

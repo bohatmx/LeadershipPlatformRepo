@@ -479,6 +479,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

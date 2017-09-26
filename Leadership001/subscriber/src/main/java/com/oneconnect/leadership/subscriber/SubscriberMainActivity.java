@@ -540,6 +540,11 @@ public class SubscriberMainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

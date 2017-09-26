@@ -501,6 +501,11 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
     }
 
     @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onEbooks(List<EBookDTO> list) {
 
     }

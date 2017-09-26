@@ -123,6 +123,10 @@
             android:name="com.oneconnect.leadership.library.photo.PhotoSelectionActivity"
             android:label="@string/title_activity_photo_selection"
             android:parentActivityName=".CompanyMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity"
+            android:label="@string/title_activity_create_daily_thought"
+            android:theme="@style/CommuterTheme"></activity>
 
 
     </application>

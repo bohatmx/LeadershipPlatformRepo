@@ -5,8 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ocg.leadership.company.NotifHandlerActivity"
-    tools:showIn="@layout/activity_notif_handler">
+    tools:context="com.oneconnect.leadership.library.com.oneconnect.leadership.admin.crud.ThoughtApprovalActivity"
+    tools:showIn="@layout/activity_thought_approval">
 
-
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pendingRecyclerView"/>
 </android.support.constraint.ConstraintLayout>

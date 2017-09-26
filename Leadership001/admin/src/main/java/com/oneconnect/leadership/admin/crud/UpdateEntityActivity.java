@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import com.oneconnect.leadership.admin.R;
@@ -31,6 +32,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.util.Date;
@@ -55,7 +57,7 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     private CachePresenter cachePresenter;
     private CrudPresenter crudPresenter;
     private Spinner spinner;
-
+    private RadioButton approvedButton, declinedButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +67,8 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
         btn = (Button) findViewById(R.id.btn);
         editTitle = (TextInputEditText) findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) findViewById(R.id.editSubtitle);
+        approvedButton = (RadioButton) findViewById(R.id.approvedButton);
+        declinedButton = (RadioButton) findViewById(R.id.declinedButton);
 
         if (getIntent().getSerializableExtra("dailyThought") != null){
             dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
@@ -97,9 +101,7 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(btn, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         if (dailyThought != null){
                             update();
                             return;
@@ -119,9 +121,9 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
                         }
 
                     }
-                });
 
-            }
+
+
         });
     }
 
@@ -139,6 +141,12 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
         if (dailyThought != null) {
             dailyThought.setTitle(editTitle.getText().toString());
             dailyThought.setSubtitle(editSubtitle.getText().toString());
+            if (approvedButton.isChecked()) {
+                dailyThought.setStatus(Constants.APPROVED);
+            }
+            if (declinedButton.isChecked()) {
+                dailyThought.setStatus(Constants.DECLINED);
+            }
             crudPresenter.updateDailyThought(dailyThought);
             finish();
             return;
@@ -290,6 +298,11 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
 

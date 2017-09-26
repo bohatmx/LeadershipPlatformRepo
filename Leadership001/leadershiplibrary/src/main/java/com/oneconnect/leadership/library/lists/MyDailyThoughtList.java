@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.MyDailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.PhotoAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -50,19 +52,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DailyThoughtListFragment} interface
- * to handle interaction events.
- * Use the {@link DailyThoughtListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
+public class MyDailyThoughtList extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
 
-    private DailyThoughtListener mListener;
+    private MyDailyThoughtListener mListener;
     private RecyclerView recyclerView, photoRecyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
@@ -70,12 +64,12 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private EntityListFragment entityListFragment;
 
 
-    public DailyThoughtListFragment() {
+    public MyDailyThoughtList() {
         // Required empty public constructor
     }
 
-    public static DailyThoughtListFragment newInstance() {
-        DailyThoughtListFragment fragment = new DailyThoughtListFragment();
+    public static MyDailyThoughtList newInstance() {
+        MyDailyThoughtList fragment = new MyDailyThoughtList();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -104,7 +98,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private View view;
     private Context ctx;
 
-    DailyThoughtAdapter adapter;
+    MyDailyThoughtAdapter adapter;
     private List<DailyThoughtDTO> dailyThoughtList = new ArrayList<>();
 
 
@@ -113,7 +107,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
+        view = inflater.inflate(R.layout.fragment_my_daily_thought_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
@@ -122,6 +116,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         } else {
             Log.i(LOG, "No Category");
         }
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         photoRecyclerView = (RecyclerView) view.findViewById(R.id.photoRecyclerView);
@@ -141,16 +137,18 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
         return view;
     }
-
-    private UserDTO user;
+    private  FirebaseAuth firebaseAuth;
+    private UserDTO user = SharedPrefUtil.getUser(ctx);
 
     public void getDailyThoughts() {
-        Log.d(LOG, "************** getDailyThoughts: " );
-//        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllDailyThoughts();
-  //      } else {
-   //         Log.d(LOG, "user is null");
-    //    }
+        Log.d(LOG, "************** getMyDailyThoughts: " );
+        if(user == null){
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }
+        else{
+            presenter.getDailyThoughtsByUser(user.getUserID());
+        }
+
     }
 
     private void getCachedDailyThoughts() {
@@ -171,13 +169,13 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DailyThoughtListener) {
-            mListener = (DailyThoughtListener) context;
+        if (context instanceof MyDailyThoughtListener) {
+            mListener = (MyDailyThoughtListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement DailyThoughtListener");
+                    + " must implement MyDailyThoughtListener");
         }
-       }
+    }
 
     @Override
     public void onDetach() {
@@ -196,7 +194,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         this.pageTitle = pageTitle;
     }
 
-    static final String LOG = DailyThoughtListFragment.class.getSimpleName();
+    static final String LOG = MyDailyThoughtList.class.getSimpleName();
 
     @Override
     public String getTitle() {
@@ -220,7 +218,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onUserFound(UserDTO user) {
-
+     presenter.getDailyThoughtsByUser(user.getUserID());
     }
 
     @Override
@@ -245,7 +243,49 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     @Override
     public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+        Log.i(LOG, "onDailythoughtsByUser: " + list.size());
+        this.dailyThoughtList = list;
+       // list = getCategoryList(list, category.getCategoryName());
+        Collections.sort(list);
 
+        adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    @Override
+                    public void onPhotoClicked(PhotoDTO photo) {
+
+                    }
+                });
+                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+        });
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -264,7 +304,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         this.dailyThoughtList = list;
         list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
-        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+        adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
 
@@ -311,7 +351,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         this.dailyThoughtList = list;
         list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
-        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+        adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
 
@@ -356,9 +396,9 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         List<DailyThoughtDTO> returnList = new ArrayList<>();
         for(DailyThoughtDTO dailyThoughtDTO : list){
             if (dailyThoughtDTO.getCategory().getCategoryName() != null){
-            if(dailyThoughtDTO.getCategory().getCategoryName().equals(typeName)){
-                returnList.add(dailyThoughtDTO);
-            }
+                if(dailyThoughtDTO.getCategory().getCategoryName().equals(typeName)){
+                    returnList.add(dailyThoughtDTO);
+                }
             }
         }
         return returnList;
@@ -372,7 +412,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);
-        adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+        adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
 
@@ -380,7 +420,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
             @Override
             public void onPhotoRequired(PhotoDTO photo) {
-                /*photoAdapter = new PhotoAdapter(dailyThoughtList)*/
+
             }
 
             @Override
@@ -769,7 +809,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
 
-    public interface DailyThoughtListener {
+    public interface MyDailyThoughtListener {
         void onDailyThoughtTapped(DailyThoughtDTO dailyThought);
     }
 
