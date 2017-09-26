@@ -113,6 +113,11 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

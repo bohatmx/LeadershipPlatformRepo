@@ -59,15 +59,7 @@ import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CompanyMainFragment.CompanyFragmentListener} interface
- * to handle interaction events.
- * Use the {@link CompanyMainFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class CompanyMainFragment extends Fragment  implements PageFragment, CrudContract.View/*, CacheContract.View*/{
+public class CompanyMainFragment extends Fragment  implements PageFragment, CrudContract.View{
     private CompanyFragmentListener mListener;
 
     String pageTitle;
@@ -314,6 +306,11 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
     }
 
     @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onEbooks(List<EBookDTO> list) {
 
     }
@@ -499,55 +496,41 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card1, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mListener.onThoughtsSelected();
                         //startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
-                    }
-                });
+
             }
         });
         card2 = (CardView) view.findViewById(R.id.card2);
         card2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card2, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mListener.onVideosSelected();
                         /*Intent intent = new Intent(ctx, VideoSelectionActivity.class);
                         startActivity(intent);*/
-                    }
-                });
+
             }
         });
         card3 = (CardView) view.findViewById(R.id.card3);
         card3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card3, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mListener.onUsersSelected();
                         //startUserBottomSheet(null, Constants.NEW_ENTITY);
-                    }
-                });
+
             }
         });
         card4 = (CardView) view.findViewById(R.id.card4);
         card4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(card4, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mListener.onPodcastsSelected();
-                       /* Intent intent = new Intent(CompanyMainActivity.this, PodcastSelectionActivity.class);
-                        intent.putExtra("user", user);
-                        startActivity(intent);*/
-                    }
-                });
+
+
             }
         });
 

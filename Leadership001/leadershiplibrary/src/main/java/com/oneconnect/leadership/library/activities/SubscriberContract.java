@@ -34,6 +34,7 @@ public class SubscriberContract {
         void getDailyThoughts(String companyID);
         void getAllCompanyDailyThoughts(String companyID);
         void getDailyThoughtsRating(String dailyThoughtID);
+        void getDailyThoughtsByUser(String userID);
         void getWeeklyMessageRating(String weeklyMessageID);
         void getWeeklyMasterClassRating(String weeklyMasterClassID);
         void getCategorisedWeeklyMessages(String categoryID);
@@ -82,6 +83,7 @@ public class SubscriberContract {
         void onDailyThoughtRatings(List<RatingDTO> list);
         void onWeeklyMessageRatings(List<RatingDTO> list);
         void onWeeklyMasterClassRatings(List<RatingDTO> list);
+        void onDailythoughtsByUser(List<DailyThoughtDTO> list);
         void onCategories(List<CategoryDTO> list);
         void onCompanies(List<CompanyDTO> list);
         void onDailyThoughts(List<DailyThoughtDTO> list);

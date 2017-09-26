@@ -19,7 +19,6 @@ public abstract class BaseDTO /*extends ExpandableGroup<PhotoDTO>*/ implements S
     public Long dateRegistered, dateScheduled;
     public String companyID, companyName;
 
-
     public BaseDTO() {
         dateRegistered = new Date().getTime();
         stringDateRegistered = sdf.format(new Date());

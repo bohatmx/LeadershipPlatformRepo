@@ -60,9 +60,9 @@
                 android:icon="@drawable/ic_microphone"
                 android:title="Leadership Podcasts" />
             <item
-               android:id="@+id/nav_video"
-               android:icon="@drawable/ic_videocam"
-               android:title="Leadership Videos" />
+                android:id="@+id/nav_video"
+                android:icon="@drawable/ic_videocam"
+                android:title="Leadership Videos" />
         </menu>
     </item>
 
@@ -74,21 +74,6 @@
                 android:title="Leadership eBooks" />
         </menu>
     </item>
-
-    <item android:title="Company Profile">
-        <menu>
-            <item
-                android:id="@+id/nav_company_profile"
-                android:icon="@drawable/ic_clipboard"
-                android:title="Company Profile"/>
-
-            <item
-                android:id="@+id/nav_users"
-                android:icon="@drawable/ic_person"
-                android:title="Company Staff" />
-        </menu>
-    </item>
-
     <item android:title="Sign out">
         <menu>
             <item

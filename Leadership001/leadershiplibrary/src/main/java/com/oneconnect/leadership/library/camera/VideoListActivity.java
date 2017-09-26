@@ -295,6 +295,11 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

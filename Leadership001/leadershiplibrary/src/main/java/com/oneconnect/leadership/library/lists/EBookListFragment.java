@@ -616,6 +616,11 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

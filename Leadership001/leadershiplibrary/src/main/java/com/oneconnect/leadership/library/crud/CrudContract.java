@@ -50,6 +50,7 @@ public class CrudContract {
         void getCategories(String companyID);
         void getAllSubscriptions();
         void getCompanies(String companyID);
+        void getPendingDailyThoughts(String status);
         void getDailyThoughts(String companyID);
         void getEbooks(String companyID);
         void getPayments(String companyID);
@@ -91,6 +92,7 @@ public class CrudContract {
         void onCategories(List<CategoryDTO> list);
         void onCompanies(List<CompanyDTO> list);
         void onDailyThoughts(List<DailyThoughtDTO> list);
+        void onPendingDailyThoughts(List<DailyThoughtDTO> list);
         void onEbooks(List<EBookDTO> list);
         void onPayments(List<PaymentDTO> list);
         void onPodcasts(List<PodcastDTO> list);

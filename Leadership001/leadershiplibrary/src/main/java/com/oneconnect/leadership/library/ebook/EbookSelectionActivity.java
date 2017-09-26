@@ -1165,6 +1165,11 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

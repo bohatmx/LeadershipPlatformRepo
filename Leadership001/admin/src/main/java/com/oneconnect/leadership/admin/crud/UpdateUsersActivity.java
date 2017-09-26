@@ -353,6 +353,11 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
     }
 
     @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onEbooks(List<EBookDTO> list) {
 
     }

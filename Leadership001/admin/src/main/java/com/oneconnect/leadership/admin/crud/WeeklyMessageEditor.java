@@ -115,6 +115,11 @@ public class WeeklyMessageEditor extends BaseBottomSheet
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
         List<String> lis = new ArrayList<String>();
         lis.add("Select Category");

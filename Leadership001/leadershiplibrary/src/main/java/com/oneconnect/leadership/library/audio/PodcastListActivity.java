@@ -306,6 +306,11 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

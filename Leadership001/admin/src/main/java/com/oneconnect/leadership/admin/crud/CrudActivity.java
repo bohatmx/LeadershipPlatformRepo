@@ -540,6 +540,11 @@ public class CrudActivity extends AppCompatActivity
             case R.id.action_new_company:
                 Intent intent = new Intent(CrudActivity.this, CreateCompanyActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.action_thought_approval:
+                Intent intent1 = new Intent(this, ThoughtApprovalActivity.class);
+                startActivity(intent1);
+                break;
             /*case R.id.action_daily:
                 cachePresenter.getCacheDailyThoughts();
                 break;
@@ -794,6 +799,11 @@ public class CrudActivity extends AppCompatActivity
         bag.setType(ResponseBag.DAILY_THOUGHTS);
         setFragment();
         cachePresenter.cacheDailyThoughts(list);
+    }
+
+    @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
+
     }
 
     @Override

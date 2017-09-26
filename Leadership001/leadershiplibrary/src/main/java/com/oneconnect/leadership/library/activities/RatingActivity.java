@@ -468,6 +468,11 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

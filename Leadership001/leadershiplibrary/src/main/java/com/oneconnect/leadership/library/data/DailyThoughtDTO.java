@@ -16,10 +16,17 @@ import java.util.List;
 
 public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparable<DailyThoughtDTO> {
 
-    private String dailyThoughtID,
-            text, dailyThoughtDescription;
-    private String
-            stringDateUpdated, html;
+    public static final int
+            INTERNAL_DAILY_THOUGHT = 1,
+            GLOBAL_DAILY_THOUGHT = 2;
+
+    public static final String
+            DESC_INTERNAL_DAILY_THOUGHT = "Internal Daily Thought",
+            DESC_GLOBAL_DAILY_THOUGHT = "Global Daily Thought";
+
+    private String dailyThoughtID, text, status;
+    private String stringDateUpdated, html, dailyThoughtDescription;
+    private int dailyThoughtType;
     private boolean active;
     private long dateUpdated;
     private CategoryDTO category;
@@ -33,34 +40,6 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;
     private HashMap<String,UserDTO> users;
-    public int dailyThoughtType;
-    public static final int INTERNAL_DAILY_THOUGHT = 1, GLOBAL_DAILY_THOUGHT = 2;
-    public static final String DESC_GLOBAL_DAILY_THOUGHT = "Global Daily Thought",
-            DESC_INTERNAL_DAILY_THOUGHT = "Internal Daily Thought";
-
-    public int getDailyThoughtType() {
-        return dailyThoughtType;
-    }
-
-    public void setDailyThoughtType(int dailyThoughtType) {
-        this.dailyThoughtType = dailyThoughtType;
-        switch (dailyThoughtType) {
-            case INTERNAL_DAILY_THOUGHT:
-                dailyThoughtDescription = DESC_INTERNAL_DAILY_THOUGHT;
-                break;
-            case GLOBAL_DAILY_THOUGHT:
-                dailyThoughtDescription = DESC_GLOBAL_DAILY_THOUGHT;
-                break;
-        }
-    }
-
-    public String getDailyThoughtDescription() {
-        return dailyThoughtDescription;
-    }
-
-    public void setDailyThoughtDescription(String dailyThoughtDescription) {
-        this.dailyThoughtDescription = dailyThoughtDescription;
-    }
 
     public HashMap<String, RatingDTO> getRatings() {
         return ratings;
@@ -111,6 +90,29 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         this.users = users;
     }
 
+    /*public List<VideoDTO> getVideoList() {
+            return videoList;
+        }
+
+        public void setVideoList(List<VideoDTO> videoList) {
+            this.videoList = videoList;
+        }
+
+        public List<PhotoDTO> getPhotoList() {
+            List<PhotoDTO> list = new ArrayList<>();
+            if (*//*photos*//*photoList != null) {
+            for (PhotoDTO p: photoList*//*photos.values()*//*) {
+                list.add(p);
+            }
+        }
+        return list*//*photos*//*;
+        *//*return photoList;*//*
+    }
+
+    public void setPhotoList(List<PhotoDTO> photoList) {
+        this.photoList = photoList;
+    }
+*/
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;
     }
@@ -194,14 +196,21 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
 
     @Override
     public void setJournalUserID(String userID) {
-
+     this.journalUserID = userID;
     }
 
     @Override
     public void setJournalUserName(String userName) {
-
+    this.journalUserName = userName;
     }
 
+    public String getJournalUserID() {
+        return journalUserID;
+    }
+
+    public String getJournalUserName() {
+        return journalUserName;
+    }
 
     @Exclude
     public int compareTo(@NonNull DailyThoughtDTO d) {
@@ -277,5 +286,45 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
 
     public void setCategory(CategoryDTO category) {
         this.category = category;
+    }
+
+    public static int getInternalDailyThought() {
+        return INTERNAL_DAILY_THOUGHT;
+    }
+
+    public static int getGlobalDailyThought() {
+        return GLOBAL_DAILY_THOUGHT;
+    }
+
+    public static String getDescInternalDailyThought() {
+        return DESC_INTERNAL_DAILY_THOUGHT;
+    }
+
+    public static String getDescGlobalDailyThought() {
+        return DESC_GLOBAL_DAILY_THOUGHT;
+    }
+
+    public String getDailyThoughtDescription() {
+        return dailyThoughtDescription;
+    }
+
+    public void setDailyThoughtDescription(String dailyThoughtDescription) {
+        this.dailyThoughtDescription = dailyThoughtDescription;
+    }
+
+    public int getDailyThoughtType() {
+        return dailyThoughtType;
+    }
+
+    public void setDailyThoughtType(int dailyThoughtType) {
+        this.dailyThoughtType = dailyThoughtType;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

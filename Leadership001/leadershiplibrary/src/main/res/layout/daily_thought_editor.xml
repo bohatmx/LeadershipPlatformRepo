@@ -79,27 +79,35 @@ app:cardElevation="@dimen/mon_padding">
         android:layout_below="@+id/t0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <RadioButton
-            android:id="@+id/internalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_below="@+id/internalButton"
-            android:text="Internal Thought"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
-        <RadioButton
-            android:layout_alignParentEnd="true"
-            android:id="@+id/globalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_alignParentEnd="true"
-            android:text="Global Thought"
-            android:layout_below="@+id/globalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <RadioGroup
+            android:id="@+id/layoutb"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:padding="@dimen/mon_padding"
+            android:paddingLeft="@dimen/mon_16"
+            android:paddingRight="@dimen/mon_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <RadioButton
+                android:id="@+id/internalButton"
+                android:text="Post Internal"
+                android:layout_weight="1"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:id="@+id/globalButton"
+                android:text="Post Globally"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+
     </RelativeLayout>
 
 

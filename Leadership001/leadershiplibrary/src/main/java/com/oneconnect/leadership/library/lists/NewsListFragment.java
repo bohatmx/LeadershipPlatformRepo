@@ -256,6 +256,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
 
     }

@@ -912,7 +912,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         platinum_nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                //drawer.closeDrawers();
+                drawer.closeDrawers();
                 if (item.getItemId() == R.id.nav_daily_thought) {
                     mPager.setCurrentItem(0, true);
                     return true;
@@ -1023,6 +1023,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
 
                 }
                 if (user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER)) {
+                    drawer.closeDrawers();
                     if (item.getItemId() == R.id.nav_daily_thought) {
                         mPager.setCurrentItem(0, true);
                         return true;
@@ -1089,6 +1090,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
                 }
 
                 if (user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
+                    drawer.closeDrawers();
                     if (item.getItemId() == R.id.nav_daily_thought) {
                         mPager.setCurrentItem(0, true);
                         return true;
@@ -1170,6 +1172,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
                 }
 
                 if (user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN)) {
+                    drawer.closeDrawers();
                     if (item.getItemId() == R.id.nav_daily_thought) {
                         mPager.setCurrentItem(0, true);
                         return true;
