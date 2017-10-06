@@ -153,6 +153,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
     public void getDailyThoughts() {
         Log.d(LOG, "************** getDailyThoughts: " );
+        presenter.getAllDailyThoughts();
         switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
@@ -332,11 +333,12 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onAllCompanyDailyThoughts: " + list.size());
-        this.dailyThoughtList = list;
+        //this.dailyThoughtList = list;
         if (category != null) {
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);
+   //    this.dailyThoughtList = getDailyThoughtList(list, "approved");
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
@@ -375,6 +377,20 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    private List<DailyThoughtDTO> getDailyThoughtList(List<DailyThoughtDTO> list, String status){
+        //DailyThoughtDTO dailyThoughtDTO = null;
+        List<DailyThoughtDTO> returnList = new ArrayList<>();
+        for(DailyThoughtDTO dailyThoughtDTO : list){
+            if (dailyThoughtDTO.getStatus() != null){
+                if(dailyThoughtDTO.getStatus().equals(status)){
+                    returnList.add(dailyThoughtDTO);
+                }
+            }
+        }
+        return returnList;
+
     }
 
     private List<DailyThoughtDTO> getCategoryList(List<DailyThoughtDTO> list, String typeName){

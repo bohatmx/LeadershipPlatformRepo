@@ -155,27 +155,33 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.audio_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.audio_card, 300, new Util.UtilAnimationListener() {
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("podcast", v);
+                ctx.startActivity(intent);
+               /* Util.flashOnce(pvh.audio_card, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                         intent.putExtra("podcast", v);
                         ctx.startActivity(intent);
                     }
-                });
+                });*/
             }
         });
         pvh.fileName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("podcast", v);
+                ctx.startActivity(intent);
+                /*Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                         intent.putExtra("podcast", v);
                         ctx.startActivity(intent);
                     }
-                });
+                });*/
             }
         });
 

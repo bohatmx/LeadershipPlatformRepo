@@ -222,6 +222,11 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }

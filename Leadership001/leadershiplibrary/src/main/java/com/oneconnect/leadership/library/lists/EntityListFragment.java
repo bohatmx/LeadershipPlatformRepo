@@ -74,14 +74,16 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_category_list, container, false);
-        ctx = getActivity();
         presenter = new CrudPresenter(this);
+        ctx = getActivity();
+
         txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         txtCount = (TextView) view.findViewById(R.id.txtCount);
         iconAdd = (ImageView) view.findViewById(R.id.iconAdd);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(lm);
+        recyclerView.setLayoutManager(new LinearLayoutManager(ctx));
+        /*LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(lm);*/
         txtTitle.setText(stringTitle);
         iconAdd.setOnClickListener(new View.OnClickListener() {
             @Override

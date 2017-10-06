@@ -4,6 +4,7 @@
     package="com.ocg.leadership.company">
 
     <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth" />
+
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -22,7 +23,6 @@
         android:roundIcon="@drawable/harmony"
         android:theme="@style/CommuterTheme"
         tools:replace="android:theme">
-
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -61,15 +61,17 @@
         <activity
             android:name="com.oneconnect.leadership.library.activities.FullArticleActivity"
             android:label="@string/title_activity_full_article"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CompanyMainActivity"
             android:label="@string/app_name"
             android:theme="@style/CommuterTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="https://leadershipplatform-158316.firebaseapp.com/"
                     android:scheme="http" />
@@ -78,7 +80,6 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.oneconnect.leadership.library.activities.RatingActivity"
             android:label="@string/title_activity_my_android_app"
@@ -87,7 +88,10 @@
         <activity
             android:name="com.oneconnect.leadership.library.audio.PodcastSelectionActivity"
             android:label="@string/title_activity_podcast_selection"
-            android:parentActivityName=".CompanyMainActivity"/>
+            android:parentActivityName=".CompanyMainActivity" />
+
+        <activity android:name="com.oneconnect.leadership.library.activities.PodcastPlayerActivity"
+            android:label="@string/title_activity_podcast_player"/>
         <activity
             android:name="com.oneconnect.leadership.library.audio.PodcastListActivity"
             android:label="@string/title_activity__podcast_list"
@@ -106,19 +110,17 @@
         <activity
             android:name=".CompanyDrawerActivity"
             android:label="@string/title_activity_company_drawer"
-            android:theme="@style/CommuterTheme"></activity>
-
+            android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.camera.CameraActivity"
             android:label="@string/title_activity_camera"
-            android:parentActivityName=".CompanyMainActivity"/>
+            android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity"
             android:theme="@style/MaterialCamera.CaptureActivity" />
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity2"
             android:theme="@style/MaterialCamera.CaptureActivity" />
-
         <activity
             android:name="com.oneconnect.leadership.library.photo.PhotoSelectionActivity"
             android:label="@string/title_activity_photo_selection"
@@ -126,8 +128,20 @@
         <activity
             android:name="com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity"
             android:label="@string/title_activity_create_daily_thought"
-            android:theme="@style/CommuterTheme"></activity>
-
+            android:theme="@style/CommuterTheme" />
+        <activity
+            android:name=".PlatinumAdminActivity"
+            android:label="@string/title_activity_platinum_admin" />
+        <activity
+            android:name=".PlatinumUserActivity"
+            android:label="@string/title_activity_platinum_user" />
+        <activity
+            android:name=".GoldUserActivity"
+            android:label="@string/title_activity_gold_user"></activity>
+        <activity android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity"/>
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.DailyThoughtApprovalActivity"
+            android:label="@string/title_activity_daily_thought" />
 
     </application>
 

@@ -1,22 +1,32 @@
-package com.oneconnect.leadership.admin.crud;
+package com.oneconnect.leadership.library.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.DatePicker;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.activities.UpdateEntityActivity;
 import com.oneconnect.leadership.library.adapters.ApprovalThoughtAdapter;
+import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
+import com.oneconnect.leadership.library.cache.CacheContract;
+import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
@@ -27,30 +37,45 @@ import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
+import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
+import com.oneconnect.leadership.library.lists.EntityListFragment;
+import com.oneconnect.leadership.library.util.Constants;
+import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-public class ThoughtApprovalActivity extends AppCompatActivity implements CrudContract.View {
+public class DailyThoughtApprovalActivity extends AppCompatActivity implements CrudContract.View,
+        CacheContract.View{
 
     CrudPresenter presenter;
-
+    private CachePresenter cachePresenter;
+    private Context ctx;
+    ResponseBag bag;
+    private UserDTO user;
+    private int type;
     RecyclerView pendingRecyclerView;
-    Context ctx;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_thought_approval);
+        setContentView(R.layout.activity_daily_thought);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
+        setSupportActionBar(toolbar);
         ctx = getApplicationContext();
+        toolbar.setLogo(R.drawable.harmony);
 
         presenter = new CrudPresenter(this);
 
@@ -59,15 +84,14 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
 
         getCachedDailyThoughts();
         getPendingDailyThoughts();
+
+
+        user = SharedPrefUtil.getUser(this);
     }
 
-
-    private FirebaseAuth firebaseAuth;
-    private UserDTO user;
-
     public void getPendingDailyThoughts() {
-        Log.d(LOG, "************** getPendingDailyThoughts: " );
-            presenter.getPendingDailyThoughts("pending");
+        Log.d(TAG, "************** getPendingDailyThoughts: " );
+        presenter.getPendingDailyThoughts("pending");
 
 
     }
@@ -76,7 +100,7 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
         DailyThoughtCache.getDailyThoughts(ctx, new DailyThoughtCache.ReadListener() {
             @Override
             public void onDataRead(List<DailyThoughtDTO> dailyThoughts) {
-                Log.d(LOG, "onDataRead: DailyThoughts: " + dailyThoughts);
+                Log.d(TAG, "onDataRead: DailyThoughts: " + dailyThoughts);
             }
 
             @Override
@@ -85,6 +109,80 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
                 getCachedDailyThoughts();
             }
         });
+    }
+
+
+
+    static final String TAG = DailyThoughtApprovalActivity.class.getSimpleName();
+
+    @Override
+    public void onDataCached() {
+
+    }
+
+    @Override
+    public void onCacheCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheEbooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onCachePhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
+
     }
 
     @Override
@@ -114,6 +212,8 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
 
     @Override
     public void onDailyThoughtUpdated(DailyThoughtDTO dailyThought) {
+        Log.i(TAG, "onDailyThoughtUpdated status: " + dailyThought.getStatus());
+        presenter.getPendingDailyThoughts("pending");
 
     }
 
@@ -211,9 +311,7 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
 
     @Override
     public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
-        Log.i(LOG, "onDailythoughtsByUser: " + list.size());
-        //this.dailyThoughtList = list;
-        // list = getCategoryList(list, category.getCategoryName());
+        Log.i(TAG, "onPendingDailyThoughts: " + list.size());
         Collections.sort(list);
 
         adapter = new ApprovalThoughtAdapter(ctx, list, new ApprovalThoughtAdapter.ApprovalThoughtAdapterlistener() {
@@ -224,9 +322,10 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
 
             @Override
             public void onThoughtSelected(DailyThoughtDTO dailyThought) {
-                Intent intent = new Intent(ThoughtApprovalActivity.this, UpdateEntityActivity.class);
+                Intent intent = new Intent(DailyThoughtApprovalActivity.this, UpdateEntityActivity.class);
                 intent.putExtra("dailyThought", dailyThought);
                 startActivity(intent);
+                finish();
             }
 
             @Override
@@ -255,8 +354,6 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
             }
         });
         pendingRecyclerView.setAdapter(adapter);
-
-
     }
 
     @Override
@@ -338,7 +435,4 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
     public void onLinksRequired(BaseDTO entity) {
 
     }
-
-
-    static final String LOG = ThoughtApprovalActivity.class.getSimpleName();
 }

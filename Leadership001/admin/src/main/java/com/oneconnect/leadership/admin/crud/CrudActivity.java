@@ -38,6 +38,7 @@ import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.activities.CreateCompanyActivity;
+import com.oneconnect.leadership.library.activities.UpdateEntityActivity;
 import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;

@@ -12,15 +12,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.adapters.CreateDailyThoughtAdapter;
+import com.oneconnect.leadership.library.adapters.MyDailyThoughtAdapter;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -42,6 +48,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -54,8 +61,10 @@ import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.Util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +73,7 @@ import es.dmoral.toasty.Toasty;
 import static com.oneconnect.leadership.library.ebook.EbookListFragment.REQUEST_LINKS;
 
 public class CreateDailyThoughtActivity extends AppCompatActivity implements CrudContract.View, CacheContract.View,
-        BasicEntityAdapter.EntityListener {
+        CreateDailyThoughtAdapter.CreateThoughtListener {
 
     CrudPresenter presenter;
     private CachePresenter cachePresenter;
@@ -73,14 +82,45 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     private UserDTO user;
     private int type;
     EntityListFragment entityListFragment;
+    RecyclerView recyclerView;
+    ImageView iconAdd;
+    TextView txtCount, txtTitle;
+    //CreateDailyThoughtAdapter adapter;
+    MyDailyThoughtAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "*** onCreate ***");
         setContentView(R.layout.activity_create_daily_thought);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
+
+        if (getIntent().getSerializableExtra("user") != null) {
+            user = (UserDTO) getIntent().getSerializableExtra("user");
+
+        }
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        iconAdd = (ImageView) findViewById(R.id.iconAdd);
+        txtCount = (TextView) findViewById(R.id.txtCount);
+        txtTitle = (TextView) findViewById(R.id.txtTitle);
+        iconAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+              /*  Util.flashOnce(iconAdd, 300, new Util.UtilAnimationListener() {
+                    @Override
+                    public void onAnimationEnded() {
+                    startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+                    }
+                });*/
+            }
+        });
+
+
         presenter = new CrudPresenter(this);
         cachePresenter = new CachePresenter(this, this);
         user = SharedPrefUtil.getUser(this);
@@ -129,7 +169,7 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
             }
           //  startPhotoService();
          //   startVideoService();
-        entityListFragment = (EntityListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
+       // entityListFragment = (EntityListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
         user = SharedPrefUtil.getUser(this);
     }
     }
@@ -161,6 +201,7 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
                 break;
         }
     }
+
     private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
 
         dailyThoughtEditor = DailyThoughtEditor.newInstance(thought, type);
@@ -168,12 +209,12 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
             @Override
             public void onWorkDone(BaseDTO entity) {
                 DailyThoughtDTO m = (DailyThoughtDTO) entity;
-                if (bag.getDailyThoughts() == null) {
+                /*if (bag.getDailyThoughts() == null) {
                     bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
                 }
-                bag.getDailyThoughts().add(0, m);
-                setFragment();
-                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
+                bag.getDailyThoughts().add(0, m);*/
+                // setFragment();
+                showSnackbar(m.getTitle().concat(" is being added"), getString(R
                         .string.ok_label), "green");
 
             }
@@ -192,10 +233,13 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
         dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
 
     }
+
+
+
     private DatePickerDialog datePickerDialog;
     private void getDate(final int sheetType) {
         final java.util.Calendar cal = java.util.Calendar.getInstance();
-        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        datePickerDialog = new DatePickerDialog(ctx/*this*/, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 cal.set(year, month, day);
@@ -391,7 +435,46 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+        Log.i(TAG, "onDailyThoughts: " + list.size());
+        adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
+            @Override
+            public void onThoughtClicked(int position) {
 
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
+       /* bag = new ResponseBag();
+        bag.setDailyThoughts(list);
+        Collections.sort(bag.getDailyThoughts());
+        bag.setType(ResponseBag.DAILY_THOUGHTS);
+        setFragment();
+        cachePresenter.cacheDailyThoughts(list);*/
     }
 
     @Override

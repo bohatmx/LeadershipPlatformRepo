@@ -140,6 +140,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     public void getPodcasts() {
         Log.d(LOG, "************** getPodcasts: " );
+        presenter.getAllPodcasts();
         switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {

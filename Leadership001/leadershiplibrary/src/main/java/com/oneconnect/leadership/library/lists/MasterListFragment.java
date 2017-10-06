@@ -136,6 +136,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     public void getWeeklyMasterClasses() {
         Log.d(LOG, "************** getWeeklyMasterClasses: " );
+        presenter.getAllWeeklyMasterClasses();
         switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {

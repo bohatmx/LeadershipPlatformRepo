@@ -6,7 +6,7 @@ package com.oneconnect.leadership.library.util;
 
 public class Constants {
     public static final String YOUTUBE_API_KEY = "AIzaSyAeeRGCDfhScMn68HXKhuNIi1v6G9ozSFU";
-    public static final int NEW_ENTITY = 1, UPDATE_ENTITY = 2, DELETE_ENTITY = 3;
+    public static final int NEW_ENTITY = 1, UPDATE_ENTITY = 2, DELETE_ENTITY = 3, INTERNAL_DATA = 4, EXTERNAL_DATA = 5;
     public static final String APPLICATION_NAME = "Leadership Platform", APPROVED = "approved", DECLINED ="declined";
     public static final String FACEBOOK_APP_ID = "1837583773163041",
             SECRET = "eb40894aeb8e122088628df637954b41";

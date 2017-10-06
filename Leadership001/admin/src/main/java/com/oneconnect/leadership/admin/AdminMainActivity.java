@@ -25,19 +25,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oneconnect.leadership.admin.crud.CrudActivity;
 import com.oneconnect.leadership.admin.services.AdminMessagingService;
-import com.oneconnect.leadership.library.activities.DailyThoughtActivity;
-import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
-import com.oneconnect.leadership.library.cache.UserCache;
-import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.FCMData;
-import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
-import com.oneconnect.leadership.library.util.Util;
 
 public class AdminMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -73,7 +65,7 @@ public class AdminMainActivity extends AppCompatActivity
                                        Util.flashOnce(fab, 300, new Util.UtilAnimationListener() {
                                            @Override
                                            public void onAnimationEnded() {
-                                               Intent intent = new Intent(ctx, DailyThoughtActivity.class);
+                                               Intent intent = new Intent(ctx, DailyThoughtApprovalActivity.class);
                                                ctx.startActivity(intent);
                                            }
                                        });

@@ -30,7 +30,7 @@
                 <item
                     android:id="@+id/nav_master"
                     android:icon="@drawable/ic_class_black_24dp"
-                    android:title="Leadership Weekly Master Classes" />
+                    android:title="Leadership  Master Class" />
                 <item
                     android:id="@+id/nav_weekly"
                     android:icon="@drawable/ic_chat"
@@ -73,7 +73,7 @@
                 android:title="Leadership eBooks" />
         </menu>
     </item>
-
+<!--
     <item android:title="Company Profile">
         <menu>
             <item
@@ -86,7 +86,7 @@
                 android:icon="@drawable/ic_person"
                 android:title="Company Staff" />
         </menu>
-    </item>
+    </item>-->
 
     <item android:title="Sign out">
         <menu>

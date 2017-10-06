@@ -166,6 +166,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     private void getVideos() {
         Log.d(LOG, "************** getVideos: " );
+        presenter.getAllVideos();
         switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
@@ -178,11 +179,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
                 presenter.getAllVideos();
                 break;
         }
-      //  if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-        //    presenter.getAllVideos();
-     //   } else {
-      //      Log.d(LOG, "user is null");
-      //  }
+
     }
 
     private void playVideo(String path) {
@@ -495,7 +492,8 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        presenter.getVideos(user.getCompanyID());
     }
 
     @Override

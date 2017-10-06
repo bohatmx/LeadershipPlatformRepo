@@ -2,13 +2,14 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -30,15 +31,22 @@ android {
     }
     productFlavors {
     }
+    /*dexOptions {
+        jumboMode = true
+    }*/
 }
-configurations.compile.resolutionStrategy {
+/*configurations.compile.resolutionStrategy {
     eachDependency { DependencyResolveDetails details ->
         if (details.requested.group == 'com.google.firebase' ||
                 details.requested.group == 'com.google.android.gms') {
-            details.useVersion '10.2.1'
+            details.useVersion '11.0.4'
         }
     }
+}*/
+configurations {
+    compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
 }
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -64,22 +72,20 @@ dependencies {
     })
     compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile files('libs/pdf-js-0.5.5.jar')
-    //  compile files('libs/objenesis-1.2.jar')
+   // compile files('libs/objenesis-1.2.jar')
     compile files('libs/Pdf_Viewer_.jar')
     compile('com.twitter.sdk.android:twitter:3.1.1') {
         transitive = true;
     }
+    compile 'com.twitter.sdk.android:twitter-core:3.1.1'
     // compile 'com.twitter.sdk.android:tweet-ui:3.1.1'
 
     // compile 'com.twitter.sdk.android:tweet-composer:3.1.1'
-
-    // https://mvnrepository.com/artifact/org.objenesis/objenesis
 
     // compile group: 'org.objenesis', name: 'objenesis', version: '2.5'
     compile 'com.cloudinary:cloudinary-android:1.9.1'
     compile 'com.cloudinary:cloudinary-core:1.9.1'
     compile 'me.relex:circleindicator:1.2.1@aar'
-    compile 'com.twitter.sdk.android:twitter-core:3.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:appcompat-v7:26.0.1'
     compile 'com.android.support:design:26.0.1'
@@ -104,7 +110,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'commons-io:commons-io:2.4'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.snappydb:snappydb-lib:0.5.2'
+  //  compile 'com.snappydb:snappydb-lib:0.5.2'
     compile 'joda-time:joda-time:2.9.7'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'commons-codec:commons-codec:1.10'
@@ -121,10 +127,18 @@ dependencies {
     compile 'com.google.android.exoplayer:extension-okhttp:r2.3.0'
     compile 'com.github.piasy:rxandroidaudio:1.5.0'
     compile 'com.github.piasy:AudioProcessor:1.5.0'
-    compile 'com.android.support:multidex:1.0.1'
+   // compile 'com.android.support:multidex:1.0.2'
     compile 'com.github.QuadFlask:colorpicker:0.0.13'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+
+  //  compile files('libs/kryo-2.24.0.jar')
+    //  compile 'com.esotericsoftware.kryo:kryo:2.24.0'
+
+    // compile files('libs/kryo-3.0.0.jar')
     testCompile 'junit:junit:4.12'
+   // compile files('libs/objenesis-1.2.jar')
+    compile 'com.snappydb:snappydb-lib:0.5.2'
+   // compile 'com.esotericsoftware.kryo:kryo:2.24.0'
 }
 
 

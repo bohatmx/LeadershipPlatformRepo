@@ -153,6 +153,7 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
 
     private void getWeeklyMessages() {
         Log.d(LOG, "************** getWeeklyMessages: " );
+        presenter.getAllWeeklyMessages();
         switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {

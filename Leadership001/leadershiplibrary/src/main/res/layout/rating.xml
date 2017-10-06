@@ -7,11 +7,10 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/CommuterTheme">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:background="#be1d2c"
             android:layout_width="match_parent"
             android:layout_height="120dp">
 

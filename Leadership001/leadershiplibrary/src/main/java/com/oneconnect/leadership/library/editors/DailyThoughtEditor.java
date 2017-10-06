@@ -23,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 //import com.oneconnect.leadership.admin.R;
@@ -119,8 +120,16 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     }
 
+    UserDTO user;
     @Override
-    public void onUserFound(UserDTO user) {
+    public void onUserFound(UserDTO u) {
+        user = u;
+        userType = u.getUserType();
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 
@@ -185,7 +194,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     CategoryAdapter.CategoryAdapterListener listener;
-
+    int userType;
     @Override
     public void onAllCategories(List<CategoryDTO> list) {
         Log.i(TAG, "**** onAllCategories: ****");
@@ -396,6 +405,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         return f;
     }
 
+    FirebaseAuth firebaseAuth;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -404,6 +414,9 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         presenter = new SheetPresenter(this);
         Catpresenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, getActivity());
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
     }
 
     @Override
@@ -540,7 +553,12 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                       dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT);
                        dailyThought.setDailyThoughtType(DailyThoughtDTO.GLOBAL_DAILY_THOUGHT);
                   }
-        dailyThought.setStatus("pending");
+                  if (userType == UserDTO.PLATINUM_USER){
+                      dailyThought.setStatus("approved");
+                  } else {
+                      dailyThought.setStatus("pending");
+                  }
+
 
         switch (type) {
             case Constants.NEW_ENTITY:

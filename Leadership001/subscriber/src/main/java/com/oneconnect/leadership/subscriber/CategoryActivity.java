@@ -215,6 +215,11 @@ public class CategoryActivity extends AppCompatActivity implements SubscriberCon
     }
 
     @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
     public void onCategories(List<CategoryDTO> list) {
         Log.i(LOG, "onCategories: " + list.size());
         this.categoryList = list;

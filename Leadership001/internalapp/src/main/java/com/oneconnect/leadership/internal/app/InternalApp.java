@@ -1,6 +1,8 @@
 package com.oneconnect.leadership.internal.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.google.firebase.FirebaseApp;
@@ -22,6 +24,12 @@ public class InternalApp extends Application {
 
         FirebaseApp.initializeApp(this);
         Log.w(TAG, "onCreate: FirebaseApp initializeApp complete" );
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
 }

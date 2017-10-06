@@ -83,9 +83,10 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_podcast_player);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-
+        setSupportActionBar(toolbar);
         ctx = getApplicationContext();
+        toolbar.setLogo(R.drawable.harmony);
+
         fileName = (TextView) findViewById(R.id.fileName);
         image = (ImageView) findViewById(R.id.image);
         podcastIMGAE = (ImageView) findViewById(R.id.podcastIMGAE);

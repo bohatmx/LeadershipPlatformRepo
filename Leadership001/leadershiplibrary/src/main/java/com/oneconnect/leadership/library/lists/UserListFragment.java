@@ -441,7 +441,8 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onUserFound(UserDTO user) {
-
+    Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        presenter.getUsers(user.getCompanyID());
     }
 
     @Override

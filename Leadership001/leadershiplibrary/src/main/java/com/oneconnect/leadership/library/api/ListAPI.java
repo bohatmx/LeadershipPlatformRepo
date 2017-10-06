@@ -104,6 +104,7 @@ public class ListAPI {
     public void getDailyThoughts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
+        /*ref.orderByChild("status").equalTo("approved");*/
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -324,7 +325,8 @@ public class ListAPI {
 
     public void getAllDailyThoughts(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query q = ref.orderByChild("status").equalTo("approved");
+        /*ref*/q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
