@@ -826,7 +826,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
 
     }
 
-    static final String TAG = CompanyMainActivity.class.getSimpleName();
+    static final String TAG = PlatinumUserActivity.class.getSimpleName();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

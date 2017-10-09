@@ -826,7 +826,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
 
     }
 
-    static final String TAG = CompanyMainActivity.class.getSimpleName();
+    static final String TAG = GoldUserActivity.class.getSimpleName();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
