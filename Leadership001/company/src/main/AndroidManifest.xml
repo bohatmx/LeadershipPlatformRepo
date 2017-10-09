@@ -60,7 +60,11 @@
             android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.FullArticleActivity"
-            android:label="@string/title_activity_full_article"
+            android:label="@string/title_activity_full_article"/>
+        <activity
+            android:name="com.oneconnect.leadership.library.links.LinksActivity"
+            android:label="@string/title_activity_links"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CompanyMainActivity"

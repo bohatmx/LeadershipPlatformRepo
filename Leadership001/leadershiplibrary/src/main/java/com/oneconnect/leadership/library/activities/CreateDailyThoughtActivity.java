@@ -438,32 +438,22 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
         Log.i(TAG, "onDailyThoughts: " + list.size());
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
-            public void onThoughtClicked(int position) {
+            public void onPhotoRequired(BaseDTO base) {
 
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
+            public void onPodcastRequired(BaseDTO base) {
 
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
+            public void onVideoRequired(BaseDTO base) {
 
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
+            public void onLinkRequired(BaseDTO base) {
 
             }
         });

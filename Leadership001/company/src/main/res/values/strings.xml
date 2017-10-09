@@ -17,5 +17,8 @@
     <string name="title_activity_platinum_admin">PlatinumAdminActivity</string>
     <string name="title_activity_platinum_user">PlatinumUserActivity</string>
     <string name="title_activity_gold_user">GoldUserActivity</string>
+    <string name="title_activity_links">LinksActivity</string>
+    <string name="title_activity_video_selection">VideoSelectionActivity</string>
+    <string name="title_activity_podcast_selection">PodcastSelectionActivity</string>
 </resources>
 

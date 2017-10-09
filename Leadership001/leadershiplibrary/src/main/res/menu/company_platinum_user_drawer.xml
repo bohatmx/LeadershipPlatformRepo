@@ -13,11 +13,6 @@
                     android:id="@+id/nav_create_thought"
                     android:icon="@drawable/ic_comment_black_24dp"
                     android:title="My Leadership Thoughts" />
-                <item
-                    android:id="@+id/nav_create"
-                    android:icon="@drawable/ic_create"
-                    android:title="Create Leadership Thoughts" />
-
             </menu>
         </item>
     </group>

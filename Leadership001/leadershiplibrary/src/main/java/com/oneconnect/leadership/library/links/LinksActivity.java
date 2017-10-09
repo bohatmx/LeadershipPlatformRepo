@@ -138,6 +138,11 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
             news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
             getSupportActionBar().setSubtitle(news.getTitle());
         }
+        if (getIntent().getSerializableExtra("dailyThought") != null) {
+            type = ResponseBag.DAILY_THOUGHTS;
+            dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            getSupportActionBar().setSubtitle(dailyThought.getTitle());
+        }
 
 
 

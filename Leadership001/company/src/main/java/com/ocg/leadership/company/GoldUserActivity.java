@@ -714,11 +714,6 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                     mPager.setCurrentItem(1, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_create) {
-                    Intent intent = new Intent(GoldUserActivity.this, CreateDailyThoughtActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
                 if (item.getItemId() == R.id.nav_news_article) {
                     mPager.setCurrentItem(2, true);
                     return true;
@@ -808,12 +803,12 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
             intent.putExtra("type", type);
             startActivity(intent);
         }
-        if (id == R.id.action_settings){
+       /* if (id == R.id.action_settings){
             Intent w = new Intent(GoldUserActivity.this, ThemeSelectorActivity.class);
             w.putExtra("darkColor", themeDarkColor);
             startActivityForResult(w, THEME_REQUESTED);
             return true;
-        }
+        }*/
         return true;
     }
     Snackbar snackbar;

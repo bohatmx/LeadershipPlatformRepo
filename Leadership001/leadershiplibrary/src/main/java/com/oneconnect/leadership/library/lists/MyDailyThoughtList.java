@@ -21,9 +21,13 @@ import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
 import com.oneconnect.leadership.library.adapters.MyDailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.PhotoAdapter;
+import com.oneconnect.leadership.library.audio.PodcastListActivity;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
+import com.oneconnect.leadership.library.camera.VideoListActivity;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -44,6 +48,8 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.links.LinksActivity;
+import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
@@ -255,42 +261,57 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
 
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPhotoRequired(BaseDTO base) {
+                startPhotoGallerySelection(base);
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
+            public void onPodcastRequired(BaseDTO base) {
+                startPodcastSelection(base);
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
-
+            public void onVideoRequired(BaseDTO base) {
+            startVideoSelection(base);
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            public void onLinkRequired(BaseDTO base) {
+                startLinksActivity(base);
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    private void startLinksActivity(BaseDTO base){
+        Intent m = new Intent(ctx, LinksActivity.class);
+        type = ResponseBag.DAILY_THOUGHTS;
+        dailyThought = (DailyThoughtDTO) base;
+        m.putExtra("dailyThought", dailyThought);
+        startActivity(m);
+    }
+    private void startPhotoGallerySelection(BaseDTO base){
+        Intent intent = new Intent(ctx, PhotoSelectionActivity.class);
+        type = ResponseBag.DAILY_THOUGHTS;
+        dailyThought = (DailyThoughtDTO) base;
+        intent.putExtra("dailyThought", dailyThought);
+        startActivity(intent);
+    }
+
+    private void startVideoSelection(BaseDTO base) {
+        Intent m = new Intent(ctx, VideoSelectionActivity.class);
+        type = ResponseBag.DAILY_THOUGHTS;
+        dailyThought = (DailyThoughtDTO) base;
+        m.putExtra("dailyThought", dailyThought);
+        startActivity(m);
+    }
+
+    private void startPodcastSelection(BaseDTO base){
+        Intent m = new Intent(ctx, PodcastSelectionActivity.class);
+        type = ResponseBag.DAILY_THOUGHTS;
+        dailyThought = (DailyThoughtDTO) base;
+        m.putExtra("dailyThought", dailyThought);
+        startActivity(m);
     }
 
     @Override
@@ -311,39 +332,23 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Collections.sort(list);
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPhotoRequired(BaseDTO base) {
+                startPhotoGallerySelection(base);
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
+            public void onPodcastRequired(BaseDTO base) {
+                startPodcastSelection(base);
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
-
+            public void onVideoRequired(BaseDTO base) {
+                startVideoSelection(base);
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            public void onLinkRequired(BaseDTO base) {
+                startLinksActivity(base);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -358,39 +363,23 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Collections.sort(list);
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPhotoRequired(BaseDTO base) {
+                startPhotoGallerySelection(base);
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
+            public void onPodcastRequired(BaseDTO base) {
+                startPodcastSelection(base);
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
-
+            public void onVideoRequired(BaseDTO base) {
+                startVideoSelection(base);
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            public void onLinkRequired(BaseDTO base) {
+                startLinksActivity(base);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -419,39 +408,23 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Collections.sort(list);
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPhotoRequired(BaseDTO base) {
+                startPhotoGallerySelection(base);
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
-
+            public void onPodcastRequired(BaseDTO base) {
+                startPodcastSelection(base);
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
-
+            public void onVideoRequired(BaseDTO base) {
+                startVideoSelection(base);
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
-            }
-
-            @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            public void onLinkRequired(BaseDTO base) {
+                startLinksActivity(base);
             }
         });
         recyclerView.setAdapter(adapter);

@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.RatingActivity;
+import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -61,12 +62,16 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private int type;
 
     public interface MyDailyThoughtAdapterlistener{
-        void onThoughtClicked(int position);
+        /*void onThoughtClicked(int position);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
         void onUrlRequired(UrlDTO url);
-        void onPhotosRequired(List<PhotoDTO> list);
+        void onPhotosRequired(List<PhotoDTO> list);*/
+        void onPhotoRequired(BaseDTO base);
+        void onPodcastRequired(BaseDTO base);
+        void onVideoRequired(BaseDTO base);
+        void onLinkRequired(BaseDTO base);
 
     }
 
@@ -142,11 +147,18 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         }
 
+        dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onVideoRequired(dt);
+            }
+        });
+
 
 
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
-            dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
+            /*dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (dvh.videoAdapterLayout.getVisibility() == View.GONE){
@@ -166,9 +178,9 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         videoList.add(vDTO);
                     }
 
-                    /*Intent intent = new Intent(ctx, LeExoPlayerActivity.class);
+                    *//*Intent intent = new Intent(ctx, LeExoPlayerActivity.class);
                     intent.putExtra("video", vDTO);
-                    ctx.startActivity(intent);*/
+                    ctx.startActivity(intent);*//*
 
                     miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
                         @Override
@@ -196,7 +208,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         }
                     });
                 }
-            });
+            });*/
         }
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,6 +218,13 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }else{
                     dvh.bottomLayout.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPhotoRequired(dt);
             }
         });
         if (dt.getPhotos() != null) {
@@ -230,7 +249,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
             }
-            dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+            /*dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (dvh.photoAdapterLayout.getVisibility() == View.GONE){
@@ -258,11 +277,11 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
 
-                        /*Glide.with(ctx)
+                        *//*Glide.with(ctx)
                                 .load(photoUrl)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(dvh.imageView);
-                        dvh.captiontxt.setText(vDTO.getCaption());*/
+                        dvh.captiontxt.setText(vDTO.getCaption());*//*
 
 
                     }
@@ -275,11 +294,18 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     });
                     dvh.imageRecyclerView.setAdapter(miniPhotoAdapter);
                 }
-            });
+            });*/
         }
+
+        dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPodcastRequired(dt);
+            }
+        });
         if (dt.getPodcasts() != null) {
             dvh.txtMicrophone.setText("" + dt.getPodcasts().size());
-            dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+            /*dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (dvh.podcastAdapterLayout.getVisibility() == View.GONE){
@@ -370,7 +396,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     });
                     dvh.podcastRecyclerView.setAdapter(miniPodcastAdapter);
                 }
-            });
+            });*/
 
         }
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
@@ -420,9 +446,16 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         });
 
+        dvh.iconLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onLinkRequired(dt);
+            }
+        });
+
         if (dt.getUrls() != null) {
             dvh.txtLinks.setText("" + dt.getUrls().size());
-            dvh.iconLink/*iconUpdate*/.setOnClickListener(new View.OnClickListener() {
+            /*dvh.iconLink*//*iconUpdate*//*.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (dvh.urlAdapterLayout.getVisibility() == View.GONE){
@@ -453,7 +486,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                     dvh.urlRecyclerView.setAdapter(urlAdapter);
                 }
-            });
+            });*/
         }
 
         dvh.iconDelete.setOnClickListener(new View.OnClickListener() {

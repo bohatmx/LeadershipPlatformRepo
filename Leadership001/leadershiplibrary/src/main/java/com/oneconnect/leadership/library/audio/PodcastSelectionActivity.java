@@ -143,6 +143,11 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             user = (UserDTO) getIntent().getSerializableExtra("user");
             getSupportActionBar().setSubtitle(user.getCompanyName());
         }
+        if (getIntent().getSerializableExtra("dailyThought") != null) {
+            type = ResponseBag.DAILY_THOUGHTS;
+            dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            getSupportActionBar().setSubtitle(dailyThought.getTitle());
+        }
 
 
         setup();

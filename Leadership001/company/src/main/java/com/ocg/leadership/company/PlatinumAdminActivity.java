@@ -719,14 +719,6 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
                     mPager.setCurrentItem(1, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_create) {
-                    if (user != null) {
-                        Intent intent = new Intent(PlatinumAdminActivity.this, CreateDailyThoughtActivity.class);
-                        intent.putExtra("user", user);
-                        startActivity(intent);
-                        return true;
-                    }
-                }
                 if (item.getItemId() == R.id.nav_news_article) {
                     mPager.setCurrentItem(2, true);
                     return true;
@@ -836,12 +828,12 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
             startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
             return true;
         }
-        if (id == R.id.action_settings){
+        /*if (id == R.id.action_settings){
             Intent w = new Intent(PlatinumAdminActivity.this, ThemeSelectorActivity.class);
             w.putExtra("darkColor", themeDarkColor);
             startActivityForResult(w, THEME_REQUESTED);
             return true;
-        }
+        }*/
         return true;
     }
     Snackbar snackbar;
