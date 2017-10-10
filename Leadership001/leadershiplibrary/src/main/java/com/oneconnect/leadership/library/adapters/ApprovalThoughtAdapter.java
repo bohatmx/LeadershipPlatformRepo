@@ -199,11 +199,12 @@ public class ApprovalThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dvh.bottomLayout.getVisibility() == View.GONE){
+               /* if (dvh.bottomLayout.getVisibility() == View.GONE){
                     dvh.bottomLayout.setVisibility(View.VISIBLE);
                 }else{
                     dvh.bottomLayout.setVisibility(View.GONE);
-                }
+                }*/
+                listener.onThoughtSelected(dt);
             }
         });
         if (dt.getPhotos() != null) {

@@ -96,7 +96,25 @@
             android:name=".activities.UserActivity"
             android:label="@string/title_activity_user"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.webpageViewer"
+            android:label="@string/title_webview"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.QuizQuestion"
+            android:label="@string/title_questions"
+            android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".activities.QuizResults"
+            android:label="@string/title_results"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.PLDPActivity"
+            android:label="@string/title_activity_pldp"
+            android:parentActivityName=".activities.DailyThoughtActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

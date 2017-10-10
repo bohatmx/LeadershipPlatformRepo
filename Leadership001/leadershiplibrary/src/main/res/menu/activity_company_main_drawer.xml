@@ -13,10 +13,6 @@
                     android:id="@+id/nav_create_thought"
                     android:icon="@drawable/ic_comment_black_24dp"
                     android:title="My Leadership Thoughts" />
-                <item
-                    android:id="@+id/nav_create"
-                    android:icon="@drawable/ic_create"
-                    android:title="Create Leadership Thoughts" />
 
             </menu>
         </item>
@@ -31,23 +27,23 @@
                 <item
                     android:id="@+id/nav_master"
                     android:icon="@drawable/ic_class_black_24dp"
-                    android:title="Leadership Weekly Master Classes" />
+                    android:title="Leadership MasterClass" />
                 <item
                     android:id="@+id/nav_weekly"
                     android:icon="@drawable/ic_chat"
-                    android:title="Top Leadership Thoughts" />
+                    android:title="Top Leader Thoughts" />
             </menu>
         </item>
     </group>
 
-    <!--<item android:title="Leadership Events">
+  <item android:title="Manage LP Thoughts">
         <menu>
             <item
-                android:id="@+id/nav_calender_events"
+                android:id="@+id/nav_app"
                 android:icon="@drawable/ic_event_black_24dp"
-                android:title="Leadership Calendar Events" />
+                android:title="Thoughts Management" />
         </menu>
-    </item>-->
+    </item>
 
     <item android:title="Leadership Media">
         <menu>
@@ -86,6 +82,11 @@
                 android:id="@+id/nav_users"
                 android:icon="@drawable/ic_person"
                 android:title="Company Staff" />
+
+            <item
+                android:id="@+id/nav_thought"
+                android:icon="@drawable/ic_library_books_black_24dp"
+                android:title="Harmony Thoughts" />
         </menu>
     </item>
 

@@ -1,29 +1,45 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
 import com.oneconnect.leadership.library.adapters.MyDailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.PhotoAdapter;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
+import com.oneconnect.leadership.library.camera.CameraActivity;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -44,13 +60,20 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
+import com.oneconnect.leadership.library.links.LinksActivity;
+import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class MyDailyThoughtList extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
@@ -249,43 +272,107 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Collections.sort(list);
 
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onLinksRequired(BaseDTO entity) {
+                Log.w(TAG, "onLinksRequired: ..............");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                Intent m = null;
+                type = ResponseBag.DAILY_THOUGHTS;
+                dailyThought = (DailyThoughtDTO) entity;
+                m = new Intent(ctx, LinksActivity.class);
+                m.putExtra("dailyThought", dailyThought);
+                startActivity(m);
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
+            public void onAddEntity() {
+                Log.w(TAG, "onAddEntity: ........open bottom appropriate sheet");
+                switch (type) {
 
+                    case ResponseBag.DAILY_THOUGHTS:
+                        startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+                        break;
+
+                }
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
-
+            public void onMicrophoneRequired(BaseDTO entity) {
+                Log.w(TAG, "onMicrophoneRequired: ,,,,,,,,,,,,,,,,,,,,");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                showSnackbar("Audio recording under construction", "OK", "cyan");
+                startPodcastSelection(entity);
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
+            public void onPictureRequired(BaseDTO entity) {
+                Log.w(TAG, "onPhotoCaptureRequested: .................");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                pickGalleryOrCamera(entity);
             }
 
             @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            public void onVideoRequired(BaseDTO entity) {
+                Log.w(TAG, "onVideoCaptureRequested: .................");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                pickGalleryOrVideoCamera(entity);
             }
         });
         recyclerView.setAdapter(adapter);
+
+    }
+    private void pickGalleryOrVideoCamera(final BaseDTO base) {
+        AlertDialog.Builder b = new AlertDialog.Builder(ctx);
+        b.setTitle("Select Video")
+                .setMessage("Please select the source of the video")
+                .setPositiveButton("Use Video Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startVideo(base);
+                    }
+                })
+                .setNegativeButton("Pick Video from Device", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startVideoSelection(base);
+                    }
+                }).show();
+    }
+
+    private void startVideoSelection(BaseDTO base) {
+        Intent m = new Intent(ctx, VideoSelectionActivity.class);
+        type = ResponseBag.DAILY_THOUGHTS;
+        dailyThought = (DailyThoughtDTO) base;
+        m.putExtra("dailyThought", dailyThought);
+        startActivity(m);
+    }
+
+    private void startVideo(BaseDTO entity) {
+
+        Intent m = new Intent(ctx, CameraActivity.class);
+        m.putExtra("type", CameraActivity.VIDEO_REQUEST);
+        switch (type) {
+
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) entity;
+                m.putExtra("dailyThought", dailyThought);
+                break;
+        }
+
+        startActivityForResult(m, CameraActivity.VIDEO_REQUEST);
     }
 
     @Override
@@ -305,46 +392,78 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onLinksRequired(BaseDTO entity) {
+                Log.w(TAG, "onLinksRequired: ..............");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                Intent m = null;
+                switch (type) {
+
+                    case ResponseBag.DAILY_THOUGHTS:
+                        dailyThought = (DailyThoughtDTO) entity;
+                        m = new Intent(ctx, LinksActivity.class);
+                        m.putExtra("dailyThought", dailyThought);
+                        break;
+
+                }
+                m.putExtra("type", type);
+                startActivityForResult(m, REQUEST_LINKS);
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
+            public void onAddEntity() {
+                Log.w(TAG, "onAddEntity: ........open bottom appropriate sheet");
+                switch (type) {
 
+                    case ResponseBag.DAILY_THOUGHTS:
+                        startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+                        break;
+
+                }
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
-
+            public void onMicrophoneRequired(BaseDTO entity) {
+                Log.w(TAG, "onMicrophoneRequired: ,,,,,,,,,,,,,,,,,,,,");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                showSnackbar("Audio recording under construction", "OK", "cyan");
+                startPodcastSelection(entity);
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
+            public void onPictureRequired(BaseDTO entity) {
+                Log.w(TAG, "onPhotoCaptureRequested: .................");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                pickGalleryOrCamera(entity);
             }
 
             @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            public void onVideoRequired(BaseDTO entity) {
+                Log.w(TAG, "onVideoCaptureRequested: .................");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                pickGalleryOrVideoCamera(entity);
             }
         });
         recyclerView.setAdapter(adapter);
-    }
 
+    }
+    boolean isTooltip;
     MiniPhotoAdapter miniPhotoAdapter;
+    public static final int REQUEST_LINKS = 1875;
+    public static final String TAG = MyDailyThoughtList.class.getSimpleName();
     @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onAllCompanyDailyThoughts: " + list.size());
@@ -352,45 +471,215 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+
+            @Override
+            public void onLinksRequired(BaseDTO entity) {
+                Log.w(TAG, "onLinksRequired: ..............");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                Intent m = null;
+                switch (type) {
+
+                    case ResponseBag.DAILY_THOUGHTS:
+                        dailyThought = (DailyThoughtDTO) entity;
+                        m = new Intent(ctx, LinksActivity.class);
+                        m.putExtra("dailyThought", dailyThought);
+                        break;
+
+                }
+                m.putExtra("type", type);
+                startActivityForResult(m, REQUEST_LINKS);
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
+            public void onAddEntity() {
+                Log.w(TAG, "onAddEntity: ........open bottom appropriate sheet");
+                switch (type) {
 
+                    case ResponseBag.DAILY_THOUGHTS:
+                        startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+                        break;
+
+                }
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
-
+            public void onMicrophoneRequired(BaseDTO entity) {
+                Log.w(TAG, "onMicrophoneRequired: ,,,,,,,,,,,,,,,,,,,,");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                showSnackbar("Audio recording under construction", "OK", "cyan");
+                startPodcastSelection(entity);
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
-
+            public void onPictureRequired(BaseDTO entity) {
+                Log.w(TAG, "onPhotoCaptureRequested: .................");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                pickGalleryOrCamera(entity);
             }
 
             @Override
-            public void onUrlRequired(UrlDTO url) {
-
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            public void onVideoRequired(BaseDTO entity) {
+                Log.w(TAG, "onVideoCaptureRequested: .................");
+                if (isTooltip) {
+                    isTooltip = false;
+                    return;
+                }
+                pickGalleryOrVideoCamera(entity);
             }
         });
         recyclerView.setAdapter(adapter);
     }
+    private Toolbar toolbar;
+    private Snackbar snackbar;
 
+    public void showSnackbar(String title, String action, String color) {
+        snackbar = Snackbar.make(recyclerView, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
+    }
+
+    private DatePickerDialog datePickerDialog;
+    private DailyThoughtEditor dailyThoughtEditor;
+
+    private void getDate(final int sheetType) {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(ctx, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(year, month, day);
+                Date d = cal.getTime();
+                switch (sheetType) {
+                    case ResponseBag.DAILY_THOUGHTS:
+                        dailyThoughtEditor.setSelectedDate(d);
+                        break;
+                }
+            }
+        }, cal.get(java.util.Calendar.YEAR),
+                cal.get(java.util.Calendar.MONTH),
+                cal.get(java.util.Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
+    private void setFragment() {
+        Log.w(TAG, "setFragment: starting new fragment");
+        SharedPrefUtil.saveFragmentType(bag.getType(), ctx);
+        type = bag.getType();
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+        entityListFragment = EntityListFragment.newInstance(bag);
+        entityListFragment.setListener(this);
+
+        ft.replace(R.id.frame, entityListFragment);
+        ft.commit();
+        // ft.commitAllowingStateLoss();
+    }
+
+    private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
+
+        dailyThoughtEditor = DailyThoughtEditor.newInstance(thought, type);
+        dailyThoughtEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                DailyThoughtDTO m = (DailyThoughtDTO) entity;
+                if (bag.getDailyThoughts() == null) {
+                    bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                }
+                bag.getDailyThoughts().add(0, m);
+                setFragment();
+                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
+                        .string.ok_label), "green");
+            }
+
+            @Override
+            public void onDateRequired() {
+                getDate(ResponseBag.DAILY_THOUGHTS);
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message, "bad", Constants.RED);
+            }
+        });
+
+        dailyThoughtEditor.show(getFragmentManager(), "SHEET_DAILY_THOUGHT");
+
+    }
+    private void startPodcastSelection(BaseDTO base){
+        Intent intent = new Intent(ctx, PodcastSelectionActivity.class);
+        intent.putExtra("type", type);
+        switch (type) {
+
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) base;
+                intent.putExtra("dailyThought", dailyThought);
+                break;
+
+        }
+        startActivity(intent);
+    }
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private void startCamera(BaseDTO entity) {
+
+        Intent m = new Intent(ctx, CameraActivity.class);
+        m.putExtra("type", CameraActivity.CAMERA_REQUEST);
+        switch (type) {
+            case ResponseBag.DAILY_THOUGHTS:
+                dailyThought = (DailyThoughtDTO) entity;
+                m.putExtra("dailyThought", dailyThought);
+                Log.d(TAG, "startCamera: ".concat(GSON.toJson(dailyThought)));
+                break;
+        }
+
+        startActivityForResult(m, CameraActivity.CAMERA_REQUEST);
+    }
+    private void pickGalleryOrCamera(final BaseDTO base) {
+        AlertDialog.Builder b = new AlertDialog.Builder(ctx);
+        b.setTitle("Select Images")
+                .setMessage("Please select the source of the photos")
+                .setPositiveButton("Use Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startCamera(base);
+                    }
+                }).setNegativeButton("Use Gallery", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                // startActivityForResult(intent, RESULT_LOAD_IMG);
+                startPhotoGallerySelection(base);
+
+            }
+        }).show();
+    }
+    private void startPhotoGallerySelection(BaseDTO base){
+
+        Intent intent = new Intent(ctx, PhotoSelectionActivity.class);
+        type = ResponseBag.DAILY_THOUGHTS;
+        dailyThought = (DailyThoughtDTO) base;
+        intent.putExtra("dailyThought", dailyThought);
+        startActivity(intent);
+
+    }
     private List<DailyThoughtDTO> getCategoryList(List<DailyThoughtDTO> list, String typeName){
         //DailyThoughtDTO dailyThoughtDTO = null;
         List<DailyThoughtDTO> returnList = new ArrayList<>();
@@ -413,40 +702,31 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         }
         Collections.sort(list);
         adapter = new MyDailyThoughtAdapter(ctx, list, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
+
+
             @Override
-            public void onThoughtClicked(int position) {
+            public void onLinksRequired(BaseDTO entity) {
 
             }
 
             @Override
-            public void onPhotoRequired(PhotoDTO photo) {
+            public void onAddEntity() {
 
             }
 
             @Override
-            public void onVideoRequired(VideoDTO video) {
+            public void onMicrophoneRequired(BaseDTO entity) {
 
             }
 
             @Override
-            public void onPodcastRequired(PodcastDTO podcast) {
+            public void onPictureRequired(BaseDTO entity) {
 
             }
 
             @Override
-            public void onUrlRequired(UrlDTO url) {
+            public void onVideoRequired(BaseDTO entity) {
 
-            }
-
-            @Override
-            public void onPhotosRequired(List<PhotoDTO> list) {
-                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                    @Override
-                    public void onPhotoClicked(PhotoDTO photo) {
-
-                    }
-                });
-                photoRecyclerView.setAdapter(miniPhotoAdapter);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -740,17 +1020,23 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onLinksTooltipRequired(int type) {
-
+        isTooltip = true;
+        Toasty.info(ctx, "Add internet links to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onPhotoCaptureTooltipRequired(int type) {
-
+        isTooltip = true;
+        Toasty.warning(ctx, "Add photos to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
     public void onVideoCaptureTooltipRequired(int type) {
-
+        isTooltip = true;
+        Toasty.info(ctx, "Add videos to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
@@ -760,7 +1046,9 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
 
     @Override
     public void onMicrophoneTooltipRequired(int type) {
-
+        isTooltip = true;
+        Toasty.success(ctx, "Add audio recording to this record",
+                Toast.LENGTH_SHORT, true).show();
     }
 
     @Override

@@ -1229,12 +1229,7 @@ static final String LOG = SubscriberMainActivity.class.getSimpleName();
             startActivity(intent);
             return true;
 
-        } /*else if (id == R.id.nav_video) {
-            Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
-            startActivity(intent);
-            return true;
-
-        }*/ else if (id == R.id.nav_eBooks) {
+        }  else if (id == R.id.nav_eBooks) {
             Intent intent = new Intent(SubscriberMainActivity.this, eBookActivity.class);
             startActivity(intent);
             return true;

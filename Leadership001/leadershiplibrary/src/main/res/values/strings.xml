@@ -31,18 +31,18 @@
     <string name="action_media">Media</string>
     <string name="action_photo">Photo</string>
     <string name="title_activity_le_exo_player">LeExo Player</string>
-
     <string name="video">LEADERSHIP VIDEOS</string>
     <string name="audio">Audio</string>
     <string name="company_profile">COMPANY PROFILE</string>
     <string name="daily_thought">LEADERSHIP DAILY THOUGHTS</string>
     <string name="news_article">LEADERSHIP ARTICLES</string>
-    <string name="weeky_master_class">LEADERSHIP WEEKLY MASTERCLASS</string>
-    <string name="weekly_message">TOP LEADERSHIP THOUGHT</string>
+    <string name="weeky_master_class">LEADERSHIP MASTERCLASS</string>
+    <string name="weekly_message">TOP LEADER THOUGHT</string>
     <string name="photo">LEADERSHIP PHOTOS</string>
     <string name="podcast">LEADERSHIP PODCASTS</string>
     <string name="ebooks">LEADERSHIP EBOOKS</string>
     <string name="users">LEADERSHIP STAFF</string>
+    <string name="hormony_list">HARMONY THOUGHTS</string>
     <string name="my_thought">MY LEADERSHIP THOUGHT</string>
     <string name="calendar_events">LEADERSHIP CALENDER EVENTS</string>
     <string name="Photographs">Photographs</string>
@@ -137,8 +137,192 @@
     <string name="enter_article_content">Enter article content</string>
     <string name="enter_news">Enter News</string>
     <string name="enter_subtitle">Enter Subtitle</string>
+    <string name="title_webview">Web View</string>
+    <string name="title_questions">Answer View</string>
+    <string name="title_results">Results View</string>
     <string name="title_activity_user">UserActivity</string>
     <string name="title_activity_thought_approval">ThoughtApprovalActivity</string>
     <string name="title_activity_create_daily_thought">CreateDailyThoughtActivity</string>
+    <string name="title_activity_pldp">My PLDP</string>
+
+    <!-- question array has 5 fields: 0 = description, 1-4 = options 1-4, 5 = correct option number -->
+    <string-array name="q1">
+        <item>What are my personal motivators, drivers, aspirations that motivate me?</item>
+        <item>Trustworthy </item>
+        <item>Being Relevant</item>
+        <item>Self-Indulgence</item>
+        <item>Career Advancement</item>
+        <item>opt3</item>
+    </string-array>
+
+    <string-array name="q2">
+        <item>What actions and plans am I following to assist me to achieve my motivation?</item>
+        <item>Believe in yourself</item>
+        <item>Think about the process to reach your goal</item>
+        <item>Visualize your steps before going to bed</item>
+        <item>Strive, fight and stay positive</item>
+        <item>opt2</item>
+    </string-array>
+
+    <string-array name="q3">
+        <item>What resources, systems or structures do I need to implement my direction?</item>
+        <item>Step 1: Organizational development (OD) with the potential of carrying out a strategy successfully.</item>
+        <item>Step 2: Utilizing financial resources to engage in activities that are essential to the strategy.</item>
+        <item>step 3: Formulate company policies that support the strategy.</item>
+        <item>step 4: Ensure continous improvements through superior programs and policies.</item>
+        <item>opt3</item>
+    </string-array>
+
+    <string-array name="q4">
+        <item>What is the capital of Sierra Leone?</item>
+        <item>Freetown</item>
+        <item>Centerville</item>
+        <item>Chestershire</item>
+        <item>Nowhere</item>
+        <item>opt1</item>
+    </string-array>
+
+    <string-array name="q5">
+        <item>The capital city of Belize is … ?</item>
+        <item>San Ignacio</item>
+        <item>Belissimo</item>
+        <item>Belize City</item>
+        <item>Belmopan</item>
+        <item>opt4</item>
+    </string-array>
+
+    <string-array name="q6">
+        <item>What is the capital city of Qatar?</item>
+        <item>Doha</item>
+        <item>Mesaieed</item>
+        <item>Old Airport</item>
+        <item>Dakar</item>
+        <item>opt1</item>
+    </string-array>
+
+    <string-array name="q7">
+        <item>What is Iceland\'s capital city?</item>
+        <item>Njarõvík</item>
+        <item>Kópavogur</item>
+        <item>Reykjavík</item>
+        <item>Mosfellsbær</item>
+        <item>opt3</item>
+    </string-array>
+
+    <string-array name="q8">
+        <item>Vanuatu\'s capital city is … ?</item>
+        <item>Whitesands</item>
+        <item>Lamap</item>
+        <item>Sulphur Bay</item>
+        <item>Port Vila</item>
+        <item>opt4</item>
+    </string-array>
+
+    <string-array name="q9">
+        <item>What is the capital of the Philippines?</item>
+        <item>Manila</item>
+        <item>Caloocan</item>
+        <item>Cagayan de Oro</item>
+        <item>Taguig</item>
+        <item>opt1</item>
+    </string-array>
+
+    <string-array name="q10">
+        <item>The capital of Morocco is … ?</item>
+        <item>Rabat</item>
+        <item>Salé</item>
+        <item>Casablanca</item>
+        <item>Fez</item>
+        <item>opt1</item>
+    </string-array>
+
+    <string-array name="q11">
+        <item>What is the capital city of Nepal?</item>
+        <item>Bhaktapur</item>
+        <item>Kathmandu</item>
+        <item>Dharan</item>
+        <item>Pokhara</item>
+        <item>opt2</item>
+    </string-array>
+
+    <string-array name="q12">
+        <item>What is the capital of Kenya?</item>
+        <item>Hakuna Matata</item>
+        <item>Mombasa</item>
+        <item>Kilwa</item>
+        <item>Nairobi</item>
+        <item>opt4</item>
+    </string-array>
+
+    <string-array name="q13">
+        <item>What is the capital of Estonia?</item>
+        <item>Nõmme</item>
+        <item>Tallinn</item>
+        <item>Haabersti</item>
+        <item>Pirita</item>
+        <item>opt2</item>
+    </string-array>
+
+    <string-array name="q14">
+        <item>What is the capital of Colombia?</item>
+        <item>El Totumo</item>
+        <item>Cundinamarca</item>
+        <item>Bogotá</item>
+        <item>San Andrés</item>
+        <item>opt3</item>
+    </string-array>
+
+    <string-array name="q15">
+        <item>What is the capital of Lesotho?</item>
+        <item>Maseru</item>
+        <item>Sesotho</item>
+        <item>Basotho</item>
+        <item>Bosiu</item>
+        <item>opt1</item>
+    </string-array>
+
+    <array name="questions">
+        <item>@array/q1</item>
+        <item>@array/q2</item>
+        <item>@array/q3</item>
+        <item>@array/q4</item>
+        <item>@array/q5</item>
+        <item>@array/q6</item>
+        <item>@array/q7</item>
+        <item>@array/q8</item>
+        <item>@array/q9</item>
+        <item>@array/q10</item>
+        <item>@array/q11</item>
+        <item>@array/q12</item>
+        <item>@array/q13</item>
+        <item>@array/q14</item>
+        <item>@array/q15</item>
+    </array>
+
+    <string name="resultsTitle" formatted="false">Score: %.1f%%</string>
+    <string name="questionNumber" formatted="false">Question %d/%d</string>
+    <string name="questionNumberSingle" formatted="false">Question %d</string>
+    <string name="youAnswered" formatted="false">You answered: %s</string>
+    <string name="incorrect" formatted="false">Correct answer: %s</string>
+    <string name="takeQuiz">Take the Quiz!</string>
+    <string name="resetQuiz">Reset Saved Answers</string>
+    <string name="previousButton">Previous Question</string>
+    <string name="nextButton">Next Question</string>
+    <string name="submitButton">Submit Answers</string>
+    <string name="dontKnow">I don\'t know.</string>
+    <string name="backToMenu">Back to Menu</string>
+    <string name="submitConfirmTitle">Confirm Submission</string>
+    <string name="submitConfirmMessage">Are you sure?</string>
+    <string name="aboutBtn">About</string>
+    <string name="resetAnsConfirmTitle">Reset Saved Answers</string>
+    <string name="resetAnsConfirmMessage">Really reset your saved answers?</string>
+    <string name="resetHighConfirmTitle">Reset Highscore</string>
+    <string name="resetHighConfirmMessage">Really reset the highscore?</string>
+    <string name="resetHighscoreBtn">Reset Highscore</string>
+    <string name="correct">Correct!</string>
+    <string name="newHighscore">New Highscore!</string>
+    <string name="resultsDesc">Individual question results:</string>
+    <string name="aboutFile">https://iono.fm/e/136415</string>
+    <string name="highscore" formatted="false">Highscore: %.1f%%</string>
 
 </resources>

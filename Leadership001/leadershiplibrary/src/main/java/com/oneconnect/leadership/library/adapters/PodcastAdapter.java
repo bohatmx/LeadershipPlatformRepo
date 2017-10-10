@@ -140,51 +140,41 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.ratingBar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         Intent intent = new Intent(ctx, RatingActivity.class);
                         //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
                         intent.putExtra("podcast", v);
                         ctx.startActivity(intent);
                     }
-                });
-            }
+
+
         });
 
         pvh.audio_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.audio_card, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                         intent.putExtra("podcast", v);
                         ctx.startActivity(intent);
-                    }
-                });
+
             }
         });
         pvh.fileName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                         intent.putExtra("podcast", v);
                         ctx.startActivity(intent);
-                    }
-                });
+
             }
         });
 
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pvh.playIMG, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mediaPlayer = new MediaPlayer();
                         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         pvh.playIMG.setVisibility(View.GONE);
@@ -210,8 +200,6 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             Log.e(LOG, "You might not set the URI correctly!");
                         }
                         mediaPlayer.start();
-                    }
-                });
 
             }
         });
@@ -219,12 +207,10 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.headerpic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                Util.flashOnce(seekBar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         showPopupMenu(v);
-                    }
-                });
+
+
 
             }
         });
@@ -298,31 +284,26 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pvh.pauseIMG, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mediaPlayer.pause();
                         pvh.pauseIMG.setVisibility(View.GONE);
                         pvh.playIMG.setVisibility(View.VISIBLE);
                         pvh.stopIMG.setVisibility(View.VISIBLE);
-                    }
-                });
+
             }
         });
 
         pvh.stopIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pvh.stopIMG, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         mediaPlayer.stop();
                         pvh.playIMG.setVisibility(View.VISIBLE);
                         pvh.pauseIMG.setVisibility(View.GONE);
                         pvh.stopIMG.setVisibility(View.GONE);
                     }
-                });
-            }
+
+
         });
     }
     private void showPopupMenu(View view) {

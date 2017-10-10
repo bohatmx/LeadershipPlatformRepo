@@ -1,17 +1,22 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -32,9 +37,12 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -87,6 +95,7 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
             @Override
             public void onClick(View view) {
                 mListener.onAddEntity();
+
             }
         });
         setList();

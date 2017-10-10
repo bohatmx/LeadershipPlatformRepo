@@ -13,7 +13,7 @@ import com.ocg.backend.endpointAPI.model.PayLoad;
 
 public class EndpointContract {
     public interface Presenter {
-        void saveUser(FCMUserDTO user);
+    void saveUser(FCMUserDTO user);
         void sendMessage(FCMessageDTO message);
         void sendEmail(EmailRecordDTO emailRecord);
         void sendLeadersMessage(String companyID, PayLoad payLoad);

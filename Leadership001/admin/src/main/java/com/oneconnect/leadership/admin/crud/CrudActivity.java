@@ -99,11 +99,12 @@ public class CrudActivity extends AppCompatActivity
     private CrudPresenter presenter;
     private CachePresenter cachePresenter;
     private Toolbar toolbar;
+    private Snackbar snackbar;
     private FloatingActionButton fab;
     private DrawerLayout drawer;
     private UserDTO user;
     private int type;
-    private Snackbar snackbar;
+
     private ProgressDialog progressDialog;
     private DatePickerDialog datePickerDialog;
     private WeeklyMessageDTO weeklyMessage;
@@ -1316,15 +1317,15 @@ public class CrudActivity extends AppCompatActivity
 
     private void pickGalleryOrVideoCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Select Images")
-                .setMessage("Please select the source of the photos")
+        b.setTitle("Select Video")
+                .setMessage("Please select the source of the Video")
                 .setPositiveButton("Use Video Camera", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startVideo(base);
                     }
                 })
-                .setNegativeButton("Pick from Device", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Pick video from Device", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startVideoSelection(base);

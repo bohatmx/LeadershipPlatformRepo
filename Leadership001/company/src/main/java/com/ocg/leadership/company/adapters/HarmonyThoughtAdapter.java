@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.library.adapters;
+package com.ocg.leadership.company.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,12 +26,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
-import com.oneconnect.leadership.library.activities.PLDPActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
+import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.MiniPodcastAdapter;
+import com.oneconnect.leadership.library.adapters.MiniVideoAdapter;
+import com.oneconnect.leadership.library.adapters.PhotoAdapter;
+import com.oneconnect.leadership.library.adapters.PodcastAdapter;
+import com.oneconnect.leadership.library.adapters.UrlAdapter;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
-import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
@@ -44,21 +48,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Nkululeko on 2017/04/07.
+ * Created by Kurisani on 2017/09/28.
  */
 
-public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<DailyThoughtDTO> mList;
     private Context ctx;
-    private DailyThoughtAdapterlistener listener;
+    private HarmonyThoughtAdapterlistener listener;
     MiniPhotoAdapter miniPhotoAdapter;
     MiniPodcastAdapter miniPodcastAdapter;
     MiniVideoAdapter miniVideoAdapter;
     UrlAdapter urlAdapter;
     private int type;
 
-    public interface DailyThoughtAdapterlistener{
+    public interface HarmonyThoughtAdapterlistener{
         void onThoughtClicked(int position);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
@@ -68,7 +72,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-    public DailyThoughtAdapter(Context ctx, List<DailyThoughtDTO> mList, DailyThoughtAdapterlistener listener) {
+    public HarmonyThoughtAdapter(Context ctx, List<DailyThoughtDTO> mList, HarmonyThoughtAdapterlistener listener) {
         this.ctx = ctx;
         this.mList = mList;
         this.listener = listener;
@@ -342,14 +346,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
 
         }
-
-        dvh.iconPldp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ctx, PLDPActivity.class);
-                ctx.startActivity(intent);
-            }
-        });
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -452,7 +448,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         PopupMenu popup = new PopupMenu(ctx, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_dailythought, popup.getMenu());
-        popup.setOnMenuItemClickListener(new DailyThoughtAdapter.MyMenuItemClickListener());
+        popup.setOnMenuItemClickListener(new HarmonyThoughtAdapter.MyMenuItemClickListener());
         popup.show();
     }
 
@@ -487,10 +483,10 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void shareIt() {
         //sharing implementation here
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AndroidSolved");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "AndroidSolved");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, "Now Learn Android with AndroidSolved clicke here to visit https://androidsolved.wordpress.com/ ");
         ctx.startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
@@ -505,7 +501,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected TextView txtEvents, /*txtTitle,*/ txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt;
         protected ImageView iconCalendar, /*iconUpdate*/iconLink, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG, imageView, iconShare, iconReview, iconPldp;
+                playIMG, pauseIMG, stopIMG, imageView, iconShare, iconReview;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
@@ -534,7 +530,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
             txtSubtitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             iconCalendar = (ImageView) itemView.findViewById(R.id.iconCalendar);
-            iconPldp = (ImageView) itemView.findViewById(R.id.iconPldp);
             iconCalendar.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             //bottomLayout.setVisibility(View.GONE);
@@ -621,5 +616,5 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
 
-    static final String LOG = DailyThoughtAdapter.class.getSimpleName();
+    static final String LOG = HarmonyThoughtAdapter.class.getSimpleName();
 }

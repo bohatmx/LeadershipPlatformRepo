@@ -55,6 +55,7 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
                 ownerDomain = "backend.ocg.com",
                 ownerName = "backend.ocg.com",
                 packagePath = ""
+
         )
 )
 public class EndpointAPI {

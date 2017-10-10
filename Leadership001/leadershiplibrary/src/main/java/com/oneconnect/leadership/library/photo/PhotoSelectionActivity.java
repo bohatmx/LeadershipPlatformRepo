@@ -175,6 +175,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             company = (CompanyDTO) getIntent().getSerializableExtra("company");
             getSupportActionBar().setSubtitle(company.getCompanyLogoUrl());
         }
+        if (getIntent().getSerializableExtra("dailyThought") != null) {
+            type = ResponseBag.DAILY_THOUGHTS;
+            dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            getSupportActionBar().setSubtitle(dailyThought.getTitle());
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(this);
