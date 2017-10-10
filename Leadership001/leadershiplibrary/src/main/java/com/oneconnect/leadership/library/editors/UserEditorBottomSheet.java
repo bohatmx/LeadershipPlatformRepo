@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 //import com.oneconnect.leadership.admin.R;
+import com.firebase.ui.auth.User;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
@@ -137,6 +138,8 @@ public class UserEditorBottomSheet extends BaseBottomSheet {
         list.add(UserDTO.DESC_LEADER);
         list.add(UserDTO.DESC_PLATINUM_USER);
         list.add(UserDTO.DESC_GOLD_USER);
+        list.add(UserDTO.DESC_COMPANY_ADMIN);
+        list.add(UserDTO.DESC_PLATINUM_ADMIN);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 getActivity(),android.R.layout.simple_list_item_1,list);
@@ -162,6 +165,12 @@ public class UserEditorBottomSheet extends BaseBottomSheet {
                         break;
                     case 5:
                         userType = UserDTO.GOLD_USER;
+                        break;
+                    case 6:
+                        userType = UserDTO.COMPANY_ADMIN;
+                        break;
+                    case 7:
+                        userType = UserDTO.PLATINUM_ADMIN;
                         break;
                 }
             }

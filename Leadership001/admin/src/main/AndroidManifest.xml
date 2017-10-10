@@ -193,7 +193,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name=".crud.UpdateEntityActivity"/>
+        <activity android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity"/>
         <activity android:name=".crud.ThoughtApprovalActivity" />
     </application>
 

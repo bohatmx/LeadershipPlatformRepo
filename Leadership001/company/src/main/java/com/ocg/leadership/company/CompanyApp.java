@@ -21,7 +21,7 @@ public class CompanyApp extends Application {
         Fabric.with(this, new Crashlytics());
         StringBuilder sb = new StringBuilder();
         sb.append("#############################################\n");
-        sb.append("######## SUBSCRIBER APP started");
+        sb.append("######## COMPANY APP started");
         sb.append("#############################################\n");
         Log.d(TAG, sb.toString());
         //  Twitter.initialize(this);

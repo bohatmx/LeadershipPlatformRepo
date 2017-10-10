@@ -60,7 +60,11 @@
             android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.FullArticleActivity"
-            android:label="@string/title_activity_full_article"
+            android:label="@string/title_activity_full_article"/>
+        <activity
+            android:name="com.oneconnect.leadership.library.links.LinksActivity"
+            android:label="@string/title_activity_links"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CompanyMainActivity"
@@ -89,6 +93,9 @@
             android:name="com.oneconnect.leadership.library.audio.PodcastSelectionActivity"
             android:label="@string/title_activity_podcast_selection"
             android:parentActivityName=".CompanyMainActivity" />
+
+        <activity android:name="com.oneconnect.leadership.library.activities.PodcastPlayerActivity"
+            android:label="@string/title_activity_podcast_player"/>
         <activity
             android:name="com.oneconnect.leadership.library.audio.PodcastListActivity"
             android:label="@string/title_activity__podcast_list"
@@ -127,19 +134,18 @@
             android:label="@string/title_activity_create_daily_thought"
             android:theme="@style/CommuterTheme" />
         <activity
-            android:name=".activities.ApproveThoughts"
-            android:label="@string/title_activity_approve_thoughts"
-            android:parentActivityName=".CompanyMainActivity"
-            android:theme="@style/CommuterTheme" />
+            android:name=".PlatinumAdminActivity"
+            android:label="@string/title_activity_platinum_admin" />
         <activity
-            android:name=".activities.ApproveEntityActivity"
-            android:label="@string/title_activity_approve"
-            android:parentActivityName=".CompanyMainActivity"
-            android:theme="@style/CommuterTheme" />
+            android:name=".PlatinumUserActivity"
+            android:label="@string/title_activity_platinum_user" />
         <activity
-            android:name=".activities.HarmonyThoughtsActivity"
-            android:label="@string/title_activity_harmony_thoughts" />
-        <activity android:name="com.oneconnect.leadership.library.links.LinksActivity"/>
+            android:name=".GoldUserActivity"
+            android:label="@string/title_activity_gold_user"></activity>
+        <activity android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity"/>
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.DailyThoughtApprovalActivity"
+            android:label="@string/title_activity_daily_thought" />
 
     </application>
 

@@ -395,6 +395,11 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
         Log.i(LOG,"onAllRatings: " + list.size());
         ratingReviewAdapter = new RatingReviewAdapter(ctx, list, new RatingReviewAdapter.RatingAdapterlistener() {

@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.links.LinksActivity;
@@ -47,6 +48,7 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.lists.PageFragment;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import org.joda.time.DateTime;
@@ -111,6 +113,8 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
         }
     }
 
+    private FirebaseAuth firebaseAuth;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,6 +123,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        if (getActivity().getIntent().getSerializableExtra("type") != null) {
+            type = (int) getActivity().getIntent().getSerializableExtra("type");
+        }
         recyclerView = (RecyclerView)view.findViewById(com.oneconnect.leadership.library.R.id.recyclerView);
         /*LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);*/
@@ -222,11 +231,23 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     private void getEBooks() {
         Log.d(LOG, "************** getEBooks: " );
-        if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
+        switch (type) {
+            case Constants.INTERNAL_DATA:
+                if (user == null) {
+                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                }  else {
+                    presenter.getEbooks(user.getCompanyID());
+                }
+                break;
+            case Constants.EXTERNAL_DATA:
+                presenter.getAllEBooks();
+                break;
+        }
+        /*if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllEBooks();
         } else {
             Log.d(LOG, "user is null");
-        }
+        }*/
 
     }
 
@@ -711,6 +732,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 

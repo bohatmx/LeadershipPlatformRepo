@@ -153,6 +153,7 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
                     company.setCompanyName(companyName.getText().toString());
                     company.setEmail(companyEmail.getText().toString());
                     company.setAddress(companyAddress.getText().toString());
+                    company.setPrimaryColor(Color.RED);
                     if (p != null) {
                         company.setPhoto(p);
                     }

@@ -281,6 +281,11 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }

@@ -62,17 +62,16 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private int type;
 
     public interface MyDailyThoughtAdapterlistener{
-    /*  void onThoughtClicked(int position);
+        /*void onThoughtClicked(int position);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
         void onUrlRequired(UrlDTO url);
         void onPhotosRequired(List<PhotoDTO> list);*/
-        void onLinksRequired(BaseDTO entity);
-        void onAddEntity();
-        void onMicrophoneRequired(BaseDTO entity);
-        void onPictureRequired(BaseDTO entity);
-        void onVideoRequired(BaseDTO entity);
+        void onPhotoRequired(BaseDTO base);
+        void onPodcastRequired(BaseDTO base);
+        void onVideoRequired(BaseDTO base);
+        void onLinkRequired(BaseDTO base);
 
     }
 
@@ -148,38 +147,258 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         }
 
-
-
-        if (dt.getVideos() != null) {
-            dvh.txtVideo.setText("" + dt.getVideos().size());
-        }
         dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 listener.onVideoRequired(dt);
             }
         });
 
-        if (dt.getPhotos() != null) {
-            dvh.txtCamera.setText("" + dt.getPhotos().size());
-            }
-            dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+
+
+        if (dt.getVideos() != null) {
+            dvh.txtVideo.setText("" + dt.getVideos().size());
+            /*dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onPictureRequired(dt);
-                }
-            });
+                    if (dvh.videoAdapterLayout.getVisibility() == View.GONE){
+                        dvh.videoAdapterLayout.setVisibility(View.VISIBLE);
+                        dvh.videoRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        dvh.videoAdapterLayout.setVisibility(View.GONE);
+                        dvh.videoRecyclerView.setVisibility(View.GONE);
+                    }
 
-        if (dt.getPodcasts() != null) {
-            dvh.txtMicrophone.setText("" + dt.getPodcasts().size());
+                    DailyThoughtDTO dtd = mList.get(position);
+                    List<VideoDTO> videoList = new ArrayList<>();
+                    Map map = dtd.getVideos();
+                    VideoDTO vDTO = new VideoDTO();
+                    for (Object value : map.values()) {
+                        vDTO = (VideoDTO) value;
+                        videoList.add(vDTO);
+                    }
+
+                    *//*Intent intent = new Intent(ctx, LeExoPlayerActivity.class);
+                    intent.putExtra("video", vDTO);
+                    ctx.startActivity(intent);*//*
+
+                    miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
+                        @Override
+                        public void onStart() {
+
+                        }
+
+                        @Override
+                        public void onPause() {
+
+                        }
+
+                        @Override
+                        public void onStop() {
+
+                        }
+                    });
+
+                    dvh.videoRecyclerView.setAdapter(miniVideoAdapter);
+                    dvh.btnPlay.setVisibility(View.GONE);
+
+                    dvh.btnPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+                }
+            });*/
         }
-        dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+        dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onMicrophoneRequired(dt);
+                if (dvh.bottomLayout.getVisibility() == View.GONE){
+                    dvh.bottomLayout.setVisibility(View.VISIBLE);
+                }else{
+                    dvh.bottomLayout.setVisibility(View.GONE);
+                }
             }
         });
+
+        dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPhotoRequired(dt);
+            }
+        });
+        if (dt.getPhotos() != null) {
+            dvh.txtCamera.setText("" + dt.getPhotos().size());
+
+            DailyThoughtDTO dtd = mList.get(position);
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = dtd.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(dvh.imageView);
+                //   dvh.captiontxt.setText(vDTO.getCaption());
+
+
+            }
+            /*dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dvh.photoAdapterLayout.getVisibility() == View.GONE){
+                        dvh.photoAdapterLayout.setVisibility(View.VISIBLE);
+                        dvh.imageRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        dvh.photoAdapterLayout.setVisibility(View.GONE);
+                        dvh.imageRecyclerView.setVisibility(View.GONE);
+                    }
+
+                    DailyThoughtDTO dtd = mList.get(position);
+                    List<PhotoDTO> urlList = new ArrayList<>();
+
+                    Map map = dtd.getPhotos();
+                    PhotoDTO vDTO;
+                    String photoUrl;
+                    for (Object value : map.values()) {
+                        vDTO = (PhotoDTO) value;
+                        photoUrl = vDTO.getUrl();
+                        urlList.add(vDTO);
+
+                        Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.photoView);
+                        dvh.captiontxt.setText(vDTO.getCaption());
+
+                        *//*Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(dvh.imageView);
+                        dvh.captiontxt.setText(vDTO.getCaption());*//*
+
+
+                    }
+
+                    miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                        @Override
+                        public void onPhotoClicked(PhotoDTO photo) {
+
+                        }
+                    });
+                    dvh.imageRecyclerView.setAdapter(miniPhotoAdapter);
+                }
+            });*/
+        }
+
+        dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPodcastRequired(dt);
+            }
+        });
+        if (dt.getPodcasts() != null) {
+            dvh.txtMicrophone.setText("" + dt.getPodcasts().size());
+            /*dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dvh.podcastAdapterLayout.getVisibility() == View.GONE){
+                        dvh.podcastAdapterLayout.setVisibility(View.VISIBLE);
+                        dvh.podcastRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        dvh.podcastAdapterLayout.setVisibility(View.GONE);
+                        dvh.podcastRecyclerView.setVisibility(View.GONE);
+                    }
+                    DailyThoughtDTO dtd = mList.get(position);
+                    List<PodcastDTO> podcastList = new ArrayList<>();
+                    Map map = dtd.getPodcasts();
+                    PodcastDTO vDTO;
+                    for (Object value : map.values()) {
+                        vDTO = (PodcastDTO) value;
+                        url = vDTO.getUrl();
+                        podcastList.add(vDTO);
+                        //
+                        int i = vDTO.getStorageName().lastIndexOf("/");
+                        dvh.podcastfileName.setText(vDTO.getStorageName().substring(i + 1));
+                        //
+                        dvh.playIMG.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mediaPlayer = new MediaPlayer();
+                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                dvh.playIMG.setVisibility(View.GONE);
+                                dvh.pauseIMG.setVisibility(View.VISIBLE);
+                                dvh.stopIMG.setVisibility(View.VISIBLE);
+                                try {
+                                    mediaPlayer.setDataSource(url);
+                                } catch (IllegalArgumentException e) {
+                                    Log.e(LOG, "You might not set the URI correctly!");
+                                } catch (SecurityException e) {
+                                    Log.e(LOG, "You might not set the URI correctly!");
+                                } catch (IllegalStateException e) {
+                                    Log.e(LOG, "You might not set the URI correctly!");
+                                } catch (IOException e) {
+                                    Log.e(LOG, e.getMessage());
+                                }
+                                try {
+                                    mediaPlayer.prepare();
+                                } catch (IllegalStateException e) {
+                                    Log.e(LOG, "You might not set the URI correctly!");
+                                } catch (IOException e) {
+                                    Log.e(LOG, "You might not set the URI correctly!");
+                                }
+                                mediaPlayer.start();
+                            }
+                        });
+                        //
+
+                        //
+                        dvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mediaPlayer.pause();
+                                dvh.pauseIMG.setVisibility(View.GONE);
+                                dvh.playIMG.setVisibility(View.VISIBLE);
+                                dvh.stopIMG.setVisibility(View.VISIBLE);
+                            }
+                        });
+
+                        dvh.stopIMG.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mediaPlayer.stop();
+                                dvh.playIMG.setVisibility(View.VISIBLE);
+                                dvh.pauseIMG.setVisibility(View.GONE);
+                                dvh.stopIMG.setVisibility(View.GONE);
+                            }
+                        });
+                        //
+                    }
+
+                    miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
+                        @Override
+                        public void onPlayClicked(PodcastDTO podcast) {
+
+                        }
+
+                        @Override
+                        public void onPodcastRequired(PodcastDTO podcast) {
+
+                        }
+                    });
+                    dvh.podcastRecyclerView.setAdapter(miniPodcastAdapter);
+                }
+            });*/
+
+        }
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,15 +446,49 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         });
 
-        if (dt.getUrls() != null) {
-            dvh.txtLinks.setText("" + dt.getUrls().size());
-        }
         dvh.iconLink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                listener.onLinksRequired(dt);
+            public void onClick(View view) {
+                listener.onLinkRequired(dt);
             }
         });
+
+        if (dt.getUrls() != null) {
+            dvh.txtLinks.setText("" + dt.getUrls().size());
+            /*dvh.iconLink*//*iconUpdate*//*.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dvh.urlAdapterLayout.getVisibility() == View.GONE){
+                        dvh.urlAdapterLayout.setVisibility(View.VISIBLE);
+                        dvh.urlRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        dvh.urlAdapterLayout.setVisibility(View.GONE);
+                        dvh.urlRecyclerView.setVisibility(View.GONE);
+                    }
+
+                    DailyThoughtDTO dtd = mList.get(position);
+                    Map map = dtd.getUrls();
+                    UrlDTO vDTO;
+                    final List<UrlDTO> urlList = new ArrayList<>();
+                    String url;
+                    for (Object value : map.values()) {
+                        vDTO = (UrlDTO) value;
+                        url = vDTO.getUrl();
+                        dvh.urlTxt.setText(url);
+                        urlList.add(vDTO);
+                    }
+
+                    urlAdapter = new UrlAdapter(urlList, ctx, new UrlAdapter.UrlAdapterListener() {
+                        @Override
+                        public void onUrlClicked(final String url) {
+                        }
+                    });
+
+                    dvh.urlRecyclerView.setAdapter(urlAdapter);
+                }
+            });*/
+        }
+
         dvh.iconDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

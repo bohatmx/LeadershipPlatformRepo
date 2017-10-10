@@ -1,17 +1,18 @@
-package com.oneconnect.leadership.admin.crud;
+package com.oneconnect.leadership.library.activities;
 
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.crud.CrudContract;
@@ -206,9 +207,12 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
 
     }
 
+    static final String TAG = UpdateEntityActivity.class.getSimpleName();
+
     @Override
     public void onDailyThoughtUpdated(DailyThoughtDTO dailyThought) {
-
+        Log.i(TAG, "onDailyThoughtUpdated status: " + dailyThought.getStatus());
+        crudPresenter.getPendingDailyThoughts("pending");
     }
 
     @Override

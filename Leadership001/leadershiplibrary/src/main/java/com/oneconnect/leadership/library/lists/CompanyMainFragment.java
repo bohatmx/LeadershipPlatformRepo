@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.ColorPickerActivity;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
@@ -342,6 +344,22 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         presenter.getPodcasts(user.getCompanyID());
         presenter.getVideos(user.getCompanyID());
         presenter.getUsers(user.getCompanyID());
+        editFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ctx, ColorPickerActivity.class);
+                intent.putExtra("user", user);
+                intent.putExtra("darkColor", THEME_REQUESTED);
+                ctx.startActivity(intent);
+                // startColorPicker(user);
+                 /* Util.flashOnce(editFab, 300, new Util.UtilAnimationListener() {
+                      @Override
+                      public void onAnimationEnded() {
+                          startColorPicker(user);
+                      }
+                  });*/
+            }
+        });
        /* card4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -440,12 +458,16 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
     Context ctx;
     CardView card1, card2, card3, card4;
     TextView companyThoughts, companyVideos, companyUsers, companyPodcasts, companyTitle;
-    ImageView companyLogo;
+    ImageView companyLogo, thoughtIcon, videoIcon, userIcon, podcastIcon;
     CrudPresenter presenter;
     private FirebaseAuth firebaseAuth;
     ResponseBag bag;
     private DailyThoughtEditor dailyThoughtEditor;
     private DatePickerDialog datePickerDialog;
+    private UserDTO user;
+    private int themeColor;
+    private FloatingActionButton editFab;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -456,10 +478,17 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         firebaseAuth = FirebaseAuth.getInstance();
        // toolbar = (Toolbar) findViewById(R.id.toolbar);
        // setSupportActionBar(toolbar);
-        ctx = getApplicationContext();
+        ctx = getActivity();
        // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         presenter = new CrudPresenter(this);
+
+        if (getActivity().getIntent().getSerializableExtra("user") != null) {
+            user = (UserDTO) getActivity().getIntent().getSerializableExtra("user");
+            Log.i(TAG, "user: " + user.getFullName());
+        } else {
+            presenter.getUser(firebaseAuth.getCurrentUser().getEmail());
+        }
 
         presenter.getUser(firebaseAuth.getCurrentUser().getEmail());
         card1 = (CardView) view.findViewById(R.id.card1);
@@ -511,8 +540,26 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         companyPodcasts = (TextView) view.findViewById(R.id.companyPodcasts);
        // companyLogo = (ImageView) view.findViewById(R.id.companyLogo);
         companyTitle = (TextView) view.findViewById(R.id.companyTitle);
+        //
+        editFab = (FloatingActionButton) view.findViewById(R.id.editFab);
+        thoughtIcon = (ImageView) view.findViewById(R.id.thoughtIcon);
+        videoIcon = (ImageView) view.findViewById(R.id.videoIcon);
+        userIcon = (ImageView) view.findViewById(R.id.userIcon);
+        podcastIcon = (ImageView) view.findViewById(R.id.podcastIcon);
+        if (themeColor != 0) {
+            thoughtIcon.setColorFilter(themeColor);
+            videoIcon.setColorFilter(themeColor);
+            userIcon.setColorFilter(themeColor);
+            podcastIcon.setColorFilter(themeColor);
+        }
 
         return view;
+    }
+
+    private void startColorPicker(UserDTO user) {
+        Intent intent = new Intent(ctx, ColorPickerActivity.class);
+        intent.putExtra("user", user);
+        ctx.startActivity(intent);
     }
 
 
@@ -532,6 +579,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         super.onDetach();
         mListener = null;
     }
+    static final int THEME_REQUESTED = 8075;
 
     int primaryColor, primaryDarkColor;
 

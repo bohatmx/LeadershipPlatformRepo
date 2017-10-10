@@ -48,10 +48,10 @@
             android:name=".activities.SubscriberDrawerActivity"
             android:label="@string/title_activity_subscriber_drawer"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.DailyThoughtActivity"
+        <!--<activity
+            android:name=".activities.DailyThoughtApprovalActivity"
             android:label="@string/title_activity_daily_thought"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activities.PodcastActivity"
             android:label="@string/title_activity_podcast"
@@ -80,10 +80,10 @@
             android:name=".audio.PodcastSelectionActivity"
             android:label="@string/title_activity_podcast_selection"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
+       <!-- <activity
             android:name=".activities.PodcastPlayerActivity"
             android:label="@string/title_activity_podcast_player"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activities.FullPhotoActivity"
             android:label="@string/title_activity_full_photo"

@@ -10,4 +10,24 @@
         android:title="Add Thoughts"
         android:icon="@drawable/ic_add"
         app:showAsAction="ifRoom" />
+    <!--<item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="Company Theme"
+        app:showAsAction="collapseActionView" />-->
+    <item
+        android:id="@+id/action_internal"
+        android:orderInCategory="100"
+        android:title="Internal View"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_external"
+        android:orderInCategory="100"
+        android:title="External View"
+        app:showAsAction="never"/>
+    <!--<item
+        android:id="@+id/action_color_picker"
+        android:orderInCategory="100"
+        android:title="Color Picker"
+        app:showAsAction="never"/>-->
 </menu>

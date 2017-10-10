@@ -9,6 +9,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
@@ -44,10 +46,14 @@ public class App extends Application {
     }
 
     private static DB snappyDB;
+    static Kryo kryo;
     public  static DB getSnappyDB(Context ctx) {
+        kryo = new Kryo();
         try {
+
+            kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
             if (snappyDB == null || !snappyDB.isOpen()) {
-                snappyDB = DBFactory.open(ctx);
+                snappyDB = DBFactory.open(ctx, kryo);
             }
         } catch (SnappydbException e) {
             Log.e(TAG, "getSnappyDB: ", e );

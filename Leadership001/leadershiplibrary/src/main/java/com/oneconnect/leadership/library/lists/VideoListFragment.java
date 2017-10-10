@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +50,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
 
@@ -122,6 +125,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     private UserDTO user;
     private Context ctx;
     MediaController mediaController;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,6 +134,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
         view =  inflater.inflate(R.layout.fragment_video_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        if (getActivity().getIntent().getSerializableExtra("type") != null) {
+            type = (int) getActivity().getIntent().getSerializableExtra("type");
+        }
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
@@ -157,11 +166,20 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     private void getVideos() {
         Log.d(LOG, "************** getVideos: " );
-      //  if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllVideos();
-     //   } else {
-      //      Log.d(LOG, "user is null");
-      //  }
+        presenter.getAllVideos();
+        switch (type) {
+            case Constants.INTERNAL_DATA:
+                if (user == null) {
+                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                }  else {
+                    presenter.getVideos(user.getCompanyID());
+                }
+                break;
+            case Constants.EXTERNAL_DATA:
+                presenter.getAllVideos();
+                break;
+        }
+
     }
 
     private void playVideo(String path) {
@@ -474,6 +492,12 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
     @Override
     public void onUserFound(UserDTO user) {
+        Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        presenter.getVideos(user.getCompanyID());
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
 
     }
 

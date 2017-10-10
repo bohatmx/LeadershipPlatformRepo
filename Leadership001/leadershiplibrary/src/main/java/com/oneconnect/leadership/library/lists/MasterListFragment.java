@@ -37,6 +37,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
@@ -116,6 +117,10 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
             Log.i(LOG, "No Category");
         }
 
+        if (getActivity().getIntent().getSerializableExtra("type") != null) {
+            type = (int) getActivity().getIntent().getSerializableExtra("type");
+        }
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
@@ -131,11 +136,25 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     public void getWeeklyMasterClasses() {
         Log.d(LOG, "************** getWeeklyMasterClasses: " );
+        presenter.getAllWeeklyMasterClasses();
+        switch (type) {
+            case Constants.INTERNAL_DATA:
+                if (user == null) {
+                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                }  else {
+                    presenter.getWeeklyMasterclasses(user.getCompanyID());
+                }
+                break;
+            case Constants.EXTERNAL_DATA:
+                presenter.getAllWeeklyMasterClasses();
+                break;
+        }
+        /*
         if (user == null) {
             presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
         }  else {
             presenter.getWeeklyMasterclasses(user.getCompanyID());
-        }
+        }*/
           //  presenter.getAllWeeklyMasterClasses();
     }
 
@@ -456,6 +475,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void onUserFound(UserDTO user) {
         Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company master classes");
         presenter.getWeeklyMasterclasses(user.getCompanyID());
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+
     }
 
     @Override

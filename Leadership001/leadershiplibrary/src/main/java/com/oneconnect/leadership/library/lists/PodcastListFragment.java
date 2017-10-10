@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +46,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import java.util.ArrayList;
@@ -93,6 +95,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     private PodcastDTO podcast;
     private int type;
     private UserDTO user;
+    private FirebaseAuth firebaseAuth;
 
 
     @Override
@@ -120,6 +123,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         view =  inflater.inflate(R.layout.fragment_podcast_list, container, false);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        if (getActivity().getIntent().getSerializableExtra("type") != null) {
+            type = (int) getActivity().getIntent().getSerializableExtra("type");
+        }
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
@@ -132,8 +140,21 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     public void getPodcasts() {
         Log.d(LOG, "************** getPodcasts: " );
+        presenter.getAllPodcasts();
+        switch (type) {
+            case Constants.INTERNAL_DATA:
+                if (user == null) {
+                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+                }  else {
+                    presenter.getPodcasts(user.getCompanyID());
+                }
+                break;
+            case Constants.EXTERNAL_DATA:
+                presenter.getAllPodcasts();
+                break;
+        }
      //   if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-            presenter.getAllPodcasts();
+          //  presenter.getAllPodcasts();
     //    } else {
     //        Log.d(LOG, "user is null");
     //    }
@@ -277,6 +298,11 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onAllRatings(List<RatingDTO> list) {
 
     }
@@ -401,8 +427,8 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void onPodcasts(List<PodcastDTO> list) {
         Log.i(LOG, "onPodcasts: " + list.size());
         this.podcasts = list;
-        Collections.sort(list);
-        adapter = new PodcastAdapter(list, ctx, new PodcastAdapter.PodcastAdapterListener() {
+        //Collections.sort(list);
+        adapter = new PodcastAdapter(podcasts, ctx, new PodcastAdapter.PodcastAdapterListener() {
 
 
             @Override

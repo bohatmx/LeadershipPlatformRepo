@@ -56,7 +56,6 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface NewsArticleListener{
         void onArticleSelected(NewsDTO newsArticle);
-
         void onThoughtClicked(int position);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
@@ -167,7 +166,8 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
+                listener.onArticleSelected(dt);
+                /*Util.flashOnce(dvh.imageView, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         if (dvh.bottomLayout.getVisibility() == View.GONE){
@@ -176,7 +176,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             dvh.bottomLayout.setVisibility(View.GONE);
                         }
                     }
-                });
+                });*/
             }
         });
         if (dt.getPhotos() != null) {
@@ -592,6 +592,6 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    static final String LOG = DailyThoughtAdapter.class.getSimpleName();
+    static final String LOG = NewsArticleAdapter.class.getSimpleName();
 }
 
