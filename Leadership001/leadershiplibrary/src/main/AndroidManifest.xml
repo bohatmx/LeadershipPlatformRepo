@@ -89,17 +89,7 @@
         <activity
             android:name=".activities.webpageViewer"
             android:label="@string/title_webview"/>
-        <activity
-            android:name=".activities.QuizQuestion"
-            android:label="@string/title_questions"/>
 
-        <activity
-            android:name=".activities.QuizResults"
-            android:label="@string/title_results" />
-
-        <activity
-            android:name=".activities.PLDPActivity"
-            android:label="@string/title_activity_pldp"/>
     </application>
 
 </manifest>

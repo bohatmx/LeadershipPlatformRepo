@@ -196,10 +196,10 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         /*toolbar.setLogo(R.drawable.harmony);*/
-
+        logoIMG = (ImageView) findViewById(R.id.logoIMG);
         ctx = getApplicationContext();
         activity = this;
-
+        firebaseAuth = firebaseAuth.getInstance();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         page = getIntent().getStringExtra("page");

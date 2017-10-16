@@ -117,8 +117,7 @@
             android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.PLDPActivity"
-            android:label="@string/title_activity_pldp"
-            android:parentActivityName=".CompanyMainActivity" />
+            android:label="@string/title_activity_pldp" />
         <activity
             android:name="com.oneconnect.leadership.library.camera.CameraActivity"
             android:label="@string/title_activity_camera"
@@ -151,7 +150,13 @@
         <activity
             android:name="com.oneconnect.leadership.library.activities.DailyThoughtApprovalActivity"
             android:label="@string/title_activity_daily_thought" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.QuizQuestion"
+            android:label="@string/title_questions"/>
 
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.QuizResults"
+            android:label="@string/title_results" />
     </application>
 
 </manifest>
