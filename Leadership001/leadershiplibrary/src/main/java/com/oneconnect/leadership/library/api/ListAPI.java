@@ -76,7 +76,29 @@ public class ListAPI {
             }
         });
     }
+    public void getDailyThoughtsByUserType(String userType, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
+        Query q = ref.orderByChild("userType").equalTo(userType);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
     public void getPendingDailyThoughts(String status, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
         Query q = ref.orderByChild("status").equalTo(status);

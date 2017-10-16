@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.crash.FirebaseCrash;
-//import com.ocg.backend.endpointAPI.model.FCMUserDTO;
+import com.ocg.backend.endpointAPI.model.FCMUserDTO;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.UserDTO;
 
@@ -93,8 +93,8 @@ public class Util {
         }
     }
 
-  /*  public static FCMUserDTO createFCMUser(UserDTO user,
-                                           String token) {
+  public static FCMUserDTO createFCMUser(UserDTO user,
+                                         String token) {
         FCMUserDTO u = new FCMUserDTO();
         u.setFcmID(user.getUserID().concat("@").concat(Build.SERIAL)
                 .concat("*") + user.getUserType());
@@ -109,7 +109,7 @@ public class Util {
         u.setCompanyID(user.getCompanyID());
         u.setCompanyName(user.getCompanyName());
         return u;
-    }*/
+    }
 
     public static Bitmap rotateBitmap(Bitmap bm) throws IOException {
 

@@ -87,12 +87,14 @@ import com.oneconnect.leadership.library.lists.CalendarEventListFragment;
 import com.oneconnect.leadership.library.lists.CompanyMainFragment;
 import com.oneconnect.leadership.library.lists.DailyThoughtListFragment;
 import com.oneconnect.leadership.library.lists.EBookListFragment;
+import com.oneconnect.leadership.library.lists.HarmonyListFragment;
 import com.oneconnect.leadership.library.lists.MasterListFragment;
 import com.oneconnect.leadership.library.lists.MyDailyThoughtList;
 import com.oneconnect.leadership.library.lists.NewsListFragment;
 import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
+import com.oneconnect.leadership.library.lists.TopLeaderListFragment;
 import com.oneconnect.leadership.library.lists.UserListFragment;
 import com.oneconnect.leadership.library.lists.VideoListFragment;
 import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
@@ -117,7 +119,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         SubscriberContract.View, CrudContract.View, CacheContract.View, MasterListFragment.WeeklyMasterClassListener,
         WeeklyMessageListFragment.WeeklyMessageListener, PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
         PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
-        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener, MyDailyThoughtList.MyDailyThoughtListener {
+        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener, MyDailyThoughtList.MyDailyThoughtListener, HarmonyListFragment.HarmonyThoughtAdapterlistener, TopLeaderListFragment.TopLeaderAdapterlistener {
 
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -126,6 +128,8 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
     private EBookListFragment eBookListFragment;
     private PodcastListFragment podcastListFragment;
     MasterListFragment masterListFragment;
+    private HarmonyListFragment harmonyListFragment;
+    private TopLeaderListFragment topLeaderListFragment;
     WeeklyMessageListFragment weeklyMessageListFragment;
     MyDailyThoughtList myDailyThoughtList;
     PhotoListFragment photoListFragment;
@@ -396,35 +400,39 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         newsListFragment = NewsListFragment.newInstance();
         dailyThoughtListFragment = DailyThoughtListFragment.newInstance();
         masterListFragment = MasterListFragment.newInstance();
-        weeklyMessageListFragment = WeeklyMessageListFragment.newInstance();
         myDailyThoughtList = myDailyThoughtList.newInstance();
+        harmonyListFragment = harmonyListFragment.newInstance();
+        topLeaderListFragment = topLeaderListFragment.newInstance();
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
         videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
         eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
 
         newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
+        harmonyListFragment.setPageTitle(ctx.getString(R.string.hormony_list));
         dailyThoughtListFragment.setPageTitle(ctx.getString(R.string.daily_thought));
         masterListFragment.setPageTitle(ctx.getString(R.string.weeky_master_class));
-        weeklyMessageListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
+        topLeaderListFragment.setPageTitle(ctx.getString(R.string.weekly_message));
         myDailyThoughtList.setPageTitle(ctx.getString(R.string.my_thought));
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
         videoListFragment.setPageTitle(ctx.getString(R.string.video));
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
 
         dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        harmonyListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         myDailyThoughtList.setThemeColors(themePrimaryColor, themeDarkColor);
         newsListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         masterListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
-        weeklyMessageListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
+        topLeaderListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         podcastListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         eBookListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         videoListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
 
         pageFragmentList.add(dailyThoughtListFragment);
+        pageFragmentList.add(harmonyListFragment);
         pageFragmentList.add(myDailyThoughtList);
         pageFragmentList.add(newsListFragment);
         pageFragmentList.add(masterListFragment);
-        pageFragmentList.add(weeklyMessageListFragment);
+        pageFragmentList.add(topLeaderListFragment);
         pageFragmentList.add(podcastListFragment);
         pageFragmentList.add(videoListFragment);
         pageFragmentList.add(eBookListFragment);
@@ -460,28 +468,31 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                 if (page.equalsIgnoreCase("Leadership Daily Thoughts")) {
                     mPager.setCurrentItem(0);
                 }
-                if (page.equalsIgnoreCase("My Leadership Thoughts")) {
+                if (page.equalsIgnoreCase("Company Thoughts")) {
                     mPager.setCurrentItem(1);
                 }
-
-                if (page.equalsIgnoreCase("Leadership News Article")) {
+                if (page.equalsIgnoreCase("My Leadership Thoughts")) {
                     mPager.setCurrentItem(2);
                 }
 
-                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
+                if (page.equalsIgnoreCase("Leadership News Article")) {
                     mPager.setCurrentItem(3);
                 }
-                if (page.equalsIgnoreCase("Top Leadership Thoughts")) {
+
+                if (page.equalsIgnoreCase("Leadership Weekly Masterclass")) {
                     mPager.setCurrentItem(4);
                 }
-                if (page.equalsIgnoreCase("Leadership Podcasts")) {
+                if (page.equalsIgnoreCase("Top Leadership Thoughts")) {
                     mPager.setCurrentItem(5);
                 }
-                if (page.equalsIgnoreCase("Leadership Videos")) {
+                if (page.equalsIgnoreCase("Leadership Podcasts")) {
                     mPager.setCurrentItem(6);
                 }
-                if (page.equalsIgnoreCase("Leadership eBooks")) {
+                if (page.equalsIgnoreCase("Leadership Videos")) {
                     mPager.setCurrentItem(7);
+                }
+                if (page.equalsIgnoreCase("Leadership eBooks")) {
+                    mPager.setCurrentItem(8);
                 }
 
             }
@@ -710,33 +721,37 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                     mPager.setCurrentItem(0, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_create_thought) {
+                if (item.getItemId() == R.id.nav_harmony_thought) {
                     mPager.setCurrentItem(1, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_news_article) {
+                if (item.getItemId() == R.id.nav_create_thought) {
                     mPager.setCurrentItem(2, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_news_article) {
+                    mPager.setCurrentItem(3, true);
                     return true;
                 }
 
                 if (item.getItemId() == R.id.nav_master) {
-                    mPager.setCurrentItem(3, true);
-                    return true;
-                }
-                if (item.getItemId() == R.id.nav_weekly) {
                     mPager.setCurrentItem(4, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_podcast) {
+                if (item.getItemId() == R.id.nav_weekly) {
                     mPager.setCurrentItem(5, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_video) {
+                if (item.getItemId() == R.id.nav_podcast) {
                     mPager.setCurrentItem(6, true);
                     return true;
                 }
-                if (item.getItemId() == R.id.nav_eBooks) {
+                if (item.getItemId() == R.id.nav_video) {
                     mPager.setCurrentItem(7, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_eBooks) {
+                    mPager.setCurrentItem(8, true);
                     return true;
                 }
 
@@ -791,7 +806,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
             startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
             return true;
         }
-        if (id == R.id.action_internal) {
+       /* if (id == R.id.action_internal) {
             type = Constants.INTERNAL_DATA;
             Intent intent = new Intent(GoldUserActivity.this, GoldUserActivity.class);
             intent.putExtra("type", type);
@@ -802,7 +817,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
             Intent intent = new Intent(GoldUserActivity.this, GoldUserActivity.class);
             intent.putExtra("type", type);
             startActivity(intent);
-        }
+        }*/
        /* if (id == R.id.action_settings){
             Intent w = new Intent(GoldUserActivity.this, ThemeSelectorActivity.class);
             w.putExtra("darkColor", themeDarkColor);
@@ -836,16 +851,22 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                 mPager.setCurrentItem(0, true);
                 return true;
             }
-            else if (id == R.id.nav_create_thought) {
+            else if (id == R.id.nav_harmony_thought) {
                 mPager.setCurrentItem(1, true);
                 return true;
 
-            } else if (id == R.id.nav_master) {
+            }
+            else if (id == R.id.nav_create_thought) {
                 mPager.setCurrentItem(2, true);
                 return true;
 
-            } else if (id == R.id.nav_weekly_message) {
+            }
+            else if (id == R.id.nav_master) {
                 mPager.setCurrentItem(3, true);
+                return true;
+
+            } else if (id == R.id.nav_weekly_message) {
+                mPager.setCurrentItem(4, true);
                 return true;
             }else if (id == R.id.nav_podcast) {
                 Intent intent = new Intent(GoldUserActivity.this, PodcastActivity.class);

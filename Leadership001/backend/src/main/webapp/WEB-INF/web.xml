@@ -5,7 +5,7 @@
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>com.ocg.leadership.backend.EndpointAPI</param-value>
+            <param-value>com.ocg.backend.endpointAPI.model.EndpointAPI</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -22,7 +22,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <listener>
-        <listener-class>com.ocg.leadership.backend.data.OfyHelper</listener-class>
+        <listener-class>com.ocg.backend.endpointAPI.model.data.OfyHelper</listener-class>
     </listener>
 
 

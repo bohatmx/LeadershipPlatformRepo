@@ -10,13 +10,14 @@
                     android:icon="@drawable/ic_comment_black_24dp"
                     android:title="Leadership Daily Thoughts" />
                 <item
+                    android:id="@+id/nav_harmony_thought"
+                    android:icon="@drawable/ic_comment_black_24dp"
+                    android:title="Company Thoughts" />
+                <item
                     android:id="@+id/nav_create_thought"
                     android:icon="@drawable/ic_comment_black_24dp"
                     android:title="My Leadership Thoughts" />
-                <item
-                    android:id="@+id/nav_create"
-                    android:icon="@drawable/ic_create"
-                    android:title="Create Leadership Thoughts" />
+
 
             </menu>
         </item>
@@ -35,7 +36,7 @@
                 <item
                     android:id="@+id/nav_weekly"
                     android:icon="@drawable/ic_chat"
-                    android:title="Top Leadership Thoughts" />
+                    android:title="Top Leader Thoughts" />
             </menu>
         </item>
     </group>

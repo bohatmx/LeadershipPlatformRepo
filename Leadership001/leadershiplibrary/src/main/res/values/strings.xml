@@ -37,12 +37,13 @@
     <string name="daily_thought">LEADERSHIP DAILY THOUGHTS</string>
     <string name="news_article">LEADERSHIP ARTICLES</string>
     <string name="weeky_master_class">LEADERSHIP MASTERCLASS</string>
+    <string name="harmony">HARMONY THOUGHTS</string>
     <string name="weekly_message">TOP LEADER THOUGHT</string>
     <string name="photo">LEADERSHIP PHOTOS</string>
     <string name="podcast">LEADERSHIP PODCASTS</string>
     <string name="ebooks">LEADERSHIP EBOOKS</string>
     <string name="users">LEADERSHIP STAFF</string>
-    <string name="hormony_list">HARMONY THOUGHTS</string>
+    <string name="hormony_list">COMPANY THOUGHTS</string>
     <string name="my_thought">MY LEADERSHIP THOUGHT</string>
     <string name="calendar_events">LEADERSHIP CALENDER EVENTS</string>
     <string name="Photographs">Photographs</string>
@@ -173,130 +174,10 @@
         <item>opt3</item>
     </string-array>
 
-    <string-array name="q4">
-        <item>What is the capital of Sierra Leone?</item>
-        <item>Freetown</item>
-        <item>Centerville</item>
-        <item>Chestershire</item>
-        <item>Nowhere</item>
-        <item>opt1</item>
-    </string-array>
-
-    <string-array name="q5">
-        <item>The capital city of Belize is … ?</item>
-        <item>San Ignacio</item>
-        <item>Belissimo</item>
-        <item>Belize City</item>
-        <item>Belmopan</item>
-        <item>opt4</item>
-    </string-array>
-
-    <string-array name="q6">
-        <item>What is the capital city of Qatar?</item>
-        <item>Doha</item>
-        <item>Mesaieed</item>
-        <item>Old Airport</item>
-        <item>Dakar</item>
-        <item>opt1</item>
-    </string-array>
-
-    <string-array name="q7">
-        <item>What is Iceland\'s capital city?</item>
-        <item>Njarõvík</item>
-        <item>Kópavogur</item>
-        <item>Reykjavík</item>
-        <item>Mosfellsbær</item>
-        <item>opt3</item>
-    </string-array>
-
-    <string-array name="q8">
-        <item>Vanuatu\'s capital city is … ?</item>
-        <item>Whitesands</item>
-        <item>Lamap</item>
-        <item>Sulphur Bay</item>
-        <item>Port Vila</item>
-        <item>opt4</item>
-    </string-array>
-
-    <string-array name="q9">
-        <item>What is the capital of the Philippines?</item>
-        <item>Manila</item>
-        <item>Caloocan</item>
-        <item>Cagayan de Oro</item>
-        <item>Taguig</item>
-        <item>opt1</item>
-    </string-array>
-
-    <string-array name="q10">
-        <item>The capital of Morocco is … ?</item>
-        <item>Rabat</item>
-        <item>Salé</item>
-        <item>Casablanca</item>
-        <item>Fez</item>
-        <item>opt1</item>
-    </string-array>
-
-    <string-array name="q11">
-        <item>What is the capital city of Nepal?</item>
-        <item>Bhaktapur</item>
-        <item>Kathmandu</item>
-        <item>Dharan</item>
-        <item>Pokhara</item>
-        <item>opt2</item>
-    </string-array>
-
-    <string-array name="q12">
-        <item>What is the capital of Kenya?</item>
-        <item>Hakuna Matata</item>
-        <item>Mombasa</item>
-        <item>Kilwa</item>
-        <item>Nairobi</item>
-        <item>opt4</item>
-    </string-array>
-
-    <string-array name="q13">
-        <item>What is the capital of Estonia?</item>
-        <item>Nõmme</item>
-        <item>Tallinn</item>
-        <item>Haabersti</item>
-        <item>Pirita</item>
-        <item>opt2</item>
-    </string-array>
-
-    <string-array name="q14">
-        <item>What is the capital of Colombia?</item>
-        <item>El Totumo</item>
-        <item>Cundinamarca</item>
-        <item>Bogotá</item>
-        <item>San Andrés</item>
-        <item>opt3</item>
-    </string-array>
-
-    <string-array name="q15">
-        <item>What is the capital of Lesotho?</item>
-        <item>Maseru</item>
-        <item>Sesotho</item>
-        <item>Basotho</item>
-        <item>Bosiu</item>
-        <item>opt1</item>
-    </string-array>
-
     <array name="questions">
         <item>@array/q1</item>
         <item>@array/q2</item>
         <item>@array/q3</item>
-        <item>@array/q4</item>
-        <item>@array/q5</item>
-        <item>@array/q6</item>
-        <item>@array/q7</item>
-        <item>@array/q8</item>
-        <item>@array/q9</item>
-        <item>@array/q10</item>
-        <item>@array/q11</item>
-        <item>@array/q12</item>
-        <item>@array/q13</item>
-        <item>@array/q14</item>
-        <item>@array/q15</item>
     </array>
 
     <string name="resultsTitle" formatted="false">Score: %.1f%%</string>

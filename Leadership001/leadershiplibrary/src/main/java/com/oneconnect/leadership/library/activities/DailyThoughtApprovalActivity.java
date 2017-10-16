@@ -75,7 +75,7 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
-        toolbar.setLogo(R.drawable.harmony);
+        //toolbar.setLogo(R.drawable.harmony);
 
         presenter = new CrudPresenter(this);
 

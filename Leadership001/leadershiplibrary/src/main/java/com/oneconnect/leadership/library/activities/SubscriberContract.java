@@ -42,6 +42,7 @@ public class SubscriberContract {
         void getCurrentUser(String email);
         void getCompanyProfile(String companyID);
         void getCategorisedCalenderEvents();
+        void getDailyThoughtsByUserType(String userType);
         void getAllStaff();
         void getAllLeaders();
         void getAllSubscribers();

@@ -116,6 +116,10 @@
             android:label="@string/title_activity_company_drawer"
             android:theme="@style/CommuterTheme" />
         <activity
+            android:name="com.oneconnect.leadership.library.activities.PLDPActivity"
+            android:label="@string/title_activity_pldp"
+            android:parentActivityName=".CompanyMainActivity" />
+        <activity
             android:name="com.oneconnect.leadership.library.camera.CameraActivity"
             android:label="@string/title_activity_camera"
             android:parentActivityName=".CompanyMainActivity" />
@@ -128,6 +132,7 @@
         <activity
             android:name="com.oneconnect.leadership.library.photo.PhotoSelectionActivity"
             android:label="@string/title_activity_photo_selection"
+            android:theme="@style/CommuterTheme"
             android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity"
@@ -141,7 +146,7 @@
             android:label="@string/title_activity_platinum_user" />
         <activity
             android:name=".GoldUserActivity"
-            android:label="@string/title_activity_gold_user"></activity>
+            android:label="@string/title_activity_gold_user"/>
         <activity android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity"/>
         <activity
             android:name="com.oneconnect.leadership.library.activities.DailyThoughtApprovalActivity"

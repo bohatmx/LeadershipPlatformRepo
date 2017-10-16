@@ -147,7 +147,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_history" />
+                    app:srcCompat="@drawable/ic_history" />
 
                 <TextView
                     android:id="@+id/txtDate"
@@ -260,7 +260,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_cancel"
+                        app:srcCompat="@drawable/ic_cancel"
                         android:tint="@color/orange_800" />
 
                     <TextView
@@ -313,7 +313,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_create"
+                        app:srcCompat="@drawable/ic_create"
                         android:tint="@color/blue_500" />
 
                     <TextView
@@ -342,7 +342,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_microphone"
+                        app:srcCompat="@drawable/ic_microphone"
                         android:tint="@color/teal_700" />
 
                     <TextView
@@ -373,7 +373,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_my_location" />
+                        app:srcCompat="@drawable/ic_my_location" />
 
                     <TextView
                         android:id="@+id/txtLocation"
@@ -401,7 +401,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_videocam" />
+                        app:srcCompat="@drawable/ic_videocam" />
 
                     <TextView
                         android:id="@+id/txtVideo"
@@ -429,7 +429,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_camera"
+                        app:srcCompat="@drawable/ic_camera"
                         android:tint="@color/red_700" />
 
                     <TextView
@@ -460,7 +460,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_share"
+                        app:srcCompat="@drawable/ic_share"
                         android:tint="@color/red_700" />
 
                     <ImageView

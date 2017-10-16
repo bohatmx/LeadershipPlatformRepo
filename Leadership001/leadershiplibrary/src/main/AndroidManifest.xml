@@ -54,67 +54,52 @@
             android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activities.PodcastActivity"
-            android:label="@string/title_activity_podcast"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_podcast" />
         <activity
             android:name=".activities.VideoActivity"
-            android:label="@string/title_activity_video"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_video" />
         <activity
             android:name=".activities.eBookActivity"
-            android:label="@string/title_activity_e_book"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_e_book" />
         <activity
             android:name=".activities.WebViewActivity"
-            android:label="@string/title_activity_web_view"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_web_view" />
         <activity
             android:name=".video.VideoPlayerActivity"
-            android:label="@string/title_activity_video_player"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_video_player" />
         <activity
             android:name=".activities.PhotoActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_main"/>
         <activity
             android:name=".audio.PodcastSelectionActivity"
-            android:label="@string/title_activity_podcast_selection"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_podcast_selection" />
        <!-- <activity
             android:name=".activities.PodcastPlayerActivity"
             android:label="@string/title_activity_podcast_player"
             android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activities.FullPhotoActivity"
-            android:label="@string/title_activity_full_photo"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_full_photo"/>
         <activity
             android:name=".activities.ImageListActivity"
-            android:label="@string/title_activity_image_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_image_list"/>
         <activity
             android:name=".activities.UserActivity"
-            android:label="@string/title_activity_user"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_user"/>
         <activity
             android:name=".activities.webpageViewer"
-            android:label="@string/title_webview"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_webview"/>
         <activity
             android:name=".activities.QuizQuestion"
-            android:label="@string/title_questions"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_questions"/>
 
         <activity
             android:name=".activities.QuizResults"
-            android:label="@string/title_results"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_results" />
 
         <activity
             android:name=".activities.PLDPActivity"
-            android:label="@string/title_activity_pldp"
-            android:parentActivityName=".activities.DailyThoughtActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:label="@string/title_activity_pldp"/>
     </application>
 
 </manifest>

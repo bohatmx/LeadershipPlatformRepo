@@ -7,8 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.oneconnect.leadership.library.activities.PLDPActivity"
-    android:background="@color/sasa_red">
+    tools:context="com.oneconnect.leadership.library.activities.PLDPActivity">
 
     <LinearLayout
         android:orientation="vertical"

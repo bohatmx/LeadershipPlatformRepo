@@ -112,7 +112,7 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
         } else {
             Log.i(LOG, "No Category");
         }
-
+        firebaseAuth = FirebaseAuth.getInstance();
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         photoRecyclerView = (RecyclerView) view.findViewById(R.id.photoRecyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -127,7 +127,7 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
 
 
         getCachedDailyThoughts();
-        getDailyThoughts();
+        getCompanyDailyThoughts();
 
         return view;
     }
@@ -135,14 +135,13 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
     private FirebaseAuth firebaseAuth;
     private UserDTO user = SharedPrefUtil.getUser(ctx);
 
-    public void getDailyThoughts() {
-        Log.d(LOG, "************** getMyDailyThoughts: " );
-        if(user == null){
+    public void getCompanyDailyThoughts() {
+        Log.d(LOG, "************** getCompanyDailyThoughts: " );
+     /*   if (user == null) { */
             presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-        }
-        else{
-            presenter.getDailyThoughtsByUser(user.getUserID());
-        }
+       /* }  else {
+            presenter.getDailyThoughts(user.getCompanyID());
+        }*/
 
     }
 
@@ -189,7 +188,7 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
         this.pageTitle = pageTitle;
     }
 
-    static final String LOG = DailyThoughtListFragment.class.getSimpleName();
+    static final String LOG = HarmonyListFragment.class.getSimpleName();
 
     @Override
     public String getTitle() {
@@ -213,7 +212,13 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
 
     @Override
     public void onUserFound(UserDTO user) {
+        Log.i(LOG, "** onUserFound **" + user.getFullName());
+      presenter.getDailyThoughts(user.getCompanyID());
+    }
 
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+        presenter.getCompanies(company.getCompanyName());
     }
 
     @Override
@@ -255,7 +260,9 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(LOG, "onDailyThoughts: " + list.size());
         this.dailyThoughtList = list;
-        list = getCategoryList(list, category.getCategoryName());
+        if(category != null) {
+            list = getCategoryList(list, category.getCategoryName());
+        }
         Collections.sort(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override

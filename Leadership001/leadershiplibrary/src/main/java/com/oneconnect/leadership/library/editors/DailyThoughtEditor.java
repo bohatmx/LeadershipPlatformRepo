@@ -530,6 +530,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 dailyThought.setActive(true);
                 dailyThought.setJournalUserID(me.getUserID());
                 dailyThought.setJournalUserName(me.getFirstName() + " " + me.getLastName());
+
             } //else if (user)
 
 
@@ -555,6 +556,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                   }
                   if (userType == UserDTO.PLATINUM_USER){
                       dailyThought.setStatus("approved");
+                      dailyThought.setUserType(UserDTO.DESC_PLATINUM_USER);
                   } else {
                       dailyThought.setStatus("pending");
                   }
