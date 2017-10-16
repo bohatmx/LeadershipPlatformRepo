@@ -11,6 +11,11 @@
         android:orderInCategory="100"
         android:title="Pending Daily Thoughts"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_companies"
+        android:orderInCategory="100"
+        android:title="Companies"
+        app:showAsAction="never"/>
     <!--<item
         android:id="@+id/action_news"
         android:icon="@drawable/ic_favorite_red"

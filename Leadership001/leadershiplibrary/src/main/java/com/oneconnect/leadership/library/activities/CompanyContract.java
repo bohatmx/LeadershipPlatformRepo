@@ -15,6 +15,7 @@ public class CompanyContract {
         void getCompany(String companyID);
         void updateCompany(CompanyDTO company);
         void getUser(String email);
+
     }
 
     public interface View {

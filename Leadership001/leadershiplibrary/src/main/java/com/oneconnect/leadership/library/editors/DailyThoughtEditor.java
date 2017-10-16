@@ -3,7 +3,12 @@ package com.oneconnect.leadership.library.editors;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -21,6 +26,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,17 +35,22 @@ import com.google.gson.GsonBuilder;
 //import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
 import com.oneconnect.leadership.library.activities.SheetContract;
 import com.oneconnect.leadership.library.activities.SheetPresenter;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.CategoryAdapter;
+import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
+import com.oneconnect.leadership.library.audio.PodcastUploadContract;
+import com.oneconnect.leadership.library.audio.PodcastUploadPresenter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.CategoryCache;
 import com.oneconnect.leadership.library.camera.CameraActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
+import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
@@ -67,11 +78,15 @@ import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
@@ -83,18 +98,23 @@ import static com.oneconnect.leadership.library.ebook.EbookListFragment.REQUEST_
  */
 
 public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View,
-        SubscriberContract.View, CacheContract.View, CategoryAdapter.CategoryAdapterListener {
+        SubscriberContract.View, PodcastUploadContract.View,CacheContract.View,
+        CategoryAdapter.CategoryAdapterListener {
     private DailyThoughtDTO dailyThought;
 
 
     private TextInputEditText editTitle, editSubtitle;
     private RecyclerView recyclerView;
-    private ImageView iconCamera, iconVideo, iconDate, iconURLs;
+    private ImageView iconCamera, iconVideo, iconDate, iconURLs, iconMicrophone;
+    TextView timer;
     private View iconLayout;
     private Button btn, btnDate;
     private Date selectedDate;
     private Spinner catSpinner;
     private SubscriberPresenter Catpresenter;
+    FirebaseStorageAPI fbs;
+    private PodcastUploadPresenter podcastUploadPresenter;
+    private CrudPresenter crudPresenter;
     private CachePresenter cachePresenter;
     private RadioButton internalButton, globalButton;
 
@@ -107,7 +127,12 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 .concat(key));
         dailyThought.setDailyThoughtID(key);
         bottomSheetListener.onWorkDone(dailyThought);
-        this.dismiss();
+        if (getOutputFile() != null) {
+            AudioSavePathInDevice = getOutputFile().getAbsolutePath();
+            sendPodcastWithDailyThought(AudioSavePathInDevice);
+            /*sendPodcastWithDailyThought(getOutputFile().getAbsolutePath());*/
+        }
+     //   this.dismiss();
     }
 
     @Override
@@ -123,6 +148,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     UserDTO user;
     @Override
     public void onUserFound(UserDTO u) {
+        Log.i(TAG, "*** onUserFound ***" + u.getFullName());
         user = u;
         userType = u.getUserType();
 
@@ -390,6 +416,39 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onPodcastUploaded(String key) {
+        progressBottomSheet.dismiss();
+        showSnackbar("Podcast has been uploaded", "OK", Constants.GREEN);
+        this.dismiss();
+    }
+
+    private Snackbar snackbar;
+
+    public void showSnackbar(String title, String action, String color) {
+        snackbar = Snackbar.make(btnDate, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
+
+    }
+
+    private static final DecimalFormat df = new DecimalFormat("##0.00");
+
+    @Override
+    public void onProgress(long transferred, long size) {
+        float percent = (float) transferred * 100 / size;
+        Log.i(TAG, "onProgress: video upload, transferred: "
+                + df.format(percent)
+                + " %");
+        progressBottomSheet.onProgress(transferred,size);
+    }
+
+    @Override
     public void onError(String message) {
           bottomSheetListener.onError(message);
     }
@@ -414,6 +473,8 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         presenter = new SheetPresenter(this);
         Catpresenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, getActivity());
+        fbs = new FirebaseStorageAPI();
+        podcastUploadPresenter = new PodcastUploadPresenter(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
         Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
@@ -428,7 +489,16 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                send();
+                if (getOutputFile() != null) {
+                    Log.i(TAG, "outputFile is not null");
+                    stopRecording();
+                    send();
+                    /*AudioSavePathInDevice = getOutputFile().getAbsolutePath();
+                    sendPodcastWithDailyThought(AudioSavePathInDevice);*/
+                } else {
+                    send();
+                }
+
 
             }
         });
@@ -445,12 +515,120 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         });
         internalButton = (RadioButton) view.findViewById(R.id.internalButton);
         globalButton = (RadioButton) view.findViewById(R.id.globalButton);
-      //  getCachedCategories();
+        timer = (TextView) view.findViewById(R.id.timer);
+        timer.setVisibility(View.GONE);
+        iconVideo = (ImageView) view.findViewById(R.id.iconVideo);
+        iconMicrophone = (ImageView) view.findViewById(R.id.iconMicrophone);
+        iconMicrophone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startRecording();
+                iconMicrophone.setVisibility(View.GONE);
+                timer.setVisibility(View.VISIBLE);
+            }
+        });
+
+        getCachedCategories();
         getCategories();
 
 
         return view;
     }
+    private MediaRecorder mRecorder;
+    private File mOutputFile;
+    private long mStartTime = 0;
+
+    private Handler mHandler = new Handler();
+    private Runnable mTickExecutor = new Runnable() {
+        @Override
+        public void run() {
+            tick();
+            mHandler.postDelayed(mTickExecutor,100);
+        }
+    };
+
+    private int[] amplitudes = new int[100];
+    private int i = 0;
+    private void tick() {
+        long time = (mStartTime < 0) ? 0 : (SystemClock.elapsedRealtime() - mStartTime);
+        int minutes = (int) (time / 60000);
+        int seconds = (int) (time / 1000) % 60;
+        int milliseconds = (int) (time / 100) % 10;
+        timer.setText(minutes+":"+(seconds < 10 ? "0"+seconds : seconds)+"."+milliseconds);
+        if (mRecorder != null) {
+            amplitudes[i] = mRecorder.getMaxAmplitude();
+            //Log.d("Voice Recorder","amplitude: "+(amplitudes[i] * 100 / 32767));
+            if (i >= amplitudes.length -1) {
+                i = 0;
+            } else {
+                ++i;
+            }
+        }
+    }
+
+    protected  void stopRecording() {
+        mRecorder.stop();
+        mRecorder.reset();
+        mRecorder.release();
+        mRecorder = null;
+        mStartTime = 0;
+        mHandler.removeCallbacks(mTickExecutor);
+        if (/*!saveFile &&*/ mOutputFile != null) {
+            Log.i(TAG, "outoutfile is not null");
+          //  mOutputFile.delete();
+        }
+    }
+    String AudioSavePathInDevice = null;
+
+    private void startRecording() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        //mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+            mRecorder.setAudioEncodingBitRate(48000);
+        } else {
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mRecorder.setAudioEncodingBitRate(64000);
+        }
+        mRecorder.setAudioSamplingRate(16000);*/
+        mOutputFile = getOutputFile();
+        mOutputFile.getParentFile().mkdirs();
+        mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
+
+        try {
+            mRecorder.prepare();
+            mRecorder.start();
+            mStartTime = SystemClock.elapsedRealtime();
+            mHandler.postDelayed(mTickExecutor, 100);
+            Log.d("Voice Recorder","started recording to "+mOutputFile.getAbsolutePath());
+        } catch (IOException e) {
+            Log.e("Voice Recorder", "prepare() failed "+e.getMessage());
+        }
+    }
+
+    private File getOutputFile() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
+       // AudioSavePathInDevice = mOutputFile.getAbsolutePath();
+        /*File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                + "/Voice Recorder/RECORDING_"
+                + dateFormat.format(new Date())
+                + ".mp3");*/
+        AudioSavePathInDevice =
+                Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                        + "/Voice Recorder/RECORDING_"
+                        + dateFormat.format(new Date())
+                        + ".mp3";
+        return new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
+                + "/Voice Recorder/RECORDING_"
+                + dateFormat.format(new Date())
+                + ".mp3"/*".m4a"*/);
+
+
+    }
+
 
     public void getCategories() {
         Log.d(TAG, "******* getAllCategories: ");
@@ -462,8 +640,8 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             @Override
             public void onDataRead(List<CategoryDTO> categories) {
                 Log.d(TAG, "onDataRead: Categories: " + categories.size());
-                categoryList = categories;
-                setCategorySpinner();
+            //    categoryList = categories;
+            //    setCategorySpinner();
             }
 
             @Override
@@ -500,6 +678,94 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
 
     private boolean isReadyToSend;
+
+    private void sendPodcastWithDailyThought(String path) {
+        PodcastDTO v = new PodcastDTO();
+
+        UserDTO u = SharedPrefUtil.getUser(getApplicationContext());
+
+        v.setCompanyName(u.getCompanyName());
+
+        v.setCompanyID(u.getCompanyID());
+
+        v.setFilePath(path);
+
+        File file = new File(path);
+
+        v.setPodcastSize(file.length());
+
+        v.setActive(true);
+        v.setPodcastDescription(PodcastDTO.DESC_VOICE_RECORDING);
+        v.setPodcastType(PodcastDTO.RECORDING);
+
+        switch (type) {
+
+            case ResponseBag.DAILY_THOUGHTS:
+
+                v.setDailyThoughtID(dailyThought.getDailyThoughtID());
+
+                v.setSubjectTitle(dailyThought.getTitle());
+
+                v.setSubtitle(dailyThought.getTitle());
+
+                break;
+        }
+
+        openProgressSheet();
+        v.setDailyThoughtID(dailyThought.getDailyThoughtID());
+        podcastUploadPresenter.uploadPodcastRecording(v);
+
+      /*  PodcastDTO v = new PodcastDTO();
+      //  if (getOutputFile() != null) {
+            Log.i(TAG, "file not null: " + path*//*getOutputFile().getAbsolutePath()*//*);
+         //   PodcastDTO v = new PodcastDTO();
+        //    UserDTO u = SharedPrefUtil.getUser(getApplicationContext());
+           *//* if (user != null){
+                v.setCompanyName(user.getCompanyName());
+                v.setCompanyID(user.getCompanyID());
+            } else if (u.getCompanyName() != null) {
+                v.setCompanyName(u.getCompanyName());
+                v.setCompanyID(u.getCompanyID());
+            }*//*
+            v.setFilePath(path*//*getOutputFile().getAbsolutePath()*//*);
+            File file = new File(path*//*getOutputFile().getAbsolutePath()*//*);
+            v.setPodcastSize(file.length());
+            v.setActive(true);
+            v.setPodcastDescription(PodcastDTO.DESC_VOICE_RECORDING);
+            v.setPodcastType(PodcastDTO.RECORDING);*/
+
+/*
+        openProgressSheet();*/
+      /*  fbs.uploadPodcast(v, new FirebaseStorageAPI.StorageListener() {
+            @Override
+            public void onResponse(String key) {
+
+            }
+
+            @Override
+            public void onProgress(long transferred, long size) {
+                float percent = (float) transferred * 100 / size;
+                Log.i(TAG, "onProgress: video upload, transferred: "
+                        + df.format(percent)
+                        + " %");
+                progressBottomSheet.onProgress(transferred,size);
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e(TAG, "onError: " + message);
+            }
+        });*/
+        /*podcastUploadPresenter.uploadPodcast(v);*/
+
+    }
+
+    private ProgressBottomSheet progressBottomSheet;
+    private void openProgressSheet() {
+        progressBottomSheet = ProgressBottomSheet.newInstance();
+        progressBottomSheet.show(getFragmentManager()/*getSupportFragmentManager()*/,"PROGRESS_SHEET");
+    }
+
     private void send() {
 
         if (TextUtils.isEmpty(editTitle.getText())) {
@@ -555,9 +821,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                   }
                   if (userType == UserDTO.PLATINUM_USER){
                       dailyThought.setStatus("approved");
+
                   } else {
                       dailyThought.setStatus("pending");
                   }
+
 
 
         switch (type) {

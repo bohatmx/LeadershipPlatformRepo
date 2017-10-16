@@ -75,7 +75,7 @@
     <string name="confirm_photo">Use Photo</string>
     <string name="confirm_video">Use Video</string>
     <string name="rating">Rating</string>
-    <string name="title_activity_daily_thought">Daily Thought</string>
+    <string name="title_activity_daily_thought">Pending Thoughts</string>
     <string name="title_activity_podcast">Podcast</string>
     <string name="title_activity_video">Video</string>
     <string name="title_activity_e_book">eBook</string>
@@ -140,5 +140,6 @@
     <string name="title_activity_user">UserActivity</string>
     <string name="title_activity_thought_approval">ThoughtApprovalActivity</string>
     <string name="title_activity_create_daily_thought">CreateDailyThoughtActivity</string>
+    <string name="title_activity_company">CompanyActivity</string>
 
 </resources>

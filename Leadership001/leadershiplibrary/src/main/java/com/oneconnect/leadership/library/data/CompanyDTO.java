@@ -6,6 +6,7 @@ import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by aubreymalabie on 3/16/17.
@@ -16,6 +17,7 @@ public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<Com
     countryID, address, companyLogoUrl;
     private int primaryColor, secondaryColor;
     private PhotoDTO photo;
+    private HashMap<String, PhotoDTO> photos;
 
 
     public CompanyDTO() {
@@ -153,5 +155,13 @@ public class CompanyDTO  extends BaseDTO implements Serializable, Comparable<Com
 
     public void setPhoto(PhotoDTO photo) {
         this.photo = photo;
+    }
+
+    public HashMap<String, PhotoDTO> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(HashMap<String, PhotoDTO> photos) {
+        this.photos = photos;
     }
 }

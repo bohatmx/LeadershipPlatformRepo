@@ -86,10 +86,10 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         playIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(playIMG, 300, new Util.UtilAnimationListener() {
+              /*  Util.flashOnce(playIMG, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        playIMG.setVisibility(View.GONE);
+                   */     playIMG.setVisibility(View.GONE);
                         pauseIMG.setVisibility(View.VISIBLE);
                         stopIMG.setVisibility(View.VISIBLE);
                         recordProgress.setVisibility(View.GONE);
@@ -121,15 +121,19 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                         setTimerLabel("Playing Audio....");
                         Toast.makeText(AudioRecordTest.this, "Recording Playing",
                                 Toast.LENGTH_LONG).show();
-                    }
-                });
+                 //   }
+               // });
             }
         });
         pauseIMG = (ImageView) findViewById(R.id.pauseIMG);
         pauseIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(pauseIMG, 300, new Util.UtilAnimationListener() {
+                pauseIMG.setVisibility(View.GONE);
+                playIMG.setVisibility(View.VISIBLE);
+                //mediaRecorder.pause();
+                mediaPlayer.pause();
+               /* Util.flashOnce(pauseIMG, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         pauseIMG.setVisibility(View.GONE);
@@ -137,14 +141,18 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                         //mediaRecorder.pause();
                         mediaPlayer.pause();
                     }
-                });
+                });*/
             }
         });
         stopIMG = (ImageView) findViewById(R.id.stopIMG);
         stopIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(stopIMG, 300, new Util.UtilAnimationListener() {
+                mediaPlayer.stop();
+                stopIMG.setVisibility(View.GONE);
+                pauseIMG.setVisibility(View.GONE);
+                playIMG.setVisibility(View.VISIBLE);
+                /* Util.flashOnce(stopIMG, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         mediaPlayer.stop();
@@ -152,7 +160,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                         pauseIMG.setVisibility(View.GONE);
                         playIMG.setVisibility(View.VISIBLE);
                     }
-                });
+                });*/
             }
         });
 
@@ -163,84 +171,86 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(imageView, 300, new Util.UtilAnimationListener() {
+                if(checkPermission()) {
+
+                    AudioSavePathInDevice =
+                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/    " +
+                                    CreateRandomAudioFileName(5) + "AudioRecording.mp3";
+
+                    MediaRecorderReady();
+
+                    try {
+                        mediaRecorder.prepare();
+                        mediaRecorder.start();
+                    } catch (IllegalStateException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                    buttonStart.setEnabled(false);
+                    buttonStop.setEnabled(true);
+                    buttonUpload.setEnabled(false);
+                    recordProgress.setVisibility(View.VISIBLE);
+                    recordProgress.setText("");
+                    buttonStop.setVisibility(View.VISIBLE);
+                    setTimerLabel("Recording Audio....");
+                    Toast.makeText(AudioRecordTest.this, "Recording started",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    requestPermission();
+                }
+                /*Util.flashOnce(imageView, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        if(checkPermission()) {
 
-                            AudioSavePathInDevice =
-                                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/    " +
-                                            CreateRandomAudioFileName(5) + "AudioRecording.mp3";
-
-                            MediaRecorderReady();
-
-                            try {
-                                mediaRecorder.prepare();
-                                mediaRecorder.start();
-                            } catch (IllegalStateException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-
-                            buttonStart.setEnabled(false);
-                            buttonStop.setEnabled(true);
-                            buttonUpload.setEnabled(false);
-                            recordProgress.setVisibility(View.VISIBLE);
-                            recordProgress.setText("");
-                            buttonStop.setVisibility(View.VISIBLE);
-                            setTimerLabel("Recording Audio....");
-                            Toast.makeText(AudioRecordTest.this, "Recording started",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            requestPermission();
-                        }
                     }
-                });
+                });*/
             }
         });
 
         podcasts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(imageView, 300, new Util.UtilAnimationListener() {
+                if(checkPermission()) {
+
+                    AudioSavePathInDevice =
+                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/    " +
+                                    CreateRandomAudioFileName(5) + "AudioRecording.mp3";
+
+                    MediaRecorderReady();
+
+                    try {
+                        mediaRecorder.prepare();
+                        mediaRecorder.start();
+                    } catch (IllegalStateException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                    buttonStart.setEnabled(false);
+                    buttonStop.setEnabled(true);
+                    buttonUpload.setEnabled(false);
+                    recordProgress.setVisibility(View.VISIBLE);
+                    recordProgress.setText("");
+                    buttonStop.setVisibility(View.VISIBLE);
+                    setTimerLabel("Recording Audio....");
+                    Toast.makeText(AudioRecordTest.this, "Recording started",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    requestPermission();
+                }
+               /* Util.flashOnce(imageView, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        if(checkPermission()) {
 
-                            AudioSavePathInDevice =
-                                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/    " +
-                                            CreateRandomAudioFileName(5) + "AudioRecording.mp3";
-
-                            MediaRecorderReady();
-
-                            try {
-                                mediaRecorder.prepare();
-                                mediaRecorder.start();
-                            } catch (IllegalStateException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
-
-                            buttonStart.setEnabled(false);
-                            buttonStop.setEnabled(true);
-                            buttonUpload.setEnabled(false);
-                            recordProgress.setVisibility(View.VISIBLE);
-                            recordProgress.setText("");
-                            buttonStop.setVisibility(View.VISIBLE);
-                            setTimerLabel("Recording Audio....");
-                            Toast.makeText(AudioRecordTest.this, "Recording started",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            requestPermission();
-                        }
                     }
-                });
+                });*/
             }
         });
 

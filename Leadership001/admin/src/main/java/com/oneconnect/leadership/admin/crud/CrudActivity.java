@@ -37,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.AdminSignInActivity;
 import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.activities.CompanyActivity;
 import com.oneconnect.leadership.library.activities.CreateCompanyActivity;
 import com.oneconnect.leadership.library.activities.UpdateEntityActivity;
 import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
@@ -188,6 +189,9 @@ public class CrudActivity extends AppCompatActivity
                     .registerReceiver(new VideoUploadReceiver(), f2);
             getPhotosOnDevice();
         }
+
+        entityListFragment = (EntityListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+
 
     }
 
@@ -546,6 +550,9 @@ public class CrudActivity extends AppCompatActivity
                 Intent intent1 = new Intent(this, ThoughtApprovalActivity.class);
                 startActivity(intent1);
                 break;
+            case R.id.action_companies:
+                Intent intent2 = new Intent(this, CompanyActivity.class);
+                startActivity(intent2);
             /*case R.id.action_daily:
                 cachePresenter.getCacheDailyThoughts();
                 break;

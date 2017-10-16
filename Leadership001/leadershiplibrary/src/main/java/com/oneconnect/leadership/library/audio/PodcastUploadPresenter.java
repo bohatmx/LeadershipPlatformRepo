@@ -35,4 +35,24 @@ public class PodcastUploadPresenter implements PodcastUploadContract.Presenter {
             }
         });
     }
+
+    @Override
+    public void uploadPodcastRecording(PodcastDTO podcast) {
+        api.uploadPodcastRecording(podcast, new FirebaseStorageAPI.StorageListener() {
+            @Override
+            public void onResponse(String key) {
+                view.onPodcastUploaded(key);
+            }
+
+            @Override
+            public void onProgress(long transferred, long size) {
+                view.onProgress(transferred, size);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
 }

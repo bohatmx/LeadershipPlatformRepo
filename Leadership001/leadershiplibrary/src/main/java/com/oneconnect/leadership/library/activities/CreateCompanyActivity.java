@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.api.DataAPI;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
@@ -47,6 +48,8 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
 
     private int RESULT_LOAD_IMG = 201;
     FirebaseStorageAPI fbs;
+    DataAPI dataAPI;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +139,7 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
         if (selectedImagePath != null) {
             p.setFilePath(selectedImagePath);
         }
+
         File file = new File(selectedImagePath);
         p.setImageSize(file.length());
         p.setBytes(file.length());
@@ -145,6 +149,8 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
             p.setCaption(companyName.getText() + "Logo");
         }
         if (file != null) {
+
+          //  dataAPI.addPhoto();
             fbs.uploadPhoto(p, new FirebaseStorageAPI.StorageListener() {
                 @Override
                 public void onResponse(String key) {
@@ -169,6 +175,7 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
                 @Override
                 public void onError(String message) {
                     Log.e(TAG, message);
+
                 }
             });
         } else {
@@ -214,6 +221,7 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
         }
     }
 
+    Cursor cursor;
 
     public String getPath(Uri uri) {
         // just some safety built in
@@ -224,7 +232,7 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
         // try to retrieve the image from the media store first
         // this will only work for images selected from gallery
         String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
+         cursor = managedQuery(uri, projection, null, null, null);
         if( cursor != null ){
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -290,7 +298,15 @@ public class CreateCompanyActivity extends AppCompatActivity implements CompanyC
         companyLogoIMG.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.coffee_screens));
 
 
+
        // finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+       // cursor.close();
+
     }
 
     static final String TAG = CreateCompanyActivity.class.getSimpleName();

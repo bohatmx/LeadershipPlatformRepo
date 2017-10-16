@@ -31,9 +31,17 @@ import com.oneconnect.leadership.library.api.ListAPI;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
 import com.oneconnect.leadership.library.audio.PodcastListActivity;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
+import com.oneconnect.leadership.library.crud.CrudContract;
+import com.oneconnect.leadership.library.crud.CrudPresenter;
+import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
+import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
+import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
+import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.ebook.EbookUploadContract;
@@ -60,13 +68,14 @@ import java.util.regex.Pattern;
 
 import es.dmoral.toasty.Toasty;
 
-public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View{
+public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View, CrudContract.View{
 
 
     private RecyclerView recyclerView;
     private int type;
     private PhotoUploadPresenter presenter;
     private PhotoDownloadPresenter presenterPhotoDownload;
+    private CrudPresenter crudPresenter;
     private EbookUploadPresenter eBookpresenter;
     private Toolbar toolbar;
     private DailyThoughtDTO dailyThought;
@@ -106,6 +115,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         fbs = new FirebaseStorageAPI();
         //remove if it doesnt work
         eBookpresenter = new EbookUploadPresenter(this);
+        crudPresenter = new CrudPresenter(this);
 
         type = getIntent().getIntExtra("type", 0/*type*/);
 
@@ -173,7 +183,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         if (getIntent().getSerializableExtra("company") != null) {
             type = ResponseBag.COMPANIES;
             company = (CompanyDTO) getIntent().getSerializableExtra("company");
-            getSupportActionBar().setSubtitle(company.getCompanyLogoUrl());
+            getSupportActionBar().setSubtitle(company.getCompanyName());
         }
         if (getIntent().getSerializableExtra("dailyThought") != null) {
             type = ResponseBag.DAILY_THOUGHTS;
@@ -514,11 +524,13 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 p.setTitle(news.getTitle());
                 //p.setCaption(news.getBody());
                 break;
-            case ResponseBag.COMPANIES:
-                p.setCompanyID(company.getCompanyID());
-                p.setTitle(company.getCompanyName());
+           /* case ResponseBag.COMPANIES:
+                p.setCompany(company);
+               // p.setCompanyID(company.getCompanyID());
+             //   p.setTitle(company.getCompanyName());
+
                 //p.setCaption(news.getBody());
-                break;
+                break;*/
         }
         if (type == ResponseBag.EBOOKS) {
             eBookpresenter.uploadEbook(eBook);
@@ -528,6 +540,26 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             presenter.uploadUserPhoto(user);
             return;
         }
+        if (type == ResponseBag.COMPANIES){
+            p.setCompanyID(company.getCompanyID());
+            fbs.uploadPhoto(p, new FirebaseStorageAPI.StorageListener() {
+                @Override
+                public void onResponse(String key) {
+
+                }
+
+                @Override
+                public void onProgress(long transferred, long size) {
+
+                }
+
+                @Override
+                public void onError(String message) {
+                    showSnackbar(message, "Dismiss", "red");
+                }
+            });
+        }
+
         presenter.uploadPhoto(p);
     }
 
@@ -679,7 +711,207 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     }
 
     @Override
+    public void onEntityAdded(String key) {
+
+    }
+
+    @Override
+    public void onEntityUpdated() {
+
+    }
+
+    @Override
+    public void onUserCreated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onCompanyCreated(CompanyDTO company) {
+
+    }
+
+    @Override
+    public void onUserUpdated(UserDTO user) {
+
+    }
+
+    @Override
+    public void onDailyThoughtUpdated(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassUpdated(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageUpdated(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onSubscriptionUpdated(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
+    public void onNewsUpdated(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onUserDeleted(UserDTO user) {
+
+    }
+
+    @Override
+    public void onSubscriptionDeleted(SubscriptionDTO subscription) {
+
+    }
+
+    @Override
+    public void onDailyThoughtDeleted(DailyThoughtDTO dailyThought) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageDeleted(WeeklyMessageDTO weeklyMessage) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassDeleted(WeeklyMasterClassDTO masterClass) {
+
+    }
+
+    @Override
+    public void onVideoDeleted(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onPodcastDeleted(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onNewsDeleted(NewsDTO news) {
+
+    }
+
+    @Override
+    public void onPhotoDeleted(PhotoDTO photo) {
+
+    }
+
+    @Override
+    public void onEbookDeleted(EBookDTO eBook) {
+
+    }
+
+    @Override
+    public void onCategoryDeleted(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onCompanies(List<CompanyDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onEbooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
+    public void onPayments(List<PaymentDTO> list) {
+
+    }
+
+    @Override
+    public void onPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onPhotos(List<PhotoDTO> list) {
+
+    }
+
+    @Override
+    public void onPrices(List<PriceDTO> list) {
+
+    }
+
+    @Override
+    public void onUserFound(UserDTO user) {
+
+    }
+
+    @Override
+    public void onUsers(List<UserDTO> list) {
+
+    }
+
+    @Override
+    public void onNews(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
     public void onError(String message) {
+
+    }
+
+    @Override
+    public void onCategoryUpdated(CategoryDTO category) {
+
+    }
+
+    @Override
+    public void onLinksRequired(BaseDTO entity) {
 
     }
 

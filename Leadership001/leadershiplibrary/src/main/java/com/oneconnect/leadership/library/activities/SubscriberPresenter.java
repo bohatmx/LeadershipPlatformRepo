@@ -21,6 +21,8 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
+import java.net.MalformedURLException;
+
 /**
  * Created by Nkululeko on 2017/04/18.
  */
@@ -211,7 +213,7 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     public void getCompanyProfile(String companyID) {
         dataAPI.getCompany(companyID, new DataAPI.CompanyQueryListener() {
             @Override
-            public void onCompanyFound(CompanyDTO company) {
+            public void onCompanyFound(CompanyDTO company){
                 view.onCompanyFound(company);
             }
 

@@ -37,7 +37,7 @@
             android:padding="@dimen/mon_padding"
             android:layout_below="@+id/color_picker_view"
             android:id="@+id/textColor1"
-            android:text="Primary Color"
+            android:text="Set Primary Color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -57,7 +57,7 @@
             android:padding="@dimen/mon_padding"
             android:layout_below="@+id/textColor1"
             android:id="@+id/textColor2"
-            android:text="Secondary Color"
+            android:text="Set Secondary Color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView

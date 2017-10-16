@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +41,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,12 +106,17 @@ import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.ThemeChooser;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import es.dmoral.toasty.Toasty;
 
@@ -142,7 +151,6 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
     private CrudPresenter crudPresenter;
     private UserDTO user;
     private TextView usernametxt;
-    private ImageView imageView;
     PagerSlidingTabStrip strip;
     CategoryDTO category;
     private DailyThoughtDTO dailyThought;
@@ -151,19 +159,18 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
     int themeDarkColor, themePrimaryColor, logo;
     private Toolbar toolbar;
     Context ctx;
-    CardView card1, card2, card3, card4;
-    TextView companyThoughts, companyVideos, companyUsers, companyPodcasts, companyTitle;
-    ImageView companyLogo;
-    private FirebaseAuth firebaseAuth;
     ResponseBag bag;
     private DailyThoughtEditor dailyThoughtEditor;
     private DatePickerDialog datePickerDialog;
     private int type;
-    NavigationView navigationView, platinum_nav_view, goldNavigationView, platinum_admin_user_nav_view;
+    NavigationView goldNavigationView;
     private PagerAdapter adapter;
     private GoldUserActivity activity;
     private ActionBar ab;
-    TextView userName, userEmail;
+    TextView userName, userEmail, companyName;
+    RelativeLayout nav_layout;
+    ImageView logoIMG, imageView;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,18 +178,17 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         Log.d(TAG, "onCreate: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         ThemeChooser.setTheme(this);
         setContentView(R.layout.activity_gold_user);
+        firebaseAuth = FirebaseAuth.getInstance();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        logoIMG = (ImageView) findViewById(R.id.logoIMG);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setLogo(R.drawable.harmony);
+      //  toolbar.setLogo(R.drawable.harmony);
 
         ctx = getApplicationContext();
         activity = this;
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        // ab = getSupportActionBar();
-        //ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-//        ab.setDisplayHomeAsUpEnabled(true);
 
         page = getIntent().getStringExtra("page");
         mPager = (ViewPager) findViewById(R.id.viewpager);
@@ -262,6 +268,8 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());*/
         }
+
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
     }
 
     private void setup() {
@@ -273,120 +281,22 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        /*if (user != null) {
-            Log.d(TAG, "onCreate: " + user.getFullName() + " usertype: "
-                    + user.getUserType() + " " + user.getUserDescription());
-            getSupportActionBar().setSubtitle(user.getFullName());
-            if (user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_USER)) {
-                Intent intent = new Intent(G.this, PlatinumUserActivity.class);
-                startActivity(intent);
-                finish();
-                // navigationView.setVisibility(View.GONE);
-              *//*  platinum_nav_view = (NavigationView) findViewById(R.id.platinum_nav_view);
-                platinum_nav_view.setNavigationItemSelectedListener(this);
-                platinum_nav_view.setVisibility(View.VISIBLE);
-                View header1 = platinum_nav_view.getHeaderView(0);
-
-                userName = header1.findViewById(R.id.owner_name);
-                userEmail = header1.findViewById(R.id.owner_email);
-                userName.setText(user.getFullName());
-                userEmail.setText(user.getEmail());
-
-                setUpPlatinumUserViewPager();*//*
-            } else if (user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER)) {*/
-                // navigationView.setVisibility(View.GONE);
                 goldNavigationView = (NavigationView) findViewById(R.id.gold_nav_view);
                 goldNavigationView.setNavigationItemSelectedListener(this);
                 goldNavigationView.setVisibility(View.VISIBLE);
-                View header1 = goldNavigationView.getHeaderView(0);
+                View header = goldNavigationView.getHeaderView(0);
 
-                userName = header1.findViewById(R.id.owner_name);
-                userEmail = header1.findViewById(R.id.owner_email);
+                userName = header.findViewById(R.id.owner_name);
+                userEmail = header.findViewById(R.id.owner_email);
+                nav_layout = header.findViewById(R.id.nav_layout);
+                imageView = header.findViewById(R.id.imageView);
+                imageView.setVisibility(View.GONE);
+                companyName = (TextView) findViewById(R.id.companyName);
+
                 userName.setText(user.getFullName());
                 userEmail.setText(user.getEmail());
 
                 setUpGoldUserViewPager();
-           /* } else if(user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN)) {
-                Intent intent = new Intent(CompanyMainActivity.this, PlatinumAdminActivity.class);
-                startActivity(intent);
-                finish();
-
-               *//* platinum_admin_user_nav_view = (NavigationView) findViewById(R.id.platinum_admin_user_nav_view);
-                platinum_admin_user_nav_view.setNavigationItemSelectedListener(this);
-                platinum_admin_user_nav_view.setVisibility(View.VISIBLE);
-                View header = platinum_admin_user_nav_view.getHeaderView(0);
-
-                userName = header.findViewById(R.id.owner_name);
-                userEmail = header.findViewById(R.id.owner_email);
-
-                userEmail.setText(user.getEmail());
-                userName.setText(user.getFullName());
-                setupPlatinumAdminUserViewPager();*//*
-                // setUpViewPager();
-            } else if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
-                Intent intent = new Intent(CompanyMainActivity.this, PlatinumAdminActivity.class);
-                startActivity(intent);
-                finish();
-               *//* platinum_admin_user_nav_view = (NavigationView) findViewById(R.id.platinum_admin_user_nav_view);
-                platinum_admin_user_nav_view.setNavigationItemSelectedListener(this);
-                platinum_admin_user_nav_view.setVisibility(View.VISIBLE);
-                View header = platinum_admin_user_nav_view.getHeaderView(0);
-
-                userName = header.findViewById(R.id.owner_name);
-                userEmail = header.findViewById(R.id.owner_email);
-
-                userEmail.setText(user.getEmail());
-                userName.setText(user.getFullName());
-                setupPlatinumAdminUserViewPager();*//*
-                //setUpViewPager();
-            }
-           *//* View hdr = navigationView.getHeaderView(0);
-            TextView txt = hdr.findViewById(R.id.owner_name);
-            txt.setText(user.getFullName());*//*
-        } else {
-            Log.e(TAG, "onCreate: --------- user not found on disk");
-            finish();
-        }*/
-
-     /*   if(user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN))
-        {
-            setUpViewPager();
-        }else
-            if(user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER))
-            {
-            setUpGoldUserViewPager();
-        }else
-            if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_USER)) {
-                navigationView.setVisibility(View.GONE);
-                platinum_nav_view = (NavigationView) findViewById(R.id.platinum_nav_view);
-                platinum_nav_view.setNavigationItemSelectedListener(this);
-                View header1 = platinum_nav_view.getHeaderView(0);
-
-                TextView username1 = header1.findViewById(R.id.owner_name);
-                TextView email1 = header1.findViewById(R.id.owner_email);
-
-                setUpPlatinumUserViewPager();
-        }
-        if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
-            navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-            View header = navigationView.getHeaderView(0);
-
-            TextView username = header.findViewById(R.id.owner_name);
-            TextView email = header.findViewById(R.id.owner_email);
-
-            email.setText(user.getEmail());
-            username.setText(user.getFullName());
-            setUpViewPager();
-        } */
-
-     /*   imageView = header.findViewById(R.id.imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickGalleryOrCamera(base);
-            }
-        }); */
     }
 
     private void setUpGoldUserViewPager() {
@@ -785,7 +695,6 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                 drawer.openDrawer(Gravity.LEFT);
                 return true;
             }
-            //   return true;
         }
         if (id == R.id.action_refresh) {
             startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
@@ -803,12 +712,6 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
             intent.putExtra("type", type);
             startActivity(intent);
         }
-       /* if (id == R.id.action_settings){
-            Intent w = new Intent(GoldUserActivity.this, ThemeSelectorActivity.class);
-            w.putExtra("darkColor", themeDarkColor);
-            startActivityForResult(w, THEME_REQUESTED);
-            return true;
-        }*/
         return true;
     }
     Snackbar snackbar;
@@ -862,15 +765,9 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                 startActivity(intent);
                 return true;
             }
-
-
-        /*DrawerLayout*/// drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        // drawer.closeDrawer(GravityCompat.START);
-        /*DrawerLayout*/
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-        /*return false;*/
     }
 
     @Override
@@ -1050,12 +947,88 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        presenter.getCompanyProfile(user.getCompanyID());
     }
+
+    String hexColor;
 
     @Override
     public void onCompanyFound(CompanyDTO company) {
+        Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
+        logoIMG.setVisibility(View.GONE);
+        companyName.setText(company.getCompanyName());
 
+        if (company.getPrimaryColor() != 0) {
+            Log.i(TAG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+            strip.setBackgroundColor(Color.parseColor(hexColor));
+            nav_layout.setBackgroundColor(Color.parseColor(hexColor));
+        }
+        if (company.getSecondaryColor() != 0) {
+            Log.i(TAG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getSecondaryColor()));
+            strip.setUnderlineColor(Color.parseColor(hexColor));
+            strip.setIndicatorColor(Color.parseColor(hexColor));
+            strip.setDividerColor(Color.parseColor(hexColor));
+        } else {
+            strip.setUnderlineColor(Color.WHITE);
+            strip.setIndicatorColor(Color.WHITE);
+            strip.setDividerColor(Color.WHITE);
+        }
+
+        if (company.getPhotos() != null) {
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = company.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                getImage(photoUrl);
+               // picassoLoader(this, logoIMG, photoUrl);
+
+            }
+        }
+    }
+
+    private void getImage(final String url) {
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bmImg = null;
+                try  {
+                    //Your code goes here
+                    try {
+                        bmImg = BitmapFactory.decodeStream((InputStream)new URL(url).getContent());
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
+                        // e.printStackTrace();
+                    }
+                    BitmapDrawable background = new BitmapDrawable(bmImg);
+                    nav_layout.setBackgroundDrawable(background);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    //  e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+    }
+    public void picassoLoader(Context context, ImageView imageView, String url){
+        Log.d("PICASSO", "loading image");
+        Picasso.with(context)
+                .load(url)
+                //.resize(30,30)
+                .placeholder(R.drawable.harmony)
+                .error(R.drawable.ic_error)
+                .into(imageView);
     }
 
     @Override

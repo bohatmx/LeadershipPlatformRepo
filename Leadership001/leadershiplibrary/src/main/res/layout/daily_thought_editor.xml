@@ -91,6 +91,7 @@ app:cardElevation="@dimen/mon_padding">
             android:layout_height="wrap_content"
             >
 
+
             <RadioButton
                 android:id="@+id/internalButton"
                 android:text="Post Internal"
@@ -105,8 +106,28 @@ app:cardElevation="@dimen/mon_padding">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+
         </RadioGroup>
 
+
+        <ImageView
+            android:layout_marginLeft="@dimen/mon_16"
+            android:layout_below="@+id/layoutb"
+            android:id="@+id/iconMicrophone"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:srcCompat="@drawable/ic_microphone"
+            android:tint="@color/teal_700" />
+        <TextView
+            android:layout_marginLeft="@dimen/mon_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutb"
+            android:text="0:00.0"
+            android:textColor="@color/teal_700"
+            android:typeface="monospace"
+            android:textStyle="bold"
+            android:id="@+id/timer"/>
 
     </RelativeLayout>
 

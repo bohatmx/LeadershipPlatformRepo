@@ -9,6 +9,7 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 public class PodcastUploadContract {
     public interface Presenter {
         void uploadPodcast(PodcastDTO podcast);
+        void uploadPodcastRecording(PodcastDTO podcast);
     }
     public interface View {
         void onPodcastUploaded(String key);

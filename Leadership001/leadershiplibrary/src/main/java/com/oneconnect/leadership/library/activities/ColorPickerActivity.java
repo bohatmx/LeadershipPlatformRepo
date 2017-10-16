@@ -86,21 +86,18 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
         v_alpha_slider = (AlphaSlider) findViewById(R.id.v_alpha_slider);
         colorBox1 = (TextView) findViewById(R.id.colorBox1);
         colorBox2 = (TextView) findViewById(R.id.colorBox2);
-        colorBox2.setVisibility(View.GONE);
         companyNameTxt = (TextView) findViewById(R.id.companyNameTxt);
         updateBTN = (Button) findViewById(R.id.updateColors);
         textColor2 = (TextView) findViewById(R.id.textColor2);
-        textColor2.setVisibility(View.GONE);
         textColor1 = (TextView) findViewById(R.id.textColor1);
 
         if (getIntent().getSerializableExtra("user") != null) {
             type = ResponseBag.USERS;
             user = (UserDTO) getIntent().getSerializableExtra("user");
             companyNameTxt.setText(user.getCompanyName());
-          //  getSupportActionBar().setSubtitle(user.getFullName());
-        } else {
+        } /*else {
             companyPresenter.getUser(firebaseAuth.getCurrentUser().getEmail());
-        }
+        }*/
         if (getIntent().getSerializableExtra("company") != null) {
             type = ResponseBag.COMPANIES;
             company = (CompanyDTO) getIntent().getSerializableExtra("company");
@@ -114,15 +111,9 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
             public void onClick(View v) {
                 colorBox1.setBackgroundColor(color_picker_view.getSelectedColor());
                 textColor1.setTextColor(color_picker_view.getSelectedColor());
-                color1 = color_picker_view.getSelectedColor();
-               /* Util.flashOnce(colorBox1, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        colorBox1.setBackgroundColor(color_picker_view.getSelectedColor());
-                        textColor1.setTextColor(color_picker_view.getSelectedColor());
-                       // color1 = color_picker_view.getSelectedColor();
-                    }
-                });*/
+                company.setPrimaryColor(textColor1.getCurrentTextColor());
+                companyPresenter.updateCompany(company);
+
             }
         });
 
@@ -131,15 +122,9 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
             public void onClick(View v) {
                 colorBox2.setBackgroundColor(color_picker_view.getSelectedColor());
                 textColor2.setTextColor(color_picker_view.getSelectedColor());
-                color2 = color_picker_view.getSelectedColor();
-                /*Util.flashOnce(colorBox2, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        colorBox2.setBackgroundColor(color_picker_view.getSelectedColor());
-                        textColor2.setTextColor(color_picker_view.getSelectedColor());
-                     //3   color2 = color_picker_view.getSelectedColor();
-                    }
-                });*/
+                company.setPrimaryColor(textColor2.getCurrentTextColor());
+                companyPresenter.updateCompany(company);
+
             }
         });
 
@@ -154,6 +139,8 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
             }
         });
 
+        updateBTN.setVisibility(View.GONE);
+
         updateBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,9 +153,15 @@ public class ColorPickerActivity extends AppCompatActivity implements CompanyCon
 
     private void updateCompanyColors(CompanyDTO company) {
         Log.i(TAG, "updating company colors");
-        company.setPrimaryColor(textColor1.getCurrentTextColor());
+        if (textColor1.getCurrentTextColor() != 0) {
+            company.setPrimaryColor(textColor1.getCurrentTextColor());
+        }
+
       //  company.setPrimaryColor(color1);
-      //  company.setSecondaryColor(textColor2.getCurrentTextColor());
+        if (textColor2.getCurrentTextColor() != 0) {
+            company.setSecondaryColor(textColor2.getCurrentTextColor());
+        }
+
        // company.setSecondaryColor(color2);
         companyPresenter.updateCompany(company);
     }

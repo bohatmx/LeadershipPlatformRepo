@@ -542,6 +542,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
         companyTitle = (TextView) view.findViewById(R.id.companyTitle);
         //
         editFab = (FloatingActionButton) view.findViewById(R.id.editFab);
+        editFab.setVisibility(View.GONE);
         thoughtIcon = (ImageView) view.findViewById(R.id.thoughtIcon);
         videoIcon = (ImageView) view.findViewById(R.id.videoIcon);
         userIcon = (ImageView) view.findViewById(R.id.userIcon);
