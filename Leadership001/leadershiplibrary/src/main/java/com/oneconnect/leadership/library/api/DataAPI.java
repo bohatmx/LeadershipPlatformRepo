@@ -1250,7 +1250,8 @@ public class DataAPI {
 
     public void addPhotoToEntity(final PhotoDTO photo, final DataListener listener) {
         if (photo.getDailyThoughtID() == null && photo.getWeeklyMasterClassID() == null
-                && photo.getWeeklyMessageID() == null && photo.getPodcastID() == null && photo.getNewsID() == null && photo.getUserID()== null)  {
+                && photo.getWeeklyMessageID() == null && photo.getPodcastID() == null && photo.getNewsID() == null
+                && photo.getUserID()== null && photo.getCompanyID() == null)  {
             listener.onResponse("No entity to add to");
             return;
 
@@ -1356,6 +1357,24 @@ public class DataAPI {
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
                         Log.i(TAG, "onComplete: photo added to Podcast: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (photo.getCompanyID() != null) {
+            DatabaseReference ref = db.getReference(COMPANIES)
+                    .child(photo.getCompanyID()).child(PHOTOS);
+            log("addPhotoToEntity", ref);
+            ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: photo added to Company: ".concat(databaseReference.getKey()));
                         listener.onResponse(databaseReference.getKey());
 
                     } else {

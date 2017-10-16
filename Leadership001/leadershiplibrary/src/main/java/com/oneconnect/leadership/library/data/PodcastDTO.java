@@ -14,7 +14,15 @@ import java.util.HashMap;
 
 public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<PodcastDTO>{
 
-    private String podcastID, transcript, stringDate, url, filePath, storageName, caption;
+    public static final int
+            RECORDING = 1,
+            PODCAST = 2;
+
+    public static final String
+            DESC_VOICE_RECORDING = "Recording",
+            DESC_PODCAST = "Podcast";
+
+    private String podcastID, transcript, stringDate, url, filePath, storageName, caption, podcastDescription;
     private Long date;
     private Double length;
     private String  stringDateUpdated, html, thumbnailUrl;
@@ -22,6 +30,7 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
     private Long dateUpdated, podcastSize;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID,
             eBookID, subjectTitle;
+    private int podcastType;
     private HashMap<String,String> urlLinks;
     private HashMap<String, PhotoDTO> photos;
     private HashMap<String, VideoDTO> videos;
@@ -32,6 +41,22 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
     private EBookDTO eBook;
     private VideoDTO video;
     private UrlDTO urlDTO;
+
+    public String getPodcastDescription() {
+        return podcastDescription;
+    }
+
+    public void setPodcastDescription(String podcastDescription) {
+        this.podcastDescription = podcastDescription;
+    }
+
+    public int getPodcastType() {
+        return podcastType;
+    }
+
+    public void setPodcastType(int podcastType) {
+        this.podcastType = podcastType;
+    }
 
     private HashMap<String,CalendarEventDTO> calendarEvents;
     private HashMap<String,RatingDTO> ratings;

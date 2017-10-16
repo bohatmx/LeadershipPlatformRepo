@@ -264,6 +264,8 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         File file = new File(path);
         v.setPodcastSize(file.length());
         v.setActive(true);
+        v.setPodcastType(PodcastDTO.PODCAST);
+        v.setPodcastDescription(PodcastDTO.DESC_PODCAST);
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 v.setDailyThoughtID(dailyThought.getDailyThoughtID());
@@ -334,13 +336,15 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(fab, 300, new Util.UtilAnimationListener() {
+                Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
+                startActivity(intent);
+               /* Util.flashOnce(fab, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
                         startActivity(intent);
                     }
-                });
+                });*/
             }
         });
         image2.setColorFilter(ContextCompat.getColor(PodcastSelectionActivity.this,R.color.black));

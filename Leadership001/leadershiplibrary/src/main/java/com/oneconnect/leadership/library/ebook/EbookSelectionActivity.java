@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -70,10 +72,13 @@ import com.oneconnect.leadership.library.util.DeleteContract;
 import com.oneconnect.leadership.library.util.DeletePresenter;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
+import com.shockwave.pdfium.PdfDocument;
+import com.shockwave.pdfium.PdfiumCore;
 
 import org.joda.time.DateTime;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -271,7 +276,9 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
                             @Override
                             public void onReadEbook(String path) {
+                           //     generateImageFromPdf(Uri.parse(path));
                                 readEbook(path);
+
                             }
 
                             @Override
@@ -295,6 +302,51 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
                     }
                 }
+            }
+        }
+    }
+
+    void generateImageFromPdf(Uri pdfUri) {
+        int pageNumber = 0;
+        PdfiumCore pdfiumCore = new PdfiumCore(this);
+        try {
+            //http://www.programcreek.com/java-api-examples/index.php?api=android.os.ParcelFileDescriptor
+            ParcelFileDescriptor fd = getContentResolver().openFileDescriptor(pdfUri, "r");
+            PdfDocument pdfDocument = pdfiumCore.newDocument(fd);
+            pdfiumCore.openPage(pdfDocument, pageNumber);
+            int width = pdfiumCore.getPageWidthPoint(pdfDocument, pageNumber);
+            int height = pdfiumCore.getPageHeightPoint(pdfDocument, pageNumber);
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            pdfiumCore.renderPageBitmap(pdfDocument, bmp, pageNumber, 0, 0, width, height);
+            saveImage(bmp);
+            pdfiumCore.closeDocument(pdfDocument); // important!
+        } catch(Exception e) {
+            //todo with exception
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public final static String FOLDER = Environment.getExternalStorageDirectory() + "/PDF";
+    private void saveImage(Bitmap bmp) {
+        Log.i(TAG, "saveImage");
+        FileOutputStream out = null;
+        try {
+            File folder = new File(FOLDER);
+            if(!folder.exists())
+                folder.mkdirs();
+            File file = new File(folder, "PDF.png");
+            out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+        } catch (Exception e) {
+            //todo with exception
+            Log.e(TAG, e.getMessage());
+        } finally {
+            try {
+                if (out != null)
+                    out.close();
+            } catch (Exception e) {
+                //todo with exception
+                Log.e(TAG, e.getMessage());
             }
         }
     }

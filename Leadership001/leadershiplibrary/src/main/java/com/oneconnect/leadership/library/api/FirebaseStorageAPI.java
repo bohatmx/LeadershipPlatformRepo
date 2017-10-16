@@ -541,6 +541,67 @@ public class FirebaseStorageAPI extends Activity {
         }
     }
 
+    public void uploadPodcastRecording(final PodcastDTO podcast,
+                              final StorageListener listener) {
+
+        final File f = new File(podcast.getFilePath());
+       /* if(podcast.getFilePath() == null) {
+            listener.onError("Cannot find podcast file for upload");
+            return;
+        }*/
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+               // e.printStackTrace();
+                listener.onError("Cannot find Podcast Recording file for upload");
+                return;
+            }
+            /*listener.onError("Cannot find podcast file for upload");
+            return;*/
+        }
+        final String storageName = podcast.getFilePath().concat(" - ").concat(sdf.format(new Date()));
+        StorageReference podcastReference = storageReference.child(PODCASTS
+                + storageName);
+        Log.w(TAG, "uploadPodcast: ******** starting upload ...: "
+                + f.getAbsolutePath().concat("\n").concat(GSON.toJson(podcast)));
+        try {
+
+            podcastReference.putStream(new FileInputStream(f))
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    podcast.setStorageName(PODCASTS.concat(storageName));
+                                    podcast.setUrl(taskSnapshot.getDownloadUrl().toString());
+                                    Log.d(TAG, "uploadPodcast onSuccess: ####### podcast in firebase storage.....starting addPodcastToFirebase method ...");
+                                    addPodcastToFirebase(podcast, taskSnapshot, listener);
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.e(TAG, "### onProgress: bytes transferred: "
+                            + getSize(taskSnapshot.getBytesTransferred())
+                            + " from total " + getSize(f.length()));
+                    listener.onProgress(taskSnapshot.getBytesTransferred(), f.length());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    FirebaseCrash.report(new Exception("Podcast file upload failed: "));
+                    listener.onError("Podcast upload failed");
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e(TAG, "uploadPodcast: we fell down", e);
+            FirebaseCrash.report(new Exception("Podcast file upload failed: "
+                    .concat(podcast.getTitle())));
+            listener.onError("Unable to upload the podcast file");
+        }
+    }
+
     public void uploadPodcast(final PodcastDTO podcast,
                             final StorageListener listener) {
 

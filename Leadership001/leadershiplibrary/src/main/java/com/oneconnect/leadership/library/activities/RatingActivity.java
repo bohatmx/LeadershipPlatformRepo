@@ -261,12 +261,13 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
 
             @Override
             public void onClick(View v) {
-                Util.flashOnce(btnSubmit, 300, new Util.UtilAnimationListener() {
+                uploadRating();
+               /* Util.flashOnce(btnSubmit, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
                         uploadRating();
                     }
-                });
+                });*/
 
                /* Toast.makeText(RatingActivity.this,
                         String.valueOf(ratingBar.getRating()),

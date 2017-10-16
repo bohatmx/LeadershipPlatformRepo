@@ -11,14 +11,28 @@
         android:layout_height="wrap_content"
         android:theme="@style/CommuterTheme">
 
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-
             app:popupTheme="@style/CommuterTheme"
             app:contentInsetStartWithNavigation="0dp"
-            />
+            >
+            <TextView
+                android:id="@+id/companyName"
+                style="@style/Title3TextStyleBlack"
+                android:gravity="center"
+                android:text="Company Name"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
+            <ImageView
+                android:id="@+id/logoIMG"
+                android:src="@drawable/harmony"
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_height="?attr/actionBarSize"/>
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 

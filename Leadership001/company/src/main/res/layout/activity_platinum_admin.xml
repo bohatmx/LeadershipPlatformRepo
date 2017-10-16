@@ -13,10 +13,6 @@ tools:openDrawer="start">
     layout="@layout/app_bar_company_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
-<!--
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">-->
 
     <android.support.design.widget.NavigationView
         android:id="@+id/platinum_admin_user_nav_view"
@@ -28,9 +24,6 @@ tools:openDrawer="start">
         app:itemTextColor="@color/black"
         app:itemIconTint="@color/black"
         app:menu="@menu/company_platinum_admin_user_drawer" />
-<!--</RelativeLayout>-->
-
-
 
 </android.support.v4.widget.DrawerLayout>
 

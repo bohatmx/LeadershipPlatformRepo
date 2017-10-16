@@ -65,6 +65,7 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
     private UserDTO user;
     private int type;
     RecyclerView pendingRecyclerView;
+    String hexColor;
 
 
 
@@ -78,6 +79,11 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
         //toolbar.setLogo(R.drawable.harmony);
 
         presenter = new CrudPresenter(this);
+
+        if (getIntent().getSerializableExtra("hexColor") != null) {
+            hexColor = String.format("#%06X", (0xFFFFFF));
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        }
 
         pendingRecyclerView = (RecyclerView) findViewById(R.id.pendingRecyclerView);
         pendingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -313,7 +319,6 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
     public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(TAG, "onPendingDailyThoughts: " + list.size());
         Collections.sort(list);
-
         adapter = new ApprovalThoughtAdapter(ctx, list, new ApprovalThoughtAdapter.ApprovalThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {

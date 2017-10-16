@@ -9,4 +9,10 @@
     tools:context="com.oneconnect.leadership.admin.crud.CrudActivity"
     tools:showIn="@layout/app_bar_crud">
 
+    <fragment
+        android:id="@+id/fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.oneconnect.leadership.library.lists.EntityListFragment"/>
+
 </RelativeLayout>

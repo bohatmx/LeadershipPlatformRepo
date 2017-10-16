@@ -42,7 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:src="@drawable/ic_person" />
+                        app:srcCompat="@drawable/ic_person" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -98,33 +98,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_call" />
+                    app:srcCompat="@drawable/ic_call" />
                 <ImageView
                     android:id="@+id/iconLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_my_location" />
+                    app:srcCompat="@drawable/ic_my_location" />
 
                 <ImageView
                     android:id="@+id/iconGallery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_gallery" />
+                    app:srcCompat="@drawable/ic_gallery" />
 
                 <ImageView
                     android:id="@+id/iconTakePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_camera" />
+                    app:srcCompat="@drawable/ic_camera" />
                 <ImageView
                     android:id="@+id/iconLogs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_clipboard" />
+                    app:srcCompat="@drawable/ic_clipboard" />
             </LinearLayout>
 
 

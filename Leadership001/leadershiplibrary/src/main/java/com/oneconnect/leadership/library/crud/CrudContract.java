@@ -34,6 +34,7 @@ public class CrudContract {
         void updateWeeklyMessage(WeeklyMessageDTO weeklyMessage);
         void updateNews(NewsDTO news);
         void updateCategory(CategoryDTO category);
+        void getCurrentUser(String email);
         void createUser(UserDTO user);
         void createCompany(CompanyDTO company);
         void deleteUser(UserDTO user);

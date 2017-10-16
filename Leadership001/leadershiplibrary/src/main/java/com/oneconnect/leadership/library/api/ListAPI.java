@@ -271,7 +271,8 @@ public class ListAPI {
 
     public void getAllPodcasts(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PODCASTS);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query q = ref.orderByChild("podcastDescription").equalTo(PodcastDTO.DESC_PODCAST);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){

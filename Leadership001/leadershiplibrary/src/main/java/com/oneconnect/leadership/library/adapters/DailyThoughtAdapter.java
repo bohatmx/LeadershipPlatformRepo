@@ -196,9 +196,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(dvh.imageView);
              //   dvh.captiontxt.setText(vDTO.getCaption());
-
-
             }
+
             dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -511,7 +510,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
                 photoAdapterLayout, urlAdapterLayout, updateLayout;
         protected Button btnPlay;
-        protected ImageView ratingBar;
+        protected ImageView ratingBar, ivUserProfilePhoto;
         protected EditText ratingCom;
         //video
         /*protected VideoView videoView;*/
@@ -553,6 +552,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             iconReview = (ImageView) itemView.findViewById(R.id.iconReview);
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
             videoFileName.setVisibility(View.GONE);*/
+
+            ivUserProfilePhoto = (ImageView) itemView.findViewById(R.id.ivUserProfilePhoto);
 
 
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);

@@ -19,6 +19,7 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 /**

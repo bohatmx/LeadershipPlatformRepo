@@ -82,7 +82,7 @@
                     android:id="@+id/ivUserProfilePhoto"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/folder"
+                    android:src="@drawable/com_facebook_profile_picture_blank_portrait"
                     android:layout_marginRight="16dp" />
 
                 <TextView
@@ -122,10 +122,10 @@
 
                 <RelativeLayout
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/ImageView"
-                    android:layout_alignTop="@id/ImageView"
-                    android:layout_alignRight="@id/ImageView"
-                    android:layout_alignBottom="@id/ImageView"
+                    android:layout_alignLeft="@+id/ImageView"
+                    android:layout_alignTop="@+id/ImageView"
+                    android:layout_alignRight="@+id/ImageView"
+                    android:layout_alignBottom="@+id/ImageView"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"

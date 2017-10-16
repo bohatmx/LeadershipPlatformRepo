@@ -103,14 +103,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.DataOb
             @Override
             public void onClick(View view) {
 
-                if (holder.messageLayout.getVisibility() == View.GONE) {
+               /* if (holder.messageLayout.getVisibility() == View.GONE) {
                     holder.messageLayout.setVisibility(View.VISIBLE);
                     animateIn(holder.iconGallery);
                     animateIn(holder.iconLocation);
                     animateIn(holder.iconTakePicture);
                 } else {
                     holder.messageLayout.setVisibility(View.GONE);
-                }
+                }*/
 
             }
         });

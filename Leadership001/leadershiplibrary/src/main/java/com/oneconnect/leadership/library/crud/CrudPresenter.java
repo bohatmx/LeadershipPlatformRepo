@@ -394,6 +394,26 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
+    public void getCurrentUser(String email) {
+        dataAPI.getUserByEmail(email, new DataAPI.EmailQueryListener() {
+            @Override
+            public void onUserFoundByEmail(UserDTO user) {
+                view.onUserFound(user);
+            }
+
+            @Override
+            public void onUserNotFoundByEmail() {
+
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void createUser(UserDTO user) {
         dataAPI.createUser(user, new DataAPI.CreateUserListener() {
             @Override
