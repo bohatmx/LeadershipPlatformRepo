@@ -154,25 +154,7 @@ public class WeeklyMessageListFragment extends Fragment implements PageFragment,
     private void getWeeklyMessages() {
         Log.d(LOG, "************** getWeeklyMessages: " );
         presenter.getAllWeeklyMessages();
-        switch (type) {
-            case Constants.INTERNAL_DATA:
-                if (user == null) {
-                    presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-                }  else {
-                    presenter.getWeeklyMessages(user.getCompanyID());
-                }
-                break;
-            case Constants.EXTERNAL_DATA:
-                presenter.getAllWeeklyMessages();
-                break;
         }
-        /*if (user == null) {
-            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-        }  else {
-            presenter.getWeeklyMessages(user.getCompanyID());
-        }*/
-         //   presenter.getAllWeeklyMessages();
-    }
 
 
 

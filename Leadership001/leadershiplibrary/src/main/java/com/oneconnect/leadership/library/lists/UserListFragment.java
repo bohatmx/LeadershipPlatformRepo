@@ -193,8 +193,6 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
         }  else {
             presenter.getUsers(user.getCompanyID());
         }
-         //   presenter.getUsers(user.getCompanyID());
-       // presenter.getAllStaff();
     }
 
     private void getCachedUsers() {

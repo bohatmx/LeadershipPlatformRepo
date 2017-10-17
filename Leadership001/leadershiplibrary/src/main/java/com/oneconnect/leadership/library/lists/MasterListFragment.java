@@ -137,7 +137,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void getWeeklyMasterClasses() {
         Log.d(LOG, "************** getWeeklyMasterClasses: " );
         presenter.getAllWeeklyMasterClasses();
-        switch (type) {
+       /* switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
                     presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
@@ -148,14 +148,8 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
             case Constants.EXTERNAL_DATA:
                 presenter.getAllWeeklyMasterClasses();
                 break;
-        }
-        /*
-        if (user == null) {
-            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-        }  else {
-            presenter.getWeeklyMasterclasses(user.getCompanyID());
         }*/
-          //  presenter.getAllWeeklyMasterClasses();
+
     }
 
     private void getCachedWeeklyMasterClasses() {

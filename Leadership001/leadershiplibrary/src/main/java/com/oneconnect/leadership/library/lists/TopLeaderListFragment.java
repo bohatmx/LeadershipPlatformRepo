@@ -208,12 +208,7 @@ public class TopLeaderListFragment extends Fragment implements PageFragment, Sub
 
     public void getTopLeaderThoughts() {
         Log.d(LOG, "************** getCompanyDailyThoughts: " );
-     /*   if (user == null) { */
         presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-       /* }  else {
-            presenter.getDailyThoughts(user.getCompanyID());
-        }*/
-
     }
 
     private void getCachedDailyThoughts() {

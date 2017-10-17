@@ -89,7 +89,7 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset PLDP"
+            android:text="Resetthis PLDP"
             android:id="@+id/resetScoreButton"
             android:onClick="resetHighscore"
             android:backgroundTint="@color/colorPrimary" />

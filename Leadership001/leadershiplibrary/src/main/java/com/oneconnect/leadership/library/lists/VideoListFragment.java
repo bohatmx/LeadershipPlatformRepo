@@ -167,7 +167,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     private void getVideos() {
         Log.d(LOG, "************** getVideos: " );
         presenter.getAllVideos();
-        switch (type) {
+      /*  switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
                     presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
@@ -178,7 +178,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             case Constants.EXTERNAL_DATA:
                 presenter.getAllVideos();
                 break;
-        }
+        }*/
 
     }
 

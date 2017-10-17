@@ -143,7 +143,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     public void getNewsArticle() {
         Log.d(LOG, "************** getNewsArticles: " );
         presenter.getAllNewsArticle();
-        switch (type) {
+       /* switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
                     presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
@@ -154,9 +154,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             case Constants.EXTERNAL_DATA:
                 presenter.getAllNewsArticle();
                 break;
-        }
-
-        /*presenter.getAllNewsArticle();*/
+        }*/
 
     }
 

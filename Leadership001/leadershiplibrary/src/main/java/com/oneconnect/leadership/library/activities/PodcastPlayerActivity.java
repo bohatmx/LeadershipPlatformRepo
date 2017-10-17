@@ -488,7 +488,6 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         pausebtn.setVisibility(View.VISIBLE);
         stopbtn.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.leadership_logo);
         getSupportActionBar().setSubtitle(podcast.getTitle());
         podcastIMGAE.setVisibility(View.VISIBLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

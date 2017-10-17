@@ -48,14 +48,7 @@ import java.util.List;
 
 import static android.R.id.list;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PhotoListener} interface
- * to handle interaction events.
- * Use the {@link PhotoListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PhotoListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View, BasicEntityAdapter.EntityListener{
     private PhotoListener mListener;
     public static final String TAG = PhotoListFragment.class.getSimpleName();
@@ -169,11 +162,8 @@ public class PhotoListFragment extends Fragment implements PageFragment, Subscri
 
     public void getPhotos() {
         Log.d(LOG, "************** getPhotos: " );
-    //    if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllPhotos();
-   //     } else {
-    //        Log.d(LOG, "user is null");
-     //   }
+
     }
 
     @Override

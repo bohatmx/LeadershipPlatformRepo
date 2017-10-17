@@ -54,14 +54,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PodcastListener} interface
- * to handle interaction events.
- * Use the {@link PodcastListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PodcastListFragment extends Fragment implements PageFragment, SubscriberContract.View,
         CacheContract.View, BasicEntityAdapter.EntityListener{
 
@@ -70,6 +63,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     public static final String TAG = PodcastListFragment.class.getSimpleName();
+
     public PodcastListFragment() {
         // Required empty public constructor
     }
@@ -141,7 +135,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void getPodcasts() {
         Log.d(LOG, "************** getPodcasts: " );
         presenter.getAllPodcasts();
-        switch (type) {
+       /* switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
                     presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
@@ -152,12 +146,8 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
             case Constants.EXTERNAL_DATA:
                 presenter.getAllPodcasts();
                 break;
-        }
-     //   if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
-          //  presenter.getAllPodcasts();
-    //    } else {
-    //        Log.d(LOG, "user is null");
-    //    }
+        }*/
+
     }
 
     private void getCachedPodcasts() {
