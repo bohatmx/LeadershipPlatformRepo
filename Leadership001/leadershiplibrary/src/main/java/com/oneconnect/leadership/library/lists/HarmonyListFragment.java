@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.MyDailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.PhotoAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -52,7 +54,8 @@ import java.util.List;
 public class HarmonyListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
-
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
     private HarmonyListFragment.HarmonyThoughtAdapterlistener mListener;
     private RecyclerView recyclerView, photoRecyclerView;
     private SubscriberPresenter presenter;
@@ -104,6 +107,7 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_harmony_list, container, false);
+        search = view.findViewById(R.id.search);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
@@ -131,18 +135,80 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
 
         return view;
     }
+    private void setRecyclerView(List<DailyThoughtDTO> dailyThoughtList) {
 
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new DailyThoughtAdapter(ctx, dailyThoughtList, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+    }
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<DailyThoughtDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < dailyThoughtList.size(); i++) {
+
+                final String text = dailyThoughtList.get(i).getTitle().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(dailyThoughtList.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
     private FirebaseAuth firebaseAuth;
     private UserDTO user = SharedPrefUtil.getUser(ctx);
 
     public void getCompanyDailyThoughts() {
         Log.d(LOG, "************** getCompanyDailyThoughts: " );
-     /*   if (user == null) { */
             presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-       /* }  else {
-            presenter.getDailyThoughts(user.getCompanyID());
-        }*/
-
     }
 
     private void getCachedDailyThoughts() {
@@ -264,6 +330,7 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);
+        setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
@@ -311,6 +378,7 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
         this.dailyThoughtList = list;
         list = getCategoryList(list, category.getCategoryName());
         Collections.sort(list);
+        setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
@@ -372,6 +440,7 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);
+        setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {

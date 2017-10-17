@@ -63,26 +63,6 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final EbookViewHolder vvh = (EbookViewHolder) holder;
         final String displayName = eBook.getStorageName().split("\\.", 2)[0];
         int i = displayName.lastIndexOf("/");
-        //
-
-      /*  if (v.getPhotos() != null) {
-          //  EBookDTO dtd = mList.get(position);
-            List<PhotoDTO> photoList = new ArrayList<>();
-            Map map = dtd.getPhotos();
-            PhotoDTO pDTO;
-            for (Object value: map.values()) {
-                pDTO = (PhotoDTO) value;
-                photoList.add(pDTO);
-                if (pDTO.getUrl() != null) {
-                    Glide.with(ctx)
-                            .load(pDTO.getUrl())
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(vvh.bookIcon);
-                }
-
-            }
-         } */
-        //
 
         vvh.fileName.setText(displayName.substring(i + 1));
         final String bookUrl = eBook.getUrl();

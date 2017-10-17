@@ -163,19 +163,11 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
 
-        //getCachedEBooks();
         getEBooks();
-      //  ebookListFragment = (EbookListFragment) getSupportFragmentManager().findFragmentById(R.id.ebookFragment);
-       // eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
+
 
     }
 
-   // @Override
-   //    {
-   //     super.onRestart();
-   //     finish();
-   //     startActivity(getIntent());
-   // }
 
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this/*ctx*/);
@@ -184,19 +176,6 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
                 .setPositiveButton("Use Gallery", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                   //    Intent intent = new Intent(EbookListActivity.this, PhotoSelectionActivity.class);
-                   //     eBook = (EBookDTO) base;
-                   //     intent.putExtra("eBook", eBook);
-                   //     intent.putExtra("type", ResponseBag.EBOOKS/*3*//*type*/);
-                        /*switch (type) {
-                            case ResponseBag.EBOOKS:
-                                // eBook = (EBookDTO) base;
-                                intent.putExtra("eBook", base*//*eBook*//*);
-                                break;
-                        }*/
-                   //     startActivity(intent);
-                        //startPhotoGallerySelection(base);
-                        // startCamera(base);
 
                         Intent intent = new Intent(EbookListActivity.this, PhotoActivity.class);
                         eBook = (EBookDTO) base;
@@ -211,16 +190,6 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
         type = ResponseBag.EBOOKS;
         eBook = (EBookDTO) base;
         intent.putExtra("eBook", eBook);
-     //   type = ResponseBag.EBOOKS;
-     //   eBook = (EBookDTO) base;
-      /*  m.putExtra("eBook", eBook);
-        intent.putExtra("type", type);
-        switch (type) {
-            case ResponseBag.EBOOKS:
-               // eBook = (EBookDTO) base;
-                intent.putExtra("eBook", base);
-                break;
-        }*/
         startActivity(intent);
     }
 
@@ -388,34 +357,6 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
         type = ResponseBag.EBOOKS;
         eBook = (EBookDTO) base;
         m.putExtra("eBook", eBook);
-      /*  m.putExtra("type", type);
-        switch (type) {
-            case ResponseBag.WEEKLY_MASTERCLASS:
-                weeklyMasterClass = (WeeklyMasterClassDTO) base;
-                m = new Intent(ctx, LinksActivity.class);
-                m.putExtra("weeklyMasterClass", weeklyMasterClass);
-                break;
-            case ResponseBag.WEEKLY_MESSAGE:
-                weeklyMessage = (WeeklyMessageDTO) base;
-                m = new Intent(ctx, LinksActivity.class);
-                m.putExtra("weeklyMessage", weeklyMessage);
-                break;
-            case ResponseBag.DAILY_THOUGHTS:
-                dailyThought = (DailyThoughtDTO) base;
-                m = new Intent(ctx, LinksActivity.class);
-                m.putExtra("dailyThought", dailyThought);
-                break;
-            case ResponseBag.PODCASTS:
-                podcast = (PodcastDTO) base;
-                m = new Intent(ctx, LinksActivity.class);
-                m.putExtra("podcast", podcast);
-                break;
-            case ResponseBag.EBOOKS:
-                eBook = (EBookDTO) base;
-                m = new Intent(ctx, LinksActivity.class);
-                m.putExtra("eBook", eBook);
-                break;
-        }*/
         startActivity(m);
         // startActivityForResult(m, REQUEST_LINKS);
     }
@@ -425,36 +366,7 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
         type = ResponseBag.EBOOKS;
         eBook = (EBookDTO) base;
         intent.putExtra("eBook", eBook);
-       //type=  ResponseBag.PODCASTS;
-       // podcast = (PodcastDTO) base;
-        //intent.putExtra("podcast", podcast);
-      //  intent.putExtra("type", type);
-     /*   switch (type) {
-            case ResponseBag.DAILY_THOUGHTS:
-                dailyThought = (DailyThoughtDTO) base;
-                intent.putExtra("dailyThought", dailyThought);
-                break;
-            case ResponseBag.WEEKLY_MASTERCLASS:
-                weeklyMasterClass = (WeeklyMasterClassDTO) base;
-                intent.putExtra("weeklyMasterClass", weeklyMasterClass);
-                break;
-            case ResponseBag.WEEKLY_MESSAGE:
-                weeklyMessage = (WeeklyMessageDTO) base;
-                intent.putExtra("weeklyMessage", weeklyMessage);
-                break;
-            case ResponseBag.EBOOKS:
-                eBook = (EBookDTO) base;
-                intent.putExtra("eBook", eBook);
-                break;
-            case ResponseBag.PODCASTS:
-                podcast = (PodcastDTO) base;
-                intent.putExtra("podcast", podcast);
-                break;
-            case ResponseBag.VIDEOS:
-                video = (VideoDTO) base;
-                intent.putExtra("video", video);
-                break;
-        } */
+
      startActivity(intent);
         //startActivityForResult(intent, type);
     }
@@ -464,34 +376,6 @@ public class EbookListActivity extends AppCompatActivity implements SubscriberCo
         type = ResponseBag.EBOOKS;
         eBook = (EBookDTO) base;
         m.putExtra("eBook", eBook);
-    /*    m.putExtra("type", type);
-        switch (type) {
-            case ResponseBag.DAILY_THOUGHTS:
-                dailyThought = (DailyThoughtDTO) base;
-                m.putExtra("dailyThought", dailyThought);
-                break;
-            case ResponseBag.WEEKLY_MASTERCLASS:
-                weeklyMasterClass = (WeeklyMasterClassDTO) base;
-                m.putExtra("weeklyMasterClass", weeklyMasterClass);
-                break;
-            case ResponseBag.WEEKLY_MESSAGE:
-                weeklyMessage = (WeeklyMessageDTO) base;
-                m.putExtra("weeklyMessage", weeklyMessage);
-                break;
-            case ResponseBag.EBOOKS:
-                eBook = (EBookDTO) base;
-                m.putExtra("eBook", eBook);
-                break;
-            case ResponseBag.PODCASTS:
-                podcast = (PodcastDTO) base;
-                //m = new Intent(this, LinksActivity.class);
-                m.putExtra("podcast", podcast);
-                break;
-            case ResponseBag.VIDEOS:
-                video = (VideoDTO) base;
-                m.putExtra("video", video);
-                break;
-        } */
 
         startActivity(m);
     }

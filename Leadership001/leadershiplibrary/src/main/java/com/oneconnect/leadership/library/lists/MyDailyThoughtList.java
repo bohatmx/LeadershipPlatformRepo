@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,8 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
-
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
 
     public MyDailyThoughtList() {
         // Required empty public constructor
@@ -103,7 +105,6 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
 
     private View view;
     private Context ctx;
-
     MyDailyThoughtAdapter adapter;
     private List<DailyThoughtDTO> dailyThoughtList = new ArrayList<>();
 
@@ -114,6 +115,7 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_my_daily_thought_list, container, false);
+        search = view.findViewById(R.id.search);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
@@ -143,6 +145,64 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
 
         return view;
     }
+
+    private void setRecyclerView(List<DailyThoughtDTO> dailyThoughtList) {
+
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new MyDailyThoughtAdapter(ctx, dailyThoughtList, new MyDailyThoughtAdapter.MyDailyThoughtAdapterlistener() {
+            @Override
+            public void onPhotoRequired(BaseDTO base) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(BaseDTO base) {
+
+            }
+
+            @Override
+            public void onVideoRequired(BaseDTO base) {
+
+            }
+
+            @Override
+            public void onLinkRequired(BaseDTO base) {
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+    }
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<DailyThoughtDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < dailyThoughtList.size(); i++) {
+
+                final String text = dailyThoughtList.get(i).getTitle().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(dailyThoughtList.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
+
     private  FirebaseAuth firebaseAuth;
     private UserDTO user = SharedPrefUtil.getUser(ctx);
 

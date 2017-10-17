@@ -57,7 +57,7 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
 
         void onAttachPhoto(EBookDTO ebook);
 
-        void onPhotoUpload(BaseDTO base/*String path*/);
+        void onPhotoUpload(BaseDTO base);
 
         void onDeleteEbook(EBookDTO eBook);
     }
@@ -96,13 +96,9 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
             holder.iconDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Util.flashOnce(holder.iconDelete, 300, new Util.UtilAnimationListener() {
-                        @Override
-                        public void onAnimationEnded() {
+
                             listener.onDeleteEbook(eBook);
                         }
-                    });
-                }
             });
         } else{
             holder.iconDelete.setVisibility(View.GONE);
@@ -129,39 +125,19 @@ public class EbookAdapter extends RecyclerView.Adapter<EbookAdapter.EbookViewHol
         holder.imageUploadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(context, PhotoSelectionActivity.class);
-                context.startActivity(intent);*/
-                //listener.onPhotoUpload(path);
-                Util.flashOnce(holder.imageUploadIcon, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        /*Intent intent = new Intent(context, PhotoSelectionActivity.class);
-                        intent.putExtra("type", type);
-                        switch (type) {
-                            case ResponseBag.EBOOKS:
-                                eBook = (EBookDTO) base;
-                                intent.putExtra("ebook", eBook);
-                                break;
-                        }
-                        context.startActivity(intent);*/
-                        //startPhotoGallerySelection(path);
+
                         listener.onPhotoUpload(eBook);
                     }
-                });
 
-            }
         });
         holder.eBookMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(holder.imageUploadIcon, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         listener.onAttachPhoto(mList.get(position));
 
                     }
-                });
-            }
+
         });
         if(eBook != null){
             if(eBook.getCoverUrl() != null){

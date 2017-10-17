@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,8 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
     private RecyclerView recyclerView;
     private Context ctx;
     private int type;
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
 
     public interface UserListListener {
         void onUsersTapped(UserDTO user);
@@ -105,6 +108,7 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_list, container, false);
+        search = view.findViewById(R.id.search);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -118,7 +122,70 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
         return view;
 
     }
+    private void setRecyclerView(List<UserDTO> users) {
 
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+
+        adapter = new UserListAdapter(users, ctx, new UserListAdapter.IconListener() {
+
+
+            @Override
+            public void onTakePicture(UserDTO user) {
+
+            }
+
+            @Override
+            public void onGallery(UserDTO user) {
+
+            }
+
+            @Override
+            public void onLocation(UserDTO user) {
+
+            }
+
+            @Override
+            public void onPhone(UserDTO user) {
+
+            }
+
+            @Override
+            public void onDriverLogs(UserDTO driver) {
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<UserDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < userList.size(); i++) {
+
+                final String text = userList.get(i).getFirstName().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(userList.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
     public void getUsers() {
         Log.d(TAG, "************** getUsers: " );
         if (user == null) {
@@ -572,9 +639,10 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onUsers(List<UserDTO> list) {
+
         Log.i(TAG, "onUsers: " + list.size());
         this.userList = list;
-//        Collections.sort(list);
+        setRecyclerView(list);
         adapter = new UserListAdapter(list, ctx, new UserListAdapter.IconListener() {
 
 

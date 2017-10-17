@@ -94,10 +94,7 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*String path = displayName;
-                FirebaseStorageAPI fbs = new FirebaseStorageAPI();
-                int i = displayName.lastIndexOf("/");
-                fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx); */
+
                 if (vvh.bottomLayout.getVisibility() == View.GONE) {
                     vvh.bottomLayout.setVisibility(View.VISIBLE);
                 } else {
@@ -109,12 +106,9 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         vvh.bookIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Util.flashOnce(vvh.bookIcon, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         vvh.iconDelete.setVisibility(View.VISIBLE);
-                    }
-                });
+
                 return false;
             }
         });
@@ -123,45 +117,33 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         vvh.iconUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.iconUpdate, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         listener.onUrlRequired(v);
-                    }
-                });
+
             }
         });
         vvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.iconMicrophone, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         listener.onPoadcastRequired(v);
-                    }
-                });
+
             }
         });
         vvh.iconVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.iconVideo, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         listener.onVideoRequired(v);
-                    }
-                });
+
             }
         });
         vvh.iconCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.iconCamera, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         listener.onAttachPhoto(v);
-                    }
-                });
+
             }
         });
         vvh.iconshar.setOnClickListener(new View.OnClickListener() {
@@ -174,27 +156,21 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         vvh.readIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.flashOnce(vvh.readIcon, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         String path = displayName;
                         FirebaseStorageAPI fbs = new FirebaseStorageAPI();
                         int i = displayName.lastIndexOf("/");
                         fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);
-                    }
-                });
+
             }
         });
 
         vvh.iconDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.iconDelete, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         listener.onDeleteEbook(v);
-                    }
-                });
+
             }
         });
 
@@ -202,15 +178,11 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         vvh.eBookMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(vvh.imageUploadIcon, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
+
                         listener.onAttachPhoto(v);
 
                     }
                 });
-            }
-        });
 
     }
 

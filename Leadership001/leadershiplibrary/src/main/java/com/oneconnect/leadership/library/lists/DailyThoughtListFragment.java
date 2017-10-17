@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,9 @@ import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.MyDailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.PhotoAdapter;
+import com.oneconnect.leadership.library.adapters.UserListAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
@@ -52,25 +55,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DailyThoughtListFragment} interface
- * to handle interaction events.
- * Use the {@link DailyThoughtListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
-
+    private RecyclerView.LayoutManager mLayoutManager;
     private DailyThoughtListener mListener;
     private RecyclerView recyclerView, photoRecyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
-
+    public SearchView search;
 
     public DailyThoughtListFragment() {
         // Required empty public constructor
@@ -117,6 +113,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
+        search = view.findViewById(R.id.search);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -148,6 +145,76 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
         return view;
     }
+    private void setRecyclerView(List<DailyThoughtDTO> dailyThoughtList) {
+
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new DailyThoughtAdapter(ctx, dailyThoughtList, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<DailyThoughtDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < dailyThoughtList.size(); i++) {
+
+                final String text = dailyThoughtList.get(i).getJournalUserName().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(dailyThoughtList.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
+
+
 
     private UserDTO user;
 
@@ -289,6 +356,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);
+        setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
@@ -338,6 +406,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);
+        setRecyclerView(list);
    //    this.dailyThoughtList = getDailyThoughtList(list, "approved");
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
@@ -414,6 +483,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             list = getCategoryList(list, category.getCategoryName());
         }
         Collections.sort(list);
+        setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {

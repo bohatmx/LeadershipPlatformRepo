@@ -264,12 +264,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     private void getEBooks() {
         Log.d(LOG, "************** getEBooks: " );
-     //   if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllEBooks();
-     //   } else {
-     //       Log.d(LOG, "user is null");
-      //  }
-
     }
 
     EbookAdapter adapter;
