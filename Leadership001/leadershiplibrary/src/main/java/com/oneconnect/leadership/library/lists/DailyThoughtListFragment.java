@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,7 +68,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
     public SearchView search;
-
+    private RelativeLayout searchLayout;
     public DailyThoughtListFragment() {
         // Required empty public constructor
     }
@@ -114,6 +115,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         // Inflate the layout for this fragment
        view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
         search = view.findViewById(R.id.search);
+        searchLayout = view.findViewById(R.id.searchLayout);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();

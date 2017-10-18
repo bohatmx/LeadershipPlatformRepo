@@ -1047,6 +1047,11 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
 
     }
 
+    @Override
+    public void onPhotoRequired(BaseDTO base) {
+
+    }
+
     private static class PagerAdapter extends FragmentStatePagerAdapter {
 
         public PagerAdapter(FragmentManager fm) {

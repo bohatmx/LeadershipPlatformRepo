@@ -301,7 +301,7 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
                 userEmail = header.findViewById(R.id.owner_email);
                 nav_layout = header.findViewById(R.id.nav_layout);
                 imageView = header.findViewById(R.id.imageView);
-                imageView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
                 companyName = (TextView) findViewById(R.id.companyName);
 
 
@@ -614,6 +614,11 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
 
     @Override
     public void onUsersTapped(UserDTO user) {
+
+    }
+
+    @Override
+    public void onPhotoRequired(BaseDTO base) {
 
     }
 

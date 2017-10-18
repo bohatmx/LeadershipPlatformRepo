@@ -60,16 +60,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link VideoListener} interface
- * to handle interaction events.
- * Use the {@link VideoListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class VideoListFragment extends Fragment implements VideoAdapter.VideoAdapterListener, PageFragment, SubscriberContract.View, CacheContract.View,
-        BasicEntityAdapter.EntityListener {
+public class VideoListFragment extends Fragment implements VideoAdapter.VideoAdapterListener, PageFragment, SubscriberContract.View,
+        CacheContract.View, BasicEntityAdapter.EntityListener {
     private VideoListener mListener;
     public static final String TAG = VideoListFragment.class.getSimpleName();
     private SubscriberPresenter presenter;
