@@ -13,11 +13,17 @@ import android.view.View;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.adapters.MasterAdapter;
 import com.oneconnect.leadership.library.cache.CachePresenter;
+import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
+import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.lists.MasterListFragment;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+
+import java.util.List;
 
 /**
  * Created by Kurisani on 2017/05/02.
@@ -67,6 +73,36 @@ public class MasterActivity  extends AppCompatActivity implements MasterAdapter.
 
         ft.replace(R.id.frame, entityListFragment);
         ft.commit();
+    }
+
+    @Override
+    public void onThoughtClicked(int position) {
+
+    }
+
+    @Override
+    public void onPhotoRequired(PhotoDTO photo) {
+
+    }
+
+    @Override
+    public void onVideoRequired(VideoDTO video) {
+
+    }
+
+    @Override
+    public void onPodcastRequired(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onUrlRequired(UrlDTO url) {
+
+    }
+
+    @Override
+    public void onPhotosRequired(List<PhotoDTO> list) {
+
     }
 
     @Override

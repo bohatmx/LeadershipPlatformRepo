@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
+import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
@@ -46,6 +47,7 @@ import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -68,6 +70,8 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     private int type;
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
 
     public VideoListFragment() {
         // Required empty public constructor
@@ -125,6 +129,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
         Log.d(TAG, "onCreateView: %%%%%%%%%%%%%%%%%%%%%%");
         view =  inflater.inflate(R.layout.fragment_video_list, container, false);
         presenter = new SubscriberPresenter(this);
+        search = view.findViewById(R.id.search);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -155,6 +160,55 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             }
         });
     }
+
+    private void setRecyclerView(List<VideoDTO> list) {
+
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new VideosAdapter(list, ctx, new VideosAdapter.VideosAdapterListener() {
+            @Override
+            public void onPlayClicked(String path) {
+                mediaController = new MediaController(ctx);
+                mediaController.setAnchorView(recyclerView);
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<VideoDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < videos.size(); i++) {
+
+                final String text = videos.get(i).getCaption().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(videos.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
 
     private void getVideos() {
         Log.d(LOG, "************** getVideos: " );

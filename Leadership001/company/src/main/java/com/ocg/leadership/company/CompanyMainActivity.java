@@ -1048,7 +1048,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     }
 
     @Override
-    public void onPhotoRequired(BaseDTO base) {
+    public void onPhotoRequired(UserDTO user) {
 
     }
 

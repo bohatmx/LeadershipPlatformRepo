@@ -77,18 +77,6 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        vvh.eBookMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (vvh.bottomLayout.getVisibility() == View.GONE) {
-                    vvh.bottomLayout.setVisibility(View.VISIBLE);
-                } else {
-                    vvh.bottomLayout.setVisibility(View.GONE);
-                }
-
-            }
-        });
-
         if(eBook != null){
             if(eBook.getCoverUrl() != null){
                 Glide.with(ctx)

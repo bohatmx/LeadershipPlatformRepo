@@ -181,12 +181,12 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
 
     @Override
     public void setJournalUserID(String userID) {
-
+       this.journalUserID = userID;
     }
 
     @Override
     public void setJournalUserName(String userName) {
-
+        this.journalUserName = userName;
     }
 
     @Override

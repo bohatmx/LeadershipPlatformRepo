@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -172,6 +173,11 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
 
             @Override
             public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
 
             }
         });
@@ -367,6 +373,11 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
             }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -414,6 +425,11 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -476,6 +492,11 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
             }
         });
         recyclerView.setAdapter(adapter);

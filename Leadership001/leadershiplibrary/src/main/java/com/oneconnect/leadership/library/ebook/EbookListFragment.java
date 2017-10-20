@@ -231,7 +231,8 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     private void getEBooks() {
         Log.d(LOG, "************** getEBooks: " );
-        switch (type) {
+        presenter.getAllEBooks();
+        /*switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
                     presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
@@ -242,7 +243,7 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
             case Constants.EXTERNAL_DATA:
                 presenter.getAllEBooks();
                 break;
-        }
+        }*/
         /*if (SharedPrefUtil.getUser(ctx).getCompanyID() != null) {
             presenter.getAllEBooks();
         } else {

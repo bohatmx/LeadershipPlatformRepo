@@ -91,17 +91,6 @@ public class AdminEbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         .into(vvh.bookIcon);
             }
         }
-        vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (vvh.bottomLayout.getVisibility() == View.GONE) {
-                    vvh.bottomLayout.setVisibility(View.VISIBLE);
-                } else {
-                    vvh.bottomLayout.setVisibility(View.GONE);
-                }
-            }
-        });
 
         vvh.bookIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

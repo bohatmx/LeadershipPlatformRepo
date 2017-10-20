@@ -618,9 +618,10 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
     }
 
     @Override
-    public void onPhotoRequired(BaseDTO base) {
+    public void onPhotoRequired(UserDTO user) {
 
     }
+
 
     private static class PagerAdapter extends FragmentStatePagerAdapter {
 

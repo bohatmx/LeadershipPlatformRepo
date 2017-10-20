@@ -103,16 +103,6 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
-        vvh.fileName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (vvh.bottomLayout.getVisibility() == View.GONE) {
-                    vvh.bottomLayout.setVisibility(View.VISIBLE);
-                } else {
-                    vvh.bottomLayout.setVisibility(View.GONE);
-                }
-            }
-        });
 
         vvh.videoView.setOnClickListener(new View.OnClickListener() {
             @Override

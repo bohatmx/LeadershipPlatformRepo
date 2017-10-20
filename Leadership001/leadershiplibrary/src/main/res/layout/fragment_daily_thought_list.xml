@@ -21,13 +21,12 @@
                 android:id="@+id/searchLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <SearchView
-                    android:layout_width="match_parent"
                     android:id="@+id/search"
-                    android:queryHint="Search for Daily Thoughts"
-                    android:layout_height="wrap_content">
-                </SearchView>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:iconifiedByDefault="false"
+                    android:queryHint="Search for Daily Thoughts" />
 
             </RelativeLayout>
 

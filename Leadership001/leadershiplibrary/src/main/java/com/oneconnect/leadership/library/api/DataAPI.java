@@ -1294,14 +1294,14 @@ public class DataAPI {
         }
 
         if (photo.getUserID() != null) {
-            DatabaseReference ref = db.getReference(DAILY_THOUGHTS)
+            DatabaseReference ref = db.getReference(USERS)
                     .child(photo.getUserID()).child(PHOTOS);
             log("addPhotoToEntity", ref);
             ref.push().setValue(photo, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
-                        Log.i(TAG, "onComplete: photo added to DailyThought: ".concat(databaseReference.getKey()));
+                        Log.i(TAG, "onComplete: photo added to user: ".concat(databaseReference.getKey()));
                         listener.onResponse(databaseReference.getKey());
 
                     } else {

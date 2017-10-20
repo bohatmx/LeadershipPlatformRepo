@@ -33,6 +33,7 @@ import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
+import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
@@ -42,6 +43,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Nkululeko on 2017/04/07.
@@ -56,6 +59,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     MiniPodcastAdapter miniPodcastAdapter;
     MiniVideoAdapter miniVideoAdapter;
     UrlAdapter urlAdapter;
+    private PhotoDTO photoDTO;
+    private UserDTO userDTO;
     private int type;
 
     public interface DailyThoughtAdapterlistener{
@@ -65,6 +70,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onPodcastRequired(PodcastDTO podcast);
         void onUrlRequired(UrlDTO url);
         void onPhotosRequired(List<PhotoDTO> list);
+        void onProfilePic(ImageView view);
 
     }
 
@@ -113,6 +119,13 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
+        dvh.ivUserProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onProfilePic(dvh.ivUserProfilePhoto);
+            }
+        });
+
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
             dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
@@ -134,10 +147,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         vDTO = (VideoDTO) value;
                         videoList.add(vDTO);
                     }
-
-                    /*Intent intent = new Intent(ctx, LeExoPlayerActivity.class);
-                    intent.putExtra("video", vDTO);
-                    ctx.startActivity(intent);*/
 
                    miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
                         @Override
@@ -167,7 +176,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
-        dvh.imageView.setOnClickListener(new View.OnClickListener() {
+      /*  dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dvh.bottomLayout.getVisibility() == View.GONE){
@@ -176,7 +185,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     dvh.bottomLayout.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
 
@@ -225,14 +234,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(dvh.photoView);
                         dvh.captiontxt.setText(vDTO.getCaption());
-
-                        /*Glide.with(ctx)
-                                .load(photoUrl)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(dvh.imageView);
-                        dvh.captiontxt.setText(vDTO.getCaption());*/
-
-
                     }
 
                     miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
@@ -396,6 +397,8 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
+
+
         if (dt.getUrls() != null) {
             dvh.txtLinks.setText("" + dt.getUrls().size());
             dvh.iconLink/*iconUpdate*/.setOnClickListener(new View.OnClickListener() {
@@ -447,7 +450,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
     private void showPopupMenu(View view) {
-        // inflate menu
         PopupMenu popup = new PopupMenu(ctx, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_dailythought, popup.getMenu());
@@ -455,9 +457,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         popup.show();
     }
 
-    /**
-     * Click listener for popup menu items
-     */
+
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         public MyMenuItemClickListener() {
@@ -473,16 +473,6 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return false;
         }
     }
-
-   /* String myDynamicLink = "https://vfb7b.app.goo.gl/tobR";
-    private void dynamicShare(){
-    Intent sendIntent = new Intent();
-    String msg = "Hey, check this out: " + myDynamicLink;
-    sendIntent.setAction(Intent.ACTION_SEND);
-    sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
-    sendIntent.setType("text/plain");
-    ctx.startActivity(sendIntent);
-}*/
 
     private void shareIt() {
         //sharing implementation here
@@ -510,11 +500,9 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
                 photoAdapterLayout, urlAdapterLayout, updateLayout;
         protected Button btnPlay;
-        protected ImageView ratingBar, ivUserProfilePhoto;
+        protected ImageView ratingBar;
         protected EditText ratingCom;
-        //video
-        /*protected VideoView videoView;*/
-        //
+       protected CircleImageView ivUserProfilePhoto;
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         //protected TextViewExpandableAnimation txtTitle;
         protected TextView txtTitle,profile, compName;
@@ -553,7 +541,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
             videoFileName.setVisibility(View.GONE);*/
 
-            ivUserProfilePhoto = (ImageView) itemView.findViewById(R.id.ivUserProfilePhoto);
+            ivUserProfilePhoto = (CircleImageView) itemView.findViewById(R.id.ivUserProfilePhoto);
 
 
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);

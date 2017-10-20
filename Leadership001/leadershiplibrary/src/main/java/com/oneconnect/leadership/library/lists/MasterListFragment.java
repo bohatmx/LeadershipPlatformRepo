@@ -9,12 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MasterAdapter;
+import com.oneconnect.leadership.library.adapters.MiniPhotoAdapter;
+import com.oneconnect.leadership.library.adapters.PhotoAdapter;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.WeeklyMasterclassCache;
@@ -33,6 +37,7 @@ import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -56,12 +61,14 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     private WeeklyMasterClassListener mListener;
     private ResponseBag bag;
     private EntityListFragment entityListFragment;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,photoRecyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     private UserDTO user;
     private MasterListener masterListener;
     private FirebaseAuth firebaseAuth;
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
 
     public interface MasterListener {
         void onWeeklyMasterClassesTapped(WeeklyMasterClassDTO master);
@@ -108,6 +115,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_weekly_master_class_list, container, false);
         presenter = new SubscriberPresenter(this);
+        search = view.findViewById(R.id.search);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
@@ -133,6 +141,81 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
         return view;
     }
     static final String LOG = MasterListFragment.class.getSimpleName();
+
+    private void setRecyclerView(List<WeeklyMasterClassDTO> masterList) {
+
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new MasterAdapter(ctx, masterList, new MasterAdapter.MasterAdapterListener() {
+
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
+
+            @Override
+            public void onMasterClicked(int position) {
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<WeeklyMasterClassDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < weeklyMasterList.size(); i++) {
+
+                final String text = weeklyMasterList.get(i).getTitle().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(weeklyMasterList.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
 
     public void getWeeklyMasterClasses() {
         Log.d(LOG, "************** getWeeklyMasterClasses: " );
@@ -616,18 +699,64 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
     }
 
+
     @Override
     public void onWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-        Log.i(LOG, "onWeeklyMasterclasses: " + list.size());
+
+        Log.w(LOG, "onWeeklyMasterclasses: " + list.size());
         this.weeklyMasterList = list;
         if (category != null) {
             list = getCategoryList(list, category.getCategoryName());
         }
-       // list = getCategoryList(list, category.getCategoryName());
-//        Collections.sort(list);
-        adapter = new MasterAdapter(ctx, list);
+        setRecyclerView(list);
+        adapter = new MasterAdapter(ctx, list, new MasterAdapter.MasterAdapterListener(){
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    @Override
+                    public void onPhotoClicked(PhotoDTO photo) {
+
+                    }
+                });
+                photoRecyclerView.setAdapter(miniPhotoAdapter);
+
+            }
+
+            @Override
+            public void onMasterClicked(int position) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
+
     }
+    MiniPhotoAdapter miniPhotoAdapter;
     private List<WeeklyMasterClassDTO> getCategoryList(List<WeeklyMasterClassDTO> list, String typeName){
         List<WeeklyMasterClassDTO> returnList = new ArrayList<>();
         for(WeeklyMasterClassDTO weeklyMasterClassDTO : list){

@@ -608,7 +608,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
     }
 
     @Override
-    public void onPhotoRequired(BaseDTO base) {
+    public void onPhotoRequired(UserDTO user) {
 
     }
 

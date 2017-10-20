@@ -825,7 +825,12 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                       dailyThought.setStatus("approved");
                       dailyThought.setUserType(UserDTO.DESC_PLATINUM_USER);
 
-                  } else {
+                  }
+                  else if(userType == UserDTO.PLATINUM_ADMIN){
+                    dailyThought.setStatus("approved");
+                    dailyThought.setUserType(UserDTO.DESC_PLATINUM_ADMIN);
+                  }
+                  else {
                       dailyThought.setStatus("pending");
                   }
 

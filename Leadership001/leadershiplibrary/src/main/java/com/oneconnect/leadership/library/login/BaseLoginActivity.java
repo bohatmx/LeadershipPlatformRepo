@@ -74,11 +74,11 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                         .setIsSmartLockEnabled(false)   //todo remove on release
                         .setTheme(R.style.RedTheme)
                         .setProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build() ))/*,
                                 googleIdp,
                                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build() ))
+                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()*/
                         .build(),
                 REQUEST_SIGN_IN);
     }
@@ -94,9 +94,9 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                         .setIsSmartLockEnabled(false)   //todo remove on release
                         .setTheme(R.style.RedTheme)
                         .setProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()/*,
                                 googleIdp,
-                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
+                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()*/))
                         .build(),
                 REQUEST_SIGN_IN);
     }
@@ -112,9 +112,9 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                         .setIsSmartLockEnabled(false)   //todo remove on release
                         .setTheme(R.style.RedTheme)
                         .setProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()/*,
                                 googleIdp,
-                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
+                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()*/))
                         .build(),
                 REQUEST_SIGN_IN);
     }

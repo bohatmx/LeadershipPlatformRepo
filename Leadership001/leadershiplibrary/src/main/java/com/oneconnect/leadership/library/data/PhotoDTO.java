@@ -231,12 +231,12 @@ public class PhotoDTO extends BaseDTO implements  Serializable, Comparable<Photo
 
     @Override
     public void setJournalUserID(String userID) {
-
+       this.journalUserID = userID;
     }
 
     @Override
     public void setJournalUserName(String userName) {
-
+     this.journalUserName = userName;
     }
 
     public String getStringDateScheduled() {

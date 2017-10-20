@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -42,6 +43,7 @@ import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
+import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
@@ -63,6 +65,8 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     public static final String TAG = PodcastListFragment.class.getSimpleName();
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
 
     public PodcastListFragment() {
         // Required empty public constructor
@@ -116,6 +120,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         Log.d(TAG, "onCreateView: .................");
         view =  inflater.inflate(R.layout.fragment_podcast_list, container, false);
         presenter = new SubscriberPresenter(this);
+        search = view.findViewById(R.id.search);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -149,7 +154,55 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         }*/
 
     }
+    private void setRecyclerView(List<PodcastDTO> podcastList) {
 
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new PodcastAdapter(podcasts, ctx, new PodcastAdapter.PodcastAdapterListener() {
+
+
+            @Override
+            public void onPlayClicked(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<PodcastDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < podcasts.size(); i++) {
+
+                final String text = podcasts.get(i).getStringDateRegistered().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(podcasts.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
     private void getCachedPodcasts() {
         PodcastCache.getPodcasts(ctx, new PodcastCache.ReadListener() {
             @Override

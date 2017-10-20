@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+
 import com.oneconnect.leadership.library.R;
 import com.google.android.youtube.player.internal.e;
 import com.google.firebase.crash.FirebaseCrash;
@@ -63,14 +65,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EBookListener} interface
- * to handle interaction events.
- * Use the {@link EBookListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class EBookListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
@@ -87,6 +81,8 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     private EBookDTO eBook;
     private int type;
     private UserDTO user;
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
 
     public EBookListFragment() {
 
@@ -137,6 +133,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
         Log.d(TAG, "onCreateView: #################");
         view =  inflater.inflate(R.layout.fragment_ebook_list, container, false);
         presenter = new SubscriberPresenter(this);
+        search = view.findViewById(R.id.search);
         ctx = getActivity();
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         /*LinearLayoutManager lm = new LinearLayoutManager(getActivity());
@@ -148,6 +145,66 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
         return view;
     }
+
+    private void setRecyclerView(List<EBookDTO> list) {
+
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new EbookAdapter(list, ctx, new EbookAdapter.EbookAdapterListener() {
+            @Override
+            public void onReadClicked(String path) {
+                //      File f = new File(path);
+                //    if (f.exists()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(path), "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent newIntent = Intent.createChooser(intent, "Open File");
+                try {
+                    ctx.startActivity(newIntent);
+                } catch(ActivityNotFoundException e) {
+                    Log.e(LOG, "Failed to open pdf");
+                }
+                // startActivity(intent);
+                //  }
+                //readEbook(path);
+
+
+            }
+
+
+
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<EBookDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < eBooks.size(); i++) {
+
+                final String text = eBooks.get(i).getCoverUrl().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(eBooks.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
 
     private void getCachedEBooks() {
         EbookCache.getEbooks(ctx, new EbookCache.ReadListener() {
