@@ -69,10 +69,11 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         vvh.bookIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String path = displayName;
+                listener.onReadClicked(bookUrl);
+                /*String path = displayName;
                 FirebaseStorageAPI fbs = new FirebaseStorageAPI();
                 int i = displayName.lastIndexOf("/");
-                fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);
+                fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);*/
 
             }
         });
