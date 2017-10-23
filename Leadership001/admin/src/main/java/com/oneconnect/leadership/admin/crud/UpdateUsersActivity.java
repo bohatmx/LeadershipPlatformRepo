@@ -13,7 +13,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.admin.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.crud.CrudContract;
@@ -42,6 +46,9 @@ import com.oneconnect.leadership.library.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Kurisani on 2017/08/30.
@@ -53,6 +60,7 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
     private TextInputEditText eFirst,eLast,eMail;
     private Spinner spinner;
     private Button btn;
+    private CircleImageView ivUserProfilePhoto;
     private CrudPresenter crudPresenter;
     Context ctx;
     private CategoryDTO category;
@@ -69,16 +77,35 @@ public class UpdateUsersActivity extends AppCompatActivity implements CrudContra
         eFirst = (TextInputEditText) findViewById(R.id.editFirstName);
         eLast = (TextInputEditText) findViewById(R.id.editLastName);
         eMail = (TextInputEditText) findViewById(R.id.editEmail);
+        ivUserProfilePhoto = (CircleImageView) findViewById(R.id.ivUserProfilePhoto);
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setVisibility(View.GONE);
 
-        if (getIntent().getSerializableExtra("user") != null){
+        if (getIntent().getSerializableExtra("user") != null) {
             user = (UserDTO) getIntent().getSerializableExtra("user");
             eFirst.setText(user.getFirstName());
             eLast.setText(user.getLastName());
             eMail.setText(user.getEmail());
-            spinner.setSelection(user.getUserType());
-        } if (getIntent().getSerializableExtra("category") != null) {
+            if (user.getPhotos() != null) {
+                List<PhotoDTO> urlList = new ArrayList<>();
+
+                Map map = user.getPhotos();
+                PhotoDTO vDTO;
+                String photoUrl;
+                for (Object value : map.values()) {
+                    vDTO = (PhotoDTO) value;
+                    photoUrl = vDTO.getUrl();
+                    urlList.add(vDTO);
+
+                    Glide.with(ctx)
+                            .load(photoUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(ivUserProfilePhoto);
+                    //   dvh.captiontxt.setText(vDTO.getCaption());
+                }
+                spinner.setSelection(user.getUserType());
+            }
+        }if (getIntent().getSerializableExtra("category") != null) {
             category = (CategoryDTO) getIntent().getSerializableExtra("category");
             eFirst.setText(category.getCategoryName());
             eLast.setVisibility(View.GONE);

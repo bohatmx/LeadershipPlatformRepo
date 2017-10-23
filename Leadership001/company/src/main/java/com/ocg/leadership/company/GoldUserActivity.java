@@ -299,7 +299,14 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         userEmail = header.findViewById(R.id.owner_email);
         nav_layout = header.findViewById(R.id.nav_layout);
         imageView = header.findViewById(R.id.imageView);
-        imageView.setVisibility(View.GONE);
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
         companyName = (TextView) findViewById(R.id.companyName);
 
         userName.setText(user.getFullName());
@@ -597,6 +604,11 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
 
     @Override
     public void onUsersTapped(UserDTO user) {
+
+    }
+
+    @Override
+    public void onPhotoRequired(UserDTO user) {
 
     }
 

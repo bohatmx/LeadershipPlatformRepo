@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.login;
 
+import com.ocg.backend.endpointAPI.model.FCMResponseDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 
 /**
@@ -16,6 +17,11 @@ public class LoginContract {
         void onUserNotFoundByEmail();
         void onUserAddedToAppDatabase(UserDTO user);
         void onUserAlreadyExists(UserDTO user);
+
+        void onFCMUserSaved(FCMResponseDTO response);
+
+        void onMessageSent(FCMResponseDTO response);
+
         void onError(String message);
     }
 }

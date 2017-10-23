@@ -56,12 +56,17 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private MediaPlayer mediaPlayer;
     String url;
 
-
     public interface MasterAdapterListener{
+        void onThoughtClicked(int position);
+        void onPhotoRequired(PhotoDTO photo);
+        void onVideoRequired(VideoDTO video);
+        void onPodcastRequired(PodcastDTO podcast);
+        void onUrlRequired(UrlDTO url);
+        void onPhotosRequired(List<PhotoDTO> list);
         void onMasterClicked(int position);
     }
 
-    public MasterAdapter(Context ctx, List<WeeklyMasterClassDTO> mList){
+    public MasterAdapter(Context ctx, List<WeeklyMasterClassDTO> mList, MasterAdapterListener listener){
         this.ctx = ctx;
         this.mList = mList;
     }
@@ -103,7 +108,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
-        dvh.imageView.setOnClickListener(new View.OnClickListener() {
+      /*  dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dvh.bottomLayout.getVisibility() == View.GONE){
@@ -112,7 +117,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     dvh.bottomLayout.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
 
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());

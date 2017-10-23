@@ -299,8 +299,8 @@ public class Util {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    /*if (listener != null)
-                        listener.onAnimationEnded();*/
+                    if (listener != null)
+                        listener.onAnimationEnded();
                 }
 
                 @Override

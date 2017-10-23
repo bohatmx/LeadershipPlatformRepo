@@ -127,12 +127,13 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 .concat(key));
         dailyThought.setDailyThoughtID(key);
         bottomSheetListener.onWorkDone(dailyThought);
-        if (getOutputFile() != null) {
+        this.dismiss();
+        /*if (getOutputFile() != null) {
             AudioSavePathInDevice = getOutputFile().getAbsolutePath();
             sendPodcastWithDailyThought(AudioSavePathInDevice);
-            /*sendPodcastWithDailyThought(getOutputFile().getAbsolutePath());*/
+            /*sendPodcastWithDailyThought(getOutputFile().getAbsolutePath());
         }
-     //   this.dismiss();
+     this.dismiss();*/
     }
 
     @Override
@@ -491,7 +492,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             public void onClick(View v) {
                 if (getOutputFile() != null) {
                     Log.i(TAG, "outputFile is not null");
-                    stopRecording();
+                    //stopRecording();
                     send();
                     /*AudioSavePathInDevice = getOutputFile().getAbsolutePath();
                     sendPodcastWithDailyThought(AudioSavePathInDevice);*/
@@ -519,6 +520,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         timer.setVisibility(View.GONE);
         iconVideo = (ImageView) view.findViewById(R.id.iconVideo);
         iconMicrophone = (ImageView) view.findViewById(R.id.iconMicrophone);
+        iconMicrophone.setVisibility(View.GONE);
         iconMicrophone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -821,8 +823,14 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                   }
                   if (userType == UserDTO.PLATINUM_USER){
                       dailyThought.setStatus("approved");
+                      dailyThought.setUserType(UserDTO.DESC_PLATINUM_USER);
 
-                  } else {
+                  }
+                  else if(userType == UserDTO.PLATINUM_ADMIN){
+                    dailyThought.setStatus("approved");
+                    dailyThought.setUserType(UserDTO.DESC_PLATINUM_ADMIN);
+                  }
+                  else {
                       dailyThought.setStatus("pending");
                   }
 

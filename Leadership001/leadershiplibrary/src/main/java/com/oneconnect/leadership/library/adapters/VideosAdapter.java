@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,8 +24,10 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.Util;
+import com.oneconnect.leadership.library.video.VideoPlayerActivity;
 
 import java.io.File;
 import java.util.List;
@@ -100,16 +103,6 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
-        vvh.fileName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (vvh.bottomLayout.getVisibility() == View.GONE) {
-                    vvh.bottomLayout.setVisibility(View.VISIBLE);
-                } else {
-                    vvh.bottomLayout.setVisibility(View.GONE);
-                }
-            }
-        });
 
         vvh.videoView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +173,14 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
+        vvh.card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("video", v);
+                ctx.startActivity(intent);
+            }
+        });
 
     }
 
@@ -250,12 +251,14 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
          protected VideoView videoView;
          protected SeekBar videoSeekBar;
          protected RelativeLayout bottomLayout;
+         protected CardView card_view;
 
 
         public VideosViewHolder(View itemView) {
             super(itemView);
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             image = (ImageView) itemView.findViewById(R.id.image);
+            card_view = (CardView) itemView.findViewById(R.id.card_view);
             //btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             //btnPlay.setVisibility(View.GONE);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
@@ -264,10 +267,11 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             overflow = (ImageView) itemView.findViewById(R.id.overflow);
             count = (TextView) itemView.findViewById(R.id.fileName);
             playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
+            playbtn.setVisibility(View.GONE);
             pausebtn = (ImageView) itemView.findViewById(R.id.pausebtn);
             pausebtn.setVisibility(View.GONE);
             playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
-
+            playbtn.setVisibility(View.GONE);
             videoSeekBar = (SeekBar) itemView.findViewById(R.id.videoSeekBar);
             videoSeekBar.setVisibility(View.GONE);
         }

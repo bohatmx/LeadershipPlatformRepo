@@ -62,12 +62,6 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private int type;
 
     public interface MyDailyThoughtAdapterlistener{
-        /*void onThoughtClicked(int position);
-        void onPhotoRequired(PhotoDTO photo);
-        void onVideoRequired(VideoDTO video);
-        void onPodcastRequired(PodcastDTO podcast);
-        void onUrlRequired(UrlDTO url);
-        void onPhotosRequired(List<PhotoDTO> list);*/
         void onPhotoRequired(BaseDTO base);
         void onPodcastRequired(BaseDTO base);
         void onVideoRequired(BaseDTO base);
@@ -111,7 +105,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         long miliSecs = Util.getMiliseconds(sb.toString());
         String formatedDate = Util.getFormattedDate(miliSecs);
         dvh.txtDate.setText(formatedDate);
-        dvh.iconCamera.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_photo_black_24dp)/*ctx.getDrawable(R.drawable.ic_photo_black_24dp)*/);
+        dvh.iconCamera.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_photo_black_24dp));
         dvh.iconCalendar.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.pending));
 
         if (dt.getStatus() != null) {
@@ -120,7 +114,6 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     @Override
                     public void onClick(View v) {
                         Toasty.warning(ctx,"You Thought is still pending", Toast.LENGTH_LONG,true).show();
-                        //Toast.makeText(ctx, "You Thought is still pending", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -130,7 +123,6 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     @Override
                     public void onClick(View v) {
                         Toasty.success(ctx, "You Thought is approved", Toast.LENGTH_LONG, true).show();
-                       // Toast.makeText(ctx, "You Thought is approved", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -140,7 +132,6 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     @Override
                     public void onClick(View v) {
                         Toasty.error(ctx,"You Thought is declined",Toast.LENGTH_LONG,true).show();
-                        //Toast.makeText(ctx, "You Thought is declined", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -210,7 +201,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             });*/
         }
-        dvh.imageView.setOnClickListener(new View.OnClickListener() {
+       /* dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (dvh.bottomLayout.getVisibility() == View.GONE){
@@ -219,7 +210,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     dvh.bottomLayout.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
 
         dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
             @Override

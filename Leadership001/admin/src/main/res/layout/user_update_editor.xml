@@ -12,11 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/mon_margin"
         android:padding="@dimen/mon_margin">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivUserProfilePhoto"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/com_facebook_profile_picture_blank_portrait"
+            android:layout_marginRight="16dp" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/t1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivUserProfilePhoto">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/editFirstName"

@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.photo;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,7 +26,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.SubscriberContract;
+import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.api.ListAPI;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
@@ -34,6 +38,7 @@ import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
+import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
 import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
@@ -41,6 +46,7 @@ import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
+import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.SubscriptionDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -68,7 +74,7 @@ import java.util.regex.Pattern;
 
 import es.dmoral.toasty.Toasty;
 
-public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View, CrudContract.View{
+public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View, CrudContract.View,SubscriberContract.View{
 
 
     private RecyclerView recyclerView;
@@ -100,7 +106,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     FirebaseStorageAPI fbs;
     List<PhotoDTO> photoDTOs;
     boolean isServerList;
-
+    private Context ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +119,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         presenter = new PhotoUploadPresenter(this);
         presenterPhotoDownload = new PhotoDownloadPresenter(this);
         fbs = new FirebaseStorageAPI();
-        //remove if it doesnt work
+        user = SharedPrefUtil.getUser(ctx);
+        subscriberPresenter = new SubscriberPresenter(this);
         eBookpresenter = new EbookUploadPresenter(this);
         crudPresenter = new CrudPresenter(this);
 
@@ -190,7 +197,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
             getSupportActionBar().setSubtitle(dailyThought.getTitle());
         }
-
+        firebaseAuth = FirebaseAuth.getInstance();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(lm);
@@ -465,14 +472,16 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 .show();
     }
 
-
+    private SubscriberPresenter subscriberPresenter;
+    private FirebaseAuth firebaseAuth;
     private void uploadPhoto(String path) {
         showSnackbar("Uploading photo ...", "OK", Constants.CYAN);
         PhotoDTO p = new PhotoDTO();
 
         UserDTO u = SharedPrefUtil.getUser(getApplicationContext());
-        // v.setCompanyName(u.getCompanyName());
-        // v.setCompanyID(u.getCompanyID());
+        subscriberPresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        p.setUserName(u.getFullName());
+        p.setUserID(u.getUserID());
         p.setFilePath(path);
         File file = new File(path);
         p.setImageSize(file.length());
@@ -537,7 +546,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             return;
         }
         if (type == ResponseBag.USERS) {
-            presenter.uploadUserPhoto(user);
+            p.setUserID(user.getUserID());
+            presenter.uploadPhoto(p);
             return;
         }
         if (type == ResponseBag.COMPANIES){
@@ -649,7 +659,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         PhotoDTO p = new PhotoDTO();
         p.setFilePath(photoFile.getAbsolutePath());
         UserDTO u = SharedPrefUtil.getUser(this);
-        p.setJournalUserName(u.getFullName());
+        p.setJournalUserName(u.getFirstName() + "" + u.getLastName());
         p.setJournalUserID(u.getUserID());
         p.setCompanyID(u.getCompanyID());
         p.setCompanyName(u.getCompanyName());
@@ -708,6 +718,21 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     public void onAllPhotos(List<PhotoDTO> list) {
         photoDTOs = list;
         serverList = getThumbNailUrl(list);
+    }
+
+    @Override
+    public void onAllWeeklyMessages(List<WeeklyMessageDTO> list) {
+
+    }
+
+    @Override
+    public void onAllPodcasts(List<PodcastDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCalendarEvents(List<CalendarEventDTO> list) {
+
     }
 
     @Override
@@ -831,6 +856,41 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     }
 
     @Override
+    public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onAllSubscriptions(List<SubscriptionDTO> list) {
+
+    }
+
+    @Override
+    public void onAllNewsArticle(List<NewsDTO> list) {
+
+    }
+
+    @Override
+    public void onAllCategories(List<CategoryDTO> list) {
+
+    }
+
+    @Override
+    public void onAllVideos(List<VideoDTO> list) {
+
+    }
+
+    @Override
+    public void onAllEBooks(List<EBookDTO> list) {
+
+    }
+
+    @Override
     public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
@@ -862,6 +922,37 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     @Override
     public void onUserFound(UserDTO user) {
+        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching user photos");
+        subscriberPresenter.getPhotos(user.getCompanyID());
+    }
+
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
+    public void onAllRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onDailyThoughtRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMessageRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onWeeklyMasterClassRatings(List<RatingDTO> list) {
+
+    }
+
+    @Override
+    public void onDailythoughtsByUser(List<DailyThoughtDTO> list) {
 
     }
 

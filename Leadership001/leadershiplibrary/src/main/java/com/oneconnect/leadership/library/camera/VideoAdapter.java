@@ -2,6 +2,7 @@ package com.oneconnect.leadership.library.camera;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
@@ -66,6 +67,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             @Override
             public void onClick(View v) {
                 listener.onPlayVideoTapped(path);
+                    // Video is either stopped or buffering
             }
         });
 
@@ -87,6 +89,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             image = (ImageView) itemView.findViewById(R.id.image);
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
+
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
 
     }

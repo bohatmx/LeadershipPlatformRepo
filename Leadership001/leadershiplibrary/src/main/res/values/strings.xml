@@ -205,5 +205,6 @@
     <string name="resultsDesc">Individual question results:</string>
     <string name="aboutFile">https://iono.fm/e/136415</string>
     <string name="highscore" formatted="false">Highscore: %.1f%%</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 </resources>

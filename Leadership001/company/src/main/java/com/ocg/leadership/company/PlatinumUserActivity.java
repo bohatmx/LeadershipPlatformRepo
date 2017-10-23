@@ -46,6 +46,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
@@ -279,7 +281,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         }
         presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
     }
-
+    private UserListFragment.UserListListener listener;
     private void setup() {
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -292,13 +294,19 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         platinum_nav_view = (NavigationView) findViewById(R.id.platinum_nav_view);
         platinum_nav_view.setNavigationItemSelectedListener(this);
         platinum_nav_view.setVisibility(View.VISIBLE);
-        View header = platinum_nav_view.getHeaderView(0);
+        final View header = platinum_nav_view.getHeaderView(0);
 
         userName = header.findViewById(R.id.owner_name);
         userEmail = header.findViewById(R.id.owner_email);
         nav_layout = header.findViewById(R.id.nav_layout);
         imageView = header.findViewById(R.id.imageView);
-        imageView.setVisibility(View.GONE);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickGalleryOrCamera(user);
+            }
+        });
+
         companyName = (TextView) findViewById(R.id.companyName);
 
 
@@ -457,14 +465,15 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
 
     private void startPhotoGallerySelection(BaseDTO base){
         Intent intent = new Intent(this, PhotoSelectionActivity.class);
-        intent.putExtra("type", type);
-        switch (type) {
-            case ResponseBag.USERS:
+        //intent.putExtra("user", user);
+       // intent.putExtra("type", type);
+    //    switch (type) {
+      //      case ResponseBag.USERS:
                 user = (UserDTO) base;
                 intent.putExtra("user", user);
-                break;
+        //        break;
 
-        }
+       // }
         startActivity(intent);
     }
     public ArrayList<String> getPhotosOnDevice() {
@@ -603,6 +612,11 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
 
     @Override
     public void onUsersTapped(UserDTO user) {
+
+    }
+
+    @Override
+    public void onPhotoRequired(UserDTO user) {
 
     }
 
@@ -992,6 +1006,22 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
     @Override
     public void onUserFound(UserDTO user) {
         Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        if (user.getPhotos() != null) {
+            List<PhotoDTO> urlList = new ArrayList<>();
+            Map map = user.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            }
+        }
         presenter.getCompanyProfile(user.getCompanyID());
     }
 

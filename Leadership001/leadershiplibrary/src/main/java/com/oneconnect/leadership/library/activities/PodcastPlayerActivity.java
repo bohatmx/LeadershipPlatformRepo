@@ -27,6 +27,7 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -59,8 +60,8 @@ import java.util.concurrent.TimeUnit;
 public class PodcastPlayerActivity extends AppCompatActivity {
 
      TextView fileName,count, txtSubtitle, txtLinks, txtMicrophone, txtVideo, txtCamera, urlTxt, podcastfileName,textCurrentPosition,
-             textView_maxTime;
-     ImageView image, overflow, playbtn, pausebtn, stopbtn, podcastIMGAE, iconUpdate, iconDelete, iconMicrophone,
+             textView_maxTime, textView2;
+     ImageView image, overflow, playbtn, pausebtn, stopbtn, rewindIMG, fowardIMG,podcastIMGAE, iconUpdate, iconDelete, iconMicrophone,
              iconVideo, iconCamera, photoView, iconShare;
      Button btnPlay;
      VideoView videoView;
@@ -78,6 +79,13 @@ public class PodcastPlayerActivity extends AppCompatActivity {
     LinearLayout podcastPlayerLayout;
     private Handler threadHandler = new Handler();
 
+
+    private double startTime = 0;
+    private double finalTime = 0;
+    private int forwardTime = 5000;
+    private int backwardTime = 5000;
+    public static int oneTimeOnly = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +93,6 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
-        toolbar.setLogo(R.drawable.harmony);
 
         fileName = (TextView) findViewById(R.id.fileName);
         image = (ImageView) findViewById(R.id.image);
@@ -102,13 +109,9 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         urlRecyclerView.setLayoutManager(llm3);
         urlRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(ctx));
         urlRecyclerView.setHasFixedSize(true);
-
-        //
-        //btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
-        //btnPlay.setVisibility(View.GONE);
+        textView2 = (TextView) findViewById(R.id.textView2);
         bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
         videoView = (VideoView) findViewById(R.id.videoView);
-
         overflow = (ImageView) findViewById(R.id.overflow);
         overflow.setVisibility(View.GONE);
         count = (TextView) findViewById(R.id.fileName);
@@ -118,6 +121,10 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         pausebtn.setVisibility(View.GONE);
         stopbtn = (ImageView) findViewById(R.id.stopIMG);
         stopbtn.setVisibility(View.GONE);
+        rewindIMG = (ImageView) findViewById(R.id.rewindIMG);
+        rewindIMG.setVisibility(View.GONE);
+        fowardIMG = (ImageView) findViewById(R.id.fowardIMG);
+        fowardIMG.setVisibility(View.GONE);
         txtLinks = (TextView) findViewById(R.id.txtLinks);
         txtMicrophone = (TextView) findViewById(R.id.txtMicrophone);
         txtVideo = (TextView) findViewById(R.id.txtVideo);
@@ -159,33 +166,14 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         //
 
         bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
+        bottomLayout.setVisibility(View.GONE);
 
         podcastPlayerLayout = (LinearLayout) findViewById(R.id.podcastPlayerLayout);
 
         iconShare = (ImageView) findViewById(R.id.iconShare);
-        /*iconShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Util.flashOnce(iconShare, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        showFullView();
-                    }
-                });
-            }
-        });*/
 
         deleteLayout = (RelativeLayout) findViewById(R.id.deleteLayout);
         deleteLayout.setVisibility(View.GONE);
-
-       /* videoView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showFullView();
-                return true;
-            }
-        });*/
-
 
 
         if (getIntent().getSerializableExtra("video") != null) {
@@ -316,31 +304,7 @@ public class PodcastPlayerActivity extends AppCompatActivity {
                                     Log.e(LOG, "You might not set the URI correctly!");
                                 }
                                 mediaPlayer.start();
-                            //}
-                       // });
-                        //
 
-                        //
-                       /* dvh.pauseIMG.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaPlayer.pause();
-                                dvh.pauseIMG.setVisibility(View.GONE);
-                                dvh.playIMG.setVisibility(View.VISIBLE);
-                                dvh.stopIMG.setVisibility(View.VISIBLE);
-                            }
-                        });
-
-                        dvh.stopIMG.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mediaPlayer.stop();
-                                dvh.playIMG.setVisibility(View.VISIBLE);
-                                dvh.pauseIMG.setVisibility(View.GONE);
-                                dvh.stopIMG.setVisibility(View.GONE);
-                            }
-                        });*/
-                        //
                     }
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
@@ -487,6 +451,8 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         videoView.setVisibility(View.GONE);
         pausebtn.setVisibility(View.VISIBLE);
         stopbtn.setVisibility(View.VISIBLE);
+        fowardIMG.setVisibility(View.VISIBLE);
+        rewindIMG.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
         getSupportActionBar().setSubtitle(podcast.getTitle());
         podcastIMGAE.setVisibility(View.VISIBLE);
@@ -517,7 +483,7 @@ public class PodcastPlayerActivity extends AppCompatActivity {
 
         int duration = mediaPlayer.getDuration();
 
-        int currentPosition = mediaPlayer.getCurrentPosition();
+      /*  int currentPosition = mediaPlayer.getCurrentPosition();
         if(currentPosition== 0)  {
             timeFormat.format(currentPosition);
             videoSeekBar.setMax(duration);
@@ -529,20 +495,48 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         } else if(currentPosition== duration)  {
             // Resets the MediaPlayer to its uninitialized state.
             mediaPlayer.reset();
-        }
+        }*/
         mediaPlayer.start();
+        finalTime = mediaPlayer.getDuration();
+        startTime = mediaPlayer.getCurrentPosition();
+
+        if (oneTimeOnly == 0) {
+            videoSeekBar.setMax((int) finalTime);
+            oneTimeOnly = 1;
+        }
+
+        textView_maxTime.setText(String.format("%d min, %d sec",
+                TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
+                TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                finalTime)))
+        );
+        textCurrentPosition.setText(String.format("%d min, %d sec",
+                TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long)
+                                startTime)))
+        );
+
+        videoSeekBar.setProgress((int)startTime);
+        threadHandler.postDelayed(UpdateSongTime,100);
+        fowardIMG.setEnabled(true);
+        stopbtn.setEnabled(false);
+
         // Create a thread to update position of SeekBar.
-        UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
-        threadHandler.postDelayed(updateSeekBarThread,50);
+      /*  UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
+        threadHandler.postDelayed(updateSeekBarThread,50);*/
 
         pausebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                        mediaPlayer.pause();
-                        pausebtn.setVisibility(View.GONE);
-                        playbtn.setVisibility(View.VISIBLE);
-                        stopbtn.setVisibility(View.VISIBLE);
+                mediaPlayer.pause();
+                pausebtn.setVisibility(View.GONE);
+                playbtn.setVisibility(View.VISIBLE);
+                stopbtn.setVisibility(View.VISIBLE);
+                rewindIMG.setVisibility(View.VISIBLE);
+                fowardIMG.setVisibility(View.VISIBLE);
             }
         });
 
@@ -554,6 +548,8 @@ public class PodcastPlayerActivity extends AppCompatActivity {
                       //  mediaPlayer.reset();
                         stopbtn.setVisibility(View.GONE);
                         pausebtn.setVisibility(View.GONE);
+                        rewindIMG.setVisibility(View.VISIBLE);
+                         fowardIMG.setVisibility(View.VISIBLE);
                         playbtn.setVisibility(View.VISIBLE);
             }
         });
@@ -564,9 +560,41 @@ public class PodcastPlayerActivity extends AppCompatActivity {
 
                         mediaPlayer.start();
                         playbtn.setVisibility(View.GONE);
+                        rewindIMG.setVisibility(View.VISIBLE);
+                        fowardIMG.setVisibility(View.VISIBLE);
                         pausebtn.setVisibility(View.VISIBLE);
                         stopbtn.setVisibility(View.VISIBLE);
 
+            }
+        });
+
+        fowardIMG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int temp = (int)startTime;
+
+                if((temp+forwardTime)<=finalTime){
+                    startTime = startTime + forwardTime;
+                    mediaPlayer.seekTo((int) startTime);
+                    Toast.makeText(getApplicationContext(),"You have Jumped forward 5 seconds",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Cannot jump forward 5 seconds",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        rewindIMG.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int temp = (int)startTime;
+
+                if((temp-backwardTime)>0){
+                    startTime = startTime - backwardTime;
+                    mediaPlayer.seekTo((int) startTime);
+                    Toast.makeText(getApplicationContext(),"You have Jumped backward 5 seconds",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(),"Cannot jump backward 5 seconds",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -727,6 +755,18 @@ public class PodcastPlayerActivity extends AppCompatActivity {
         mediaPlayer.stop();
         finish();
     }
-
+    private Runnable UpdateSongTime = new Runnable() {
+        public void run() {
+            startTime = mediaPlayer.getCurrentPosition();
+            textCurrentPosition.setText(String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                    toMinutes((long) startTime)))
+            );
+            videoSeekBar.setProgress((int)startTime);
+            threadHandler.postDelayed(this, 50);
+        }
+    };
     static final String LOG = PodcastPlayerActivity.class.getSimpleName();
 }

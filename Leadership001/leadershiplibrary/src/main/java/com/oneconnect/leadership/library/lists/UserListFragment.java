@@ -66,6 +66,7 @@ public class UserListFragment extends Fragment implements PageFragment, Subscrib
 
     public interface UserListListener {
         void onUsersTapped(UserDTO user);
+        void onPhotoRequired(UserDTO user);
     }
 
     public UserListFragment() {

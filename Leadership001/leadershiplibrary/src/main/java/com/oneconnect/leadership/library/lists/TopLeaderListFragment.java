@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,7 +106,7 @@ public class TopLeaderListFragment extends Fragment implements PageFragment, Sub
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_harmony_list, container, false);
+        view = inflater.inflate(R.layout.fragment_topleader_list, container, false);
         search = view.findViewById(R.id.search);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
@@ -171,6 +172,11 @@ public class TopLeaderListFragment extends Fragment implements PageFragment, Sub
 
             @Override
             public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
 
             }
         });
@@ -367,6 +373,11 @@ public class TopLeaderListFragment extends Fragment implements PageFragment, Sub
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
             }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -414,6 +425,11 @@ public class TopLeaderListFragment extends Fragment implements PageFragment, Sub
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -476,6 +492,11 @@ public class TopLeaderListFragment extends Fragment implements PageFragment, Sub
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
             }
         });
         recyclerView.setAdapter(adapter);

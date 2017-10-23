@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
@@ -66,7 +67,8 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     private int type;
     private NewsDTO article;
     private UserDTO user;
-
+    private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
     private View view;
     private Context ctx;
     private FirebaseAuth firebaseAuth;
@@ -108,6 +110,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_news_article, container, false);
         presenter = new SubscriberPresenter(this);
+        search = view.findViewById(R.id.search);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();
         if (getActivity().getIntent().getSerializableExtra("category") != null) {
@@ -139,7 +142,87 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
 
         return view;
     }
+    private void setRecyclerView(List<NewsDTO> list) {
 
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        search.setOnQueryTextListener(listener);
+
+        adapter = new NewsArticleAdapter(ctx, list, new NewsArticleAdapter.NewsArticleListener() {
+            @Override
+            public void onArticleSelected(NewsDTO newsArticle) {
+                if (newsArticle.getBody() != null) {
+                    Intent intent = new Intent(ctx, FullArticleActivity.class);
+                    intent.putExtra("newsArticle", newsArticle);
+                    ctx.startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+                miniPhotoAdapter = new MiniPhotoAdapter(list, ctx, new PhotoAdapter.PhotoAdapterlistener() {
+                    @Override
+                    public void onPhotoClicked(PhotoDTO photo) {
+
+                    }
+                });
+                photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    SearchView.OnQueryTextListener listener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextChange(String query) {
+            query = query.toLowerCase();
+
+            final List<NewsDTO> filteredList = new ArrayList<>();
+
+            for (int i = 0; i < newsArticletList.size(); i++) {
+
+                final String text = newsArticletList.get(i).getTitle().toLowerCase();
+                if (text.contains(query)) {
+
+                    filteredList.add(newsArticletList.get(i));
+                }
+
+            }
+            setRecyclerView(filteredList);
+            return true;
+
+        }
+
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+    };
     public void getNewsArticle() {
         Log.d(LOG, "************** getNewsArticles: " );
         presenter.getAllNewsArticle();

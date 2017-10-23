@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,20 +56,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class DailyThoughtListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View,
         BasicEntityAdapter.EntityListener{
 
     private RecyclerView.LayoutManager mLayoutManager;
+    public SearchView search;
     private DailyThoughtListener mListener;
     private RecyclerView recyclerView, photoRecyclerView;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
     private ResponseBag  bag;
     private EntityListFragment entityListFragment;
-    public SearchView search;
-
+    private RelativeLayout searchLayout;
     public DailyThoughtListFragment() {
         // Required empty public constructor
     }
@@ -145,6 +148,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
         return view;
     }
+    private UserDTO user;
+
     private void setRecyclerView(List<DailyThoughtDTO> dailyThoughtList) {
 
         recyclerView.setHasFixedSize(true);
@@ -183,6 +188,12 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             public void onPhotosRequired(List<PhotoDTO> list) {
 
             }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
+
+            }
         });
         recyclerView.setAdapter(adapter);
 
@@ -214,12 +225,9 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         }
     };
 
-
-
-    private UserDTO user;
-
     public void getDailyThoughts() {
         Log.d(LOG, "************** getDailyThoughts: " );
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
         presenter.getAllDailyThoughts();
        /* switch (type) {
             case Constants.INTERNAL_DATA:
@@ -302,9 +310,69 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
+    public void onUserFound(final UserDTO user) {
         Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company DailyThoughts");
-        presenter.getDailyThoughts(user.getCompanyID());
+       // presenter.getDailyThoughts(user.getCompanyID());
+        adapter = new DailyThoughtAdapter(ctx, null, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+            @Override
+            public void onThoughtClicked(int position) {
+
+            }
+
+            @Override
+            public void onPhotoRequired(PhotoDTO photo) {
+
+            }
+
+            @Override
+            public void onVideoRequired(VideoDTO video) {
+
+            }
+
+            @Override
+            public void onPodcastRequired(PodcastDTO podcast) {
+
+            }
+
+            @Override
+            public void onUrlRequired(UrlDTO url) {
+
+            }
+
+            @Override
+            public void onPhotosRequired(List<PhotoDTO> list) {
+
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+                if (user.getPhotos() != null) {
+                    //dvh.txtCamera.setText("" + user.getPhotos().size());
+
+                  //  DailyThoughtDTO dtd = mList.get(position);
+                    List<PhotoDTO> urlList = new ArrayList<>();
+
+                    Map map = user.getPhotos();
+                    PhotoDTO vDTO;
+                    String photoUrl;
+                    for (Object value : map.values()) {
+                        vDTO = (PhotoDTO) value;
+                        photoUrl = vDTO.getUrl();
+                        urlList.add(vDTO);
+
+                        Glide.with(ctx)
+                                .load(photoUrl)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(view);
+                        //   dvh.captiontxt.setText(vDTO.getCaption());
+                    }
+                  /*  Glide.with(ctx)
+                            .load(user.get)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(dvh.imageView);*/
+                }
+            }
+        });
 
     }
 
@@ -393,6 +461,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
             }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -443,6 +516,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -519,6 +597,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
+            }
+
+            @Override
+            public void onProfilePic(ImageView view) {
+
             }
         });
         recyclerView.setAdapter(adapter);
