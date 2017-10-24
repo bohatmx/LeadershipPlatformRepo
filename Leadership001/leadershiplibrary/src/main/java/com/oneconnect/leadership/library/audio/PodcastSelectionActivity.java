@@ -256,6 +256,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         if (user != null){
             v.setCompanyName(user.getCompanyName());
             v.setCompanyID(user.getCompanyID());
+          //  v.setUser(user);
         } else if (u.getCompanyName() != null) {
         v.setCompanyName(u.getCompanyName());
         v.setCompanyID(u.getCompanyID());

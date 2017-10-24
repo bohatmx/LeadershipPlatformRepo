@@ -196,7 +196,7 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         /*toolbar.setLogo(R.drawable.harmony);*/
-        logoIMG = (ImageView) findViewById(R.id.logoIMG);
+
         ctx = getApplicationContext();
         activity = this;
         firebaseAuth = firebaseAuth.getInstance();
@@ -1018,6 +1018,26 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
     @Override
     public void onUserFound(UserDTO user) {
         Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        if (user.getPhotos() != null) {
+            List<PhotoDTO> urlList = new ArrayList<>();
+
+            Map map = user.getPhotos();
+            PhotoDTO vDTO;
+            String photoUrl;
+            for (Object value : map.values()) {
+                vDTO = (PhotoDTO) value;
+                photoUrl = vDTO.getUrl();
+                urlList.add(vDTO);
+
+                Glide.with(ctx)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            //    getImage(photoUrl);
+                // picassoLoader(this, logoIMG, photoUrl);
+
+            }
+        }
         presenter.getCompanyProfile(user.getCompanyID());
     }
 

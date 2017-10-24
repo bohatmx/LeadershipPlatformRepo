@@ -34,6 +34,7 @@ import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
+import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -59,6 +61,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     MiniPodcastAdapter miniPodcastAdapter;
     MiniVideoAdapter miniVideoAdapter;
     UrlAdapter urlAdapter;
+    private UserDTO userDTO;
     private int type;
 
     public interface MyDailyThoughtAdapterlistener{
@@ -218,6 +221,27 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 listener.onPhotoRequired(dt);
             }
         });
+        if (dt.getUser() != null) {
+            userDTO = dt.getUser();
+            if (userDTO.getPhotos() != null){
+                List<PhotoDTO> urlList = new ArrayList<>();
+
+                Map map = userDTO.getPhotos();
+                PhotoDTO vDTO;
+                String photoUrl;
+                for (Object value : map.values()) {
+                    vDTO = (PhotoDTO) value;
+                    photoUrl = vDTO.getUrl();
+                    urlList.add(vDTO);
+
+                    Glide.with(ctx)
+                            .load(photoUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(dvh.ivUserProfilePhoto);
+                    //   dvh.captiontxt.setText(vDTO.getCaption());
+                }
+            }
+        }
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
 
@@ -559,6 +583,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 photoAdapterLayout, urlAdapterLayout, updateLayout;
         protected Button btnPlay;
         protected ImageView ratingBar;
+        protected CircleImageView ivUserProfilePhoto;
         protected EditText ratingCom;
         //video
         /*protected VideoView videoView;*/
@@ -599,6 +624,8 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             iconReview = (ImageView) itemView.findViewById(R.id.iconReview);
             /*videoFileName = (TextView) itemView.findViewById(R.id.fileName);
             videoFileName.setVisibility(View.GONE);*/
+
+            ivUserProfilePhoto = (CircleImageView) itemView.findViewById(R.id.ivUserProfilePhoto);
 
 
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);

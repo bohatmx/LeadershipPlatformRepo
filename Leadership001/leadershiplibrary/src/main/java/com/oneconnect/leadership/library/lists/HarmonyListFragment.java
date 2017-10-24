@@ -44,6 +44,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 
@@ -285,7 +286,10 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
     @Override
     public void onUserFound(UserDTO user) {
         Log.i(LOG, "** onUserFound **" + user.getFullName());
-      presenter.getDailyThoughts(user.getCompanyID());
+        String companyID_status = user.getCompanyID().concat("_").concat(Constants.APPROVED);
+
+        presenter.getCompanyApprovedDailyThoughts(companyID_status);
+        //  presenter.getDailyThoughts(user.getCompanyID());
     }
 
     @Override

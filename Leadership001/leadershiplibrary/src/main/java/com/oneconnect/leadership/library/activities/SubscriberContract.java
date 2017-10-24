@@ -34,6 +34,8 @@ public class SubscriberContract {
         void getCompanies(String companyID);
         void getDailyThoughts(String companyID);
         void getAllCompanyDailyThoughts(String companyID);
+        void getCompanyApprovedDailyThoughts(String companyID_status);
+        void getAllExternallyApprovedDailyThoughts(String dailyThoughtType_status);
         void getDailyThoughtsRating(String dailyThoughtID);
         void getDailyThoughtsByUser(String userID);
         void getWeeklyMessageRating(String weeklyMessageID);

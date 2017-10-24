@@ -113,6 +113,36 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     }
 
     @Override
+    public void getCompanyApprovedDailyThoughts(String companyID_status) {
+        listAPI.getCompanyApprovedDailyThoughts(companyID_status, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onDailyThoughts(bag.getDailyThoughts());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
+    public void getAllExternallyApprovedDailyThoughts(String dailyThoughtType_status) {
+        listAPI.getAllExternallyApprovedDailyThoughts(dailyThoughtType_status, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onAllDailyThoughts(bag.getDailyThoughts());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
     public void getDailyThoughtsRating(String dailyThoughtID) {
         listAPI.getDailyThoughtsRating(dailyThoughtID, new ListAPI.DataListener() {
             @Override

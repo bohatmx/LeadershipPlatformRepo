@@ -123,6 +123,31 @@ public class ListAPI {
         });
     }
 
+    public void getCompanyApprovedDailyThoughts(String companyID_status, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
+        Query q = ref.orderByChild("companyID_status").equalTo(companyID_status);
+        /*ref.orderByChild("status").equalTo("approved");*/
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
     public void getDailyThoughts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
         Query q = ref.orderByChild("companyID").equalTo(companyID);
@@ -334,6 +359,33 @@ public class ListAPI {
                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         VideoDTO v = shot.getValue(VideoDTO.class);
                         bag.getVideos().add(v);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getAllExternallyApprovedDailyThoughts(String dailyThoughtType_status, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
+        Query q = ref.orderByChild("dailyThoughtType_status").equalTo(dailyThoughtType_status);
+        /*ref*/q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO dt = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(dt);
                     }
                 }
                 listener.onResponse(bag);

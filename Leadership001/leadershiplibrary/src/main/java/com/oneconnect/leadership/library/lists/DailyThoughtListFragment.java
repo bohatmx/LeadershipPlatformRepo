@@ -228,7 +228,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     public void getDailyThoughts() {
         Log.d(LOG, "************** getDailyThoughts: " );
         presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
-        presenter.getAllDailyThoughts();
+        presenter.getAllExternallyApprovedDailyThoughts(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+       // presenter.getAllDailyThoughts();
        /* switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {

@@ -541,33 +541,35 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
                 //p.setCaption(news.getBody());
                 break;*/
         }
-        if (type == ResponseBag.EBOOKS) {
-            eBookpresenter.uploadEbook(eBook);
-            return;
-        }
-        if (type == ResponseBag.USERS) {
-            p.setUserID(user.getUserID());
-            presenter.uploadPhoto(p);
-            return;
-        }
-        if (type == ResponseBag.COMPANIES){
-            p.setCompanyID(company.getCompanyID());
-            fbs.uploadPhoto(p, new FirebaseStorageAPI.StorageListener() {
-                @Override
-                public void onResponse(String key) {
+        if (type == 0) {
+            if (type == ResponseBag.EBOOKS) {
+                eBookpresenter.uploadEbook(eBook);
+                return;
+            }
+            if (type == ResponseBag.USERS) {
+                p.setUserID(user.getUserID());
+                presenter.uploadPhoto(p);
+                return;
+            }
+            if (type == ResponseBag.COMPANIES) {
+                p.setCompanyID(company.getCompanyID());
+                fbs.uploadPhoto(p, new FirebaseStorageAPI.StorageListener() {
+                    @Override
+                    public void onResponse(String key) {
 
-                }
+                    }
 
-                @Override
-                public void onProgress(long transferred, long size) {
+                    @Override
+                    public void onProgress(long transferred, long size) {
 
-                }
+                    }
 
-                @Override
-                public void onError(String message) {
-                    showSnackbar(message, "Dismiss", "red");
-                }
-            });
+                    @Override
+                    public void onError(String message) {
+                        showSnackbar(message, "Dismiss", "red");
+                    }
+                });
+            }
         }
 
         presenter.uploadPhoto(p);
@@ -691,7 +693,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     @Override
     public void onPhotoUploaded(String key) {
-
+        Log.i(LOG, "onPhotoUploaded: .................. ".concat(key));
+        showSnackbar("Photo".concat(" ADDED."), "OK", "green");
     }
 
     @Override

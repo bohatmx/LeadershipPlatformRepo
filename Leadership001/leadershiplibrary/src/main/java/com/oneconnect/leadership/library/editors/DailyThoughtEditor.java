@@ -490,15 +490,15 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getOutputFile() != null) {
+              /*  if (getOutputFile() != null) {
                     Log.i(TAG, "outputFile is not null");
                     //stopRecording();
                     send();
-                    /*AudioSavePathInDevice = getOutputFile().getAbsolutePath();
-                    sendPodcastWithDailyThought(AudioSavePathInDevice);*/
-                } else {
+                    *//*AudioSavePathInDevice = getOutputFile().getAbsolutePath();
+                    sendPodcastWithDailyThought(AudioSavePathInDevice);*//*
+                } else {*/
                     send();
-                }
+                /*}*/
 
 
             }
@@ -794,6 +794,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             if (me != null) {
                 dailyThought.setCompanyID(me.getCompanyID());
                 dailyThought.setCompanyName(me.getCompanyName());
+                dailyThought.setUser(me);
 
                 dailyThought.setActive(true);
                 dailyThought.setJournalUserID(me.getUserID());
@@ -813,28 +814,58 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         dailyThought.setTitle(editTitle.getText().toString());
         dailyThought.setSubtitle(editSubtitle.getText().toString());
         dailyThought.setCategory(category);
+
         if (internalButton.isChecked()) {
                      dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT);
                     dailyThought.setDailyThoughtType(DailyThoughtDTO.INTERNAL_DAILY_THOUGHT);
+                    if (userType == UserDTO.PLATINUM_USER) {
+                        dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+                    }
+                    else if (userType == UserDTO.PLATINUM_ADMIN) {
+                        dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+                    }
+                    else if (userType == UserDTO.COMPANY_ADMIN) {
+                        dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+                    }
+                    else if (userType == UserDTO.GOLD_USER) {
+                        dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.PENDING));
+                    }
                   }
               if (globalButton.isChecked()) {
                       dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT);
                        dailyThought.setDailyThoughtType(DailyThoughtDTO.GLOBAL_DAILY_THOUGHT);
+                  if (userType == UserDTO.PLATINUM_USER) {
+                      dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
                   }
-                  if (userType == UserDTO.PLATINUM_USER){
-                      dailyThought.setStatus("approved");
+                  else if (userType == UserDTO.PLATINUM_ADMIN) {
+                      dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+                  }
+                  else if (userType == UserDTO.COMPANY_ADMIN) {
+                      dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+                  }
+                  else if (userType == UserDTO.GOLD_USER) {
+                      dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.PENDING));
+                  }
+              }
+                  if (userType == UserDTO.PLATINUM_USER) {
+                      dailyThought.setStatus(Constants.APPROVED);
                       dailyThought.setUserType(UserDTO.DESC_PLATINUM_USER);
-
+                      dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.APPROVED));
+                    //  dailyThought.setDailyThoughtType_status();
                   }
                   else if(userType == UserDTO.PLATINUM_ADMIN){
-                    dailyThought.setStatus("approved");
+                    dailyThought.setStatus(Constants.APPROVED);
                     dailyThought.setUserType(UserDTO.DESC_PLATINUM_ADMIN);
+                    dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.APPROVED));
                   }
-                  else {
-                      dailyThought.setStatus("pending");
+                  else if (userType == UserDTO.GOLD_USER) {
+                      dailyThought.setStatus(Constants.PENDING);
+                      dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.PENDING));
                   }
-
-
+                  else if (userType == UserDTO.COMPANY_ADMIN) {
+                      dailyThought.setStatus(Constants.APPROVED);
+                      dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.APPROVED));
+                  }
 
         switch (type) {
             case Constants.NEW_ENTITY:

@@ -119,12 +119,12 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
-        dvh.ivUserProfilePhoto.setOnClickListener(new View.OnClickListener() {
+        /*dvh.ivUserProfilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onProfilePic(dvh.ivUserProfilePhoto);
             }
-        });
+        });*/
 
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
@@ -175,6 +175,27 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     });
                 }
             });
+        }
+        if (dt.getUser() != null) {
+            userDTO = dt.getUser();
+            if (userDTO.getPhotos() != null){
+                List<PhotoDTO> urlList = new ArrayList<>();
+
+                Map map = userDTO.getPhotos();
+                PhotoDTO vDTO;
+                String photoUrl;
+                for (Object value : map.values()) {
+                    vDTO = (PhotoDTO) value;
+                    photoUrl = vDTO.getUrl();
+                    urlList.add(vDTO);
+
+                    Glide.with(ctx)
+                            .load(photoUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(dvh.ivUserProfilePhoto);
+                    //   dvh.captiontxt.setText(vDTO.getCaption());
+                }
+            }
         }
       /*  dvh.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
