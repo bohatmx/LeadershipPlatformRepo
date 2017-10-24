@@ -72,18 +72,18 @@
         <activity
             android:name=".activities.PhotoActivity"
             android:label="@string/title_activity_main" />
-        <activity
+        <!--<activity
             android:name=".audio.PodcastSelectionActivity"
-            android:label="@string/title_activity_podcast_selection" />
+            android:label="@string/title_activity_podcast_selection" />-->
         <!--
             <activity
             android:name=".activities.PodcastPlayerActivity"
             android:label="@string/title_activity_podcast_player"
             android:theme="@style/AppTheme.NoActionBar" />
         -->
-        <activity
+        <!--<activity
             android:name=".activities.FullPhotoActivity"
-            android:label="@string/title_activity_full_photo" />
+            android:label="@string/title_activity_full_photo" />-->
         <activity
             android:name=".activities.ImageListActivity"
             android:label="@string/title_activity_image_list" />
