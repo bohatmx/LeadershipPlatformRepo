@@ -11,6 +11,13 @@
         android:layout_height="wrap_content"
         android:theme="@style/CommuterTheme">
 
+        <TextView
+            style="@style/Title2TextStyleBlack"
+            android:id="@+id/pageTitleTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pending Daily Thoughts"/>
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"

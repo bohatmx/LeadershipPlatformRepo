@@ -23,6 +23,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -125,6 +126,7 @@ public class CrudActivity extends AppCompatActivity
         setContentView(R.layout.activity_crud);
         Log.d(TAG, "onCreate: ************************");
         firebaseAuth = FirebaseAuth.getInstance();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Leadership Platform");

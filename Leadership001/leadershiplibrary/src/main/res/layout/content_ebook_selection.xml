@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,10 +10,8 @@
 
     <RelativeLayout
         android:id="@+id/viewLay"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/bookViewLay"
@@ -23,6 +21,17 @@
                 layout="@layout/book_view"
                 />
         </RelativeLayout>
+
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/noBookTxt"
+            android:layout_below="@+id/bookViewLay"
+            style="@style/Title3TextStyleBlack"
+            android:text="No Book/s found on Device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_below="@+id/bookViewLay"
@@ -37,4 +46,4 @@
 
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -101,6 +102,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     private ListAPI listAPI;
     public List<String> serverList;
     ImageView galleryImage, serverImage;
+    TextView noPhotoTxt;
     ArrayList<String> searchResult;
     PhotoAdapter adapter;
     FirebaseStorageAPI fbs;
@@ -199,6 +201,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         }
         firebaseAuth = FirebaseAuth.getInstance();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        noPhotoTxt = (TextView) findViewById(R.id.noPhotoTxt);
+        noPhotoTxt.setVisibility(View.GONE);
         LinearLayoutManager lm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(lm);
 
@@ -322,6 +326,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
         if ((c != null) && (c.moveToFirst()))
         {
+            noPhotoTxt.setVisibility(View.GONE);
             do
             {
                 String tempDir = c.getString(0);
@@ -338,6 +343,9 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             directories = new String[dirList.size()];
             dirList.toArray(directories);
 
+        } else {
+            Log.e(LOG, "**** no photo/s found on device and we not crashing ****");
+            noPhotoTxt.setVisibility(View.VISIBLE);
         }
 
         for(int i=0;i<dirList.size();i++)

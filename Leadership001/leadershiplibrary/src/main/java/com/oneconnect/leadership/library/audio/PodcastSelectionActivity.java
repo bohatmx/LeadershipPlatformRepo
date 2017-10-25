@@ -41,6 +41,7 @@ import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 import android.support.v7.widget.SearchView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -69,6 +70,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     private PodcastUploadPresenter presenter;
     public static final String TAG = PodcastSelectionActivity.class.getSimpleName();
     ImageView image1, image2;
+    TextView noPodcastTxt;
     SearchView searchView = null;
     ArrayList<String> downloadedList;
     public static final int PERMISSIONS_REQUEST = 113;
@@ -84,6 +86,8 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         presenter = new PodcastUploadPresenter(this);
         image2 = (ImageView) findViewById(R.id.image2);
+        noPodcastTxt = (TextView) findViewById(R.id.noPodcastTxt);
+        noPodcastTxt.setVisibility(View.GONE);
 
         check();
 
@@ -186,12 +190,18 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             cursor.moveToFirst();
             do {
 
-                Log.d(TAG, "getPodcastsOnDevice: ".concat(cursor.getColumnNames().toString()));
-                String path =  cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION));
-                Log.e(TAG, "getPodcastsOnDevice: duration: " + duration + " path: ".concat(path));
-                localPodcasts.add(new LocalPodcast(duration,path));
-                podcastItemHashSet.add(path);
+                if (cursor != null) {
+                    noPodcastTxt.setVisibility(View.GONE);
+                    Log.d(TAG, "getPodcastsOnDevice: ".concat(cursor.getColumnNames().toString()));
+                    String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                    long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.DURATION));
+                    Log.e(TAG, "getPodcastsOnDevice: duration: " + duration + " path: ".concat(path));
+                    localPodcasts.add(new LocalPodcast(duration, path));
+                    podcastItemHashSet.add(path);
+                } else {
+                    Log.e(TAG, "**** no podcast/s found on device and we not crashing ****");
+                    noPodcastTxt.setVisibility(View.VISIBLE);
+                }
             } while (cursor.moveToNext());
 
             cursor.close();

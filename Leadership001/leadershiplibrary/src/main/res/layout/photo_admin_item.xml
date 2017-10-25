@@ -34,7 +34,7 @@
             android:layout_margin="@dimen/mon_padding"
             android:tint="@color/black"
             android:layout_below="@+id/photoFileNametxt"
-            android:src="@drawable/ic_cloud_upload"
+            app:srcCompat="@drawable/ic_cloud_upload"
             android:id="@+id/uploadIMG"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

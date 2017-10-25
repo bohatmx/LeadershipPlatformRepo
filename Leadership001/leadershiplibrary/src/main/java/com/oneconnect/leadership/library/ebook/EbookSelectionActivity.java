@@ -122,6 +122,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
    // MultipleEbookSelectorAdapter adapter;
     public List<String> serverList;
     ListView listView;
+    TextView noBookTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +241,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
                 } else {
                     if (listFile[i].getName().endsWith(pdfPattern)){
+                        noBookTxt.setVisibility(View.GONE);
                         filePathList.add(listFile[i].getAbsolutePath());
                         Log.d(LOG, "FileName: " + listFile[i].getName());
 
@@ -300,6 +302,9 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                         recyclerView.setAdapter(adapter);
 
 
+                    } else {
+                        /*Log.e(TAG, "**** no book/s found on device and we not crashing ****");
+                        noBookTxt.setVisibility(View.VISIBLE);*/
                     }
                 }
             }
@@ -403,28 +408,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 public void onDeleteEbook(EBookDTO eBook) {
                     deletePresenter.deleteEbook(eBook);
                 }
-            });/*EbookAdapter.EbookAdapterListener() {
-                @Override
-                public void onUploadEbook(String path) {
-                    confirmUpload(path);
-                }
-
-                @Override
-                public void onReadEbook(String path) {
-                    readEbook(path);
-                }
-
-                @Override
-                public void onPhotoUpload(BaseDTO base) {
-                    pickGalleryOrCamera(base);
-                }
-
-                @Override
-                public void onAttachPhoto(EBookDTO ebook) {
-                    //startPhotoGallerySelection(ebook);
-                    pickGalleryOrCamera(ebook);
-                }
-            });*/
+            });
             recyclerView.setAdapter(adapter);
         }
     }
@@ -909,6 +893,9 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
     private void setup() {
         nameTxt = (TextView) findViewById(R.id.nameTxt);
         nameTxt.setText("EBook Selection & Upload");
+
+        noBookTxt = (TextView) findViewById(R.id.noBookTxt);
+        noBookTxt.setVisibility(View.GONE);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));

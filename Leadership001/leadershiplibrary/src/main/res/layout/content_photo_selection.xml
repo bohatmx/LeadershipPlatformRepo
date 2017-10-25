@@ -24,6 +24,17 @@
                 />
         </RelativeLayout>
 
+        <TextView
+            android:padding="@dimen/mon_padding"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/noPhotoTxt"
+            android:layout_below="@+id/videoLay"
+            style="@style/Title3TextStyleBlack"
+            android:text="No Photo/s found on Device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="368dp"

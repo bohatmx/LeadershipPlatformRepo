@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
@@ -68,6 +69,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     private VideoUploadPresenter presenter;
     public static final String TAG = VideoSelectionActivity.class.getSimpleName();
     ImageView image1, image2;
+    TextView noVideoTxt;
     SearchView searchView = null;
     ArrayList<String> downloadedList;
     public static final int PERMISSIONS_REQUEST = 113;
@@ -83,6 +85,8 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         presenter = new VideoUploadPresenter(this);
         image1 = (ImageView) findViewById(R.id.image1);
         image2 = (ImageView) findViewById(R.id.image2);
+        noVideoTxt = (TextView) findViewById(R.id.noVideoTxt);
+        noVideoTxt.setVisibility(View.GONE);
 
         check();
 
@@ -199,6 +203,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                 do {
 
                     if (cursor != null) {
+                        noVideoTxt.setVisibility(View.GONE);
                         Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
                         if (cursor != null && cursor.moveToFirst()) {
                         String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
@@ -208,6 +213,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                         videoItemHashSet.add(path);
                         } else {
                             Log.e(TAG, "**** no videos found on device and we not crashing ****");
+                            noVideoTxt.setVisibility(View.VISIBLE);
                         }
                     }
 
