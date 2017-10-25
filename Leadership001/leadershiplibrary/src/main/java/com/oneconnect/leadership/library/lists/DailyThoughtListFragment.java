@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -111,12 +113,14 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
 
     CategoryDTO category;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        view = inflater.inflate(R.layout.fragment_daily_thought_list, container, false);
-        search = view.findViewById(R.id.search);
+       search = view.findViewById(R.id.search);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         presenter = new SubscriberPresenter(this);
         ctx = getActivity();
         firebaseAuth = FirebaseAuth.getInstance();

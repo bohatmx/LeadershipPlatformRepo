@@ -173,6 +173,12 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
             public void onLinkRequired(BaseDTO base) {
 
             }
+
+            @Override
+            public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+            }
+
         });
         recyclerView.setAdapter(adapter);
 
@@ -339,6 +345,13 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
             public void onLinkRequired(BaseDTO base) {
                 startLinksActivity(base);
             }
+
+            @Override
+            public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+            }
+
+
         });
         recyclerView.setAdapter(adapter);
     }
@@ -410,6 +423,13 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
             public void onLinkRequired(BaseDTO base) {
                 startLinksActivity(base);
             }
+
+            @Override
+            public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+            }
+
+
         });
         recyclerView.setAdapter(adapter);
     }
@@ -441,6 +461,13 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
             public void onLinkRequired(BaseDTO base) {
                 startLinksActivity(base);
             }
+
+            @Override
+            public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+            }
+
+
         });
         recyclerView.setAdapter(adapter);
     }
@@ -486,6 +513,13 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
             public void onLinkRequired(BaseDTO base) {
                 startLinksActivity(base);
             }
+
+            @Override
+            public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+            }
+
+
         });
         recyclerView.setAdapter(adapter);
     }

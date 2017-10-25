@@ -26,8 +26,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.database.DatabaseReference;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PLDPActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
+import com.oneconnect.leadership.library.api.DataAPI;
+import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
@@ -47,6 +51,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+
+import static com.oneconnect.leadership.library.api.DataAPI.DAILY_THOUGHTS;
 
 /**
  * Created by Kurisani on 2017/09/21.
@@ -69,6 +75,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         void onPodcastRequired(BaseDTO base);
         void onVideoRequired(BaseDTO base);
         void onLinkRequired(BaseDTO base);
+        void onDeleteDailyThought(DailyThoughtDTO dailyThought);
 
     }
 
@@ -503,11 +510,19 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             });*/
         }
+        dvh.iconPldp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ctx, PLDPActivity.class);
+                ctx.startActivity(intent);
+            }
+        });
 
         dvh.iconDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dvh.deleteLayout.setVisibility(View.GONE);
+                    listener.onDeleteDailyThought(dt);
+
             }
         });
 
@@ -518,6 +533,8 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         });
     }
+
+    private CrudPresenter presenter;
     private void showPopupMenu(View view) {
         // inflate menu
         PopupMenu popup = new PopupMenu(ctx, view);
@@ -526,7 +543,6 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         popup.setOnMenuItemClickListener(new MyDailyThoughtAdapter.MyMenuItemClickListener());
         popup.show();
     }
-
     /**
      * Click listener for popup menu items
      */
@@ -582,7 +598,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
                 photoAdapterLayout, urlAdapterLayout, updateLayout;
         protected Button btnPlay;
-        protected ImageView ratingBar;
+        protected ImageView ratingBar, iconPldp;
         protected CircleImageView ivUserProfilePhoto;
         protected EditText ratingCom;
         //video
@@ -600,7 +616,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             profile = (TextView) itemView.findViewById(R.id.profile);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-
+            iconPldp =(ImageView) itemView.findViewById(R.id.iconPldp);
             //txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             iconShare = (ImageView) itemView.findViewById(R.id.iconShare);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);
@@ -613,8 +629,8 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             updateLayout.setVisibility(View.GONE);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.iconLayout);
             deleteLayout = (RelativeLayout) itemView.findViewById(R.id.deleteLayout);
-            deleteLayout.setVisibility(View.GONE);
             iconDelete = (ImageView) itemView.findViewById(R.id.iconDelete);
+            iconDelete.setVisibility(View.GONE);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
             txtMicrophone = (TextView) itemView.findViewById(R.id.txtMicrophone);
             txtVideo = (TextView) itemView.findViewById(R.id.txtVideo);
@@ -626,22 +642,15 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             videoFileName.setVisibility(View.GONE);*/
 
             ivUserProfilePhoto = (CircleImageView) itemView.findViewById(R.id.ivUserProfilePhoto);
-
-
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);
             pauseIMG = (ImageView)itemView.findViewById(R.id.pauseIMG);
             stopIMG = (ImageView) itemView.findViewById(R.id.stopIMG);
             podcastfileName = (TextView) itemView.findViewById(R.id.fileName);
-
-
             iconMicrophone = (ImageView) itemView.findViewById(R.id.iconMicrophone);
-
             iconVideo = (ImageView) itemView.findViewById(R.id.iconVideo);
-
-
             iconCamera = (ImageView) itemView.findViewById(R.id.iconCamera);
 
-            //   iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
+            //iconUpdate = (ImageView) itemView.findViewById(R.id.iconUpdate);
             iconLink = (ImageView) itemView.findViewById(R.id.iconLink);
             //
             imageRecyclerView = (RecyclerView) itemView.findViewById(R.id.imageRecyclerView);
@@ -675,13 +684,8 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             podcastRecyclerView.setHasFixedSize(true);
             // layouts
             podcastAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.podcastAdapterLayout);
-            //
-
-            //
             videoAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.videoAdapterLayout);
-            //
 
-            //
             photoAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.photoAdapterLayout);
             photoView = (ImageView) itemView.findViewById(R.id.photoView);
             captiontxt = (TextView) itemView.findViewById(R.id.captiontxt);

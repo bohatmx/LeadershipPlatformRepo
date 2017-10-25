@@ -44,6 +44,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/highscore"
             android:id="@+id/score"
+            android:visibility="gone"
             android:layout_gravity="center_horizontal"
             android:paddingTop="10dp"
             android:paddingBottom="10dp" />
@@ -53,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginTop="@dimen/appbar_padding_top"
             android:baselineAligned="false">
 
             <Button
@@ -67,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Begin!!"
+                android:visibility="gone"
                 android:id="@+id/takeQuizButton"
                 android:layout_gravity="right"
                 android:onClick="takeQuiz"
@@ -84,13 +87,23 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:gravity="center">
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="PLDP content is coming soon! Watch the space."
+            android:id="@+id/coming"
+            android:paddingTop="10dp"
+            android:textColor="@color/absa_red"
+            android:textAlignment="center"
+            android:textIsSelectable="true" />
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Resetthis PLDP"
             android:id="@+id/resetScoreButton"
+            android:visibility="gone"
             android:onClick="resetHighscore"
             android:backgroundTint="@color/colorPrimary" />
 
@@ -101,6 +114,7 @@
             android:text="Reset All PLDP"
             android:id="@+id/resetQuizButton"
             android:onClick="resetAnswers"
+            android:visibility="gone"
             android:backgroundTint="@color/colorPrimary" />
     </LinearLayout>
 

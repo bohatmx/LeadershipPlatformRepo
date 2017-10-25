@@ -82,11 +82,10 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     private Handler threadHandler = new Handler();
 
 
-    private double startTime = 0;
-    private double finalTime = 0;
+    private int startTime = 0;
+    private int finalTime = 0;
     private int forwardTime = 5000;
     private int backwardTime = 5000;
-    public static int oneTimeOnly = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,39 +200,26 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     private String millisecondsToString(int milliseconds) {
         long minutes = TimeUnit.MINUTES.toMinutes((long) milliseconds);
         long seconds = TimeUnit.SECONDS.toSeconds((long) milliseconds);
-        /*long minutes = TimeUnit.MILLISECONDS.toMinutes((long) milliseconds);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds((long) milliseconds);*/
         timeFormat.format(minutes);
         timeFormat.format(seconds);
         return minutes + ":" + seconds;
     }
 
- /*   public void doStart(View view)  {
-        // The duration in milliseconds
-        int duration = this.mediaPlayer.getDuration();
-
-        int currentPosition = this.mediaPlayer.getCurrentPosition();
-        if(currentPosition== 0)  {
-            this.videoSeekBar.setMax(duration);
-            String maxTimeString = this.millisecondsToString(duration);
-            this.textView_maxTime.setText(maxTimeString);
-        } else if(currentPosition== duration)  {
-            // Resets the MediaPlayer to its uninitialized state.
-            this.mediaPlayer.reset();
-        }
-        this.mediaPlayer.start();
-        // Create a thread to update position of SeekBar.
-       // UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
-        threadHandler.postDelayed(UpdateSongTime,50);
-
-
-      //  this.buttonPause.setEnabled(true);
-      //  this.buttonStart.setEnabled(false);
-    }*/
-
-    @Override
+ @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mediaPlayer.seekTo(progress);
+
+         if (fromUser) {
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.seekTo(progress);
+                } else {
+                    try {
+                        mediaPlayer.start();
+                        mediaPlayer.seekTo(progress);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
     }
 
     @Override
@@ -246,175 +232,15 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
 
     }
 
-    // Thread to Update position for SeekBar.
-    /*class UpdateSeekBarThread implements Runnable {
-
-        public void run()  {
-            int currentPosition = mediaPlayer.getCurrentPosition();
-            timeFormat.format(currentPosition);
-            String currentPositionStr = millisecondsToString(currentPosition);
-            textCurrentPosition.setText(currentPositionStr);
-
-
-            videoSeekBar.setProgress(currentPosition);
-            // Delay thread 50 milisecond.
-            threadHandler.postDelayed(this, 50);
-        }
-    }*/
-
     String url;
     private void playVideo() {
-       // videoView.setVisibility(View.VISIBLE);
-       // showFullView();
-        /*requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        */bottomLayout.setVisibility(View.GONE);
+       bottomLayout.setVisibility(View.GONE);
         toolbar.setVisibility(View.GONE);
         videoSeekBar.setVisibility(View.GONE);
         textCurrentPosition.setVisibility(View.GONE);
         textView_maxTime.setVisibility(View.GONE);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        if (video.getPodcasts() != null) {
-            txtMicrophone.setText("" + video.getPodcasts().size());
-            iconMicrophone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (podcastAdapterLayout.getVisibility() == View.GONE){
-                        podcastAdapterLayout.setVisibility(View.VISIBLE);
-                        podcastRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        podcastAdapterLayout.setVisibility(View.GONE);
-                        podcastRecyclerView.setVisibility(View.GONE);
-                    }
-                    VideoDTO dtd = video;
-                    List<PodcastDTO> podcastList = new ArrayList<>();
-                    Map map = dtd.getPodcasts();
-                    PodcastDTO vDTO;
-                    ;
-                    for (Object value : map.values()) {
-                        vDTO = (PodcastDTO) value;
-                        url = vDTO.getUrl();
-                        podcastList.add(vDTO);
-                        //
-                        int i = vDTO.getStorageName().lastIndexOf("/");
-                        podcastfileName.setText(vDTO.getStorageName().substring(i + 1));
-                        //
-                        /*playIMG.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {*/
-                                mediaPlayer = new MediaPlayer();
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                try {
-                                    mediaPlayer.setDataSource(url);
-                                } catch (IllegalArgumentException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (SecurityException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (IllegalStateException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (IOException e) {
-                                    Log.e(LOG, e.getMessage());
-                                }
-                                try {
-                                    mediaPlayer.prepare();
-                                } catch (IllegalStateException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                } catch (IOException e) {
-                                    Log.e(LOG, "You might not set the URI correctly!");
-                                }
-                                mediaPlayer.start();
-
-                    }
-
-                    miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
-
-
-                        @Override
-                        public void onPlayClicked(PodcastDTO podcast) {
-
-                        }
-
-                        @Override
-                        public void onPodcastRequired(PodcastDTO podcast) {
-
-                        }
-                    });
-                    podcastRecyclerView.setAdapter(miniPodcastAdapter);
-                }
-            });
-
-        }
-
-        if (video.getPhotos() != null) {
-            txtCamera.setText("" + video.getPhotos().size());
-
-            VideoDTO dtd = video;
-            List<PhotoDTO> urlList = new ArrayList<>();
-
-            Map map = dtd.getPhotos();
-            PhotoDTO vDTO;
-            String photoUrl;
-            for (Object value : map.values()) {
-                vDTO = (PhotoDTO) value;
-                photoUrl = vDTO.getUrl();
-                urlList.add(vDTO);
-
-                Glide.with(ctx)
-                        .load(photoUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(photoView);
-            }
-
-            miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                @Override
-                public void onPhotoClicked(PhotoDTO photo) {
-
-                }
-            });
-            imageRecyclerView.setAdapter(miniPhotoAdapter);
-
-        }
-
-
-
-        if (video.getUrls() != null) {
-            txtLinks.setText("" + video.getUrls().size());
-            iconUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (urlAdapterLayout.getVisibility() == View.GONE){
-                        urlAdapterLayout.setVisibility(View.VISIBLE);
-                        urlRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        urlAdapterLayout.setVisibility(View.GONE);
-                        urlRecyclerView.setVisibility(View.GONE);
-                    }
-
-                    VideoDTO dtd = video;
-                    Map map = dtd.getUrls();
-                    UrlDTO vDTO;
-                    final List<UrlDTO> urlList = new ArrayList<>();
-                    String url;
-                    for (Object value : map.values()) {
-                        vDTO = (UrlDTO) value;
-                        url = vDTO.getUrl();
-                        urlTxt.setText(url);
-                        urlList.add(vDTO);
-                    }
-
-                    urlAdapter = new UrlAdapter(urlList, ctx, new UrlAdapter.UrlAdapterListener() {
-                        @Override
-                        public void onUrlClicked(final String url) {
-                        }
-                    });
-
-                    urlRecyclerView.setAdapter(urlAdapter);
-                }
-            });
-        }
 
         try {
             mediaPlayer = new MediaPlayer();
@@ -457,13 +283,22 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
 
 
     }
-
-
-
     private MediaPlayer mediaPlayer;
-    MiniPhotoAdapter miniPhotoAdapter;
-    MiniVideoAdapter miniVideoAdapter;
-    MiniPodcastAdapter miniPodcastAdapter;
+    private Runnable UpdateSongTime = new Runnable() {
+        public void run() {
+            startTime = mediaPlayer.getCurrentPosition();
+            finalTime = mediaPlayer.getDuration();
+            videoSeekBar.setMax(finalTime);
+            textCurrentPosition.setText(String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                    toMinutes((long) startTime)))
+            );
+            videoSeekBar.setProgress((int)startTime);
+            threadHandler.postDelayed(this, 50);
+        }
+    };
 
     private void playPodcast() {
         videoView.setVisibility(View.GONE);
@@ -480,48 +315,30 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
 
         try {
             mediaPlayer.setDataSource(podcast.getUrl());
-        } catch (IllegalArgumentException e) {
-            Log.e(LOG, "You might not set the URI correctly!");
-        } catch (SecurityException e) {
-            Log.e(LOG, "You might not set the URI correctly!");
-        } catch (IllegalStateException e) {
-            Log.e(LOG, "You might not set the URI correctly!");
-        } catch (IOException e) {
-            Log.e(LOG, e.getMessage());
-        }
-        try {
-            mediaPlayer.prepare();
-        } catch (IllegalStateException e) {
-            Log.e(LOG, "You might not set the URI correctly!");
-        } catch (IOException e) {
-            Log.e(LOG, "You might not set the URI correctly!");
-        }
-      //  mediaPlayer.start();
 
-        int duration = mediaPlayer.getDuration();
+            } catch (IllegalArgumentException e) {
+                Log.e(LOG, "You might not set the URI correctly!");
+            } catch (SecurityException e) {
+                Log.e(LOG, "You might not set the URI correctly!");
+            } catch (IllegalStateException e) {
+                Log.e(LOG, "You might not set the URI correctly!");
+            } catch (IOException e) {
+                Log.e(LOG, e.getMessage());
+            }
+            try {
+                mediaPlayer.prepare();
+            } catch (IllegalStateException e) {
+                Log.e(LOG, "You might not set the URI correctly!");
+            } catch (IOException e) {
+                Log.e(LOG, "You might not set the URI correctly!");
+            }
 
-        int currentPosition = mediaPlayer.getCurrentPosition();
-        /*if(currentPosition== 0)  {
-            timeFormat.format(currentPosition);
-            videoSeekBar.setMax(duration);
-           // timeFormat.format(duration);
-            String maxTimeString = millisecondsToString(duration);
-            textView_maxTime.setText(maxTimeString);
-
-           // timeFormat.format(seconds);
-        } else if(currentPosition== duration)  {
-            // Resets the MediaPlayer to its uninitialized state.
-            mediaPlayer.reset();
-        }*/
-       // videoSeekBar.setProgress(0/*duration*//*(int)startTime*/);
         mediaPlayer.start();
-        finalTime = mediaPlayer.getDuration();
         startTime = mediaPlayer.getCurrentPosition();
-
-        if (oneTimeOnly == 0) {
-            videoSeekBar.setMax((int) finalTime);
-            oneTimeOnly = 1;
-        }
+        finalTime = mediaPlayer.getDuration();
+        videoSeekBar.setMax(finalTime);
+        videoSeekBar.setProgress((int) startTime);
+        threadHandler.postDelayed(UpdateSongTime,50);
 
         textView_maxTime.setText(String.format("%d min, %d sec",
                 TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
@@ -536,15 +353,6 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
                                 startTime)))
         );
 
-        videoSeekBar.setProgress((int) startTime);
-        threadHandler.postDelayed(UpdateSongTime,50);
-        fowardIMG.setEnabled(true);
-        stopbtn.setEnabled(false);
-
-        // Create a thread to update position of SeekBar.
-        /*UpdateSeekBarThread updateSeekBarThread= new UpdateSeekBarThread();
-        threadHandler.postDelayed(updateSeekBarThread,50);*/
-
         pausebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -558,30 +366,17 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
             }
         });
 
-        /*stopbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                        mediaPlayer.stop();
-                      //  mediaPlayer.reset();
-                        stopbtn.setVisibility(View.GONE);
-                        pausebtn.setVisibility(View.GONE);
-                        rewindIMG.setVisibility(View.VISIBLE);
-                         fowardIMG.setVisibility(View.VISIBLE);
-                        playbtn.setVisibility(View.VISIBLE);
-            }
-        });*/
 
         playbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                        mediaPlayer.start();
-                        playbtn.setVisibility(View.GONE);
-                        rewindIMG.setVisibility(View.VISIBLE);
-                        fowardIMG.setVisibility(View.VISIBLE);
-                        pausebtn.setVisibility(View.VISIBLE);
-                        stopbtn.setVisibility(View.GONE);
+                mediaPlayer.start();
+                playbtn.setVisibility(View.GONE);
+                rewindIMG.setVisibility(View.VISIBLE);
+                fowardIMG.setVisibility(View.VISIBLE);
+                pausebtn.setVisibility(View.VISIBLE);
+                stopbtn.setVisibility(View.GONE);
 
             }
         });
@@ -616,122 +411,6 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
             }
         });
 
-        if (podcast.getPhotos() != null) {
-            txtCamera.setText("" + podcast.getPhotos().size());
-
-            PodcastDTO dtd = podcast;
-            List<PhotoDTO> urlList = new ArrayList<>();
-
-            Map map = dtd.getPhotos();
-            PhotoDTO vDTO;
-            String photoUrl;
-            for (Object value : map.values()) {
-                vDTO = (PhotoDTO) value;
-                photoUrl = vDTO.getUrl();
-                urlList.add(vDTO);
-
-                Glide.with(ctx)
-                        .load(photoUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(photoView);
-            }
-
-            miniPhotoAdapter = new MiniPhotoAdapter(urlList, ctx, new PhotoAdapter.PhotoAdapterlistener() {
-                @Override
-                public void onPhotoClicked(PhotoDTO photo) {
-
-                }
-            });
-            imageRecyclerView.setAdapter(miniPhotoAdapter);
-
-        }
-
-        if (podcast.getVideos() != null) {
-            txtVideo.setText("" + podcast.getVideos().size());
-            iconVideo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (videoAdapterLayout.getVisibility() == View.GONE){
-                        videoAdapterLayout.setVisibility(View.VISIBLE);
-                        videoRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        videoAdapterLayout.setVisibility(View.GONE);
-                        videoRecyclerView.setVisibility(View.GONE);
-                    }
-
-                    PodcastDTO dtd = podcast;
-                    List<VideoDTO> videoList = new ArrayList<>();
-                    Map map = dtd.getVideos();
-                    VideoDTO vDTO = new VideoDTO();
-                    for (Object value : map.values()) {
-                        vDTO = (VideoDTO) value;
-                        videoList.add(vDTO);
-                    }
-
-                    miniVideoAdapter = new MiniVideoAdapter(videoList, ctx, new MiniVideoAdapter.MiniVideoAdapterListener() {
-                        @Override
-                        public void onStart() {
-
-                        }
-
-                        @Override
-                        public void onPause() {
-
-                        }
-
-                        @Override
-                        public void onStop() {
-
-                        }
-                    });
-
-                    videoRecyclerView.setAdapter(miniVideoAdapter);
-                    btnPlay.setVisibility(View.GONE);
-
-                    btnPlay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    });
-                }
-            });
-        }
-
-        if (podcast.getUrls() != null) {
-            txtLinks.setText("" + podcast.getUrls().size());
-            iconUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (urlAdapterLayout.getVisibility() == View.GONE){
-                        urlAdapterLayout.setVisibility(View.VISIBLE);
-                        urlRecyclerView.setVisibility(View.VISIBLE);
-                    } else {
-                        urlAdapterLayout.setVisibility(View.GONE);
-                        urlRecyclerView.setVisibility(View.GONE);
-                    }
-
-                    PodcastDTO dtd = podcast;
-                    Map map = dtd.getUrls();
-                    UrlDTO vDTO;
-                    final List<UrlDTO> urlList = new ArrayList<>();
-                    String url;
-                    for (Object value : map.values()) {
-                        vDTO = (UrlDTO) value;
-                        url = vDTO.getUrl();
-                        urlTxt.setText(url);
-                        urlList.add(vDTO);
-                    }
-
-                    urlAdapter = new UrlAdapter(urlList, ctx, new UrlAdapter.UrlAdapterListener() {
-                        @Override
-                        public void onUrlClicked(final String url) {
-                        }
-                    });
-
-                    urlRecyclerView.setAdapter(urlAdapter);
-                }
-            });
-        }
     }
 
     @Override
@@ -771,18 +450,5 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
         super.onPause();
     }
 
-    private Runnable UpdateSongTime = new Runnable() {
-        public void run() {
-            startTime = mediaPlayer.getCurrentPosition();
-            textCurrentPosition.setText(String.format("%d min, %d sec",
-                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
-                                    toMinutes((long) startTime)))
-            );
-            videoSeekBar.setProgress((int)startTime);
-            threadHandler.postDelayed(this, 50);
-        }
-    };
     static final String LOG = PodcastPlayerActivity.class.getSimpleName();
 }

@@ -187,7 +187,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
             for (int i = 0; i < podcasts.size(); i++) {
 
-                final String text = podcasts.get(i).getStringDateRegistered().toLowerCase();
+                final String text = podcasts.get(i).getCompanyName().toLowerCase();
                 if (text.contains(query)) {
 
                     filteredList.add(podcasts.get(i));
