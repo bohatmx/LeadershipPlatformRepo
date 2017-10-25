@@ -55,7 +55,7 @@ public class ListAPI {
 
     public void getDailyThoughtsByUser(String journalUserID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("journalUserID").equalTo(journalUserID);
+        Query q = ref.orderByChild("journalUserID").equalTo(journalUserID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -78,7 +78,7 @@ public class ListAPI {
     }
     public void getDailyThoughtsByUserType(String userType, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("userType").equalTo(userType);
+        Query q = ref.orderByChild("userType").equalTo(userType).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,7 +101,7 @@ public class ListAPI {
     }
     public void getPendingDailyThoughts(String status, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("status").equalTo(status);
+        Query q = ref.orderByChild("status").equalTo(status).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -125,7 +125,7 @@ public class ListAPI {
 
     public void getCompanyApprovedDailyThoughts(String companyID_status, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("companyID_status").equalTo(companyID_status);
+        Query q = ref.orderByChild("companyID_status").equalTo(companyID_status).limitToLast(15);
         /*ref.orderByChild("status").equalTo("approved");*/
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -150,8 +150,9 @@ public class ListAPI {
 
     public void getDailyThoughts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        Query q = ref.orderByChild("companyID").equalTo(companyID).limitToLast(15);
         /*ref.orderByChild("status").equalTo("approved");*/
+
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -199,7 +200,8 @@ public class ListAPI {
 
     public void getAllWeeklyMessages(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MESSAGES);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = ref.orderByKey().limitToLast(10);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ResponseBag bag = new ResponseBag();
@@ -246,7 +248,8 @@ public class ListAPI {
 
     public void getAllNewsArticle(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.NEWS);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = ref.orderByKey().limitToLast(10);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ResponseBag bag = new ResponseBag();
@@ -270,7 +273,8 @@ public class ListAPI {
 
     public void getAllEBooks(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.EBOOKS);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = ref.orderByKey().limitToLast(10);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
@@ -296,7 +300,7 @@ public class ListAPI {
 
     public void getAllPodcasts(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PODCASTS);
-        Query q = ref.orderByChild("podcastDescription").equalTo(PodcastDTO.DESC_PODCAST);
+        Query q = ref.orderByChild("podcastDescription").equalTo(PodcastDTO.DESC_PODCAST).limitToLast(10);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -347,7 +351,8 @@ public class ListAPI {
     }
     public void getAllVideos(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = ref.orderByKey().limitToLast(10);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
@@ -373,7 +378,7 @@ public class ListAPI {
 
     public void getAllExternallyApprovedDailyThoughts(String dailyThoughtType_status, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("dailyThoughtType_status").equalTo(dailyThoughtType_status);
+        Query q = ref.orderByChild("dailyThoughtType_status").equalTo(dailyThoughtType_status).limitToLast(15);
         /*ref*/q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -400,7 +405,7 @@ public class ListAPI {
 
     public void getAllDailyThoughts(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("status").equalTo("approved");
+        Query q = ref.orderByChild("status").equalTo("approved").limitToLast(15);
         /*ref*/q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -453,7 +458,8 @@ public class ListAPI {
 
     public void getAllPhotos(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PHOTOS);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = ref.orderByKey().limitToLast(15);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
@@ -479,7 +485,8 @@ public class ListAPI {
 
     public void getAllWeeklyMasterClasses(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MASTER_CLASSES);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = ref.orderByKey().limitToLast(15);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
@@ -505,7 +512,7 @@ public class ListAPI {
 
     public void getAllCompanyDailyThoughts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        Query q = ref.orderByChild("companyID").equalTo(companyID).limitToLast(15);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -604,7 +611,7 @@ public class ListAPI {
 
     public void getPhotos(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PHOTOS);
-        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        Query q = ref.orderByChild("companyID").equalTo(companyID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -676,7 +683,7 @@ public class ListAPI {
 
     public void getPodcasts(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PODCASTS);
-        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        Query q = ref.orderByChild("companyID").equalTo(companyID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -772,7 +779,7 @@ public class ListAPI {
 
     public void getCompanyVideos(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.VIDEOS);
-        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        Query q = ref.orderByChild("companyID").equalTo(companyID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -881,7 +888,7 @@ public class ListAPI {
 
     public void getWeeklyMasterclasses(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MASTER_CLASSES);
-        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        Query q = ref.orderByChild("companyID").equalTo(companyID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -905,7 +912,7 @@ public class ListAPI {
 
     public void getWeeklyMessages(String companyID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.WEEKLY_MESSAGES);
-        Query q = ref.orderByChild("companyID").equalTo(companyID);
+        Query q = ref.orderByChild("companyID").equalTo(companyID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -953,7 +960,7 @@ public class ListAPI {
 
     public void getDailyThoughtsRating(String dailyThoughtID, final DataListener listener){
         DatabaseReference ref = db.getReference(DataAPI.RATINGS);
-        Query q = ref.orderByChild("dailyThoughtID").equalTo(dailyThoughtID);
+        Query q = ref.orderByChild("dailyThoughtID").equalTo(dailyThoughtID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -980,7 +987,7 @@ public class ListAPI {
 
     public void getWeeklyMessageRating(String weeklyMessageID, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.RATINGS);
-        Query q = ref.orderByChild("weeklyMessageID").equalTo(weeklyMessageID);
+        Query q = ref.orderByChild("weeklyMessageID").equalTo(weeklyMessageID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1007,7 +1014,7 @@ public class ListAPI {
 
     public void getWeeklyMasterClassRating(String weeklyMasterClassID, final DataListener listener){
         DatabaseReference ref = db.getReference(DataAPI.RATINGS);
-        Query q = ref.orderByChild("weeklyMasterClassID").equalTo(weeklyMasterClassID);
+        Query q = ref.orderByChild("weeklyMasterClassID").equalTo(weeklyMasterClassID).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

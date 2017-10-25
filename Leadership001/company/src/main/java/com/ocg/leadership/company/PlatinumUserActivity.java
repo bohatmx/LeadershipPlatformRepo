@@ -300,6 +300,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         userEmail = header.findViewById(R.id.owner_email);
         nav_layout = header.findViewById(R.id.nav_layout);
         imageView = header.findViewById(R.id.imageView);
+        imageView.setVisibility(View.GONE);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -301,7 +301,13 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
                 userEmail = header.findViewById(R.id.owner_email);
                 nav_layout = header.findViewById(R.id.nav_layout);
                 imageView = header.findViewById(R.id.imageView);
-                imageView.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.GONE);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pickGalleryOrCamera(user);
+                    }
+                });
                 companyName = (TextView) findViewById(R.id.companyName);
 
 

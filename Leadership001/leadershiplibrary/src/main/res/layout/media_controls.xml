@@ -10,20 +10,7 @@
         android:layout_marginTop="12dp">
 
         <ImageView
-            android:layout_margin="8dp"
-            android:id="@+id/playIMG"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_play_arrow_black_24dp"/>
-
-        <ImageView
-            android:layout_margin="8dp"
-            android:id="@+id/pauseIMG"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_pause_black_24dp"/>
-
-        <ImageView
+            android:visibility="gone"
             android:layout_margin="8dp"
             android:id="@+id/stopIMG"
             android:layout_width="30dp"
@@ -36,6 +23,20 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_fast_rewind_black_24dp"/>
+
+        <ImageView
+            android:layout_margin="8dp"
+            android:id="@+id/playIMG"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_play_arrow_black_24dp"/>
+
+        <ImageView
+            android:layout_margin="8dp"
+            android:id="@+id/pauseIMG"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_pause_black_24dp"/>
 
         <ImageView
             android:layout_margin="8dp"

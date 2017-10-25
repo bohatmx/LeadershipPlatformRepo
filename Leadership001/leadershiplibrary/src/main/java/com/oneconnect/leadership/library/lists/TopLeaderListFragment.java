@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.ui.auth.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -285,7 +286,7 @@ public class TopLeaderListFragment extends Fragment implements PageFragment, Sub
     @Override
     public void onUserFound(UserDTO user) {
         Log.i(LOG, "** onUserFound **" + user.getFullName());
-        presenter.getDailyThoughtsByUserType(user.getUserDescription());
+        presenter.getDailyThoughtsByUserType(UserDTO.DESC_PLATINUM_USER);
     }
 
     @Override
