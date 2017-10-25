@@ -339,15 +339,13 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 Util.flashOnce(dvh.txtSubtitle, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
+
                             if (dvh.txtSubtitle.getLineCount() > 3) {
                                 dvh.txtSubtitle.setLines(7);
                             }
                             /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
                             //   dvh.txtTitle.setText(dvh.txtTitle.getText());
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
+                         else {
                             if (dvh.txtSubtitle.getLineCount() > 3) {
                                 dvh.txtSubtitle.setLines(3);
                                 dvh.txtSubtitle.setEllipsize(TextUtils.TruncateAt.END);
@@ -364,15 +362,13 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 Util.flashOnce(dvh.txtTitle, 300, new Util.UtilAnimationListener() {
                     @Override
                     public void onAnimationEnded() {
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
+
                             if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(7);
                             }
                             /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
                          //   dvh.txtTitle.setText(dvh.txtTitle.getText());
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
+                        else {
                             if (dvh.txtTitle.getLineCount() > 3) {
                                 dvh.txtTitle.setLines(3);
                                 dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);

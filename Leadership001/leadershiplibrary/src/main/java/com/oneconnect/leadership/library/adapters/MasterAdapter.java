@@ -340,45 +340,6 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     });
         }
 
-        dvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                        if (dvh.bottomLayout.getVisibility() == View.GONE){
-                            dvh.bottomLayout.setVisibility(View.VISIBLE);
-                          /* if (dvh.txtTitle.getLineCount() > 3) {
-                               dvh.txtTitle.setLines(5);
-                           }*/
-                        } else {
-                            dvh.bottomLayout.setVisibility(View.GONE);
-                           /* if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(3);
-                                dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }*/
-
-                        }
-                    }
-
-
-        });
-
-        dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dvh.bottomLayout.getVisibility() == View.GONE){
-                    dvh.bottomLayout.setVisibility(View.VISIBLE);
-                            /*if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(5);
-                            }*/
-                } else {
-                    dvh.bottomLayout.setVisibility(View.GONE);
-                           /* if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(3);
-                                dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }*/
-                }
-            }
-        });
 
         if (dt.getUrls() != null) {
             dvh.txtLinks.setText("" + dt.getUrls().size());

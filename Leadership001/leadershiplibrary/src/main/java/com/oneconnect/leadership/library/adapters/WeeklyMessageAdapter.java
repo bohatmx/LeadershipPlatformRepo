@@ -92,23 +92,6 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
       //  wmvh.iconUpdate.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.ic_link_black_24dp)/*ctx.getDrawable(R.drawable.ic_link_black_24dp)*/);
 
 
-        wmvh.txtTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (wmvh.bottomLayout.getVisibility() == View.GONE){
-                    wmvh.bottomLayout.setVisibility(View.VISIBLE);
-                           /* if (wmvh.txtTitle.getLineCount() > 3) {
-                                wmvh.txtTitle.setLines(5);
-                            }*/
-                } else {
-                    wmvh.bottomLayout.setVisibility(View.GONE);
-                            /*if (wmvh.txtTitle.getLineCount() > 3) {
-                                wmvh.txtTitle.setLines(3);
-                                wmvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }*/
-                }
-            }
-        });
         wmvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -231,17 +214,6 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
 
-        wmvh.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (wmvh.bottomLayout.getVisibility() == View.GONE){
-                    wmvh.bottomLayout.setVisibility(View.VISIBLE);
-                }else{
-                    wmvh.bottomLayout.setVisibility(View.GONE);
-                }
-            }
-        });
-
         if (wm.getPodcasts() != null) {
             wmvh.txtMicrophone.setText("" + wm.getPodcasts().size());
             wmvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
@@ -351,15 +323,12 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
             @Override
             public void onClick(View v) {
 
-                        if (wmvh.bottomLayout.getVisibility() == View.GONE){
-                            wmvh.bottomLayout.setVisibility(View.VISIBLE);
                             if (wmvh.txtSubtitle.getLineCount() > 3) {
                                 wmvh.txtSubtitle.setLines(7);
                             }
                             /*dvh.txtTitle.getEllipsize()setEllipsize(TextUtils.TruncateAt.END);*/
                             //   dvh.txtTitle.setText(dvh.txtTitle.getText());
-                        } else {
-                            wmvh.bottomLayout.setVisibility(View.GONE);
+                         else {
                             if (wmvh.txtSubtitle.getLineCount() > 3) {
                                 wmvh.txtSubtitle.setLines(3);
                                 wmvh.txtSubtitle.setEllipsize(TextUtils.TruncateAt.END);

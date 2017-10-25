@@ -171,16 +171,7 @@ public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             });
         }
-        dvh.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dvh.bottomLayout.getVisibility() == View.GONE){
-                    dvh.bottomLayout.setVisibility(View.VISIBLE);
-                }else{
-                    dvh.bottomLayout.setVisibility(View.GONE);
-                }
-            }
-        });
+
         if (dt.getPhotos() != null) {
             dvh.txtCamera.setText("" + dt.getPhotos().size());
 
@@ -353,43 +344,6 @@ public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
                 intent.putExtra("dailyThought", dt);
                 ctx.startActivity(intent);
-            }
-        });
-        dvh.txtTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dvh.bottomLayout.getVisibility() == View.GONE){
-                    dvh.bottomLayout.setVisibility(View.VISIBLE);
-                          /* if (dvh.txtTitle.getLineCount() > 3) {
-                               dvh.txtTitle.setLines(5);
-                           }*/
-                } else {
-                    dvh.bottomLayout.setVisibility(View.GONE);
-                           /* if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(3);
-                                dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }*/
-
-                }
-            }
-        });
-
-        dvh.txtSubtitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dvh.bottomLayout.getVisibility() == View.GONE){
-                    dvh.bottomLayout.setVisibility(View.VISIBLE);
-                          /* if (dvh.txtTitle.getLineCount() > 3) {
-                               dvh.txtTitle.setLines(5);
-                           }*/
-                } else {
-                    dvh.bottomLayout.setVisibility(View.GONE);
-                           /* if (dvh.txtTitle.getLineCount() > 3) {
-                                dvh.txtTitle.setLines(3);
-                                dvh.txtTitle.setEllipsize(TextUtils.TruncateAt.END);
-                            }*/
-
-                }
             }
         });
 

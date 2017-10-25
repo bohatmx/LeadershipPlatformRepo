@@ -456,6 +456,13 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
             public void onLinkRequired(BaseDTO base) {
 
             }
+
+            @Override
+            public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
+
+            }
+
+
         });
 
         recyclerView.setAdapter(adapter);

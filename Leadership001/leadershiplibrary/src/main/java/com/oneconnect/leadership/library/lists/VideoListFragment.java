@@ -193,7 +193,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
             for (int i = 0; i < videos.size(); i++) {
 
-                final String text = videos.get(i).getCaption().toLowerCase();
+                final String text = videos.get(i).getCompanyName().toLowerCase();
                 if (text.contains(query)) {
 
                     filteredList.add(videos.get(i));
