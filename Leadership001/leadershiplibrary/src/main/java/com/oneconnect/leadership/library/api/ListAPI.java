@@ -458,7 +458,7 @@ public class ListAPI {
 
     public void getAllPhotos(final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.PHOTOS);
-        Query query = ref.orderByKey().limitToLast(15);
+        Query query = ref.orderByKey()/*.limitToLast(15)*/;
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

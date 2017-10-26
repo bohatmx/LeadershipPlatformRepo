@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.activities;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -149,6 +150,8 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
                 dailyThought.setStatus(Constants.DECLINED);
             }
             crudPresenter.updateDailyThought(dailyThought);
+            //Intent intent = new Intent(this, UpdateEntityActivity.class);
+            //startActivity(intent);
             finish();
             return;
         }

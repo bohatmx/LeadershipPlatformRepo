@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -193,6 +194,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         //toolbar.setLogo(R.drawable.harmony);
         logoIMG = (ImageView) findViewById(R.id.logoIMG);
          firebaseAuth = firebaseAuth.getInstance();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         ctx = getApplicationContext();
         activity = this;
 
@@ -1033,7 +1035,12 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
     public void onCompanyFound(CompanyDTO company) {
         Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
         logoIMG.setVisibility(View.GONE);
-        companyName.setText(company.getCompanyName());
+        if(company.getCompanyName() != null) {
+            companyName.setText(company.getCompanyName());
+        } else {
+            companyName.setVisibility(View.GONE);
+        }
+       // companyName.setText(company.getCompanyName());
 
         if (company.getPrimaryColor() != 0) {
             Log.i(TAG, "*** converting primary color to a hex color ***");

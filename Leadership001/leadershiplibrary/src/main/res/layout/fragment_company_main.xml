@@ -114,7 +114,7 @@
                                 android:id="@+id/videoIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_videocam" />
+                                app:srcCompat="@drawable/ic_videocam" />
 
                         </RelativeLayout>
 
@@ -167,7 +167,7 @@
                                 android:id="@+id/userIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_people" />
+                                app:srcCompat="@drawable/ic_people" />
 
                         </RelativeLayout>
 
@@ -210,7 +210,7 @@
                                 android:id="@+id/podcastIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_microphone" />
+                                app:srcCompat="@drawable/ic_microphone" />
 
                         </RelativeLayout>
 
@@ -228,7 +228,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_create"
+            app:srcCompat="@drawable/ic_create"
             app:layout_anchor="@id/scrollView"
             app:layout_anchorGravity="bottom|right|end" />
 

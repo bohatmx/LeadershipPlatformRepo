@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -52,6 +53,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.util.ColorParser;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ocg.leadership.company.adapters.HarmonyThoughtAdapter;
@@ -183,6 +185,7 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
     private ActionBar ab;
     TextView userName, userEmail, companyName;
     RelativeLayout nav_layout;
+    FirebaseUser fbUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,7 +198,8 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
         logoIMG = (ImageView) findViewById(R.id.logoIMG);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        /*toolbar.setLogo(R.drawable.harmony);*/
+        fbUser = FirebaseAuth.getInstance().getCurrentUser();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         ctx = getApplicationContext();
         activity = this;
@@ -464,13 +468,13 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
 
         Intent m = new Intent(this, CameraActivity.class);
         m.putExtra("type", CameraActivity.CAMERA_REQUEST);
-        switch (type) {
-            case ResponseBag.USERS:
+        /*switch (type) {
+            case ResponseBag.USERS:*/
                 user = (UserDTO) entity;
                 m.putExtra("user", user);
                 Log.d(TAG, "startCamera: ".concat(GSON.toJson(user)));
-                break;
-        }
+               /* break;
+        }*/
 
         startActivityForResult(m, CameraActivity.CAMERA_REQUEST);
     }
@@ -1053,7 +1057,12 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
     public void onCompanyFound(CompanyDTO company) {
         Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
         logoIMG.setVisibility(View.GONE);
-        companyName.setText(company.getCompanyName());
+        if(company.getCompanyName() != null) {
+            companyName.setText(company.getCompanyName());
+        } else {
+            companyName.setVisibility(View.GONE);
+        }
+        //companyName.setText(company.getCompanyName());
 
         if (company.getPrimaryColor() != 0) {
             Log.i(TAG, "*** converting primary color to a hex color ***");
@@ -1408,6 +1417,23 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
         startPhotoService();
 
     }
+
+    private void updateFirebaseUser() {
+        if (fbUser != null) {
+            // Name, email address, and profile photo Url
+            String name = fbUser.getDisplayName();
+            String email = fbUser.getEmail();
+            Uri photoUrl = fbUser.getPhotoUrl();
+
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+           // String uid = fbUser.getUid();
+        }
+    }
+
+
 
     private void startPhotoService() {
         Log.d(TAG, "startPhotoService: ###################");

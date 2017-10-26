@@ -24,6 +24,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -122,6 +123,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
    // MultipleEbookSelectorAdapter adapter;
     public List<String> serverList;
     ListView listView;
+    TextView noBookTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +242,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
                 } else {
                     if (listFile[i].getName().endsWith(pdfPattern)){
+                        noBookTxt.setVisibility(View.GONE);
                         filePathList.add(listFile[i].getAbsolutePath());
                         Log.d(LOG, "FileName: " + listFile[i].getName());
 
@@ -300,6 +303,9 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                         recyclerView.setAdapter(adapter);
 
 
+                    } else {
+                        /*Log.e(TAG, "**** no book/s found on device and we not crashing ****");
+                        noBookTxt.setVisibility(View.VISIBLE);*/
                     }
                 }
             }
@@ -403,28 +409,7 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
                 public void onDeleteEbook(EBookDTO eBook) {
                     deletePresenter.deleteEbook(eBook);
                 }
-            });/*EbookAdapter.EbookAdapterListener() {
-                @Override
-                public void onUploadEbook(String path) {
-                    confirmUpload(path);
-                }
-
-                @Override
-                public void onReadEbook(String path) {
-                    readEbook(path);
-                }
-
-                @Override
-                public void onPhotoUpload(BaseDTO base) {
-                    pickGalleryOrCamera(base);
-                }
-
-                @Override
-                public void onAttachPhoto(EBookDTO ebook) {
-                    //startPhotoGallerySelection(ebook);
-                    pickGalleryOrCamera(ebook);
-                }
-            });*/
+            });
             recyclerView.setAdapter(adapter);
         }
     }
@@ -910,6 +895,9 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
         nameTxt = (TextView) findViewById(R.id.nameTxt);
         nameTxt.setText("EBook Selection & Upload");
 
+        noBookTxt = (TextView) findViewById(R.id.noBookTxt);
+        noBookTxt.setVisibility(View.GONE);
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(ctx, 2));
         books = (ImageView) findViewById(R.id.books);
@@ -958,8 +946,8 @@ public class EbookSelectionActivity extends AppCompatActivity implements EbookUp
 
     private void confirmUpload(final String path) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Confirmation")
-                .setMessage("Do you want to upload this ebook to the database?")
+        b.setTitle(Html.fromHtml("<font color='#000000'>Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to upload this ebook to the database?</font>"))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

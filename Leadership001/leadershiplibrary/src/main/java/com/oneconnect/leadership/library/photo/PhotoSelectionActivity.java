@@ -19,11 +19,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -101,6 +103,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     private ListAPI listAPI;
     public List<String> serverList;
     ImageView galleryImage, serverImage;
+    TextView noPhotoTxt;
     ArrayList<String> searchResult;
     PhotoAdapter adapter;
     FirebaseStorageAPI fbs;
@@ -199,6 +202,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         }
         firebaseAuth = FirebaseAuth.getInstance();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        noPhotoTxt = (TextView) findViewById(R.id.noPhotoTxt);
+        noPhotoTxt.setVisibility(View.GONE);
         LinearLayoutManager lm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(lm);
 
@@ -322,6 +327,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
         if ((c != null) && (c.moveToFirst()))
         {
+            noPhotoTxt.setVisibility(View.GONE);
             do
             {
                 String tempDir = c.getString(0);
@@ -338,6 +344,9 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
             directories = new String[dirList.size()];
             dirList.toArray(directories);
 
+        } else {
+            Log.e(LOG, "**** no photo/s found on device and we not crashing ****");
+            noPhotoTxt.setVisibility(View.VISIBLE);
         }
 
         for(int i=0;i<dirList.size();i++)
@@ -451,8 +460,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     private void confirmUpload(final String path, final int pos) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Confirmation")
-                .setMessage("Do you want to upload this photo to the database?")
+        b.setTitle(Html.fromHtml("<font color='#000000'>Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to upload this photo to the database?</font>"))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
