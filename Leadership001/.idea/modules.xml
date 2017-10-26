@@ -3,19 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Leadership001.iml" filepath="$PROJECT_DIR$/Leadership001.iml" />
-      <module fileurl="file://C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\Leadership001.iml" filepath="C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\Leadership001.iml" />
       <module fileurl="file://$PROJECT_DIR$/admin/admin.iml" filepath="$PROJECT_DIR$/admin/admin.iml" />
-      <module fileurl="file://C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\admin\admin.iml" filepath="C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\admin\admin.iml" />
       <module fileurl="file://$PROJECT_DIR$/backend/backend.iml" filepath="$PROJECT_DIR$/backend/backend.iml" />
-      <module fileurl="file://C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\backend\backend.iml" filepath="C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\backend\backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/company/company.iml" filepath="$PROJECT_DIR$/company/company.iml" />
-      <module fileurl="file://C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\company\company.iml" filepath="C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\company\company.iml" />
       <module fileurl="file://$PROJECT_DIR$/internalapp/internalapp.iml" filepath="$PROJECT_DIR$/internalapp/internalapp.iml" />
-      <module fileurl="file://C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\internalapp\internalapp.iml" filepath="C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\internalapp\internalapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/leadershiplibrary/leadershiplibrary.iml" filepath="$PROJECT_DIR$/leadershiplibrary/leadershiplibrary.iml" />
-      <module fileurl="file://C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\leadershiplibrary\leadershiplibrary.iml" filepath="C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\leadershiplibrary\leadershiplibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/subscriber/subscriber.iml" filepath="$PROJECT_DIR$/subscriber/subscriber.iml" />
-      <module fileurl="file://C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\subscriber\subscriber.iml" filepath="C:\Users\Kurisani\Music\LeadershipPlatformRepo\Leadership001\subscriber\subscriber.iml" />
     </modules>
   </component>
 </project>
