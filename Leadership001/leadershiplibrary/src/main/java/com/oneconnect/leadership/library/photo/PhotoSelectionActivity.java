@@ -19,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -459,8 +460,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     private void confirmUpload(final String path, final int pos) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Confirmation")
-                .setMessage("Do you want to upload this photo to the database?")
+        b.setTitle(Html.fromHtml("<font color='#000000'>Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to upload this photo to the database?</font>"))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

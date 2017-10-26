@@ -233,7 +233,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             category = cat;
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -532,7 +532,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
         getCachedCategories();
         getCategories();
-
 
         return view;
     }

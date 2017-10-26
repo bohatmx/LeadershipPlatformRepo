@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -204,13 +205,15 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
         webView.loadUrl("https://www.google.com/search?q=".concat(sb.toString()));
     }
 
+   // String next = "<font color='#000000'>Do you want to add this link?</font>";
+    //t.setText(Html.fromHtml(first + next));
     private void confirm() {
         StringBuilder sb = new StringBuilder();
         sb.append(webView.getTitle()).append("\n");
         sb.append(webView.getUrl());
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Confirmation")
-                .setMessage("Do you want to add this link?\n\n".concat(sb.toString()))
+        b.setTitle(Html.fromHtml("<font color='#000000'>Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to add this link?</font>".concat(sb.toString())))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
