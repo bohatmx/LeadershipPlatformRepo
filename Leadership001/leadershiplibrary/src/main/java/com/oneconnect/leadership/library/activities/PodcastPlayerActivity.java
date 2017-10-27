@@ -428,23 +428,41 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        if (this.isFinishing()){ //basically BACK was pressed from this activity
+
+
+        // cleanUp();
+        if (mediaPlayer != null && mediaPlayer.isPlaying() && this.isFinishing())
+        {
             mediaPlayer.stop();
-          //  Toast.makeText(PodcastPlayerActivity.this, "YOU PRESSED BACK FROM YOUR 'HOME/MAIN' ACTIVITY", Toast.LENGTH_SHORT).show();
+            mediaPlayer.release();
+            mediaPlayer = null;
+
         }
+
+       /* if (this.isFinishing()){ //basically BACK was pressed from this activity
+            mediaPlayer.stop();
+           Toast.makeText(PodcastPlayerActivity.this, "YOU PRESSED BACK FROM YOUR 'HOME/MAIN' ACTIVITY", Toast.LENGTH_SHORT).show();
+        }*/
+
         Context context = getApplicationContext();
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
         if (!taskInfo.isEmpty()) {
             ComponentName topActivity = taskInfo.get(0).topActivity;
             if (!topActivity.getPackageName().equals(context.getPackageName())) {
-                mediaPlayer.stop();
-            //    Toast.makeText(PodcastPlayerActivity.this, "YOU LEFT YOUR APP", Toast.LENGTH_SHORT).show();
+               mediaPlayer.stop();
+               Toast.makeText(PodcastPlayerActivity.this, "YOU LEFT YOUR APP", Toast.LENGTH_SHORT).show();
             }
             else {
-       //         Toast.makeText(PodcastPlayerActivity.this, "YOU SWITCHED ACTIVITIES WITHIN YOUR APP", Toast.LENGTH_SHORT).show();
+               Toast.makeText(PodcastPlayerActivity.this, "YOU SWITCHED ACTIVITIES WITHIN YOUR APP", Toast.LENGTH_SHORT).show();
             }
         }
         super.onPause();

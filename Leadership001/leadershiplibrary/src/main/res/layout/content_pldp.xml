@@ -25,6 +25,7 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/pldp"
             android:contentDescription="The PLDP"
+            android:visibility="gone"
             android:adjustViewBounds="true"
             android:maxWidth="300dp" />
 
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text=" Personal Leadership Development Plan"
+            style="@style/TextAppearance.AppCompat.Body1"
             android:id="@+id/textView"
             android:paddingTop="10dp"
             android:textAlignment="center"
