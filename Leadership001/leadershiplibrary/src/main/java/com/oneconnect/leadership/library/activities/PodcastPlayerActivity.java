@@ -416,7 +416,7 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mediaPlayer.stop/*pause*/();
+        mediaPlayer.stop();
        // mediaPlayer.reset();
         finish();
     }
@@ -426,13 +426,14 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
         super.onStop();
         mediaPlayer.pause();/*.stop();*/
       //  finish();
-      //  mediaPlayer.reset();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mediaPlayer.start();
+        playbtn.setVisibility(View.GONE);
+        pausebtn.setVisibility(View.VISIBLE);
     }
 
     @Override
