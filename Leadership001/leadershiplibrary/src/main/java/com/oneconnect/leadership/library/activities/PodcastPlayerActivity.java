@@ -416,32 +416,33 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        mediaPlayer.stop();
-        mediaPlayer.reset();
+        mediaPlayer.stop/*pause*/();
+       // mediaPlayer.reset();
         finish();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mediaPlayer.reset();
+        mediaPlayer.pause();/*.stop();*/
+      //  finish();
+      //  mediaPlayer.reset();
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
+        mediaPlayer.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-
         // cleanUp();
         if (mediaPlayer != null && mediaPlayer.isPlaying() && this.isFinishing())
         {
-            mediaPlayer.stop();
+            mediaPlayer./*stop*/pause();
             mediaPlayer.release();
             mediaPlayer = null;
 
@@ -458,11 +459,11 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
         if (!taskInfo.isEmpty()) {
             ComponentName topActivity = taskInfo.get(0).topActivity;
             if (!topActivity.getPackageName().equals(context.getPackageName())) {
-               mediaPlayer.stop();
-               Toast.makeText(PodcastPlayerActivity.this, "YOU LEFT YOUR APP", Toast.LENGTH_SHORT).show();
+               mediaPlayer./*stop*/pause();
+        //       Toast.makeText(PodcastPlayerActivity.this, "YOU LEFT YOUR APP", Toast.LENGTH_SHORT).show();
             }
             else {
-               Toast.makeText(PodcastPlayerActivity.this, "YOU SWITCHED ACTIVITIES WITHIN YOUR APP", Toast.LENGTH_SHORT).show();
+        //       Toast.makeText(PodcastPlayerActivity.this, "YOU SWITCHED ACTIVITIES WITHIN YOUR APP", Toast.LENGTH_SHORT).show();
             }
         }
         super.onPause();
