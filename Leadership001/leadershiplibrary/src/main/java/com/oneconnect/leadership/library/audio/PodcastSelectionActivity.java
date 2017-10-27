@@ -75,6 +75,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     SearchView searchView = null;
     ArrayList<String> downloadedList;
     public static final int PERMISSIONS_REQUEST = 113;
+    String hexColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,9 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         image2 = (ImageView) findViewById(R.id.image2);
         noPodcastTxt = (TextView) findViewById(R.id.noPodcastTxt);
         noPodcastTxt.setVisibility(View.GONE);
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        }
 
         check();
 

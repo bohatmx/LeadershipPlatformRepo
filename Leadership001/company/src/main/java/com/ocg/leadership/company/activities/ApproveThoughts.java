@@ -107,6 +107,11 @@ public class ApproveThoughts extends AppCompatActivity implements CrudContract.V
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }

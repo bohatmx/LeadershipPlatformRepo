@@ -31,9 +31,10 @@ android {
     }
     productFlavors {
     }
-    /*dexOptions {
+    dexOptions {
         jumboMode = true
-    }*/
+        javaMaxHeapSize "4g"
+    }
 }
 /*configurations.compile.resolutionStrategy {
     eachDependency { DependencyResolveDetails details ->

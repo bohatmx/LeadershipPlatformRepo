@@ -110,6 +110,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     List<PhotoDTO> photoDTOs;
     boolean isServerList;
     private Context ctx;
+    String hexColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +127,10 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         subscriberPresenter = new SubscriberPresenter(this);
         eBookpresenter = new EbookUploadPresenter(this);
         crudPresenter = new CrudPresenter(this);
+
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        }
 
         type = getIntent().getIntExtra("type", 0/*type*/);
 

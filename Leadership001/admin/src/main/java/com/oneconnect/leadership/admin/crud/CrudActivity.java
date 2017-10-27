@@ -25,6 +25,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -696,6 +697,11 @@ public class CrudActivity extends AppCompatActivity
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
         Intent intent= new Intent(this, UpdateUsersActivity.class);
         intent.putExtra("user", user);
@@ -1279,8 +1285,8 @@ public class CrudActivity extends AppCompatActivity
 
     private void pickGalleryOrCamera(final BaseDTO base) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Select Images")
-                .setMessage("Please select the source of the photos")
+        b.setTitle(Html.fromHtml("<font color='#000000'>Select Images</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Please select the source of the photos</font>"))
                 .setPositiveButton("Use Camera", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -1688,8 +1694,8 @@ public class CrudActivity extends AppCompatActivity
 
     private void confirmUpload(final Intent data) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Upload Confirmation")
-                .setMessage("Do you want to upload the captured files?")
+        b.setTitle(Html.fromHtml("<font color='#000000'>Upload Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to upload the captured files?</font>"))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

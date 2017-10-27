@@ -108,6 +108,11 @@ public class ThoughtApprovalActivity extends AppCompatActivity implements CrudCo
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }

@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
@@ -59,7 +62,8 @@ public class WeeklyMessageEditor extends BaseBottomSheet
     private TextInputEditText editTitle, editSubtitle;
     private Button btnSend, btnDate;
     private Date selectedDate;
-
+    private ImageView iconMicrophone;
+    private TextView timer;
     private Spinner catSpinner;
     private SubscriberPresenter Catpresenter;
 
@@ -86,7 +90,8 @@ public class WeeklyMessageEditor extends BaseBottomSheet
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        Catpresenter.getCategories(user.getCompanyID());
     }
 
     @Override
@@ -128,7 +133,7 @@ public class WeeklyMessageEditor extends BaseBottomSheet
         for (CategoryDTO cat : list) {
             lis.add(cat.getCategoryName());
             category = cat;
-            ArrayAdapter<String> adapter;  adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+            ArrayAdapter<String> adapter;  adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
             catSpinner.setAdapter(adapter);
             catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -191,7 +196,7 @@ public class WeeklyMessageEditor extends BaseBottomSheet
             lis.add(cat.getCategoryName());
             category = cat;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -317,6 +322,7 @@ public class WeeklyMessageEditor extends BaseBottomSheet
         f.setArguments(args);
         return f;
     }
+    FirebaseAuth firebaseAuth;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -325,6 +331,7 @@ public class WeeklyMessageEditor extends BaseBottomSheet
         type = getArguments().getInt("type", 0);
         presenter = new SheetPresenter(this);
         Catpresenter = new SubscriberPresenter(this);
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -339,6 +346,10 @@ public class WeeklyMessageEditor extends BaseBottomSheet
         editTitle.setHint("Enter message");
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
         editSubtitle.setHint("Enter message author");
+        iconMicrophone = (ImageView) view.findViewById(R.id.iconMicrophone);
+        iconMicrophone.setVisibility(View.GONE);
+        timer = (TextView) view.findViewById(R.id.timer);
+        timer.setVisibility(View.GONE);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -360,7 +371,8 @@ public class WeeklyMessageEditor extends BaseBottomSheet
     public void getCategories() {
         // Log.d(LOG, "******* getCategories: ");
       //  Catpresenter.getCategories(weeklyMessage.getCompanyID());
-        Catpresenter.getCategories("-KgsUcgfo7z1U9MXgd9i");
+        Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        /*Catpresenter.getCategories("-KgsUcgfo7z1U9MXgd9i");*/
        // Catpresenter.getAllCategories();/*getCategories();*/
     }
 

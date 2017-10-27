@@ -744,6 +744,26 @@ public class CrudPresenter implements CrudContract.Presenter {
     }
 
     @Override
+    public void getCompanyProfile(String companyID) {
+        dataAPI.getCompany(companyID, new DataAPI.CompanyQueryListener() {
+            @Override
+            public void onCompanyFound(CompanyDTO company) {
+                view.onCompanyFound(company);
+            }
+
+            @Override
+            public void onCompanyNotFound() {
+                view.onError("Company not found");
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
     public void getPrices(String companyID) {
            listAPI.getPrices(companyID, new ListAPI.DataListener() {
                @Override

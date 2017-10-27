@@ -212,6 +212,11 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }

@@ -412,6 +412,11 @@ public class EntityListFragment extends BaseListingFragment implements CrudContr
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }

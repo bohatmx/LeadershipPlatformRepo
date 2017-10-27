@@ -58,6 +58,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.facebook.FacebookSdk.isDebugEnabled;
 
 public class CompanyMainFragment extends Fragment  implements PageFragment, CrudContract.View{
     private CompanyFragmentListener mListener;
@@ -92,6 +93,17 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
     @Override
     public void onCompanyCreated(CompanyDTO company) {
 
+    }
+
+    String hexColor;
+    @Override
+    public void onCompanyFound(CompanyDTO company) {
+        Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
+        if (company.getPrimaryColor() != 0) {
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
+
+      //  toolbar.setBackgroundColor(Color.parseColor(hexColor));
     }
 
     @Override
@@ -340,6 +352,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
     public void onUserFound(final UserDTO user) {
         Log.i(TAG, "*** onUserFound ***" +"\n" + "FullName: " + user.getFullName());
         companyTitle.setText(user.getCompanyName());
+        presenter.getCompanyProfile(user.getCompanyID());
         presenter.getDailyThoughts(user.getCompanyID());
         presenter.getPodcasts(user.getCompanyID());
         presenter.getVideos(user.getCompanyID());
@@ -507,9 +520,12 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
             @Override
             public void onClick(View v) {
 
-                        mListener.onVideosSelected();
-                        /*Intent intent = new Intent(ctx, VideoSelectionActivity.class);
-                        startActivity(intent);*/
+                      //  mListener.onVideosSelected();
+                        Intent intent = new Intent(ctx, VideoSelectionActivity.class);
+                        if (hexColor != null) {
+                            intent.putExtra("hexColor", hexColor);
+                        }
+                        startActivity(intent);
 
             }
         });

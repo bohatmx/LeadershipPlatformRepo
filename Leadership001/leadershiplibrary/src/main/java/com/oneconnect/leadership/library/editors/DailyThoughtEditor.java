@@ -150,6 +150,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     @Override
     public void onUserFound(UserDTO u) {
         Log.i(TAG, "*** onUserFound ***" + u.getFullName());
+        Catpresenter.getCategories(u.getCompanyID());
         user = u;
         userType = u.getUserType();
 
@@ -187,7 +188,28 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        List<String> lis = new ArrayList<String>();
+        lis.add("Select Category");
+        //  Collections.sort(list);
 
+        for (CategoryDTO cat : list) {
+            lis.add(cat.getCategoryName());
+            category = cat;
+            ArrayAdapter<String> adapter;  adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
+            catSpinner.setAdapter(adapter);
+            catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.i(TAG, "Spinner item selected: " + catSpinner.getSelectedItem().toString());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -632,8 +654,9 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
 
     public void getCategories() {
-        Log.d(TAG, "******* getAllCategories: ");
-        Catpresenter.getAllCategories();
+        Log.d(TAG, "******* getCategories: ");
+        Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+       // Catpresenter.getAllCategories();
     }
 
     public void getCachedCategories() {
@@ -661,7 +684,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             list.add(cat.getCategoryName());
             category = cat;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

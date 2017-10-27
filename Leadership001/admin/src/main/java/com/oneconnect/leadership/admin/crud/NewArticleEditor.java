@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
@@ -89,7 +90,8 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        Catpresenter.getCategories(user.getCompanyID());
     }
 
     @Override
@@ -124,6 +126,28 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        List<String> lis = new ArrayList<String>();
+        lis.add("Select Category");
+        //  Collections.sort(list);
+
+        for (CategoryDTO cat : list) {
+            lis.add(cat.getCategoryName());
+            category = cat;
+            ArrayAdapter<String> adapter;  adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
+            catSpinner.setAdapter(adapter);
+            catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.i(TAG, "Spinner item selected: " + catSpinner.getSelectedItem().toString());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
 
     }
 
@@ -168,7 +192,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
             lis.add(cat.getCategoryName());
             category = cat;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -293,6 +317,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
         f.setArguments(args);
         return f;
     }
+    FirebaseAuth firebaseAuth;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -301,6 +326,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
         type = getArguments().getInt("type", 0);
         presenter = new SheetPresenter(this);
         Catpresenter = new SubscriberPresenter(this);
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -336,7 +362,8 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
 
     public void getCategories() {
         // Log.d(LOG, "******* getCategories: ");
-        Catpresenter.getAllCategories();/*getCategories();*/
+        Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        /*Catpresenter.getAllCategories();*//*getCategories();*/
     }
 
 
@@ -350,7 +377,7 @@ public class NewArticleEditor extends BaseBottomSheet implements SheetContract.V
             list.add(cat.getCategoryName());
             category = cat;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

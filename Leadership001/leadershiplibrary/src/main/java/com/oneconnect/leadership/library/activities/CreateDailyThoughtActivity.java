@@ -339,6 +339,11 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }

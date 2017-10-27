@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.admin.R;
@@ -57,6 +60,8 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
         implements SheetContract.View, SubscriberContract.View {
     private WeeklyMasterClassDTO weeklyMasterClass;
     private TextInputEditText editTitle, editSubtitle;
+    private ImageView iconMicrophone;
+    private TextView timer;
     private Button btnSend, btnDate;
     private Date selectedDate;
     private Spinner catSpinner;
@@ -84,7 +89,8 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
 
     @Override
     public void onUserFound(UserDTO user) {
-
+        Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        Catpresenter.getCategories(user.getCompanyID());
     }
 
     @Override
@@ -120,6 +126,28 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
     @Override
     public void onCategories(List<CategoryDTO> list) {
 
+        List<String> lis = new ArrayList<String>();
+        lis.add("Select Category");
+        //  Collections.sort(list);
+
+        for (CategoryDTO cat : list) {
+            lis.add(cat.getCategoryName());
+            category = cat;
+            ArrayAdapter<String> adapter;  adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
+            catSpinner.setAdapter(adapter);
+            catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.i(TAG, "Spinner item selected: " + catSpinner.getSelectedItem().toString());
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -164,7 +192,7 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
             lis.add(cat.getCategoryName());
             category = cat;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, lis);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -291,6 +319,7 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
         f.setArguments(args);
         return f;
     }
+    FirebaseAuth firebaseAuth;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -299,6 +328,7 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
         type = getArguments().getInt("type", 0);
         presenter = new SheetPresenter(this);
         Catpresenter = new SubscriberPresenter(this);
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -312,6 +342,10 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
         editTitle.setHint("Enter class message");
         editSubtitle = (TextInputEditText) view.findViewById(R.id.editSubtitle);
         editSubtitle.setHint("Enter author name");
+        iconMicrophone = (ImageView) view.findViewById(R.id.iconMicrophone);
+        iconMicrophone.setVisibility(View.GONE);
+        timer = (TextView) view.findViewById(R.id.timer);
+        timer.setVisibility(View.GONE);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -331,7 +365,8 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
     }
     public void getCategories() {
         // Log.d(LOG, "******* getCategories: ");
-        Catpresenter.getAllCategories();/*getCategories();*/
+        Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        /*Catpresenter.getAllCategories();*//*getCategories();*/
     }
 
     private void setCategorySpinner() {
@@ -344,7 +379,7 @@ public class WeeklyMasterclassEditor extends BaseBottomSheet
             list.add(cat.getCategoryName());
             category = cat;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

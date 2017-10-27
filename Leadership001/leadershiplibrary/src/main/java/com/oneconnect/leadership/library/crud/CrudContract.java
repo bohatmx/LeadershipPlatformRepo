@@ -57,6 +57,7 @@ public class CrudContract {
         void getPayments(String companyID);
         void getPodcasts(String companyID);
         void getPhotos(String companyID);
+        void getCompanyProfile(String companyID);
         void getPrices(String companyID);
         void getUsers(String companyID);
         void getUser(String email);
@@ -73,6 +74,7 @@ public class CrudContract {
         void onEntityUpdated();
         void onUserCreated(UserDTO user);
         void onCompanyCreated(CompanyDTO company);
+        void onCompanyFound(CompanyDTO company);
         void onUserUpdated(UserDTO user);
         void onDailyThoughtUpdated(DailyThoughtDTO dailyThought);
         void onWeeklyMasterClassUpdated(WeeklyMasterClassDTO masterClass);

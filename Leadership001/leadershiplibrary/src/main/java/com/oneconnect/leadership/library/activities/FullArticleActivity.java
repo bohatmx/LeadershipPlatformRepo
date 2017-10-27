@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.activities;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,6 +27,7 @@ public class FullArticleActivity extends AppCompatActivity {
     Context ctx;
     NewsDTO newsArticle;
     ImageView articleImage;
+    String hexColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,10 @@ public class FullArticleActivity extends AppCompatActivity {
 
         ctx = getApplicationContext();
         articleImage = (ImageView) findViewById(R.id.articleImage);
+
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        }
 
         if (getIntent().getSerializableExtra("newsArticle") != null) {
                 //  type = ResponseBag.URLS;

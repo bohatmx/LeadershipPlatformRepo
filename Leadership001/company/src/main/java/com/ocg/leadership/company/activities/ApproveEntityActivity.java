@@ -201,6 +201,11 @@ public class ApproveEntityActivity extends AppCompatActivity implements CrudCont
     }
 
     @Override
+    public void onCompanyFound(CompanyDTO company) {
+
+    }
+
+    @Override
     public void onUserUpdated(UserDTO user) {
 
     }
