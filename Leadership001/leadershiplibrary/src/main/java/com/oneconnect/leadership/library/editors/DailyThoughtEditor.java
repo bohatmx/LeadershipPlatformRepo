@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.editors;
 
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -76,6 +78,7 @@ import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.TimePickerFragment;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.io.File;
@@ -99,7 +102,7 @@ import static com.oneconnect.leadership.library.ebook.EbookListFragment.REQUEST_
 
 public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View,
         SubscriberContract.View, PodcastUploadContract.View,CacheContract.View,
-        CategoryAdapter.CategoryAdapterListener {
+        CategoryAdapter.CategoryAdapterListener{
     private DailyThoughtDTO dailyThought;
 
 
@@ -118,7 +121,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private CachePresenter cachePresenter;
     private RadioButton internalButton, globalButton;
 
-    List<CategoryDTO> categoryList;
+    List<CategoryDTO> categoryList, selectedcategories = new ArrayList<>();
     private CategoryDTO category;
 
     @Override
@@ -188,28 +191,64 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        this.categoryList = list;
         List<String> lis = new ArrayList<String>();
         lis.add("Select Category");
         //  Collections.sort(list);
-
-        for (CategoryDTO cat : list) {
+        for (CategoryDTO cat : categoryList) {
             lis.add(cat.getCategoryName());
-            category = cat;
-            ArrayAdapter<String> adapter;  adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
-            catSpinner.setAdapter(adapter);
-            catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    Log.i(TAG, "Spinner item selected: " + catSpinner.getSelectedItem().toString());
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
+            /*category = cat;*/
         }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lis);
+        catSpinner.setAdapter(adapter);
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (i == 0) {
+                    return;
+                }
+                if (categoryList.isEmpty()) {
+                    Log.i(TAG, "category list is null");
+                    return;
+                }
+                Log.d(TAG, "onItemSelected: category: " + categoryList.size() + " index: " + i);
+                if (categoryList.size() == 1) {
+                    categoryList.clear();
+                } else {
+                    boolean isFound = false;
+                    int j = 0;
+                    CategoryDTO cat = categoryList.get(i - 1);
+                    for (CategoryDTO u : categoryList) {
+                        if (u.getCategoryID().equalsIgnoreCase(cat.getCategoryID())) {
+
+                            Log.i(TAG, "onItemSelected: ".concat(GSON.toJson(cat)));
+                            categoryList.add(cat);
+                            category = cat;
+                            isFound = true;
+                            break;
+                        }
+                        j++;
+                    }
+                    if (isFound) {
+                        categoryList.remove(j);
+                        setCategorySpinner();
+                    }
+                }
+
+               // cat = category;
+             //   category = cat;
+               /* Log.i(TAG, "onItemSelected: ".concat(GSON.toJson(cat))*//* catSpinner.getSelectedItem().toString()*//*);
+                selectedcategories.add(cat);*/
+              //  setCategorySpinner();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -678,18 +717,44 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private void setCategorySpinner() {
         List<String> list = new ArrayList<String>();
         list.add("Select Category");
-        Collections.sort(categoryList);
+     //   Collections.sort(categoryList);
 
         for (CategoryDTO cat : categoryList) {
             list.add(cat.getCategoryName());
-            category = cat;
+        //    category = cat;
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                if (i == 0) {
+                    return;
+                }
+                if (categoryList.isEmpty()) {
+                    Log.i(TAG, "No categories");
+                    return;
+                }
+                Log.d(TAG, "onItemSelected: categories: " + categoryList.size() + " index: " + i);
+                if (categoryList.size() == 1) {
+                    categoryList.clear();
+                } else {
+                    boolean isFound = false;
+                    int j = 0;
+                    CategoryDTO c = categoryList.get(i - 1);
+                   // category = c;
+                    for (CategoryDTO ca : categoryList) {
+                        if (ca.getCategoryID().equalsIgnoreCase(c.getCategoryID())) {
+                            isFound = true;
+                            break;
+                        }
+                        j++;
+                    }
+                    if (isFound) {
+                        categoryList.remove(j);
+                        setCategorySpinner();
+                    }
+                }
             }
 
             @Override
@@ -702,6 +767,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
 
     private boolean isReadyToSend;
+
+    /*private void setCategories() {
+        selectedcategories = categoryList;
+       // setCategorySpinner();
+    }*/
 
     private void sendPodcastWithDailyThought(String path) {
         PodcastDTO v = new PodcastDTO();
@@ -816,7 +886,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             if (me != null) {
                 dailyThought.setCompanyID(me.getCompanyID());
                 dailyThought.setCompanyName(me.getCompanyName());
-                dailyThought.setUser(me);
+               // dailyThought.setUser(me);
 
                 dailyThought.setActive(true);
                 dailyThought.setJournalUserID(me.getUserID());
@@ -832,7 +902,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         } else {
             dailyThought.setDateScheduled(selectedDate.getTime());
         }
-        category.setCategoryName(catSpinner.getSelectedItem().toString());
+       // category.setCategoryName(/*catSpinner.getSelectedItem().toString()*/);
         dailyThought.setTitle(editTitle.getText().toString());
         dailyThought.setSubtitle(editSubtitle.getText().toString());
         dailyThought.setCategory(category);
@@ -903,9 +973,18 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         }
     }
 
-    public void setSelectedDate(Date selectedDate) {
+    TimePickerFragment timePickerFragment;
+    TimePickerDialog timePickerDialog;
+    int hours, minute;
 
-        this.selectedDate  = Util.getDateAtMidnite(selectedDate);
+    public void setSelectedDate(Date selectedDate) {
+        timePickerFragment = new TimePickerFragment();
+        timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");
+       // timePickerFragment.show(getFragmentManager()/*getSupportFragmentManager()*/,"PROGRESS_SHEET");
+
+       // timePickerFragment.getSetTime(selectedDate);
+
+        this.selectedDate  = timePickerFragment.getSetTime(selectedDate)/*selectedDate*//*Util.getDateAtMidnite(selectedDate)*/;
         btnDate.setText(sdf.format(this.selectedDate));
         if (dailyThought != null) {
             dailyThought.setDateScheduled(this.selectedDate.getTime());
@@ -925,4 +1004,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     public void onCategorySelected(CategoryDTO category) {
         this.category = category;
     }
+
+
 }

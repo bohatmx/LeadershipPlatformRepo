@@ -47,6 +47,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.CompanyActivity;
 import com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -176,7 +177,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setLogo(R.drawable.harmony);
+       // toolbar.setLogo(R.drawable.harmony);
 
         ctx = getApplicationContext();
         activity = this;
@@ -269,6 +270,7 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
     private void setup() {
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setVisibility(View.GONE);
         user = SharedPrefUtil.getUser(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -283,116 +285,30 @@ public class CompanyMainActivity extends AppCompatActivity implements  Navigatio
                 Intent intent = new Intent(CompanyMainActivity.this, PlatinumUserActivity.class);
                 startActivity(intent);
                 finish();
-               // navigationView.setVisibility(View.GONE);
-              /*  platinum_nav_view = (NavigationView) findViewById(R.id.platinum_nav_view);
-                platinum_nav_view.setNavigationItemSelectedListener(this);
-                platinum_nav_view.setVisibility(View.VISIBLE);
-                View header1 = platinum_nav_view.getHeaderView(0);
-
-                userName = header1.findViewById(R.id.owner_name);
-                userEmail = header1.findViewById(R.id.owner_email);
-                userName.setText(user.getFullName());
-                userEmail.setText(user.getEmail());
-
-                setUpPlatinumUserViewPager();*/
             } else if (user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER)) {
                 Intent intent = new Intent(CompanyMainActivity.this, GoldUserActivity.class);
                 startActivity(intent);
                 finish();
-                // navigationView.setVisibility(View.GONE);
-                /*goldNavigationView = (NavigationView) findViewById(R.id.gold_nav_view);
-                goldNavigationView.setNavigationItemSelectedListener(this);
-                goldNavigationView.setVisibility(View.VISIBLE);
-                View header1 = goldNavigationView.getHeaderView(0);
-
-                userName = header1.findViewById(R.id.owner_name);
-                userEmail = header1.findViewById(R.id.owner_email);
-                userName.setText(user.getFullName());
-                userEmail.setText(user.getEmail());
-
-                setUpGoldUserViewPager();*/
             } else if(user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN)) {
                 Intent intent = new Intent(CompanyMainActivity.this, PlatinumAdminActivity.class);
                 startActivity(intent);
                 finish();
-
-               /* platinum_admin_user_nav_view = (NavigationView) findViewById(R.id.platinum_admin_user_nav_view);
-                platinum_admin_user_nav_view.setNavigationItemSelectedListener(this);
-                platinum_admin_user_nav_view.setVisibility(View.VISIBLE);
-                View header = platinum_admin_user_nav_view.getHeaderView(0);
-
-                userName = header.findViewById(R.id.owner_name);
-                userEmail = header.findViewById(R.id.owner_email);
-
-                userEmail.setText(user.getEmail());
-                userName.setText(user.getFullName());
-                setupPlatinumAdminUserViewPager();*/
-               // setUpViewPager();
             } else if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
                 Intent intent = new Intent(CompanyMainActivity.this, PlatinumAdminActivity.class);
                 startActivity(intent);
                 finish();
-               /* platinum_admin_user_nav_view = (NavigationView) findViewById(R.id.platinum_admin_user_nav_view);
-                platinum_admin_user_nav_view.setNavigationItemSelectedListener(this);
-                platinum_admin_user_nav_view.setVisibility(View.VISIBLE);
-                View header = platinum_admin_user_nav_view.getHeaderView(0);
-
-                userName = header.findViewById(R.id.owner_name);
-                userEmail = header.findViewById(R.id.owner_email);
-
-                userEmail.setText(user.getEmail());
-                userName.setText(user.getFullName());
-                setupPlatinumAdminUserViewPager();*/
-                //setUpViewPager();
+            } else if (user.getUserDescription().equalsIgnoreCase(user.DESC_STANDARD_USER)) {
+                Intent intent = new Intent(CompanyMainActivity.this, StandardUserActivity.class);
+                startActivity(intent);
+                finish();
             }
-           /* View hdr = navigationView.getHeaderView(0);
-            TextView txt = hdr.findViewById(R.id.owner_name);
-            txt.setText(user.getFullName());*/
         } else {
-            Log.e(TAG, "onCreate: --------- user not found on disk");
-            finish();
+            Log.e(TAG, "onCreate: --------- unexpected user");
+            showSnackbar("You are not allowed on this app, please speak to your administrator ", "Dismiss", Constants.RED);
+          //  finish();
         }
-
-     /*   if(user.getUserDescription().equalsIgnoreCase(user.DESC_COMPANY_ADMIN))
-        {
-            setUpViewPager();
-        }else
-            if(user.getUserDescription().equalsIgnoreCase(user.DESC_GOLD_USER))
-            {
-            setUpGoldUserViewPager();
-        }else
-            if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_USER)) {
-                navigationView.setVisibility(View.GONE);
-                platinum_nav_view = (NavigationView) findViewById(R.id.platinum_nav_view);
-                platinum_nav_view.setNavigationItemSelectedListener(this);
-                View header1 = platinum_nav_view.getHeaderView(0);
-
-                TextView username1 = header1.findViewById(R.id.owner_name);
-                TextView email1 = header1.findViewById(R.id.owner_email);
-
-                setUpPlatinumUserViewPager();
-        }
-        if(user.getUserDescription().equalsIgnoreCase(user.DESC_PLATINUM_ADMIN)) {
-            navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-            View header = navigationView.getHeaderView(0);
-
-            TextView username = header.findViewById(R.id.owner_name);
-            TextView email = header.findViewById(R.id.owner_email);
-
-            email.setText(user.getEmail());
-            username.setText(user.getFullName());
-            setUpViewPager();
-        } */
-
-     /*   imageView = header.findViewById(R.id.imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickGalleryOrCamera(base);
-            }
-        }); */
     }
+
     private BaseDTO base;
     private void setUpViewPager() {
         setMenuDestination();

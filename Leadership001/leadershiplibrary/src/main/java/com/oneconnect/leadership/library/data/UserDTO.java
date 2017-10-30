@@ -22,7 +22,8 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
             PLATINUM_USER = 4,
             GOLD_USER = 5,
             COMPANY_ADMIN = 6,
-            PLATINUM_ADMIN = 7;
+            PLATINUM_ADMIN = 7,
+            STANDARD_USER = 8;
 
     private String userID, firstName, lastName,
             email, cellphone, password, uid,
@@ -35,7 +36,8 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
             DESC_PLATINUM_USER = "Platinum",
             DESC_GOLD_USER = "Gold",
             DESC_COMPANY_ADMIN = "Company Admin",
-            DESC_PLATINUM_ADMIN = "Platinum Admin";
+            DESC_PLATINUM_ADMIN = "Platinum Admin",
+            DESC_STANDARD_USER = "Standard";
 
     private HashMap<String, DeviceDTO> devices;
     private HashMap<String, SubscriptionDTO> subscriptions;
@@ -119,6 +121,9 @@ public class UserDTO extends BaseDTO implements Serializable, Comparable<UserDTO
                 break;
             case PLATINUM_ADMIN:
                 userDescription = DESC_PLATINUM_ADMIN;
+                break;
+            case STANDARD_USER:
+                userDescription = DESC_STANDARD_USER;
                 break;
         }
     }

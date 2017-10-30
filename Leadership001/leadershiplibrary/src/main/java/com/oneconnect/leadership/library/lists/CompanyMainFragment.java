@@ -100,7 +100,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
     public void onCompanyFound(CompanyDTO company) {
         Log.i(TAG, "*** onCompanyFound ***" + company.getCompanyName());
         if (company.getPrimaryColor() != 0) {
-            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+            this.hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
         }
 
       //  toolbar.setBackgroundColor(Color.parseColor(hexColor));
@@ -521,11 +521,11 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
             public void onClick(View v) {
 
                       //  mListener.onVideosSelected();
-                        Intent intent = new Intent(ctx, VideoSelectionActivity.class);
+                       /* Intent intent = new Intent(ctx, VideoSelectionActivity.class);
                         if (hexColor != null) {
                             intent.putExtra("hexColor", hexColor);
                         }
-                        startActivity(intent);
+                        startActivity(intent);*/
 
             }
         });
@@ -534,7 +534,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
             @Override
             public void onClick(View v) {
 
-                        mListener.onUsersSelected();
+                        /*mListener.onUsersSelected();*/
                         //startUserBottomSheet(null, Constants.NEW_ENTITY);
 
             }
@@ -544,7 +544,7 @@ public class CompanyMainFragment extends Fragment  implements PageFragment, Crud
             @Override
             public void onClick(View v) {
 
-                        mListener.onPodcastsSelected();
+                        /*mListener.onPodcastsSelected();*/
 
 
             }

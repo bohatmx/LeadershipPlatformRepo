@@ -29,39 +29,6 @@
            app:itemTextColor="@color/black"
            app:itemIconTint="@color/black"
            app:menu="@menu/activity_company_main_drawer" />
-       <android.support.design.widget.NavigationView
-           android:id="@+id/platinum_nav_view"
-           android:visibility="gone"
-           android:layout_width="wrap_content"
-           android:layout_height="match_parent"
-           android:layout_gravity="start"
-           app:headerLayout="@layout/nav_header_company_main"
-           android:fitsSystemWindows="true"
-           app:itemTextColor="@color/black"
-           app:itemIconTint="@color/black"
-           app:menu="@menu/company_platinum_user_drawer" />
-       <android.support.design.widget.NavigationView
-           android:id="@+id/gold_nav_view"
-           android:visibility="gone"
-           android:layout_width="wrap_content"
-           android:layout_height="match_parent"
-           android:layout_gravity="start"
-           app:headerLayout="@layout/nav_header_company_main"
-           android:fitsSystemWindows="true"
-           app:itemTextColor="@color/black"
-           app:itemIconTint="@color/black"
-           app:menu="@menu/company_gold_user_drawer" />
-       <android.support.design.widget.NavigationView
-           android:id="@+id/platinum_admin_user_nav_view"
-           android:visibility="gone"
-           android:layout_width="wrap_content"
-           android:layout_height="match_parent"
-           android:layout_gravity="start"
-           app:headerLayout="@layout/nav_header_company_main"
-           android:fitsSystemWindows="true"
-           app:itemTextColor="@color/black"
-           app:itemIconTint="@color/black"
-           app:menu="@menu/company_platinum_admin_user_drawer" />
    </RelativeLayout>
 
 

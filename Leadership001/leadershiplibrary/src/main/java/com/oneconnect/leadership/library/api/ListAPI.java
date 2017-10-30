@@ -75,6 +75,31 @@ public class ListAPI {
                 listener.onError(databaseError.getMessage());
             }
         });
+        /*q.addChildEventListener(new ChildEventListener() {
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousKey) {
+           //     System.out.println("Add "+dataSnapshot.getKey()+" to UI after "+previousKey);
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
     }
     public void getDailyThoughtsByUserType(String userType, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
@@ -121,6 +146,40 @@ public class ListAPI {
                 listener.onError(databaseError.getMessage());
             }
         });
+        /*q.addChildEventListener(new ChildEventListener() {
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousKey) {
+                //     System.out.println("Add "+dataSnapshot.getKey()+" to UI after "+previousKey);
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });*/
     }
 
     public void getCompanyApprovedDailyThoughts(String companyID_status, final DataListener listener) {
@@ -983,6 +1042,47 @@ public class ListAPI {
                 listener.onError(databaseError.getMessage());
             }
         });
+        //
+        /*q.addChildEventListener(new ChildEventListener() {
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousKey) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        DailyThoughtDTO u = shot.getValue(DailyThoughtDTO.class);
+                        bag.getDailyThoughts().add(u);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });*/
+
     }
 
     public void getWeeklyMessageRating(String weeklyMessageID, final DataListener listener) {

@@ -337,6 +337,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
     @Override
     public void onUserFound(UserDTO user) {
+        Log.i(TAG, "*** onUserFound ***");
 
     }
 

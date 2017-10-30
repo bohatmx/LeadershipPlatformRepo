@@ -207,4 +207,6 @@
     <string name="highscore" formatted="false">Highscore: %.1f%%</string>
     <string name="title_activity_profile">ProfileActivity</string>
 
+    <string name="title_activity_record">Record Audio</string>
+
 </resources>

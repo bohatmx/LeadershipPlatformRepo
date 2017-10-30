@@ -25,7 +25,7 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
             DESC_GLOBAL_DAILY_THOUGHT = "Global Daily Thought";
 
     private String dailyThoughtID, text, status, userType, userProfilePicUrl, companyID_status, dailyThoughtType_status;
-    private String stringDateUpdated, html, dailyThoughtDescription;
+    private String stringDateUpdated, html, dailyThoughtDescription, tags;
     private int dailyThoughtType;
     private boolean active;
     private long dateUpdated;
@@ -358,5 +358,13 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
 
     public void setDailyThoughtType_status(String dailyThoughtType_status) {
         this.dailyThoughtType_status = dailyThoughtType_status;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

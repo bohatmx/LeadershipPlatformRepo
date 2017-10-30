@@ -89,9 +89,9 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         image2 = (ImageView) findViewById(R.id.image2);
         noVideoTxt = (TextView) findViewById(R.id.noVideoTxt);
         noVideoTxt.setVisibility(View.GONE);
-        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+        /*if (getIntent().getSerializableExtra("hexColor" ) != null) {
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
-        }
+        }*/
 
         check();
 

@@ -1173,61 +1173,271 @@ public class CrudActivity extends AppCompatActivity
     @Override
     public void onDeleteUser(UserDTO user) {
         Log.i(TAG, "onDeleteUser");
-        presenter.deleteUser(user);
+        confirmUserDelete(user);
+       // presenter.deleteUser(user);
     }
+
+    private void confirmUserDelete(final UserDTO user) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this User?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteUser(user);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "User released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
+    }
+
+    private void confirmDailyThoughtDelete(final DailyThoughtDTO dailyThought) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Thought?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                     presenter.deleteDailyThought(dailyThought);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Thought released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
+    }
+
 
     @Override
     public void onDeleteDailyThought(DailyThoughtDTO dailyThought) {
         Log.i(TAG, "onDeleteDailyThought");
-        presenter.deleteDailyThought(dailyThought);
+        confirmDailyThoughtDelete(dailyThought);
+       // presenter.deleteDailyThought(dailyThought);
+    }
+
+    private void confirmWeeklyMessageDelete(final WeeklyMessageDTO weeklyMessage) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Message?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteWeeklyMessage(weeklyMessage);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Message released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeleteWeeklyMessage(WeeklyMessageDTO weeklyMessage) {
         Log.i(TAG, "onDeleteWeeklyMessage");
-        presenter.deleteWeeklyMessage(weeklyMessage);
+        confirmWeeklyMessageDelete(weeklyMessage);
+       // presenter.deleteWeeklyMessage(weeklyMessage);
+    }
+
+    private void confirmWeeklyMasterClassDelete(final WeeklyMasterClassDTO masterClass) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this masterClass?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteWeeklyMasterClass(masterClass);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Masterclass released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeleteWeeklyMasterClass(WeeklyMasterClassDTO masterClass) {
         Log.i(TAG, "onDeleteWeeklyMasterClass");
-        presenter.deleteWeeklyMasterClass(masterClass);
+        confirmWeeklyMasterClassDelete(masterClass);
+        //presenter.deleteWeeklyMasterClass(masterClass);
+    }
+
+    private void confirmPodcastDelete(final PodcastDTO podcast) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Podcast?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deletePodcast(podcast);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Podcast released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeletePodcast(PodcastDTO podcast) {
         Log.i(TAG, "onDeletePodcast");
-        presenter.deletePodcast(podcast);
+        confirmPodcastDelete(podcast);
+        //presenter.deletePodcast(podcast);
+    }
+
+    private void confirmNewsDelete(final NewsDTO news) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Article?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteNews(news);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Article released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeleteNews(NewsDTO news) {
         Log.i(TAG, "onDeleteNews");
-        presenter.deleteNews(news);
+        confirmNewsDelete(news);
+      //  presenter.deleteNews(news);
+    }
+
+    private void confirmVideoDelete(final VideoDTO video) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Video?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteVideo(video);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Video released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeleteVideo(VideoDTO video) {
         Log.i(TAG, "onDeleteVideo");
-        presenter.deleteVideo(video);
+        confirmVideoDelete(video);
+        //presenter.deleteVideo(video);
+    }
+
+    private void confirmEbookDelete(final EBookDTO book) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Ebook?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteEbook(book);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Ebook released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeleteEbook(EBookDTO eBook) {
         Log.i(TAG, "onDeleteEbook");
-        presenter.deleteEbook(ebook);
+        confirmEbookDelete(eBook);
+       // presenter.deleteEbook(ebook);
+    }
+    private void confirmCategoryDelete(final CategoryDTO category) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Category?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteCategory(category);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Category released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeleteCategory(CategoryDTO category) {
         Log.i(TAG, "onDeleteCategory");
-        presenter.deleteCategory(category);
+        confirmCategoryDelete(category);
+       // presenter.deleteCategory(category);
+    }
+
+    private void confirmSubscriptionDelete(final SubscriptionDTO subscription) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(Html.fromHtml("<font color='#000000'>Delete Confirmation</font>"))
+                .setMessage(Html.fromHtml("<font color='#000000'>Do you want to delete this Subscription?</font>"))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.deleteSubscription(subscription);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Subscription released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
     }
 
     @Override
     public void onDeleteSubscription(SubscriptionDTO subscription) {
         Log.i(TAG, "onDeleteSubscription");
-        presenter.deleteSubscription(subscription);
+        confirmSubscriptionDelete(subscription);
+       // presenter.deleteSubscription(subscription);
     }
 
     @Override

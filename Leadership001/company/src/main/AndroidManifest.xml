@@ -60,16 +60,16 @@
             android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.FullArticleActivity"
-            android:label="@string/title_activity_full_article"/>
+            android:label="@string/title_activity_full_article" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.FullPhotoActivity"
             android:label="@string/title_activity_full_photo"
-            android:theme="@style/CommuterTheme"/>
+            android:theme="@style/CommuterTheme" />
         <activity
             android:name="com.oneconnect.leadership.library.links.LinksActivity"
             android:label="@string/title_activity_links"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".CompanyMainActivity"/>
+            android:parentActivityName=".CompanyMainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CompanyMainActivity"
             android:label="@string/app_name"
@@ -96,9 +96,9 @@
             android:name="com.oneconnect.leadership.library.audio.PodcastSelectionActivity"
             android:label="@string/title_activity_podcast_selection"
             android:parentActivityName=".CompanyMainActivity" />
-
-        <activity android:name="com.oneconnect.leadership.library.activities.PodcastPlayerActivity"
-            android:label="@string/title_activity_podcast_player"/>
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.PodcastPlayerActivity"
+            android:label="@string/title_activity_podcast_player" />
         <activity
             android:name="com.oneconnect.leadership.library.audio.PodcastListActivity"
             android:label="@string/title_activity__podcast_list"
@@ -120,7 +120,7 @@
         <activity
             android:name="com.oneconnect.leadership.library.activities.PLDPActivity"
             android:label="@string/title_activity_pldp"
-            android:parentActivityName=".CompanyMainActivity"/>
+            android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.camera.CameraActivity"
             android:label="@string/title_activity_camera"
@@ -134,8 +134,8 @@
         <activity
             android:name="com.oneconnect.leadership.library.photo.PhotoSelectionActivity"
             android:label="@string/title_activity_photo_selection"
-            android:theme="@style/CommuterTheme"
-            android:parentActivityName=".CompanyMainActivity" />
+            android:parentActivityName=".CompanyMainActivity"
+            android:theme="@style/CommuterTheme" />
         <activity
             android:name=".PlatinumAdminActivity"
             android:label="@string/title_activity_platinum_admin" />
@@ -144,23 +144,30 @@
             android:label="@string/title_activity_platinum_user" />
         <activity
             android:name=".GoldUserActivity"
-            android:label="@string/title_activity_gold_user"/>
-        <activity android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity"
-            android:parentActivityName=".CompanyMainActivity"/>
+            android:label="@string/title_activity_gold_user" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity"
+            android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.DailyThoughtApprovalActivity"
             android:label="@string/title_activity_daily_thought"
-            android:parentActivityName=".CompanyMainActivity"/>
-
+            android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.QuizQuestion"
             android:label="@string/title_questions"
-            android:parentActivityName=".CompanyMainActivity"/>
-
+            android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.QuizResults"
             android:label="@string/title_results"
-            android:parentActivityName=".CompanyMainActivity"/>
+            android:parentActivityName=".CompanyMainActivity" />
+        <activity
+            android:name="com.oneconnect.leadership.library.audio.AudioRecordTest"
+            android:label="@string/title_activity_record"
+            android:parentActivityName="com.oneconnect.leadership.library.audio.PodcastSelectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".StandardUserActivity"
+            android:label="@string/title_activity_standard_user"/>
     </application>
 
 </manifest>
