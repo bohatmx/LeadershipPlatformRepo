@@ -107,13 +107,13 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         vvh.videoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isPlaying) {
-                    vvh.pausebtn.setVisibility(View.VISIBLE);
+               /* if (isPlaying) {
+                    vvh.pausebtn.setVisibility(View.GONE);
                     vvh.playbtn.setVisibility(View.GONE);
                 } else if (!isPlaying) {
                     vvh.pausebtn.setVisibility(View.GONE);
-                    vvh.playbtn.setVisibility(View.VISIBLE);
-                }
+                    vvh.playbtn.setVisibility(View.GONE);
+                }*/
             }
         });
 
@@ -142,13 +142,13 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });*/
 
-        vvh.playbtn.setOnClickListener(new View.OnClickListener() {
+        /*vvh.playbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isPlaying = true;
                 vvh.videoView.start();
                 vvh.playbtn.setVisibility(View.GONE);
-                vvh.pausebtn.setVisibility(View.VISIBLE);
+                vvh.pausebtn.setVisibility(View.GONE);
 
             }
         });
@@ -159,10 +159,10 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 isPlaying = false;
                 vvh.videoView.pause();
                 vvh.pausebtn.setVisibility(View.GONE);
-                vvh.playbtn.setVisibility(View.VISIBLE);
+                vvh.playbtn.setVisibility(View.GONE);
 
             }
-        });
+        });*/
 
         vvh.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,7 +246,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     SeekBar videoSeekBar;*/
     public class VideosViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName,count;
-        protected ImageView image, overflow, playbtn, pausebtn;
+        protected ImageView image, overflow;
         protected Button btnPlay;
          protected VideoView videoView;
          protected SeekBar videoSeekBar;
@@ -266,12 +266,6 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             videoView = (VideoView) itemView.findViewById(R.id.videoView);
             overflow = (ImageView) itemView.findViewById(R.id.overflow);
             count = (TextView) itemView.findViewById(R.id.fileName);
-            playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
-            playbtn.setVisibility(View.GONE);
-            pausebtn = (ImageView) itemView.findViewById(R.id.pausebtn);
-            pausebtn.setVisibility(View.GONE);
-            playbtn = (ImageView) itemView.findViewById(R.id.playbtn);
-            playbtn.setVisibility(View.GONE);
             videoSeekBar = (SeekBar) itemView.findViewById(R.id.videoSeekBar);
             videoSeekBar.setVisibility(View.GONE);
         }

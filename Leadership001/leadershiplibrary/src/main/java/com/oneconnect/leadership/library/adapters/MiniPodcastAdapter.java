@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -54,6 +56,12 @@ public class MiniPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (v.getStorageName() != null) {
         pvh.podcastNametxt.setText(v.getStorageName().substring(i + 1));
         }
+        pvh.podcastCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPodcastRequired(v);
+            }
+        });
         final String podcastURL = v.getUrl();
 
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
@@ -135,16 +143,22 @@ public class MiniPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         protected TextView podcastNametxt;
         protected ImageView image, playIMG, pauseIMG, stopIMG,headerpic;
         protected Button btnPlay, btnUpload;
+        protected LinearLayout mediaControlLayout;
+        protected CardView podcastCard;
 
         public MiniPodcastViewHolder(View itemView) {
             super(itemView);
             podcastNametxt = (TextView) itemView.findViewById(R.id.podcastNametxt);
             headerpic = (ImageView) itemView.findViewById(R.id.headerpic);
             playIMG = (ImageView) itemView.findViewById(R.id.playIMG);
+            playIMG.setVisibility(View.GONE);
             pauseIMG = (ImageView) itemView.findViewById(R.id.pauseIMG);
             pauseIMG.setVisibility(View.GONE);
             stopIMG = (ImageView) itemView.findViewById(R.id.stopIMG);
             stopIMG.setVisibility(View.GONE);
+            mediaControlLayout = (LinearLayout) itemView.findViewById(R.id.mediaControlLayout);
+            mediaControlLayout.setVisibility(View.GONE);
+            podcastCard = (CardView) itemView.findViewById(R.id.podcastCard);
 
             /*mediaPlayer = new MediaPlayer();*/
             //mediaController = new MediaController(ctx);

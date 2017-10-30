@@ -62,7 +62,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
     String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     public static final int RequestPermissionCode = 1;
     MediaPlayer mediaPlayer ;
-    TextView recordProgress, textCurrentPosition, textView_maxTime;
+    TextView recordProgress, textCurrentPosition, textView_maxTime, contentTxt;
     long miliSecs = 0;
     Thread t;
     String timer;
@@ -75,7 +75,15 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_audio);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+        contentTxt = (TextView) findViewById(R.id.contentTxt);
+        if (getIntent().getSerializableExtra("dailyThought") != null) {
+            type = ResponseBag.DAILY_THOUGHTS;
+            dailyThought =  (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            contentTxt.setText(dailyThought.getTitle() + "-" + dailyThought.getSubtitle());
+        }
         recorderSeekBar = (SeekBar) findViewById(R.id.recorderSeekBar);
         recorderSeekBar.setVisibility(View.GONE);
         textCurrentPosition = (TextView) findViewById(R.id.textCurrentPosition);
@@ -86,10 +94,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         playIMG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              /*  Util.flashOnce(playIMG, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                   */     playIMG.setVisibility(View.GONE);
+                  playIMG.setVisibility(View.GONE);
                         pauseIMG.setVisibility(View.VISIBLE);
                         stopIMG.setVisibility(View.VISIBLE);
                         recordProgress.setVisibility(View.GONE);
@@ -121,8 +126,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                         setTimerLabel("Playing Audio....");
                         Toast.makeText(AudioRecordTest.this, "Recording Playing",
                                 Toast.LENGTH_LONG).show();
-                 //   }
-               // });
+
             }
         });
         pauseIMG = (ImageView) findViewById(R.id.pauseIMG);
@@ -566,6 +570,8 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
         v.setPodcastSize(file.length());
 
         v.setActive(true);
+      //  v.setPodcastDescription(PodcastDTO.DESC_PODCAST);
+      //  v.setPodcastType(PodcastDTO.PODCAST);
 
         switch (type) {
 
@@ -600,6 +606,7 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
                 break;
 
         }
+
 
         openProgressSheet();
 

@@ -168,6 +168,9 @@
         <activity
             android:name=".StandardUserActivity"
             android:label="@string/title_activity_standard_user"/>
+
+        <activity android:name="com.oneconnect.leadership.library.audio.AudioPlayerActivity"
+            android:label="@string/title_activity_audio_player"/>
     </application>
 
 </manifest>

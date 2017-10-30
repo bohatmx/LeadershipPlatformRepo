@@ -42,6 +42,7 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
     private VideoDTO video;
     private UrlDTO urlDTO;
     private UserDTO user;
+    private DailyThoughtDTO dailyThought;
 
     public String getPodcastDescription() {
         return podcastDescription;
@@ -389,5 +390,13 @@ public class PodcastDTO  extends BaseDTO implements  Serializable, Comparable<Po
 
     public void setUser(UserDTO user) {
         this.user = user;
+    }
+
+    public DailyThoughtDTO getDailyThought() {
+        return dailyThought;
+    }
+
+    public void setDailyThought(DailyThoughtDTO dailyThought) {
+        this.dailyThought = dailyThought;
     }
 }

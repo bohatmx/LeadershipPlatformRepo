@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.PLDPActivity;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
@@ -347,15 +348,18 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
 
-
                         @Override
                         public void onPlayClicked(PodcastDTO podcast) {
-
+                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                        intent.putExtra("podcast", podcast);
+                        ctx.startActivity(intent);
                         }
 
                         @Override
                         public void onPodcastRequired(PodcastDTO podcast) {
-
+                            Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                            intent.putExtra("podcast", podcast);
+                            ctx.startActivity(intent);
                         }
                     });
                     dvh.podcastRecyclerView.setAdapter(miniPodcastAdapter);

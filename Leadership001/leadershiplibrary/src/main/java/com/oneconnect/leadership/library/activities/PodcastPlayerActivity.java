@@ -236,6 +236,7 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     private void playVideo() {
        bottomLayout.setVisibility(View.GONE);
         toolbar.setVisibility(View.GONE);
+        pausebtn.setVisibility(View.GONE);
         videoSeekBar.setVisibility(View.GONE);
         textCurrentPosition.setVisibility(View.GONE);
         textView_maxTime.setVisibility(View.GONE);
