@@ -611,6 +611,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public DailyViewHolder(View itemView) {
             super(itemView);
             ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
+            ratingBar.setVisibility(View.GONE);
             ratingCom = (EditText) itemView.findViewById(R.id.ratingCom);
             compName = (TextView) itemView.findViewById(R.id.compName);
             profile = (TextView) itemView.findViewById(R.id.profile);

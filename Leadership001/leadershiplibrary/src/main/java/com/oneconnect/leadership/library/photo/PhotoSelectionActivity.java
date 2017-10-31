@@ -129,7 +129,10 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         crudPresenter = new CrudPresenter(this);
 
         if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        } else {
+            Log.i(LOG, "Color not found");
         }
 
         type = getIntent().getIntExtra("type", 0/*type*/);

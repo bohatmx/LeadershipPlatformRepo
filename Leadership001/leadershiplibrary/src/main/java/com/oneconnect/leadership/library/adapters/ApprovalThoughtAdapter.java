@@ -358,7 +358,7 @@ public class ApprovalThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
                         @Override
-                        public void onPlayClicked(PodcastDTO podcast) {
+                        public void onPodcastRating(PodcastDTO podcast) {
 
                         }
 

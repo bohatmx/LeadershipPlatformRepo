@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -173,6 +175,16 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
             }
 
             @Override
+            public void onMasterClassRating(WeeklyMasterClassDTO masterClass) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("weeklyMasterClass", masterClass);
+                ctx.startActivity(intent);
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -220,6 +232,7 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void getWeeklyMasterClasses() {
         Log.d(LOG, "************** getWeeklyMasterClasses: " );
         presenter.getAllWeeklyMasterClasses();
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
        /* switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
@@ -552,11 +565,17 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     public void onUserFound(UserDTO user) {
         Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company master classes");
         presenter.getWeeklyMasterclasses(user.getCompanyID());
+        presenter.getCompanyProfile(user.getCompanyID());
     }
+
+    String hexColor;
 
     @Override
     public void onCompanyFound(CompanyDTO company) {
-
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
     }
 
     @Override
@@ -729,6 +748,16 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
             @Override
             public void onPodcastRequired(PodcastDTO podcast) {
 
+            }
+
+            @Override
+            public void onMasterClassRating(WeeklyMasterClassDTO masterClass) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("weeklyMasterClass", masterClass);
+                ctx.startActivity(intent);
             }
 
             @Override

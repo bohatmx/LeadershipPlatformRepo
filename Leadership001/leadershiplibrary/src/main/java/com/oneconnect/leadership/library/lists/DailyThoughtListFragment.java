@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -184,6 +185,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("dailyThought", dailyThought);
+                ctx.startActivity(intent);
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -193,11 +204,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
             }
 
-            @Override
-            public void onProfilePic(ImageView view) {
-
-
-            }
         });
         recyclerView.setAdapter(adapter);
 
@@ -317,8 +323,8 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     @Override
     public void onUserFound(final UserDTO user) {
         Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company DailyThoughts");
-       // presenter.getDailyThoughts(user.getCompanyID());
-        adapter = new DailyThoughtAdapter(ctx, null, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
+        presenter.getCompanyProfile(user.getCompanyID());
+        /*adapter = new DailyThoughtAdapter(ctx, null, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
 
@@ -340,6 +346,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("dailyThought", dailyThought);
+                ctx.startActivity(intent);
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -348,42 +364,17 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             public void onPhotosRequired(List<PhotoDTO> list) {
 
             }
-
-            @Override
-            public void onProfilePic(ImageView view) {
-                if (user.getPhotos() != null) {
-                    //dvh.txtCamera.setText("" + user.getPhotos().size());
-
-                  //  DailyThoughtDTO dtd = mList.get(position);
-                    List<PhotoDTO> urlList = new ArrayList<>();
-
-                    Map map = user.getPhotos();
-                    PhotoDTO vDTO;
-                    String photoUrl;
-                    for (Object value : map.values()) {
-                        vDTO = (PhotoDTO) value;
-                        photoUrl = vDTO.getUrl();
-                        urlList.add(vDTO);
-
-                        Glide.with(ctx)
-                                .load(photoUrl)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(view);
-                        //   dvh.captiontxt.setText(vDTO.getCaption());
-                    }
-                  /*  Glide.with(ctx)
-                            .load(user.get)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(dvh.imageView);*/
-                }
-            }
-        });
+        });*/
 
     }
 
+    String hexColor;
     @Override
     public void onCompanyFound(CompanyDTO company) {
-
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
     }
 
     @Override
@@ -452,6 +443,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("dailyThought", dailyThought);
+                ctx.startActivity(intent);
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -467,10 +468,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
             }
 
-            @Override
-            public void onProfilePic(ImageView view) {
-
-            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -508,6 +505,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("dailyThought", dailyThought);
+                ctx.startActivity(intent);
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -523,10 +530,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
             }
 
-            @Override
-            public void onProfilePic(ImageView view) {
-
-            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -589,6 +592,16 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("dailyThought", dailyThought);
+                ctx.startActivity(intent);
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -604,10 +617,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
             }
 
-            @Override
-            public void onProfilePic(ImageView view) {
-
-            }
         });
         recyclerView.setAdapter(adapter);
     }

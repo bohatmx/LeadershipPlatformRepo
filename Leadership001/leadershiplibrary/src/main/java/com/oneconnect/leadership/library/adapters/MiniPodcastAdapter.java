@@ -53,8 +53,15 @@ public class MiniPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final PodcastDTO v = mList.get(position);
         final MiniPodcastViewHolder pvh = (MiniPodcastViewHolder) holder;
         int i = v.getStorageName().lastIndexOf("/");
-        if (v.getStorageName() != null) {
-        pvh.podcastNametxt.setText(v.getStorageName().substring(i + 1));
+        String newName = null;/*=  v.getStorageName();*/
+        int spacePos = v.getStorageName().indexOf(".mp3");
+        if (spacePos > 0) {
+             newName = v.getStorageName().substring(0, spacePos - 1);
+        }
+
+
+        if (newName/*v.getStorageName()*/ != null) {
+        pvh.podcastNametxt.setText(newName/*v.getStorageName()*/.substring(i + 1));
         }
         pvh.podcastCard.setOnClickListener(new View.OnClickListener() {
             @Override

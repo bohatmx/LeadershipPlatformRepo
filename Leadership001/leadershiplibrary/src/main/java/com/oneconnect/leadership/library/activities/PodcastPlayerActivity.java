@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -76,6 +77,7 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     RecyclerView urlRecyclerView, imageRecyclerView, videoRecyclerView, podcastRecyclerView;
     UrlAdapter urlAdapter;
     Toolbar toolbar;
+    String hexColor;
 
     RelativeLayout urlAdapterLayout, videoAdapterLayout, deleteLayout, podcastAdapterLayout;
     LinearLayout podcastPlayerLayout;
@@ -94,6 +96,13 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
+
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        } else {
+            Log.i(LOG, "Color not found");
+        }
 
         fileName = (TextView) findViewById(R.id.fileName);
         image = (ImageView) findViewById(R.id.image);

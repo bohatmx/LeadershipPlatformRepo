@@ -19,6 +19,7 @@ import com.oneconnect.leadership.library.data.ResponseBag;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.lists.MasterListFragment;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
@@ -92,6 +93,11 @@ public class MasterActivity  extends AppCompatActivity implements MasterAdapter.
 
     @Override
     public void onPodcastRequired(PodcastDTO podcast) {
+
+    }
+
+    @Override
+    public void onMasterClassRating(WeeklyMasterClassDTO masterClass) {
 
     }
 

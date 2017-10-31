@@ -305,7 +305,7 @@ public class WeeklyMessageAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
                                 @Override
-                                public void onPlayClicked(PodcastDTO podcast) {
+                                public void onPodcastRating(PodcastDTO podcast) {
 
                                 }
 

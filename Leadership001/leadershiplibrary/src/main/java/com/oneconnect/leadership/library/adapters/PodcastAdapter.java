@@ -110,7 +110,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public interface PodcastAdapterListener {
-        void onPlayClicked(PodcastDTO podcast);
+        void onPodcastRating(PodcastDTO podcast);
         void onPodcastRequired(PodcastDTO podcast);
     }
 
@@ -140,50 +140,30 @@ public class PodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         pvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Util.flashOnce(pvh.ratingBar, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, RatingActivity.class);
-                        //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
-                        intent.putExtra("podcast", v);
-                        ctx.startActivity(intent);
-                    }
-                });
+                listener.onPodcastRating(v);
             }
         });
 
         pvh.audio_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                listener.onPodcastRequired(v);
+                /*Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                 intent.putExtra("podcast", v);
-                ctx.startActivity(intent);
-               /* Util.flashOnce(pvh.audio_card, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
-                        intent.putExtra("podcast", v);
-                        ctx.startActivity(intent);
-                    }
-                });*/
+                ctx.startActivity(intent);*/
+
             }
         });
-        pvh.fileName.setOnClickListener(new View.OnClickListener() {
+        /*pvh.fileName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                listener.onPodcastRequired(v);
+               *//* Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                 intent.putExtra("podcast", v);
-                ctx.startActivity(intent);
-                /*Util.flashOnce(pvh.fileName, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
-                        intent.putExtra("podcast", v);
-                        ctx.startActivity(intent);
-                    }
-                });*/
+                ctx.startActivity(intent);*//*
+
             }
-        });
+        });*/
 
         pvh.playIMG.setOnClickListener(new View.OnClickListener() {
             @Override

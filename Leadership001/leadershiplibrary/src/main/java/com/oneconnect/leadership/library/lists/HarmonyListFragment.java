@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
+import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -168,17 +171,22 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("dailyThought", dailyThought);
+                ctx.startActivity(intent);
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
 
             @Override
             public void onPhotosRequired(List<PhotoDTO> list) {
-
-            }
-
-            @Override
-            public void onProfilePic(ImageView view) {
 
             }
         });
@@ -287,14 +295,18 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
     public void onUserFound(UserDTO user) {
         Log.i(LOG, "** onUserFound **" + user.getFullName());
         String companyID_status = user.getCompanyID().concat("_").concat(Constants.APPROVED);
-
         presenter.getCompanyApprovedDailyThoughts(companyID_status);
-        //  presenter.getDailyThoughts(user.getCompanyID());
+        presenter.getCompanyProfile(user.getCompanyID());
     }
+
+    String hexColor;
 
     @Override
     public void onCompanyFound(CompanyDTO company) {
-        presenter.getCompanies(company.getCompanyName());
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
     }
 
     @Override
@@ -359,7 +371,23 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
 
             @Override
             public void onPodcastRequired(PodcastDTO podcast) {
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
 
+                }
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
+            }
+
+            @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("dailyThought", dailyThought);
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -376,11 +404,6 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
-            }
-
-            @Override
-            public void onProfilePic(ImageView view) {
-
             }
         });
         recyclerView.setAdapter(adapter);
@@ -416,6 +439,11 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -429,11 +457,6 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
-            }
-
-            @Override
-            public void onProfilePic(ImageView view) {
-
             }
         });
         recyclerView.setAdapter(adapter);
@@ -483,6 +506,11 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
             }
 
             @Override
+            public void onDailyThoughtRating(DailyThoughtDTO dailyThought) {
+
+            }
+
+            @Override
             public void onUrlRequired(UrlDTO url) {
 
             }
@@ -496,11 +524,6 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
                     }
                 });
                 photoRecyclerView.setAdapter(miniPhotoAdapter);
-            }
-
-            @Override
-            public void onProfilePic(ImageView view) {
-
             }
         });
         recyclerView.setAdapter(adapter);

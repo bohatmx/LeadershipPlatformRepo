@@ -2,6 +2,7 @@ package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -291,11 +292,20 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
     @Override
     public void onUserFound(UserDTO user) {
      presenter.getDailyThoughtsByUser(user.getUserID());
+     presenter.getCompanyProfile(user.getCompanyID());
     }
 
+    String hexColor;
     @Override
     public void onCompanyFound(CompanyDTO company) {
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
 
+           // toolbar.setBackgroundColor(Color.parseColor(hexColor));
+           // strip.setBackgroundColor(Color.parseColor(hexColor));
+          //  nav_layout.setBackgroundColor(Color.parseColor(hexColor));
+        }
     }
 
     @Override
@@ -333,7 +343,8 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
 
             @Override
             public void onPodcastRequired(BaseDTO base) {
-                startPodcastSelection(base);
+                    startPodcastSelection(base);
+
             }
 
             @Override
@@ -360,6 +371,10 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Intent m = new Intent(ctx, LinksActivity.class);
         type = ResponseBag.DAILY_THOUGHTS;
         dailyThought = (DailyThoughtDTO) base;
+        if (hexColor != null) {
+            m.putExtra("hexColor", hexColor);
+            Log.d(LOG, "color found: " + hexColor);
+        }
         m.putExtra("dailyThought", dailyThought);
         startActivity(m);
     }
@@ -367,6 +382,10 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Intent intent = new Intent(ctx, PhotoSelectionActivity.class);
         type = ResponseBag.DAILY_THOUGHTS;
         dailyThought = (DailyThoughtDTO) base;
+        if (hexColor != null) {
+            intent.putExtra("hexColor", hexColor);
+            Log.d(LOG, "color found: " + hexColor);
+        }
         intent.putExtra("dailyThought", dailyThought);
         startActivity(intent);
     }
@@ -375,6 +394,10 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Intent m = new Intent(ctx, VideoSelectionActivity.class);
         type = ResponseBag.DAILY_THOUGHTS;
         dailyThought = (DailyThoughtDTO) base;
+        if (hexColor != null) {
+            m.putExtra("hexColor", hexColor);
+            Log.d(LOG, "color found: " + hexColor);
+        }
         m.putExtra("dailyThought", dailyThought);
         startActivity(m);
     }
@@ -383,6 +406,10 @@ public class MyDailyThoughtList extends Fragment implements PageFragment, Subscr
         Intent m = new Intent(ctx, PodcastSelectionActivity.class);
         type = ResponseBag.DAILY_THOUGHTS;
         dailyThought = (DailyThoughtDTO) base;
+        if (hexColor != null) {
+            m.putExtra("hexColor", hexColor);
+            Log.d(LOG, "color found: " + hexColor);
+        }
         m.putExtra("dailyThought", dailyThought);
         startActivity(m);
     }

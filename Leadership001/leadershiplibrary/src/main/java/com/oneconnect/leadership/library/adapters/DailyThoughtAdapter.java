@@ -69,9 +69,9 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
+        void onDailyThoughtRating(DailyThoughtDTO dailyThought);
         void onUrlRequired(UrlDTO url);
         void onPhotosRequired(List<PhotoDTO> list);
-        void onProfilePic(ImageView view);
 
     }
 
@@ -348,18 +348,23 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     miniPodcastAdapter = new MiniPodcastAdapter(podcastList, ctx, new PodcastAdapter.PodcastAdapterListener() {
 
+
                         @Override
-                        public void onPlayClicked(PodcastDTO podcast) {
-                        Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
-                        intent.putExtra("podcast", podcast);
-                        ctx.startActivity(intent);
+                        public void onPodcastRating(PodcastDTO podcast) {
+                            /*Intent intent = new Intent(ctx, RatingActivity.class);
+                            if (hexColor != null) {
+                                intent.putExtra("hexColor", hexColor);
+                            }
+                            intent.putExtra("podcast", podcast);
+                            ctx.startActivity(intent);*/
                         }
 
                         @Override
                         public void onPodcastRequired(PodcastDTO podcast) {
-                            Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                            listener.onPodcastRequired(podcast);
+                            /*Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
                             intent.putExtra("podcast", podcast);
-                            ctx.startActivity(intent);
+                            ctx.startActivity(intent);*/
                         }
                     });
                     dvh.podcastRecyclerView.setAdapter(miniPodcastAdapter);
@@ -378,10 +383,11 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ctx, RatingActivity.class);
+                listener.onDailyThoughtRating(dt);
+                /*Intent intent = new Intent(ctx, RatingActivity.class);
                 //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
                 intent.putExtra("dailyThought", dt);
-                ctx.startActivity(intent);
+                ctx.startActivity(intent);*/
             }
         });
        /* dvh.txtTitle.setOnClickListener(new View.OnClickListener() {

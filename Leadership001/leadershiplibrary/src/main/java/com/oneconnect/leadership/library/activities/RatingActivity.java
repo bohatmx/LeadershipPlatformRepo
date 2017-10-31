@@ -80,6 +80,7 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
     private RecyclerView recyclerView;
     private RatingReviewAdapter ratingReviewAdapter;
     private SubscriberPresenter presenter;
+    String hexColor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,13 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Rating Activity");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        } else {
+            Log.i(LOG, "Color not found");
+        }
 
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);

@@ -16,13 +16,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".CompanyApp"
+        android:name="com.oneconnect.leadership.library.activities.CompanyApp"
         android:allowBackup="true"
         android:icon="@drawable/harmony"
         android:label="@string/app_name"
         android:roundIcon="@drawable/harmony"
         android:theme="@style/CommuterTheme"
-        tools:replace="android:theme">
+        tools:replace="android:theme"
+        android:largeHeap="true">
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -167,10 +168,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".StandardUserActivity"
-            android:label="@string/title_activity_standard_user"/>
-
-        <activity android:name="com.oneconnect.leadership.library.audio.AudioPlayerActivity"
-            android:label="@string/title_activity_audio_player"/>
+            android:label="@string/title_activity_standard_user" />
+        <activity
+            android:name="com.oneconnect.leadership.library.audio.AudioPlayerActivity"
+            android:label="@string/title_activity_audio_player" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.CompanyAudioPlayerActivity"
+            android:label="@string/title_activity_company_audio_player"/>
     </application>
 
 </manifest>

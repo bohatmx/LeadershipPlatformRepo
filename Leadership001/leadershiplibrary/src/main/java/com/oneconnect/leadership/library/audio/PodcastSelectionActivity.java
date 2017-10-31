@@ -27,6 +27,7 @@ import android.widget.ImageView;
 
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.CompanyAudioPlayerActivity;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -91,7 +92,10 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         noPodcastTxt = (TextView) findViewById(R.id.noPodcastTxt);
         noPodcastTxt.setVisibility(View.GONE);
         if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        } else {
+            Log.i(TAG, "Color not found");
         }
 
         check();
@@ -221,7 +225,12 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         PodcastAdapter adapter = new PodcastAdapter(downloadedList, this, new PodcastAdapter.AudioAdapterListener() {
             @Override
             public void onPlayAudioTapped(String path) {
-                playAudio(path);
+                if (dailyThought != null) {
+                    playCompanyAudio(path);
+                } else {
+                    playAudio(path);
+                }
+
             }
 
             @Override
@@ -230,6 +239,19 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    private void playCompanyAudio(String path) {
+
+        Intent m = new Intent(this, CompanyAudioPlayerActivity.class);
+        ResponseBag bag = new ResponseBag();
+        bag.setPodcasts(new ArrayList<PodcastDTO>());
+        PodcastDTO v = new PodcastDTO();
+        File f = new File(path);
+        v.setUrl(Uri.fromFile(f).toString());
+        bag.getPodcasts().add(v);
+        m.putExtra("bag",bag);
+        startActivity(m);
     }
 
     private void playAudio(String path) {

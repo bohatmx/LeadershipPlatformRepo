@@ -89,9 +89,13 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         image2 = (ImageView) findViewById(R.id.image2);
         noVideoTxt = (TextView) findViewById(R.id.noVideoTxt);
         noVideoTxt.setVisibility(View.GONE);
-        /*if (getIntent().getSerializableExtra("hexColor" ) != null) {
+
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
-        }*/
+        } else {
+            Log.i(TAG, "Color not found");
+        }
 
         check();
 
@@ -213,7 +217,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                         if (cursor != null && cursor.moveToFirst()) {
                         String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                         long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
-                        Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
+                       // Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
                         localVideos.add(new LocalVideo(duration, path));
                         videoItemHashSet.add(path);
                         } else {

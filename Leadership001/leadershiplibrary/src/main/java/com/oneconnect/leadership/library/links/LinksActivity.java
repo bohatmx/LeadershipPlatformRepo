@@ -58,6 +58,7 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
     private LinksPresenter presenter;
     private TextInputEditText editSearch;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    String hexColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,12 @@ public class LinksActivity extends AppCompatActivity implements LinksContract.Vi
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         }
 
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        } else {
+            Log.i(TAG, "Color not found");
+        }
         presenter = new LinksPresenter(this);
 
         type = getIntent().getIntExtra("type", 0);

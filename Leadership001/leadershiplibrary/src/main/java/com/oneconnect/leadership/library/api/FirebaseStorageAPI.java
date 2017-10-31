@@ -768,9 +768,10 @@ public class FirebaseStorageAPI extends Activity {
         dataAPI.addPodcast(podcast, new DataAPI.DataListener() {
             @Override
             public void onResponse(final String key) {
-                podcast.setPodcastID(key);
-                Log.w(TAG, "dataAPI addPodcast onResponse: ".concat(key).concat(" - adding PodcastDTO to entity ...") );
-                dataAPI.addPodcastToEntity(podcast, new DataAPI.DataListener() {
+                listener.onResponse(key);
+               // podcast.setPodcastID(key);
+               // Log.w(TAG, "dataAPI addPodcast onResponse: ".concat(key).concat(" - adding PodcastDTO to entity ...") );
+              /*  dataAPI.addPodcastToEntity(podcast, new DataAPI.DataListener() {
                     @Override
                     public void onResponse(String k) {
                         listener.onResponse(key);
@@ -780,7 +781,7 @@ public class FirebaseStorageAPI extends Activity {
                     public void onError(String message) {
                         listener.onError(message);
                     }
-                });
+                });*/
 
             }
 

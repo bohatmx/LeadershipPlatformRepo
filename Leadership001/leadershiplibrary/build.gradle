@@ -127,6 +127,9 @@ dependencies {
     compile 'com.github.jd-alexander:LikeButton:0.2.3'
     testCompile 'junit:junit:4.12'
     compile project(path: ':backend', configuration: 'android-endpoints')
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }
 
 

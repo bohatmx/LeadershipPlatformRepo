@@ -61,6 +61,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
+        void onMasterClassRating(WeeklyMasterClassDTO masterClass);
         void onUrlRequired(UrlDTO url);
         void onPhotosRequired(List<PhotoDTO> list);
         void onMasterClicked(int position);
@@ -325,7 +326,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
                                 @Override
-                                public void onPlayClicked(PodcastDTO podcast) {
+                                public void onPodcastRating(PodcastDTO podcast) {
 
                                 }
 
@@ -381,11 +382,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                        Intent intent = new Intent(ctx, RatingActivity.class);
-                        //intent.putExtra("type", ResponseBag.DAILY_THOUGHTS);
-                        intent.putExtra("weeklyMasterClass", dt);
-                        ctx.startActivity(intent);
+                listener.onMasterClassRating(dt);
             }
         });
 
@@ -456,7 +453,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public MasterViewHolder(View itemView) {
             super(itemView);
             //txtEvents = (TextView) itemView.findViewById(R.id.txtEvents);
-            ratingBar =(ImageView) itemView.findViewById(R.id.ratingBar);
+            ratingBar = (ImageView) itemView.findViewById(R.id.ratingBar);
             txtTitle = (TextViewExpandableAnimation/*TextView*/) itemView.findViewById(R.id.txtTitle);
             //txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtDate = (TextView) itemView.findViewById(R.id.txtDate);

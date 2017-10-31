@@ -323,7 +323,7 @@ public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
                         @Override
-                        public void onPlayClicked(PodcastDTO podcast) {
+                        public void onPodcastRating(PodcastDTO podcast) {
 
                         }
 

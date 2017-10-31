@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
+import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -140,6 +143,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     public void getPodcasts() {
         Log.d(LOG, "************** getPodcasts: " );
         presenter.getAllPodcasts();
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
        /* switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
@@ -165,12 +169,23 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
 
             @Override
-            public void onPlayClicked(PodcastDTO podcast) {
-
+            public void onPodcastRating(PodcastDTO podcast) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
             }
 
             @Override
             public void onPodcastRequired(PodcastDTO podcast) {
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
 
             }
         });
@@ -338,11 +353,17 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     @Override
     public void onUserFound(UserDTO user) {
         Log.i(TAG, "*** onUserFound ***");
+        presenter.getCompanyProfile(user.getCompanyID());
 
     }
 
+    String hexColor;
     @Override
     public void onCompanyFound(CompanyDTO company) {
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
 
     }
 
@@ -440,13 +461,24 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
 
             @Override
-            public void onPlayClicked(PodcastDTO podcast) {
-
+            public void onPodcastRating(PodcastDTO podcast) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
             }
 
             @Override
             public void onPodcastRequired(PodcastDTO podcast) {
-
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                    Log.d(TAG, "color found: " + hexColor);
+                }
+                intent.putExtra("podcast", podcast);
+                startActivity(intent);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -476,13 +508,23 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
 
 
             @Override
-            public void onPlayClicked(PodcastDTO podcast) {
-
+            public void onPodcastRating(PodcastDTO podcast) {
+                Intent intent = new Intent(ctx, RatingActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
             }
 
             @Override
             public void onPodcastRequired(PodcastDTO podcast) {
-
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                intent.putExtra("podcast", podcast);
+                ctx.startActivity(intent);
             }
         });
         recyclerView.setAdapter(adapter);
