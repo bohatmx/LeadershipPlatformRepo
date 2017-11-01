@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.lists;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.EbookAdapter;
 import com.oneconnect.leadership.library.adapters.PodcastAdapter;
 import com.oneconnect.leadership.library.adapters.VideosAdapter;
+import com.oneconnect.leadership.library.audio.AudioRecordTest;
 import com.oneconnect.leadership.library.audio.PodcastUploadContract;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -97,6 +99,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     private int type;
     private UserDTO user;
     private FirebaseAuth firebaseAuth;
+    FloatingActionButton fabIcon;
 
 
     @Override
@@ -118,7 +121,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: .................");
         view =  inflater.inflate(R.layout.fragment_podcast_list, container, false);
@@ -130,6 +133,18 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         if (getActivity().getIntent().getSerializableExtra("type") != null) {
             type = (int) getActivity().getIntent().getSerializableExtra("type");
         }
+
+        fabIcon = (FloatingActionButton) view.findViewById(R.id.fabIcon);
+        fabIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, AudioRecordTest.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                ctx.startActivity(intent);
+            }
+        });
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
@@ -353,6 +368,21 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
     @Override
     public void onUserFound(UserDTO user) {
         Log.i(TAG, "*** onUserFound ***");
+        if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_PLATINUM_USER)) {
+            fabIcon.setVisibility(View.VISIBLE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_STANDARD_USER)) {
+            fabIcon.setVisibility(View.GONE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_GOLD_USER)) {
+            fabIcon.setVisibility(View.GONE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_PLATINUM_ADMIN)) {
+            fabIcon.setVisibility(View.GONE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_COMPANY_ADMIN)) {
+            fabIcon.setVisibility(View.GONE);
+        }
         presenter.getCompanyProfile(user.getCompanyID());
 
     }

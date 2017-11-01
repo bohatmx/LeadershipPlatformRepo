@@ -11,6 +11,7 @@ import android.media.MediaRecorder;
 
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -70,11 +71,14 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
     SeekBar recorderSeekBar;
     ImageView stopIMG, pauseIMG, playIMG, imageView, podcasts;
     RelativeLayout controlsLay;
+    String hexColor;
+    AppBarLayout appBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_audio);
+        appBar = (AppBarLayout) findViewById(R.id.appBar);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -83,6 +87,11 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
             type = ResponseBag.DAILY_THOUGHTS;
             dailyThought =  (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
             contentTxt.setText(dailyThought.getTitle() + "-" + dailyThought.getSubtitle());
+        }
+        if (getIntent().getSerializableExtra("hexColor") != null) {
+         hexColor = (String) getIntent().getSerializableExtra("hexColor");
+         toolbar.setBackgroundColor(Color.parseColor(hexColor));
+            appBar.setBackgroundColor(Color.parseColor(hexColor));
         }
         recorderSeekBar = (SeekBar) findViewById(R.id.recorderSeekBar);
         recorderSeekBar.setVisibility(View.GONE);

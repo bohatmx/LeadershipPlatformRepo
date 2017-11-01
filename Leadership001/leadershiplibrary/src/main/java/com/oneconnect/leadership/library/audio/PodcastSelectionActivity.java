@@ -376,6 +376,9 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                @Override
                public void onClick(View v) {
                    Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
+                   if (hexColor != null) {
+                       intent.putExtra("hexColor", hexColor);
+                   }
                    intent.putExtra("dailyThought", dailyThought);
                    startActivity(intent);
 

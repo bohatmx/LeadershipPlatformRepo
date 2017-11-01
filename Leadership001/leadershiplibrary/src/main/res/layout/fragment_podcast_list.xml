@@ -41,4 +41,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:padding="@dimen/mon_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/fabIcon"
+        app:srcCompat="@drawable/ic_microphone_white"
+        app:layout_anchor="@+id/card"
+        app:layout_anchorGravity="bottom|right"/>
+
 </RelativeLayout>

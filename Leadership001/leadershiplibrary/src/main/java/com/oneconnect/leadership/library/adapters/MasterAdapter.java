@@ -70,6 +70,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public MasterAdapter(Context ctx, List<WeeklyMasterClassDTO> mList, MasterAdapterListener listener){
         this.ctx = ctx;
         this.mList = mList;
+        this.listener = listener;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
