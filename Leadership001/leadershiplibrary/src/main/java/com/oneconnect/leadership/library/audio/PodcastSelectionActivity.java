@@ -389,6 +389,9 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                @Override
                public void onClick(View v) {
                    Intent intent = new Intent(PodcastSelectionActivity.this, AudioRecordTest.class);
+                   if (hexColor != null) {
+                       intent.putExtra("hexColor", hexColor);
+                   }
                    startActivity(intent);
                }
            });
@@ -405,6 +408,9 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
                     @Override
                     public void onAnimationEnded() {
                         Intent intent = new Intent(PodcastSelectionActivity.this, PodcastListActivity.class);
+                        if (hexColor != null) {
+                            intent.putExtra("hexColor", hexColor);
+                        }
                         startActivity(intent);
                     }
                 });

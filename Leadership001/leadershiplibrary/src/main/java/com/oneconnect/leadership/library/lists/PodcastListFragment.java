@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.lists;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,15 +25,18 @@ import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.activities.VideoRecordActivity;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.EbookAdapter;
 import com.oneconnect.leadership.library.adapters.PodcastAdapter;
 import com.oneconnect.leadership.library.adapters.VideosAdapter;
 import com.oneconnect.leadership.library.audio.AudioRecordTest;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.audio.PodcastUploadContract;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.PodcastCache;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
 import com.oneconnect.leadership.library.data.CategoryDTO;
@@ -139,11 +143,12 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         fabIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ctx, AudioRecordTest.class);
+                pickGalleryOrAudioRecord();
+                /*Intent intent = new Intent(ctx, AudioRecordTest.class);
                 if (hexColor != null) {
                     intent.putExtra("hexColor", hexColor);
                 }
-                ctx.startActivity(intent);
+                ctx.startActivity(intent);*/
             }
         });
 
@@ -154,6 +159,40 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         getCachedPodcasts();
         getPodcasts();
         return view;
+    }
+
+    private void pickGalleryOrAudioRecord() {
+        android.support.v7.app.AlertDialog.Builder b = new android.support.v7.app.AlertDialog.Builder(ctx);
+        b.setTitle("Select Audio")
+                .setMessage("Please select the source of the Audio")
+                .setPositiveButton("Record Audio", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startAudioRecording();
+                    }
+                })
+                .setNegativeButton("Pick audio from Device", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startPodcastSelection();
+                    }
+                }).show();
+    }
+
+    private void startAudioRecording() {
+        Intent intent = new Intent(ctx, AudioRecordTest.class);
+        if (hexColor != null) {
+            intent.putExtra("hexColor", hexColor);
+        }
+        startActivity(intent);
+    }
+
+    private void startPodcastSelection() {
+        Intent intent = new Intent(ctx, PodcastSelectionActivity.class);
+        if (hexColor != null) {
+            intent.putExtra("hexColor", hexColor);
+        }
+        startActivity(intent);
     }
 
     public void getPodcasts() {

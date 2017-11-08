@@ -2,6 +2,7 @@ package com.oneconnect.leadership.library.audio;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +69,7 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     private CachePresenter cachePresenter;
     private VideoDTO video;
     ImageView image1, image2;
+    String hexColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,11 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
 
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
+
+        if (getIntent().getSerializableExtra("hexColor") != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        }
 
         type = getIntent().getIntExtra("type", 0);
         switch (type) {

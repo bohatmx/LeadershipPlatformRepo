@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,6 +43,7 @@ import com.oneconnect.leadership.library.cache.DailyThoughtCache;
 import com.oneconnect.leadership.library.cache.VideoCache;
 import com.oneconnect.leadership.library.camera.CameraActivity;
 import com.oneconnect.leadership.library.camera.VideoAdapter;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.camera.VideoUploadContract;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
@@ -129,6 +131,41 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
         }
     }
 
+    private void pickGalleryOrVideoCamera() {
+        android.support.v7.app.AlertDialog.Builder b = new android.support.v7.app.AlertDialog.Builder(ctx);
+        b.setTitle("Select Video")
+                .setMessage("Please select the source of the Video")
+                .setPositiveButton("Use Video Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startVideo();
+                    }
+                })
+                .setNegativeButton("Pick video from Device", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startVideoSelection();
+                    }
+                }).show();
+    }
+
+    private void startVideoSelection() {
+        Intent intent = new Intent(ctx, VideoSelectionActivity.class);
+        if (hexColor != null) {
+            intent.putExtra("hexColor", hexColor);
+        }
+        startActivity(intent);
+    }
+
+    private void startVideo() {
+        Intent intent = new Intent(ctx, VideoRecordActivity.class);
+        intent.putExtra("type", VideoRecordActivity.VIDEO_REQUEST);
+        /*if (hexColor != null) {
+            intent.putExtra("hexColor", hexColor);
+        }*/
+        startActivityForResult(intent, VideoRecordActivity.VIDEO_REQUEST);
+    }
+
 
     VideosAdapter adapter;
     ArrayList<String> downloadedList = new ArrayList<>();
@@ -157,12 +194,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
         fabIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ctx, VideoRecordActivity.class);
-                intent.putExtra("type", VideoRecordActivity.VIDEO_REQUEST);
-                if (hexColor != null) {
-                    intent.putExtra("hexColor", hexColor);
-                }
-                startActivityForResult(intent, VideoRecordActivity.VIDEO_REQUEST);
+                pickGalleryOrVideoCamera();
             }
         });
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
@@ -246,6 +278,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     private void getVideos() {
         Log.d(LOG, "************** getVideos: " );
         presenter.getAllVideos();
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
       /*  switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
@@ -587,7 +620,9 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
         else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_COMPANY_ADMIN)) {
             fabIcon.setVisibility(View.GONE);
         }
+
         presenter.getVideos(user.getCompanyID());
+        presenter.getCompanyProfile(user.getCompanyID());
 
     }
 

@@ -80,6 +80,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_selection);
+        check();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Video Selection & Upload");
@@ -97,7 +98,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
             Log.i(TAG, "Color not found");
         }
 
-        check();
+       // check();
 
 
 
@@ -153,6 +154,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
             getSupportActionBar().setSubtitle(dailyThought.getTitle());
         }
 
+
         setup();
         getVideosOnDevice();
     }
@@ -187,6 +189,10 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                     @Override
                     public void onAnimationEnded() {
                         Intent intent = new Intent(VideoSelectionActivity.this, VideoListActivity.class);
+                        if (getIntent().getSerializableExtra("hexColor") != null) {
+                            hexColor = (String) getIntent().getSerializableExtra("hexColor");
+                            intent.putExtra("hexColor", hexColor);
+                        }
                         startActivity(intent);
                     }
                 });

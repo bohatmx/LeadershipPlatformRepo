@@ -2,6 +2,7 @@ package com.oneconnect.leadership.library.camera;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
     Context ctx;
     private SubscriberPresenter presenter;
     private CachePresenter cachePresenter;
+    String hexColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,13 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ctx = getApplicationContext();
+
+        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        } else {
+            Log.i(LOG, "Color not found");
+        }
 
         presenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
