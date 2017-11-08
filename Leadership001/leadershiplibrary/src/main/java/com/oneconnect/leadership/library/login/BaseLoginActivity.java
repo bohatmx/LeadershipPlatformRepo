@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -40,6 +41,8 @@ import com.oneconnect.leadership.library.util.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+
+import es.dmoral.toasty.Toasty;
 
 public abstract class BaseLoginActivity extends AppCompatActivity
         implements LoginContract.View, EndpointContract.View {
@@ -165,7 +168,8 @@ public abstract class BaseLoginActivity extends AppCompatActivity
             } else {
                 Log.e(TAG, "onActivityResult: login not ok");
                 if (idpResponse == null) {
-                    showSnackbar(getString(R.string.sign_in_cancelled), "Bad", "red");
+                    Toasty.error(getApplicationContext(), "sign in cancelled", Toast.LENGTH_LONG, true).show();
+                   // showSnackbar(getString(R.string.sign_in_cancelled), "Bad", "red");
                     onLoginFailed();
                     return;
                 }

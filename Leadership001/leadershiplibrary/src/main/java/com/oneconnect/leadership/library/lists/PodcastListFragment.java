@@ -135,6 +135,7 @@ public class PodcastListFragment extends Fragment implements PageFragment, Subsc
         }
 
         fabIcon = (FloatingActionButton) view.findViewById(R.id.fabIcon);
+        fabIcon.setVisibility(View.GONE);
         fabIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

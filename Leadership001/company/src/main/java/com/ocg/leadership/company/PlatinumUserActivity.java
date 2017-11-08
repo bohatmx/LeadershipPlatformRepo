@@ -65,6 +65,7 @@ import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.PhotoCache;
+import com.oneconnect.leadership.library.cache.VideoCache;
 import com.oneconnect.leadership.library.camera.CameraActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.crud.CrudContract;
@@ -107,6 +108,7 @@ import com.oneconnect.leadership.library.lists.VideoListFragment;
 import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.services.PhotoUploaderService;
+import com.oneconnect.leadership.library.services.VideoUploaderService;
 import com.oneconnect.leadership.library.util.Base64;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.DepthPageTransformer;
@@ -815,7 +817,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
                 return true;
 
             } /*else if (id == R.id.nav_video) {
-            Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
+            Intent intent = new Intent(SubscriberMainActivity.this, VideoRecordActivity.class);
             startActivity(intent);
             return true;
         }*/
@@ -1087,18 +1089,15 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
             public void run() {
                 Bitmap bmImg = null;
                 try  {
-                    //Your code goes here
                     try {
                         bmImg = BitmapFactory.decodeStream((Base64.InputStream)new URL(url).getContent());
                     } catch (IOException e) {
                         Log.e(TAG, e.getMessage());
-                        // e.printStackTrace();
                     }
                     BitmapDrawable background = new BitmapDrawable(bmImg);
                     nav_layout.setBackgroundDrawable(background);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
-                    //  e.printStackTrace();
                 }
             }
         });
@@ -1344,6 +1343,9 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
             case CameraActivity.CAMERA_REQUEST:
                 confirmUpload(data);
                 break;
+            /*case CameraActivity.VIDEO_REQUEST:
+                confirmUpload(data);
+                break;*/
            /* case REQUEST_PHOTO:
                 if (reqCode == Activity.RESULT_OK) {
                     //  data
@@ -1377,8 +1379,37 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
             case ResponseBag.USERS:
                 saveUserFiles(data);
                 break;
+            case ResponseBag.VIDEOS:
+                saveVideoFiles(data);
+                break;
 
         }
+    }
+
+    private void saveVideoFiles(Intent data) {
+        ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
+        if (bag == null) return;
+        Log.d(TAG, "saveVideoFiles: .......");
+        /*for (PhotoDTO p : bag.getPhotos()) {
+            p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            p.setCaption(dailyThought.getTitle());
+            PhotoCache.addPhoto(p, this, null);
+        }*/
+        for (VideoDTO p : bag.getVideos()) {
+            //  p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            // p.setCaption(dailyThought.getTitle());
+            Log.e(TAG, "saveVideoFiles: ".concat(GSON.toJson(p)));
+            VideoCache.addVideo(p, ctx, null);
+        }
+        // startPhotoService();
+        startVideoService();
+
+    }
+
+    private void startVideoService() {
+        Log.d(TAG, "startVideoService: @@@@@@@@@@@@@@@@@@@@@@");
+        Intent m = new Intent(ctx, VideoUploaderService.class);
+        ctx.startService(m);
     }
 
     private void saveUserFiles(Intent data) {

@@ -831,7 +831,7 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
                 return true;
 
             } /*else if (id == R.id.nav_video) {
-            Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
+            Intent intent = new Intent(SubscriberMainActivity.this, VideoRecordActivity.class);
             startActivity(intent);
             return true;
         }*/

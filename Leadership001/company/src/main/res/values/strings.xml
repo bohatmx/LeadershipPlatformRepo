@@ -22,5 +22,6 @@
     <string name="title_activity_podcast_selection">PodcastSelectionActivity</string>
     <string name="title_activity_standard_user">StandardUserActivity</string>
     <string name="title_activity_company_audio_player">CompanyAudioPlayerActivity</string>
+    <string name="title_activity_video">VideoActivity</string>
 </resources>
 

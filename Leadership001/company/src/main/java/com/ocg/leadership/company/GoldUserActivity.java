@@ -802,7 +802,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                 return true;
 
             } /*else if (id == R.id.nav_video) {
-            Intent intent = new Intent(SubscriberMainActivity.this, VideoActivity.class);
+            Intent intent = new Intent(SubscriberMainActivity.this, VideoRecordActivity.class);
             startActivity(intent);
             return true;
         }*/
@@ -1060,18 +1060,15 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
             public void run() {
                 Bitmap bmImg = null;
                 try  {
-                    //Your code goes here
                     try {
                         bmImg = BitmapFactory.decodeStream((InputStream)new URL(url).getContent());
                     } catch (IOException e) {
                         Log.e(TAG, e.getMessage());
-                        // e.printStackTrace();
                     }
                     BitmapDrawable background = new BitmapDrawable(bmImg);
                     nav_layout.setBackgroundDrawable(background);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
-                    //  e.printStackTrace();
                 }
             }
         });

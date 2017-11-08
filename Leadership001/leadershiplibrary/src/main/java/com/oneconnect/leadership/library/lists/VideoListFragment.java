@@ -1,20 +1,27 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -23,13 +30,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.activities.VideoActivity;
+import com.oneconnect.leadership.library.activities.VideoRecordActivity;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.VideosAdapter;
 import com.oneconnect.leadership.library.api.ListAPI;
+import com.oneconnect.leadership.library.audio.AudioRecordTest;
 import com.oneconnect.leadership.library.cache.CacheContract;
 import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.DailyThoughtCache;
 import com.oneconnect.leadership.library.cache.VideoCache;
+import com.oneconnect.leadership.library.camera.CameraActivity;
 import com.oneconnect.leadership.library.camera.VideoAdapter;
 import com.oneconnect.leadership.library.camera.VideoUploadContract;
 import com.oneconnect.leadership.library.data.BaseDTO;
@@ -52,6 +63,7 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.services.VideoUploaderService;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.video.LeExoPlayerActivity;
@@ -61,6 +73,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class VideoListFragment extends Fragment implements VideoAdapter.VideoAdapterListener, PageFragment, SubscriberContract.View,
         CacheContract.View, BasicEntityAdapter.EntityListener {
@@ -122,6 +136,7 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     private Context ctx;
     MediaController mediaController;
     private FirebaseAuth firebaseAuth;
+    FloatingActionButton fabIcon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -137,6 +152,19 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             type = (int) getActivity().getIntent().getSerializableExtra("type");
         }
 
+        fabIcon = (FloatingActionButton) view.findViewById(R.id.fabIcon);
+        fabIcon.setVisibility(View.GONE);
+        fabIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, VideoRecordActivity.class);
+                intent.putExtra("type", VideoRecordActivity.VIDEO_REQUEST);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivityForResult(intent, VideoRecordActivity.VIDEO_REQUEST);
+            }
+        });
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
@@ -146,6 +174,11 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
 
         return view;
     }
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+
+
 
     private void getCachedVideos() {
         VideoCache.getVideos(ctx, new VideoCache.ReadListener() {
@@ -539,12 +572,32 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
     @Override
     public void onUserFound(UserDTO user) {
         Log.i(TAG, "*** onUserFound ***" + user.getFullName());
+        if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_PLATINUM_USER)) {
+            fabIcon.setVisibility(View.VISIBLE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_STANDARD_USER)) {
+            fabIcon.setVisibility(View.GONE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_GOLD_USER)) {
+            fabIcon.setVisibility(View.GONE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_PLATINUM_ADMIN)) {
+            fabIcon.setVisibility(View.GONE);
+        }
+        else if (user.getUserDescription().equalsIgnoreCase(UserDTO.DESC_COMPANY_ADMIN)) {
+            fabIcon.setVisibility(View.GONE);
+        }
         presenter.getVideos(user.getCompanyID());
+
     }
 
+    String hexColor;
     @Override
     public void onCompanyFound(CompanyDTO company) {
-
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
     }
 
     @Override

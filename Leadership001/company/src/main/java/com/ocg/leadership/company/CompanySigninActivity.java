@@ -49,6 +49,6 @@ public class CompanySigninActivity extends BaseLoginActivity {
     public void onLoginFailed() {
         Log.e(TAG, "onLoginFailed: ");
         Toasty.error(this,getString(R.string.signin_failed), Toast.LENGTH_LONG,true).show();
-        showSnackbar(getString(R.string.signin_failed),"Dismiss","red");
+      //  showSnackbar(getString(R.string.signin_failed),"Dismiss","red");
     }
 }
