@@ -192,7 +192,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         getSupportActionBar().setDisplayShowTitleEnabled(false);
        // toolbar.setLogo(R.drawable.harmony);
         logoIMG = (ImageView) findViewById(R.id.logoIMG);
-        firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         ctx = getApplicationContext();
         activity = this;

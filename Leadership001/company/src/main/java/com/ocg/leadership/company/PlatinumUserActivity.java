@@ -117,6 +117,7 @@ import com.oneconnect.leadership.library.util.ThemeChooser;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -197,7 +198,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //toolbar.setLogo(R.drawable.harmony);
         logoIMG = (ImageView) findViewById(R.id.logoIMG);
-         firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         ctx = getApplicationContext();
         activity = this;
@@ -1090,7 +1091,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
                 Bitmap bmImg = null;
                 try  {
                     try {
-                        bmImg = BitmapFactory.decodeStream((Base64.InputStream)new URL(url).getContent());
+                        bmImg = BitmapFactory.decodeStream((InputStream)new URL(url).getContent());
                     } catch (IOException e) {
                         Log.e(TAG, e.getMessage());
                     }

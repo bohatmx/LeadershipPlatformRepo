@@ -164,7 +164,7 @@ public class StandardUserActivity extends AppCompatActivity implements  Navigati
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         logoIMG = (ImageView) findViewById(R.id.logoIMG);
-        firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         ctx = getApplicationContext();
         activity = this;
