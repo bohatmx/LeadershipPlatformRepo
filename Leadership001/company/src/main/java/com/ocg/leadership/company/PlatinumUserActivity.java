@@ -1,9 +1,11 @@
 package com.ocg.leadership.company;
 
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -14,7 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Activity;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,6 +24,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -53,13 +56,11 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ocg.leadership.company.services.CompanyMessagingService;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
-import com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
-import com.oneconnect.leadership.library.activities.ThemeSelectorActivity;
-import com.oneconnect.leadership.library.activities.UserActivity;
 import com.oneconnect.leadership.library.activities.eBookActivity;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
 import com.oneconnect.leadership.library.cache.CacheContract;
@@ -77,6 +78,7 @@ import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.FCMData;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
@@ -90,6 +92,7 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
+import com.oneconnect.leadership.library.editors.NewsArticleEditor;
 import com.oneconnect.leadership.library.editors.UserEditorBottomSheet;
 import com.oneconnect.leadership.library.lists.CalendarEventListFragment;
 import com.oneconnect.leadership.library.lists.CompanyMainFragment;
@@ -109,7 +112,6 @@ import com.oneconnect.leadership.library.lists.WeeklyMessageListFragment;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.services.PhotoUploaderService;
 import com.oneconnect.leadership.library.services.VideoUploaderService;
-import com.oneconnect.leadership.library.util.Base64;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
@@ -178,6 +180,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
     private FirebaseAuth firebaseAuth;
     ResponseBag bag;
     private DailyThoughtEditor dailyThoughtEditor;
+    private NewsArticleEditor newsArticleEditor;
     private DatePickerDialog datePickerDialog;
     private int type;
     NavigationView navigationView, platinum_nav_view, goldNavigationView, platinum_admin_user_nav_view;
@@ -281,13 +284,30 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
                     break;
             }
 
-            /*IntentFilter filter = new IntentFilter(SubscriberMessagingService.BROADCAST_MESSAGE_RECEIVED);
+            IntentFilter filter = new IntentFilter(CompanyMessagingService.BROADCAST_MESSAGE_RECEIVED);
             LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy(builder.build());*/
+            StrictMode.setVmPolicy(builder.build());
         }
         presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
     }
+
+
+    private FCMData fcmData;
+
+    class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fcmData = (FCMData)intent.getSerializableExtra("data");
+            if (fcmData != null) {
+                Log.i(TAG, "onReceive: ".concat(fcmData.getTitle().concat("\n ").concat(fcmData.getMessage())));
+                showSnackbar(fcmData.getTitle(),"OK","green");
+            }
+
+        }
+    }
+
     private UserListFragment.UserListListener listener;
     private void setup() {
 
@@ -525,7 +545,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
                 }*/
                 // bag.getDailyThoughts().add(0, m);
                 // setFragment();
-                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(com.oneconnect.leadership.library.R
+                showSnackbar(m.getTitle().concat(" is being added"), getString(com.oneconnect.leadership.library.R
                         .string.ok_label), "green");
 
             }
@@ -542,6 +562,38 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         });
 
         dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
+
+    }
+
+    private void startNewsArticleBottomSheet(final NewsDTO article, int type) {
+
+        newsArticleEditor = NewsArticleEditor.newInstance(article, type);
+        newsArticleEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+            @Override
+            public void onWorkDone(BaseDTO entity) {
+                NewsDTO m = (NewsDTO) entity;
+                /*if (bag.getNews() == null) {
+                    bag.setNews(new ArrayList<NewsDTO>());
+                }
+                bag.getNews().add(0, m);
+                setFragment();*/
+                showSnackbar(m.getTitle().concat(" is being added"), getString(R
+                        .string.ok_label), "green");
+
+            }
+
+            @Override
+            public void onDateRequired() {
+                getDate(ResponseBag.NEWS);
+            }
+
+            @Override
+            public void onError(String message) {
+                showSnackbar(message, "bad", Constants.RED);
+            }
+        });
+
+        newsArticleEditor.show(getSupportFragmentManager(), "SHEET_NEWS_ARTICLE");
 
     }
 
@@ -728,7 +780,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.company_drawer, menu);
+        getMenuInflater().inflate(R.menu.platinum_menu, menu);
         return true;
     }
 
@@ -749,6 +801,10 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         }
         if (id == R.id.action_refresh) {
             startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+            return true;
+        }
+        if (id == R.id.action_article) {
+            startNewsArticleBottomSheet(null, Constants.NEW_ENTITY);
             return true;
         }
        /* if (id == R.id.action_internal) {

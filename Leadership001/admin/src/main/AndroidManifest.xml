@@ -4,6 +4,7 @@
     package="com.oneconnect.leadership.admin">
 
     <uses-sdk tools:overrideLibrary="com.firebase.ui, com.firebase.ui.auth" />
+
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -23,8 +24,6 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
-
-
         <service android:name=".services.AdminMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -40,16 +39,13 @@
             android:name=".AdminSignInActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity"
             android:theme="@style/MaterialCamera.CaptureActivity" />
         <activity
             android:name="com.afollestad.materialcamera.CaptureActivity2"
             android:theme="@style/MaterialCamera.CaptureActivity" />
-
         <activity
             android:name=".NotifHandlerActivity"
             android:label="@string/title_activity_notif_handler"
@@ -65,7 +61,6 @@
             android:label="@string/title_activity_crud"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".calendar.CalendarActivity"
             android:label="@string/title_activity_calendar"
@@ -126,19 +121,20 @@
             android:label="@string/title_activity_photo_selection"
             android:parentActivityName=".crud.CrudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.oneconnect.leadership.library.activities.CreateCompanyActivity"
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.CreateCompanyActivity"
             android:label="@string/title_activity_create_company"
             android:parentActivityName=".crud.CrudActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.oneconnect.leadership.library.audio.AudioRecordTest"
             android:label="@string/title_activity_record"
             android:parentActivityName=".crud.CrudActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.oneconnect.leadership.library.activities.CompanyActivity"
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.CompanyActivity"
             android:parentActivityName=".crud.CrudActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -186,7 +182,6 @@
             android:label="@string/title_activity_image_list"
             android:theme="@style/AppTheme.NoActionBar" />
 
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -196,12 +191,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity"/>
+
+        <activity android:name="com.oneconnect.leadership.library.activities.UpdateEntityActivity" />
         <activity android:name=".crud.ThoughtApprovalActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.ColorPickerActivity"
             android:label="@string/color_picker"
             android:theme="@style/CommuterTheme" />
+        <activity
+            android:name="com.oneconnect.leadership.library.activities.DataImportActivity"
+            android:label="@string/title_activity_data_import"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

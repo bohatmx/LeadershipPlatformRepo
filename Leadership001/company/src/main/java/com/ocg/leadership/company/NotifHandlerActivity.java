@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.oneconnect.leadership.library.data.FCMData;
@@ -26,6 +27,10 @@ public class NotifHandlerActivity extends AppCompatActivity {
 
         title = getIntent().getStringExtra("title");
         body = getIntent().getStringExtra("body");
+        if (getIntent().getSerializableExtra("data") != null) {
+            fcmData = (FCMData) getIntent().getSerializableExtra("data");
+            Log.d(TAG, "we have fcm data");
+        }
 
         if (title != null) {
             showSnackbar(title,"OK","green");
@@ -44,4 +49,6 @@ public class NotifHandlerActivity extends AppCompatActivity {
         snackbar.show();
 
     }
+
+    static final String TAG = NotifHandlerActivity.class.getSimpleName();
 }

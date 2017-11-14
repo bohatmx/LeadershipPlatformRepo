@@ -45,6 +45,7 @@ import com.oneconnect.leadership.library.activities.UpdateEntityActivity;
 import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
+import com.oneconnect.leadership.library.editors.NewsArticleEditor;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
@@ -115,7 +116,7 @@ public class CrudActivity extends AppCompatActivity
     private EBookDTO ebook;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private PodcastDTO podcast;
-    private NewArticleEditor newArticleEditor;
+    private NewsArticleEditor newsArticleEditor;
     private DailyThoughtEditor dailyThoughtEditor;
     private WeeklyMessageEditor weeklyMessageEditor;
     private WeeklyMasterclassEditor weeklyMasterclassEditor;
@@ -242,7 +243,7 @@ public class CrudActivity extends AppCompatActivity
                         dailyThoughtEditor.setSelectedDate(d);
                         break;
                     case ResponseBag.NEWS:
-                        newArticleEditor.setSelectedDate(d);
+                        newsArticleEditor.setSelectedDate(d);
                         break;
                     case ResponseBag.WEEKLY_MESSAGE:
                         weeklyMessageEditor.setSelectedDate(d);
@@ -360,8 +361,8 @@ public class CrudActivity extends AppCompatActivity
 
     private void startNewsArticleBottomSheet(final NewsDTO article, int type) {
 
-        newArticleEditor = NewArticleEditor.newInstance(article, type);
-        newArticleEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
+        newsArticleEditor = NewsArticleEditor.newInstance(article, type);
+        newsArticleEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
             @Override
             public void onWorkDone(BaseDTO entity) {
                 NewsDTO m = (NewsDTO) entity;
@@ -386,7 +387,7 @@ public class CrudActivity extends AppCompatActivity
             }
         });
 
-        newArticleEditor.show(getSupportFragmentManager(), "SHEET_NEWS_ARTICLE");
+        newsArticleEditor.show(getSupportFragmentManager(), "SHEET_NEWS_ARTICLE");
 
     }
 
@@ -656,7 +657,7 @@ public class CrudActivity extends AppCompatActivity
         Log.w(TAG, "onEntityAdded: ++++++++++ data has been added, key: ".concat(key));
         switch (type) {
             case ResponseBag.NEWS:
-                newArticleEditor.dismiss();
+                newsArticleEditor.dismiss();
                 break;
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThoughtEditor.dismiss();
@@ -1921,6 +1922,7 @@ public class CrudActivity extends AppCompatActivity
                 })
                 .show();
     }
+
 
     private void saveFiles(Intent data) {
         switch (type) {

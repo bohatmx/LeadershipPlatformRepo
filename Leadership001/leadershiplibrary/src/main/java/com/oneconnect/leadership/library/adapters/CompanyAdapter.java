@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,13 @@ public class CompanyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 listener.onChangeColor(com);
             }
         });
+        cvh.companyCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onCompanySelected(com);
+            }
+        });
+
 
         if (com.getPhotos() != null) {
             CompanyDTO dtd = mList.get(position);
@@ -132,6 +140,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public class CompanyViewHolder extends RecyclerView.ViewHolder {
         protected TextView companyTxt;
         protected ImageView companyIMG, color1, color2;
+        protected CardView companyCard;
 
         public CompanyViewHolder(View itemView) {
             super(itemView);
@@ -139,6 +148,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             companyIMG = (ImageView) itemView.findViewById(R.id.companyIMG);
             color1 = (ImageView) itemView.findViewById(R.id.color1);
             color2 = (ImageView) itemView.findViewById(R.id.color2);
+            companyCard = (CardView) itemView.findViewById(R.id.companyCard);
         }
     }
 }

@@ -195,6 +195,9 @@ public class CompanyActivity extends AppCompatActivity implements CrudContract.V
         adapter = new CompanyAdapter(list, ctx, new CompanyAdapter.CompanyAdapterListener() {
             @Override
             public void onCompanySelected(CompanyDTO company) {
+                Intent intent = new Intent(CompanyActivity.this, DataImportActivity.class);
+                intent.putExtra("company", company);
+                startActivity(intent);
 
             }
 

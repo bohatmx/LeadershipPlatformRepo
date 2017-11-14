@@ -41,8 +41,8 @@ public class CompanyMessagingService extends FirebaseMessagingService {
                 "onMessageReceived: from: " + remoteMessage.getFrom()
                 + " to:" + remoteMessage.getTo() + " collapseKey: "
                 + remoteMessage.getCollapseKey());
-        boolean isRunning = isMainActivityRunning("com.ocg.leadership.subscriber");
-        Log.w(TAG, "onMessageReceived: com.ocg.leadership.subscriber isRunning: " + isRunning);
+        boolean isRunning = isMainActivityRunning("com.ocg.leadership.company");
+        Log.w(TAG, "onMessageReceived: com.ocg.leadership.company isRunning: " + isRunning);
         //check for notifcations without app data structures
         if (remoteMessage.getNotification() != null) {
             String title = remoteMessage.getNotification().getTitle();
@@ -106,7 +106,7 @@ public class CompanyMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(FCMData message) {
         if (message.getTitle() == null) {
-            message.setTitle("AftaRobot");
+            message.setTitle("Leadership Platform");
         }
         StringBuilder sb = new StringBuilder();
         NotificationCompat.Builder mBuilder =
@@ -149,6 +149,7 @@ public class CompanyMessagingService extends FirebaseMessagingService {
         Intent resultIntent = new Intent(this, NotifHandlerActivity.class);
         resultIntent.putExtra("title", title);
         resultIntent.putExtra("body", body);
+
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(

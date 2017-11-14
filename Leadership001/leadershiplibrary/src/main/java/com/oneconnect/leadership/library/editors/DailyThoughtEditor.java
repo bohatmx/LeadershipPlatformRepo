@@ -32,9 +32,15 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-//import com.oneconnect.leadership.admin.R;
+import com.ocg.backend.endpointAPI.model.Data;
+import com.ocg.backend.endpointAPI.model.FCMUserDTO;
+import com.ocg.backend.endpointAPI.model.PayLoad;
+import com.ocg.backend.endpointAPI.model.EmailResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMessageDTO;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
@@ -73,6 +79,8 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.fcm.EndpointContract;
+import com.oneconnect.leadership.library.fcm.EndpointPresenter;
 import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
@@ -95,6 +103,8 @@ import es.dmoral.toasty.Toasty;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.oneconnect.leadership.library.ebook.EbookListFragment.REQUEST_LINKS;
+import static com.oneconnect.leadership.library.fcm.EndpointUtil.COMPANY;
+import static com.oneconnect.leadership.library.fcm.EndpointUtil.DAILY_THOUGHT;
 
 /**
  * Created by aubreymalabie on 3/18/17.
@@ -102,7 +112,7 @@ import static com.oneconnect.leadership.library.ebook.EbookListFragment.REQUEST_
 
 public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View,
         SubscriberContract.View, PodcastUploadContract.View,CacheContract.View,
-        CategoryAdapter.CategoryAdapterListener{
+        CategoryAdapter.CategoryAdapterListener, EndpointContract.View{
     private DailyThoughtDTO dailyThought;
 
 
@@ -123,6 +133,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     List<CategoryDTO> categoryList, selectedcategories = new ArrayList<>();
     private CategoryDTO category;
+    Data data;
+    PayLoad payLoad;
+    EndpointPresenter endpointPresenter;
+    FCMessageDTO fcmMessage;
+    FCMUserDTO fcmUser;
 
     @Override
     public void onEntityAdded(String key) {
@@ -130,7 +145,31 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 .concat(key));
         dailyThought.setDailyThoughtID(key);
         bottomSheetListener.onWorkDone(dailyThought);
+        data = new Data();
+        fcmUser = new FCMUserDTO();
+        payLoad = new PayLoad();
+        fcmMessage = new FCMessageDTO();
+        data.setUserID(user.getUserID());
+        data.setTitle(dailyThought.getSubtitle());
+        data.setFromUser(user.getFullName());
+        data.setMessageType(DAILY_THOUGHT);
+        data.setMessage(dailyThought.getTitle() /*+ " - " + dailyThought.getSubtitle()*/);
+        data.setDate(new Date().getTime());
+        payLoad.setData(data);
+        fcmMessage.setCompanyID(user.getCompanyID());
+        fcmMessage.setDailyThoughtID(dailyThought.getDailyThoughtID());
+        fcmMessage.setTitle(dailyThought.getSubtitle());
+        fcmMessage.setData(data);
+        endpointPresenter.sendDailyThought(user.getCompanyID(), payLoad);
+        endpointPresenter.sendMessage(fcmMessage);
+        endpointPresenter.sendCompanyMessage(user.getCompanyID(), payLoad);
+       // endpointPresenter.s
+        /*if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT)){
+            endpointPresenter.sendCompanyMessage(user.getCompanyID(), payLoad);
+        }*/
+
         this.dismiss();
+        //
         /*if (getOutputFile() != null) {
             AudioSavePathInDevice = getOutputFile().getAbsolutePath();
             sendPodcastWithDailyThought(AudioSavePathInDevice);
@@ -511,6 +550,27 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onFCMUserSaved(FCMResponseDTO response) {
+
+    }
+
+    @Override
+    public void onMessageSent(FCMResponseDTO response) {
+        if (response.getStatusCode() == 0) {
+            Log.i(TAG, "onMessageSent: daily thought sent" + response.getMessage());
+
+        } else {
+            Log.e(TAG, "onMessageSent: daily thought failed");
+            FirebaseCrash.report(new Exception("daily thought failed"));
+        }
+    }
+
+    @Override
+    public void onEmailSent(EmailResponseDTO response) {
+
+    }
+
+    @Override
     public void onError(String message) {
           bottomSheetListener.onError(message);
     }
@@ -537,9 +597,10 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         cachePresenter = new CachePresenter(this, getActivity());
         fbs = new FirebaseStorageAPI();
         podcastUploadPresenter = new PodcastUploadPresenter(this);
-
+        endpointPresenter = new EndpointPresenter(this);
         firebaseAuth = FirebaseAuth.getInstance();
         Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+
     }
 
     @Override

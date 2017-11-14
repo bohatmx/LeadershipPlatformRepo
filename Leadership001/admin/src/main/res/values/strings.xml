@@ -50,4 +50,5 @@
     <string name="title_activity_create_company">CreateCompanyActivity</string>
     <string name="title_activity_pending">Thought Approval</string>
     <string name="color_picker">Color Picker</string>
+    <string name="title_activity_data_import">DataImportActivity</string>
 </resources>
