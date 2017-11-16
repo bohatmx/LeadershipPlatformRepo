@@ -369,7 +369,7 @@ public abstract class BaseLoginActivity extends AppCompatActivity
             case UserDTO.PLATINUM_USER:
                 if (user.getCompanyID() != null) {
                     FirebaseMessaging.getInstance().subscribeToTopic(
-                            EndpointUtil.TOPIC_GOLD + user.getCompanyID());
+                            EndpointUtil.TOPIC_DAILY_THOUGHT/*TOPIC_GOLD*/ + user.getCompanyID());
                     Log.w(TAG, "################## ==> Subscribed to topic: Gold"
                             .concat(user.getCompanyID()));
                 }
@@ -378,8 +378,32 @@ public abstract class BaseLoginActivity extends AppCompatActivity
             case UserDTO.GOLD_USER:
                 if (user.getCompanyID() != null) {
                     FirebaseMessaging.getInstance().subscribeToTopic(
-                            EndpointUtil.TOPIC_PLATINIM + user.getCompanyID());
+                            EndpointUtil.TOPIC_DAILY_THOUGHT + user.getCompanyID());
                     Log.w(TAG, "################## ==> Subscribed to topic: Platinum"
+                            .concat(user.getCompanyID()));
+                }
+                break;
+            case UserDTO.STANDARD_USER:
+                if (user.getCompanyID() != null) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            EndpointUtil.TOPIC_DAILY_THOUGHT + user.getCompanyID());
+                    Log.w(TAG, "################## ==> Subscribed to topic: DailyThought"
+                            .concat(user.getCompanyID()));
+                }
+                break;
+            case UserDTO.COMPANY_ADMIN:
+                if (user.getCompanyID() != null) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            EndpointUtil.TOPIC_DAILY_THOUGHT + user.getCompanyID());
+                    Log.w(TAG, "################## ==> Subscribed to topic: DailyThought"
+                            .concat(user.getCompanyID()));
+                }
+                break;
+            case UserDTO.PLATINUM_ADMIN:
+                if (user.getCompanyID() != null) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(
+                            EndpointUtil.TOPIC_DAILY_THOUGHT + user.getCompanyID());
+                    Log.w(TAG, "################## ==> Subscribed to topic: DailyThought"
                             .concat(user.getCompanyID()));
                 }
                 break;

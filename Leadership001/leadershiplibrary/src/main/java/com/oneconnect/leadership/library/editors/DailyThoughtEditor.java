@@ -145,24 +145,35 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 .concat(key));
         dailyThought.setDailyThoughtID(key);
         bottomSheetListener.onWorkDone(dailyThought);
-        data = new Data();
-        fcmUser = new FCMUserDTO();
-        payLoad = new PayLoad();
-        fcmMessage = new FCMessageDTO();
-        data.setUserID(user.getUserID());
-        data.setTitle(dailyThought.getSubtitle());
-        data.setFromUser(user.getFullName());
-        data.setMessageType(DAILY_THOUGHT);
-        data.setMessage(dailyThought.getTitle() /*+ " - " + dailyThought.getSubtitle()*/);
-        data.setDate(new Date().getTime());
-        payLoad.setData(data);
-        fcmMessage.setCompanyID(user.getCompanyID());
-        fcmMessage.setDailyThoughtID(dailyThought.getDailyThoughtID());
-        fcmMessage.setTitle(dailyThought.getSubtitle());
-        fcmMessage.setData(data);
-        endpointPresenter.sendDailyThought(user.getCompanyID(), payLoad);
-        endpointPresenter.sendMessage(fcmMessage);
-        endpointPresenter.sendCompanyMessage(user.getCompanyID(), payLoad);
+
+        if (dailyThought.getStatus().equalsIgnoreCase(Constants.APPROVED)) {
+            data = new Data();
+            fcmUser = new FCMUserDTO();
+            payLoad = new PayLoad();
+            fcmMessage = new FCMessageDTO();
+            data.setUserID(user.getUserID());
+            data.setTitle(dailyThought.getSubtitle());
+            data.setFromUser(user.getFullName());
+            data.setMessageType(DAILY_THOUGHT);
+            data.setMessage(dailyThought.getTitle() /*+ " - " + dailyThought.getSubtitle()*/);
+            data.setDate(new Date().getTime());
+            payLoad.setData(data);
+            fcmMessage.setCompanyID(user.getCompanyID());
+            fcmMessage.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            fcmMessage.setTitle(dailyThought.getSubtitle());
+            fcmMessage.setData(data);
+            if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT)) {
+                endpointPresenter.sendDailyThought(user.getCompanyID(), payLoad);
+            }
+            if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT)) {
+                   endpointPresenter.sendDailyThought(user.getCompanyID(), payLoad);
+            //    endpointPresenter.sendMessage(fcmMessage);
+            }
+        } else {
+            Log.w(TAG, "daily thought status not approved");
+        }
+
+       // endpointPresenter.sendCompanyMessage(user.getCompanyID(), payLoad);
        // endpointPresenter.s
         /*if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT)){
             endpointPresenter.sendCompanyMessage(user.getCompanyID(), payLoad);

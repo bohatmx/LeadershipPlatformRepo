@@ -281,7 +281,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                     break;
             }
 
-            IntentFilter filter = new IntentFilter(CompanyMessagingService.BROADCAST_MESSAGE_RECEIVED);
+            IntentFilter filter = new IntentFilter(CompanyMessagingService.BROADCAST_COMPANY_MESSAGE_RECEIVED);
             LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());

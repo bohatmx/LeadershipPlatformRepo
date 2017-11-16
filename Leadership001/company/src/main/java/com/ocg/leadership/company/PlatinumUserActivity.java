@@ -284,7 +284,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
                     break;
             }
 
-            IntentFilter filter = new IntentFilter(CompanyMessagingService.BROADCAST_MESSAGE_RECEIVED);
+            IntentFilter filter = new IntentFilter(CompanyMessagingService.BROADCAST_COMPANY_MESSAGE_RECEIVED);
             LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -572,11 +572,11 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
             @Override
             public void onWorkDone(BaseDTO entity) {
                 NewsDTO m = (NewsDTO) entity;
-                /*if (bag.getNews() == null) {
+                if (bag.getNews() == null) {
                     bag.setNews(new ArrayList<NewsDTO>());
                 }
                 bag.getNews().add(0, m);
-                setFragment();*/
+               // setFragment();
                 showSnackbar(m.getTitle().concat(" is being added"), getString(R
                         .string.ok_label), "green");
 

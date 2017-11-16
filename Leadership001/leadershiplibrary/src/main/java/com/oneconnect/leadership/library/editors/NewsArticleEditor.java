@@ -415,7 +415,14 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
             editContent.setError(getString(R.string.enter_article_content));
             return;
         }
-        Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");
+
+        if(catSpinner == null) {
+            isReadyToSend = true;
+            bottomSheetListener.onError("Choose a category");
+            return;
+        }
+
+        Log.d(TAG, "send: @@@@@@@@@@@ starting to send article to Firebase");
         if (article == null) {
             article = new NewsDTO();
             UserDTO me = SharedPrefUtil.getUser(getActivity());
@@ -434,11 +441,7 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
             article.setDateScheduled(selectedDate.getTime());
         }
 
-        if(catSpinner == null) {
-            isReadyToSend = true;
-            bottomSheetListener.onError("Choose a category");
-            return;
-        }
+
         article.setTitle(editTitle.getText().toString());
         article.setSubtitle(editSubtitle.getText().toString());
         article.setBody(editContent.getText().toString());
@@ -462,10 +465,10 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
 
     public void setSelectedDate(Date selectedDate) {
 
-        timePickerFragment = new TimePickerFragment();
-        timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");
+        /*timePickerFragment = new TimePickerFragment();
+        timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");*/
 
-        this.selectedDate  = timePickerFragment.getSetTime(selectedDate);/*Util.getDateAtMidnite(selectedDate);*/
+        this.selectedDate  = /*timePickerFragment.getSetTime(selectedDate);*/Util.getDateAtMidnite(selectedDate);
         btnDate.setText(sdf.format(this.selectedDate));
         if (article != null) {
             article.setDateScheduled(this.selectedDate.getTime());

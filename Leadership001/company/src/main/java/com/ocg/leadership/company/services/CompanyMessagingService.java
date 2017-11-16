@@ -33,7 +33,8 @@ public class CompanyMessagingService extends FirebaseMessagingService {
 
     public static final String TAG = CompanyMessagingService.class.getSimpleName(),
             BROADCAST_LOCATION_RESPONSE_ARRIVED = "com.oneconnect.BROADCAST_LOCATION_RESPONSE_ARRIVED",
-            BROADCAST_MESSAGE_RECEIVED = "com.oneconnect.BROADCAST_MESSAGE_RECEIVED";
+           /* BROADCAST_MESSAGE_RECEIVED = "com.oneconnect.BROADCAST_MESSAGE_RECEIVED";*/
+    BROADCAST_COMPANY_MESSAGE_RECEIVED = "com.oneconnect.BROADCAST_COMPANY_MESSAGE_RECEIVED";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -48,7 +49,7 @@ public class CompanyMessagingService extends FirebaseMessagingService {
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
             if (isRunning) {
-                Intent m = new Intent(BROADCAST_MESSAGE_RECEIVED);
+                Intent m = new Intent(BROADCAST_COMPANY_MESSAGE_RECEIVED);
                 FCMData f = new FCMData();
                 f.setTitle(title);
                 f.setMessage(body);
@@ -87,12 +88,19 @@ public class CompanyMessagingService extends FirebaseMessagingService {
             if (data.getMessageType() == EndpointUtil.COMPANY) {
                 Log.w(TAG, "onMessageReceived: responding to company ....");
             }
+
+            if (data.getMessageType() == EndpointUtil.DAILY_THOUGHT) {
+                Log.w(TAG, "onMessageReceived: responding to DailyThought ...");
+            //    sendNotification(data);
+
+            }
+
             if (isRunning) {
-                Intent m = new Intent(BROADCAST_MESSAGE_RECEIVED);
+                Intent m = new Intent(BROADCAST_COMPANY_MESSAGE_RECEIVED);
                 m.putExtra("data", data);
                 LocalBroadcastManager bm = LocalBroadcastManager.getInstance(getApplicationContext());
                 bm.sendBroadcast(m);
-                Log.w(TAG, "onMessageReceived: BROADCAST_MESSAGE_RECEIVED has been broadcast to app" );
+                Log.w(TAG, "onMessageReceived: BROADCAST_COMPANY_MESSAGE_RECEIVED has been broadcast to app" );
             } else {
                 sendNotification(data);
             }

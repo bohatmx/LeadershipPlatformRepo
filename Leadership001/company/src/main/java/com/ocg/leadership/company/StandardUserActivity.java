@@ -99,6 +99,7 @@ import com.oneconnect.leadership.library.util.DepthPageTransformer;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -250,7 +251,7 @@ public class StandardUserActivity extends AppCompatActivity implements  Navigati
                     break;
             }
 
-            IntentFilter filter = new IntentFilter(CompanyMessagingService.BROADCAST_MESSAGE_RECEIVED);
+            IntentFilter filter = new IntentFilter(CompanyMessagingService.BROADCAST_COMPANY_MESSAGE_RECEIVED);
             LocalBroadcastManager.getInstance(this).registerReceiver(new MessageReceiver(), filter);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -716,18 +717,15 @@ public class StandardUserActivity extends AppCompatActivity implements  Navigati
             public void run() {
                 Bitmap bmImg = null;
                 try  {
-                    //Your code goes here
                     try {
-                        bmImg = BitmapFactory.decodeStream((Base64.InputStream)new URL(url).getContent());
+                        bmImg = BitmapFactory.decodeStream((InputStream)new URL(url).getContent());
                     } catch (IOException e) {
                         Log.e(TAG, e.getMessage());
-                        // e.printStackTrace();
                     }
                     BitmapDrawable background = new BitmapDrawable(bmImg);
                     nav_layout.setBackgroundDrawable(background);
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
-                    //  e.printStackTrace();
                 }
             }
         });
