@@ -119,7 +119,7 @@ public class CompanyMessagingService extends FirebaseMessagingService {
         StringBuilder sb = new StringBuilder();
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_clipboard)
+                        .setSmallIcon(R.drawable.harmony)
                         .setDefaults(Notification.DEFAULT_SOUND)
                         .setContentTitle(message.getTitle())
                         .setContentText(message.getMessage());
