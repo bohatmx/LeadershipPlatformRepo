@@ -354,6 +354,7 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
         editContent = (TextInputEditText) view.findViewById(R.id.editContent);
         editContent.setHint("Enter article content");
         btnDate = (Button) view.findViewById(R.id.btnDate);
+        btnDate.setVisibility(View.GONE);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -433,15 +434,16 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
             article.setJournalUserName(me.getFullName());
 
         }
-        if (selectedDate == null) {
+        /*if (selectedDate == null) {
             isReadyToSend = true;
             bottomSheetListener.onDateRequired();
             return;
         } else {
             article.setDateScheduled(selectedDate.getTime());
-        }
+        }*/
 
-
+        //
+        article.setDateScheduled(new Date().getTime());
         article.setTitle(editTitle.getText().toString());
         article.setSubtitle(editSubtitle.getText().toString());
         article.setBody(editContent.getText().toString());
@@ -463,12 +465,31 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
 
     TimePickerFragment timePickerFragment;
 
-    public void setSelectedDate(Date selectedDate) {
+    /*public void setSelectedDate(Date selectedDate) {
+        timePickerFragment = new TimePickerFragment();
+        timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");
+        // timePickerFragment.show(getFragmentManager()*//*getSupportFragmentManager()*//*,"PROGRESS_SHEET");
 
-        /*timePickerFragment = new TimePickerFragment();
-        timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");*/
+        // timePickerFragment.getSetTime(selectedDate);
 
-        this.selectedDate  = /*timePickerFragment.getSetTime(selectedDate);*/Util.getDateAtMidnite(selectedDate);
+        this.selectedDate  = timePickerFragment.getSetTime(selectedDate)*//*selectedDate*//**//*Util.getDateAtMidnite(selectedDate)*//*;
+        btnDate.setText(sdf.format(this.selectedDate));
+        if (article != null) {
+            article.setDateScheduled(this.selectedDate.getTime());
+            if (isReadyToSend) {
+                isReadyToSend = false;
+                send();
+            }
+
+        }
+    }*/
+
+   /* public void setSelectedDate(Date selectedDate) {
+
+        timePickerFragment = new TimePickerFragment();
+        timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");
+
+        this.selectedDate  = *//*timePickerFragment.getSetTime(selectedDate);*//*Util.getDateAtMidnite(selectedDate);
         btnDate.setText(sdf.format(this.selectedDate));
         if (article != null) {
             article.setDateScheduled(this.selectedDate.getTime());
@@ -480,7 +501,7 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
         }
 
 
-    }
+    }*/
     public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy");
     public static final String TAG = NewsArticleEditor.class.getSimpleName();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

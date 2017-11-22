@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.editors;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -48,6 +49,7 @@ import com.oneconnect.leadership.library.activities.SheetContract;
 import com.oneconnect.leadership.library.activities.SheetPresenter;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.activities.VideoRecordActivity;
 import com.oneconnect.leadership.library.adapters.CategoryAdapter;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
@@ -58,6 +60,8 @@ import com.oneconnect.leadership.library.cache.CachePresenter;
 import com.oneconnect.leadership.library.cache.CategoryCache;
 import com.oneconnect.leadership.library.camera.CameraActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
+import com.oneconnect.leadership.library.camera.VideoUploadContract;
+import com.oneconnect.leadership.library.camera.VideoUploadPresenter;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
@@ -112,14 +116,14 @@ import static com.oneconnect.leadership.library.fcm.EndpointUtil.DAILY_THOUGHT;
 
 public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract.View,
         SubscriberContract.View, PodcastUploadContract.View,CacheContract.View,
-        CategoryAdapter.CategoryAdapterListener, EndpointContract.View{
+        CategoryAdapter.CategoryAdapterListener, EndpointContract.View, VideoUploadContract.View{
     private DailyThoughtDTO dailyThought;
 
 
     private TextInputEditText editTitle, editSubtitle;
     private RecyclerView recyclerView;
     private ImageView iconCamera, iconVideo, iconDate, iconURLs, iconMicrophone;
-    TextView timer;
+    TextView timer, videoPath;
     private View iconLayout;
     private Button btn, btnDate;
     private Date selectedDate;
@@ -127,6 +131,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private SubscriberPresenter Catpresenter;
     FirebaseStorageAPI fbs;
     private PodcastUploadPresenter podcastUploadPresenter;
+    private VideoUploadPresenter videoUploadPresenter;
     private CrudPresenter crudPresenter;
     private CachePresenter cachePresenter;
     private RadioButton internalButton, globalButton;
@@ -173,11 +178,12 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             Log.w(TAG, "daily thought status not approved");
         }
 
-       // endpointPresenter.sendCompanyMessage(user.getCompanyID(), payLoad);
-       // endpointPresenter.s
-        /*if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT)){
-            endpointPresenter.sendCompanyMessage(user.getCompanyID(), payLoad);
-        }*/
+        if (getOutputFile() != null) {
+            AudioSavePathInDevice = getOutputFile().getAbsolutePath();
+            sendPodcastWithDailyThought(AudioSavePathInDevice);
+        }
+
+
 
         this.dismiss();
         //
@@ -552,6 +558,12 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     private static final DecimalFormat df = new DecimalFormat("##0.00");
 
     @Override
+    public void onVideoUploaded(String key) {
+        progressBottomSheet.dismiss();
+        showSnackbar("video has been uploaded", "OK", Constants.GREEN);
+    }
+
+    @Override
     public void onProgress(long transferred, long size) {
         float percent = (float) transferred * 100 / size;
         Log.i(TAG, "onProgress: video upload, transferred: "
@@ -598,16 +610,19 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     FirebaseAuth firebaseAuth;
+    Context ctx;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dailyThought = (DailyThoughtDTO) getArguments().getSerializable("dailyThought");
         type = getArguments().getInt("type", 0);
+        ctx = getActivity();
         presenter = new SheetPresenter(this);
         Catpresenter = new SubscriberPresenter(this);
         cachePresenter = new CachePresenter(this, getActivity());
         fbs = new FirebaseStorageAPI();
         podcastUploadPresenter = new PodcastUploadPresenter(this);
+        videoUploadPresenter = new VideoUploadPresenter(this);
         endpointPresenter = new EndpointPresenter(this);
         firebaseAuth = FirebaseAuth.getInstance();
         Catpresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
@@ -633,7 +648,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                     send();
                 /*}*/
 
-
             }
         });
         editTitle = (TextInputEditText) view.findViewById(R.id.editTitle);
@@ -653,7 +667,6 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         timer.setVisibility(View.GONE);
         iconVideo = (ImageView) view.findViewById(R.id.iconVideo);
         iconMicrophone = (ImageView) view.findViewById(R.id.iconMicrophone);
-        iconMicrophone.setVisibility(View.GONE);
         iconMicrophone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -662,12 +675,37 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
                 timer.setVisibility(View.VISIBLE);
             }
         });
+        videoPath = (TextView) view.findViewById(R.id.videoPath);
+        videoPath.setVisibility(View.GONE);
+        iconVideo = (ImageView) view.findViewById(R.id.iconVideo);
+        iconVideo.setVisibility(View.GONE);
+        /*iconVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startVideo();
+                iconVideo.setVisibility(View.GONE);
+                videoPath.setVisibility(View.VISIBLE);
+            }
+        });*/
 
         getCachedCategories();
         getCategories();
 
         return view;
     }
+
+
+    private void startVideo() {
+        Intent intent = new Intent(/*ctx*/getApplicationContext(), VideoRecordActivity.class);
+        intent.putExtra("type", VideoRecordActivity.VIDEO_REQUEST);
+        intent.putExtra("dailyThought", dailyThought);
+        /*if (hexColor != null) {
+            intent.putExtra("hexColor", hexColor);
+        }*/
+        startActivityForResult(intent, VideoRecordActivity.VIDEO_REQUEST);
+    }
+
+
     private MediaRecorder mRecorder;
     private File mOutputFile;
     private long mStartTime = 0;
@@ -713,6 +751,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         }
     }
     String AudioSavePathInDevice = null;
+    String VideoSavePathInDevice = null;
 
     private void startRecording() {
         mRecorder = new MediaRecorder();
@@ -840,10 +879,26 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
 
     private boolean isReadyToSend;
 
-    /*private void setCategories() {
-        selectedcategories = categoryList;
-       // setCategorySpinner();
-    }*/
+    private void sendVideoWithDailyThought(String path) {
+        VideoDTO video = new VideoDTO();
+        video.setCompanyName(user.getCompanyName());
+        video.setCompanyID(user.getCompanyID());
+        video.setFilePath(path);
+        File file = new File(path);
+        video.setVideoSize(file.length());
+        video.setActive(true);
+
+        switch (type) {
+
+            case ResponseBag.DAILY_THOUGHTS:
+                video.setDailyThoughtID(dailyThought.getDailyThoughtID());
+                break;
+        }
+        openProgressSheet();
+        video.setDailyThoughtID(dailyThought.getDailyThoughtID());
+        videoUploadPresenter.uploadVideo(video);
+        //
+    }
 
     private void sendPodcastWithDailyThought(String path) {
         PodcastDTO v = new PodcastDTO();
@@ -867,13 +922,9 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         switch (type) {
 
             case ResponseBag.DAILY_THOUGHTS:
-
                 v.setDailyThoughtID(dailyThought.getDailyThoughtID());
-
                 v.setSubjectTitle(dailyThought.getTitle());
-
                 v.setSubtitle(dailyThought.getTitle());
-
                 break;
         }
 

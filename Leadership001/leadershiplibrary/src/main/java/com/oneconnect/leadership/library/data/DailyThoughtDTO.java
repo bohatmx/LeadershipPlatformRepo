@@ -90,29 +90,6 @@ public class DailyThoughtDTO extends BaseDTO implements  Serializable, Comparabl
         this.users = users;
     }
 
-    /*public List<VideoDTO> getVideoList() {
-            return videoList;
-        }
-
-        public void setVideoList(List<VideoDTO> videoList) {
-            this.videoList = videoList;
-        }
-
-        public List<PhotoDTO> getPhotoList() {
-            List<PhotoDTO> list = new ArrayList<>();
-            if (*//*photos*//*photoList != null) {
-            for (PhotoDTO p: photoList*//*photos.values()*//*) {
-                list.add(p);
-            }
-        }
-        return list*//*photos*//*;
-        *//*return photoList;*//*
-    }
-
-    public void setPhotoList(List<PhotoDTO> photoList) {
-        this.photoList = photoList;
-    }
-*/
     public HashMap<String, PhotoDTO> getPhotos() {
         return photos;
     }

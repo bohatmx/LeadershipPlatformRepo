@@ -860,7 +860,7 @@ public class DataAPI {
             @Override
             public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
                 if (databaseError == null) {
-                    Log.i(TAG, "------------- onComplete: calendar rating added: ");
+                    Log.i(TAG, "------------- onComplete: rating added: ");
                     rating.setRatingID(responseRef.getKey());
                     responseRef.child("ratingID").setValue(responseRef.getKey());
                     addRatingToEntity(rating,listener);

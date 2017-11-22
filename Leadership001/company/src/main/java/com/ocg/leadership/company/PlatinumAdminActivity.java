@@ -795,7 +795,13 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
             startActivity(intent);
         }*/
         if (id == R.id.action_refresh) {
-            startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+            Intent intent = new Intent(this, CreateDailyThoughtActivity.class);
+            intent.putExtra("user", user);
+            if (hexColor != null) {
+                intent.putExtra("hexColor", hexColor);
+            }
+            startActivity(intent);
+          //  startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
             return true;
         }
         /*if (id == R.id.action_settings){
@@ -1072,7 +1078,7 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
         presenter.getCompanyProfile(user.getCompanyID());
     }
 
-    String hexColor;
+    String hexColor, secondaryColor;
 
     @Override
     public void onCompanyFound(CompanyDTO company) {
@@ -1094,11 +1100,11 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
             nav_layout.setBackgroundColor(Color.parseColor(hexColor));
 
         } if (company.getSecondaryColor() != 0) {
-            Log.i(TAG, "*** converting primary color to a hex color ***");
-            hexColor = String.format("#%06X", (0xFFFFFF & company.getSecondaryColor()));
-            strip.setUnderlineColor(Color.parseColor(hexColor));
-            strip.setIndicatorColor(Color.parseColor(hexColor));
-            strip.setDividerColor(Color.parseColor(hexColor));
+            Log.i(TAG, "*** converting secondary color ***");
+            secondaryColor = String.format("#%06X", (0xFFFFFF & company.getSecondaryColor()));
+            strip.setUnderlineColor(Color.parseColor(secondaryColor));
+            strip.setIndicatorColor(Color.parseColor(secondaryColor));
+            strip.setDividerColor(Color.parseColor(secondaryColor));
         } else {
             strip.setUnderlineColor(Color.WHITE);
             strip.setIndicatorColor(Color.WHITE);

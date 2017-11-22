@@ -187,6 +187,8 @@
             android:name="com.oneconnect.leadership.library.activities.VideoRecordActivity"
             android:label="@string/title_activity_video"
             android:theme="@style/CommuterTheme"></activity>
+
+        <activity android:name="com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity"/>
     </application>
 
 </manifest>

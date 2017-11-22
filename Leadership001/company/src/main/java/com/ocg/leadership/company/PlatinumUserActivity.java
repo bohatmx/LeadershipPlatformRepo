@@ -58,6 +58,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ocg.leadership.company.services.CompanyMessagingService;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
+import com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -572,19 +573,19 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
             @Override
             public void onWorkDone(BaseDTO entity) {
                 NewsDTO m = (NewsDTO) entity;
-                if (bag.getNews() == null) {
+                /*if (bag.getNews() == null) {
                     bag.setNews(new ArrayList<NewsDTO>());
                 }
-                bag.getNews().add(0, m);
-               // setFragment();
-                showSnackbar(m.getTitle().concat(" is being added"), getString(R
+                bag.getNews().add(0, m);*/
+              //  setFragment();
+                showSnackbar(m.getTitle().concat(" is being added/updated"), getString(R
                         .string.ok_label), "green");
 
             }
 
             @Override
             public void onDateRequired() {
-                getDate(ResponseBag.NEWS);
+                /*getDate(ResponseBag.NEWS);*/
             }
 
             @Override
@@ -800,8 +801,14 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
             //   return true;
         }
         if (id == R.id.action_refresh) {
-            startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
-            return true;
+            Intent intent = new Intent(this, CreateDailyThoughtActivity.class);
+            if (hexColor != null)  {
+                intent.putExtra("hexColor", hexColor);
+            }
+            startActivity(intent);
+
+            /*startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+            return true;*/
         }
         if (id == R.id.action_article) {
             startNewsArticleBottomSheet(null, Constants.NEW_ENTITY);
@@ -1089,7 +1096,8 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         presenter.getCompanyProfile(user.getCompanyID());
     }
 
-    String hexColor;
+    String hexColor, secondaryColor;
+
     ImageView logoIMG;
 
     @Override
@@ -1113,10 +1121,10 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         }
         if (company.getSecondaryColor() != 0) {
             Log.i(TAG, "*** converting primary color to a hex color ***");
-            hexColor = String.format("#%06X", (0xFFFFFF & company.getSecondaryColor()));
-            strip.setUnderlineColor(Color.parseColor(hexColor));
-            strip.setIndicatorColor(Color.parseColor(hexColor));
-            strip.setDividerColor(Color.parseColor(hexColor));
+            secondaryColor = String.format("#%06X", (0xFFFFFF & company.getSecondaryColor()));
+            strip.setUnderlineColor(Color.parseColor(secondaryColor));
+            strip.setIndicatorColor(Color.parseColor(secondaryColor));
+            strip.setDividerColor(Color.parseColor(secondaryColor));
         } else {
             strip.setUnderlineColor(Color.WHITE);
             strip.setIndicatorColor(Color.WHITE);

@@ -52,6 +52,7 @@ import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -314,6 +315,8 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
         snackbar.show();
     }
 
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy HH:mm:ss");
+
     private void uploadRating(){
         Log.d(LOG, "****uploadingRating****");
        // showSnackbar("Uploading Rating ...", "OK", Constants.CYAN);
@@ -330,6 +333,7 @@ public class RatingActivity extends AppCompatActivity implements RatingContract.
             rate.setComment(ratingCom.getText().toString());
         }
         rate.setDate(new Date().getTime());
+        //rate.setStringDate(sdf.format(new Date()));
         switch (type){
             case ResponseBag.DAILY_THOUGHTS:
                 rate.setDailyThoughtID(dailyThought.getDailyThoughtID());

@@ -129,6 +129,27 @@ app:cardElevation="@dimen/mon_padding">
             android:textStyle="bold"
             android:id="@+id/timer"/>
 
+        <ImageView
+            android:layout_marginRight="@dimen/mon_16"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/layoutb"
+            android:id="@+id/iconVideo"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:srcCompat="@drawable/ic_microphone"
+            android:tint="@color/teal_700" />
+        <TextView
+            android:layout_marginRight="@dimen/mon_16"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutb"
+            android:text="video name"
+            android:textColor="@color/teal_700"
+            android:typeface="monospace"
+            android:textStyle="bold"
+            android:id="@+id/videoPath"/>
+
     </RelativeLayout>
 
 

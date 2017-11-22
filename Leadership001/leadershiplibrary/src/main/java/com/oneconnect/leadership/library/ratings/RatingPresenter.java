@@ -33,16 +33,5 @@ public class RatingPresenter implements RatingContract.Presenter {
                view.onError(message);
            }
        });
-        /* api.addRatingToEntity(rating, new DataAPI.DataListener() {
-            @Override
-            public void onResponse(String key) {
-                view.onRatingUploaded(key);
-            }
-
-            @Override
-            public void onError(String message) {
-                view.onError(message);
-            }
-        }); */
     }
 }

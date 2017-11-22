@@ -1,6 +1,7 @@
 package com.oneconnect.leadership.library.activities;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,15 +16,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ocg.backend.endpointAPI.model.Data;
+import com.ocg.backend.endpointAPI.model.EmailResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMUserDTO;
+import com.ocg.backend.endpointAPI.model.FCMessageDTO;
+import com.ocg.backend.endpointAPI.model.PayLoad;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.adapters.CreateDailyThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.MyDailyThoughtAdapter;
@@ -54,6 +70,8 @@ import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.editors.DailyThoughtEditor;
+import com.oneconnect.leadership.library.fcm.EndpointContract;
+import com.oneconnect.leadership.library.fcm.EndpointPresenter;
 import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.lists.BaseListingFragment;
 import com.oneconnect.leadership.library.lists.BasicEntityAdapter;
@@ -61,8 +79,10 @@ import com.oneconnect.leadership.library.lists.EntityListFragment;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.TimePickerFragment;
 import com.oneconnect.leadership.library.util.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -70,10 +90,12 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
+import static android.view.View.GONE;
 import static com.oneconnect.leadership.library.ebook.EbookListFragment.REQUEST_LINKS;
+import static com.oneconnect.leadership.library.fcm.EndpointUtil.DAILY_THOUGHT;
 
-public class CreateDailyThoughtActivity extends AppCompatActivity implements CrudContract.View, CacheContract.View,
-        CreateDailyThoughtAdapter.CreateThoughtListener {
+public class CreateDailyThoughtActivity extends AppCompatActivity implements CrudContract.View,
+        CreateDailyThoughtAdapter.CreateThoughtListener, EndpointContract.View {
 
     CrudPresenter presenter;
     private CachePresenter cachePresenter;
@@ -81,12 +103,24 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     ResponseBag bag;
     private UserDTO user;
     private int type;
-    EntityListFragment entityListFragment;
     RecyclerView recyclerView;
-    ImageView iconAdd;
-    TextView txtCount, txtTitle;
-    //CreateDailyThoughtAdapter adapter;
+    EditText editTitle, editSubtitle;
+    ImageView iconDelete, iconLink, iconMicrophone, iconVideo, iconCamera;
+    TextView txtLinks ,txtMicrophone, txtVideo, txtCamera;
     MyDailyThoughtAdapter adapter;
+    LinearLayout iconLayout;
+    Button btn, btnDate, btnDone;
+    private RadioButton internalButton, globalButton;
+    private Spinner catSpinner;
+    CategoryDTO category;
+    String hexColor;
+    FirebaseAuth firebaseAuth;
+
+    Data data;
+    PayLoad payLoad;
+    EndpointPresenter endpointPresenter;
+    FCMessageDTO fcmMessage;
+    FCMUserDTO fcmUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,123 +130,313 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         if (getIntent().getSerializableExtra("user") != null) {
             user = (UserDTO) getIntent().getSerializableExtra("user");
-
         }
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        iconAdd = (ImageView) findViewById(R.id.iconAdd);
-        txtCount = (TextView) findViewById(R.id.txtCount);
-        txtTitle = (TextView) findViewById(R.id.txtTitle);
-        iconAdd.setOnClickListener(new View.OnClickListener() {
+        if (getIntent().getSerializableExtra("hexColor") != null) {
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
+            toolbar.setBackgroundColor(Color.parseColor(hexColor));
+        }
+
+
+        btn = (Button) findViewById(R.id.btn);
+        btnDone = (Button) findViewById(R.id.btnDone);
+        btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
-              /*  Util.flashOnce(iconAdd, 300, new Util.UtilAnimationListener() {
-                    @Override
-                    public void onAnimationEnded() {
-                    startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
-                    }
-                });*/
+            public void onClick(View v) {
+                editTitle.setText(" ");
+                editSubtitle.setText(" ");
+                editTitle.setHint("Enter Thought");
+                editSubtitle.setHint("Enter thought author");
+                finish();
+            }
+        });
+        btnDone.setVisibility(GONE);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                send();
             }
         });
 
+        iconLayout = (LinearLayout) findViewById(R.id.iconLayout);
+        iconLayout.setVisibility(GONE);
+        iconDelete = (ImageView) findViewById(R.id.iconDelete);
+        iconDelete.setVisibility(GONE);
+        iconLink = (ImageView) findViewById(R.id.iconLink);
+        iconLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateDailyThoughtActivity.this, LinksActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivity(intent);
+            }
+        });
+        iconMicrophone = (ImageView) findViewById(R.id.iconMicrophone);
+        iconMicrophone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateDailyThoughtActivity.this, PodcastSelectionActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivity(intent);
+            }
+        });
+        iconVideo = (ImageView) findViewById(R.id.iconVideo);
+        iconVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateDailyThoughtActivity.this, VideoSelectionActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivity(intent);
+            }
+        });
+        iconCamera = (ImageView) findViewById(R.id.iconCamera);
+        iconCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateDailyThoughtActivity.this, PhotoSelectionActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivity(intent);
+            }
+        });
+
+        txtLinks = (TextView) findViewById(R.id.txtLinks);
+        txtMicrophone = (TextView) findViewById(R.id.txtMicrophone);
+        txtVideo = (TextView) findViewById(R.id.txtVideo);
+        txtCamera = (TextView) findViewById(R.id.txtCamera);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        editTitle = (EditText) findViewById(R.id.editTitle);
+        editTitle.setHint("Enter Thought");
+        editSubtitle = (EditText) findViewById(R.id.editSubtitle);
+        editSubtitle.setHint("Enter thought author");
+
+        internalButton = (RadioButton) findViewById(R.id.internalButton);
+        globalButton = (RadioButton) findViewById(R.id.globalButton);
+
+        catSpinner = (Spinner) findViewById(R.id.Catspinner);
+
+        btnDate = (Button) findViewById(R.id.btnDate);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDate();
+             //   bottomSheetListener.onDateRequired();
+            }
+        });
 
         presenter = new CrudPresenter(this);
-        cachePresenter = new CachePresenter(this, this);
-        user = SharedPrefUtil.getUser(this);
-        type = SharedPrefUtil.getFragmentType(this);
-        if (type == 0) {
-            cachePresenter.getCacheUsers();
+        endpointPresenter = new EndpointPresenter(this);
+
+        if (user != null) {
+            presenter.getCategories(user.getCompanyID());
         } else {
-            switch (type) {
-                case ResponseBag.CATEGORIES:
-                    cachePresenter.getCacheCategories();
-                    break;
-                case ResponseBag.DAILY_THOUGHTS:
-                    cachePresenter.getCacheDailyThoughts();
-                    break;
-                case ResponseBag.EBOOKS:
-                    cachePresenter.getCacheEbooks();
-                    break;
-                case ResponseBag.PODCASTS:
-                    cachePresenter.getCachePodcasts();
-                    break;
-                case ResponseBag.NEWS:
-                    cachePresenter.getCacheNews();
-                    break;
-                case ResponseBag.PRICES:
-                    cachePresenter.getCachePrices();
-                    break;
-                case ResponseBag.SUBSCRIPTIONS:
-                    cachePresenter.getCacheSubscriptions();
-                    break;
-                case ResponseBag.USERS:
-                    cachePresenter.getCacheUsers();
-                    break;
-                case ResponseBag.WEEKLY_MASTERCLASS:
-                    cachePresenter.getCacheWeeklyMasterclasses();
-                    break;
-                case ResponseBag.WEEKLY_MESSAGE:
-                    cachePresenter.getCacheWeeklyMessages();
-                    break;
-                case ResponseBag.PHOTOS:
-                    break;
-                case ResponseBag.VIDEOS:
-                    cachePresenter.getCacheVideos();
-                    break;
-                case ResponseBag.PAYMENTS:
-                    break;
+            presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
+        }
+
+    }
+
+    TimePickerFragment timePickerFragment;
+    TimePickerDialog timePickerDialog;
+    int hours, minute;
+
+    public void setSelectedDate(Date selectedDate) {
+        timePickerFragment = new TimePickerFragment();
+        timePickerFragment.show(getFragmentManager(), "DIALOG_TIME");
+        // timePickerFragment.getSetTime(selectedDate);
+
+        this.selectedDate  = timePickerFragment.getSetTime(selectedDate)/*selectedDate*//*Util.getDateAtMidnite(selectedDate)*/;
+        btnDate.setText(sdf.format(this.selectedDate));
+        if (dailyThought != null) {
+            dailyThought.setDateScheduled(this.selectedDate.getTime());
+            if (isReadyToSend) {
+                isReadyToSend = false;
+                send();
             }
-          //  startPhotoService();
-         //   startVideoService();
-       // entityListFragment = (EntityListFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
-        user = SharedPrefUtil.getUser(this);
-    }
-    }
-    private void setFragment() {
-        Log.w(TAG, "setFragment: starting new fragment");
-        SharedPrefUtil.saveFragmentType(bag.getType(), this);
-        type = bag.getType();
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-        entityListFragment = EntityListFragment.newInstance(bag);
-        //   entityListFragment.setListener(this);
-
-        ft.replace(R.id.frame, entityListFragment);
-        ft.commit();
+        }
     }
 
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    static final String TAG = CreateDailyThoughtActivity.class.getSimpleName();
-    private DailyThoughtEditor dailyThoughtEditor;
+    private void send() {
+
+        if (TextUtils.isEmpty(editTitle.getText())) {
+            editTitle.setError(getString(R.string.enter_thought));
+            return;
+        }
+
+        if (TextUtils.isEmpty(editSubtitle.getText())) {
+            editTitle.setError(getString(R.string.enter_thought_author));
+            return;
+        }
+
+        if(catSpinner == null) {
+            isReadyToSend = true;
+            showSnackbar("Choose a category", "OK", "red");
+        //    bottomSheetListener.onError("Choose a category");
+            return;
+        }
+
+        Log.d(TAG, "send: @@@@@@@@@@@ starting to send daily thought to Firebase");
+
+        if (dailyThought == null) {
+            dailyThought = new DailyThoughtDTO();
+           // UserDTO me = SharedPrefUtil.getUser(getActivity());
+            if (user != null) {
+                dailyThought.setCompanyID(user.getCompanyID());
+                dailyThought.setCompanyName(user.getCompanyName());
+                // dailyThought.setUser(me);
+
+                dailyThought.setActive(true);
+                dailyThought.setJournalUserID(user.getUserID());
+                dailyThought.setJournalUserName(user.getFirstName() + " " + user.getLastName());
+            } //else if (user)
+
+
+        }
+        /*if (selectedDate == null) {
+            isReadyToSend = true;
+         //   bottomSheetListener.onDateRequired();
+            return;
+        } *//*else {
+
+        }*/
+        if (d != null) {
+            dailyThought.setDateScheduled(d.getTime()/*getDate()*//*();selectedDate.getTime()*/);
+        }
+        // category.setCategoryName(/*catSpinner.getSelectedItem().toString()*/);
+        dailyThought.setTitle(editTitle.getText().toString());
+        dailyThought.setSubtitle(editSubtitle.getText().toString());
+        if (category != null) {
+        dailyThought.setCategory(category);
+        }
+
+        if (user.getUserType() == UserDTO.GOLD_USER) {
+            globalButton.setVisibility(GONE);
+        }
+        if (user.getUserType() == UserDTO.COMPANY_ADMIN) {
+            globalButton.setVisibility(GONE);
+        }
+        if (user.getUserType() == UserDTO.PLATINUM_ADMIN) {
+            globalButton.setVisibility(GONE);
+        }
+
+
+        if (internalButton.isChecked()) {
+            dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT);
+            dailyThought.setDailyThoughtType(DailyThoughtDTO.INTERNAL_DAILY_THOUGHT);
+            if (user.getUserType() == UserDTO.PLATINUM_USER) {
+                dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+            }
+            else if (user.getUserType() == UserDTO.PLATINUM_ADMIN) {
+                dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+            }
+            else if (user.getUserType() == UserDTO.COMPANY_ADMIN) {
+                dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+            }
+            else if (user.getUserType() == UserDTO.GOLD_USER) {
+                dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.PENDING));
+            }
+        }
+        if (globalButton.isChecked()) {
+            dailyThought.setDailyThoughtDescription(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT);
+            dailyThought.setDailyThoughtType(DailyThoughtDTO.GLOBAL_DAILY_THOUGHT);
+            if (user.getUserType() == UserDTO.PLATINUM_USER) {
+                dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+            }
+            else if (user.getUserType() == UserDTO.PLATINUM_ADMIN) {
+                dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+            }
+            else if (user.getUserType() == UserDTO.COMPANY_ADMIN) {
+                dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
+            }
+            else if (user.getUserType() == UserDTO.GOLD_USER) {
+                dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.PENDING));
+            }
+        }
+        if (user.getUserType() == UserDTO.PLATINUM_USER) {
+            dailyThought.setStatus(Constants.APPROVED);
+            dailyThought.setUserType(UserDTO.DESC_PLATINUM_USER);
+            dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.APPROVED));
+            //  dailyThought.setDailyThoughtType_status();
+        }
+        else if(user.getUserType() == UserDTO.PLATINUM_ADMIN){
+            dailyThought.setStatus(Constants.APPROVED);
+            dailyThought.setUserType(UserDTO.DESC_PLATINUM_ADMIN);
+            dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.APPROVED));
+        }
+        else if (user.getUserType() == UserDTO.GOLD_USER) {
+            dailyThought.setStatus(Constants.PENDING);
+            dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.PENDING));
+        }
+        else if (user.getUserType() == UserDTO.COMPANY_ADMIN) {
+            dailyThought.setStatus(Constants.APPROVED);
+            dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.APPROVED));
+        }
+
+        presenter.addEntity(dailyThought);
+    }
+
+    private boolean isReadyToSend;
+    private Date selectedDate;
+    Date d;
+
+    private void getDate() {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(year, month, day);
+               /* Date */d = cal.getTime();
+                timePickerFragment = new TimePickerFragment();
+                timePickerFragment.show(getFragmentManager(), "DIALOG_TIME");
+                d = timePickerFragment.getSetTime(d);
+                btnDate.setText(sdf.format(d));
+            }
+        }, cal.get(java.util.Calendar.YEAR),
+                cal.get(java.util.Calendar.MONTH),
+                cal.get(java.util.Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
 
     @Override
     public void onAddEntity() {
         Log.w(TAG, "onAddEntity: ........open bottom appropriate sheet");
-        switch (type) {
+       /* switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
                 break;
-        }
+        }*/
     }
 
-    private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
+    /*private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
 
         dailyThoughtEditor = DailyThoughtEditor.newInstance(thought, type);
         dailyThoughtEditor.setBottomSheetListener(new BaseBottomSheet.BottomSheetListener() {
             @Override
             public void onWorkDone(BaseDTO entity) {
                 DailyThoughtDTO m = (DailyThoughtDTO) entity;
-                /*if (bag.getDailyThoughts() == null) {
+                *//*if (bag.getDailyThoughts() == null) {
                     bag.setDailyThoughts(new ArrayList<DailyThoughtDTO>());
                 }
-                bag.getDailyThoughts().add(0, m);*/
+                bag.getDailyThoughts().add(0, m);*//*
                 // setFragment();
                 showSnackbar(m.getTitle().concat(" is being added"), getString(R
                         .string.ok_label), "green");
@@ -232,30 +456,30 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
         dailyThoughtEditor.show(getSupportFragmentManager(), "SHEET_DAILY_THOUGHT");
 
-    }
+    }*/
 
 
 
     private DatePickerDialog datePickerDialog;
-    private void getDate(final int sheetType) {
+    /*private void getDate(final int sheetType) {
         final java.util.Calendar cal = java.util.Calendar.getInstance();
-        datePickerDialog = new DatePickerDialog(ctx/*this*/, new DatePickerDialog.OnDateSetListener() {
+        datePickerDialog = new DatePickerDialog(ctx*//*this*//*, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 cal.set(year, month, day);
                 Date d = cal.getTime();
-                switch (sheetType) {
+                *//*switch (sheetType) {
                     case ResponseBag.DAILY_THOUGHTS:
                         dailyThoughtEditor.setSelectedDate(d);
                         break;
-                }
+                }*//*
             }
         }, cal.get(java.util.Calendar.YEAR),
                 cal.get(java.util.Calendar.MONTH),
                 cal.get(java.util.Calendar.DAY_OF_MONTH));
 
         datePickerDialog.show();
-    }
+    }*/
     @Override
     public void onDeleteClicked(BaseDTO entity) {
         Log.w(TAG, "onDeleteClicked: ..............");
@@ -320,13 +544,65 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
     @Override
     public void onEntityAdded(String key) {
-
+        Log.i(TAG, "******* onEntityAdded: daily thought added to firebase "
+                .concat(key));
+        dailyThought.setDailyThoughtID(key);
+        if (dailyThought.getStatus().equalsIgnoreCase(Constants.APPROVED)) {
+            data = new Data();
+            fcmUser = new FCMUserDTO();
+            payLoad = new PayLoad();
+            fcmMessage = new FCMessageDTO();
+            data.setUserID(user.getUserID());
+            data.setTitle(dailyThought.getSubtitle());
+            data.setFromUser(user.getFullName());
+            data.setMessageType(DAILY_THOUGHT);
+            data.setMessage(dailyThought.getTitle() /*+ " - " + dailyThought.getSubtitle()*/);
+            data.setDate(new Date().getTime());
+            payLoad.setData(data);
+            fcmMessage.setCompanyID(user.getCompanyID());
+            fcmMessage.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            fcmMessage.setTitle(dailyThought.getSubtitle());
+            fcmMessage.setData(data);
+            if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT)) {
+                endpointPresenter.sendDailyThought(user.getCompanyID(), payLoad);
+            }
+            if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT)) {
+                endpointPresenter.sendDailyThought(user.getCompanyID(), payLoad);
+                //    endpointPresenter.sendMessage(fcmMessage);
+            }
+        }
+        attachmentsQuestion(dailyThought);
     }
+
+    private void attachmentsQuestion(DailyThoughtDTO thought) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Add attachments")
+                .setMessage("Would you like to add attachments to this thought?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    iconLayout.setVisibility(View.VISIBLE);
+                    btn.setVisibility(GONE);
+                    btnDone.setVisibility(View.VISIBLE);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        /*Toasty.warning(getApplicationContext(), "Media file(s) released",
+                                Toast.LENGTH_LONG, true).show();*/
+                    }
+                })
+                .show();
+    }
+
+
 
     @Override
     public void onEntityUpdated() {
 
     }
+
 
     @Override
     public void onUserCreated(UserDTO user) {
@@ -428,8 +704,115 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
     }
 
+    private int i = 0;
+    List<CategoryDTO> categoryList= new ArrayList<>();
+
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        this.categoryList = list;
+        List<String> lis = new ArrayList<String>();
+        lis.add("Select Category");
+        //  Collections.sort(list);
+        for (CategoryDTO cat : categoryList) {
+            lis.add(cat.getCategoryName());
+            /*category = cat;*/
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lis);
+        catSpinner.setAdapter(adapter);
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (i == 0) {
+                    return;
+                }
+                if (categoryList.isEmpty()) {
+                    Log.i(TAG, "category list is null");
+                    return;
+                }
+                Log.d(TAG, "onItemSelected: category: " + categoryList.size() + " index: " + i);
+                Log.i(TAG, "selectedItem: " + "\n" + "category: " + catSpinner.getSelectedItem().toString());
+
+                if (categoryList.size() == 1) {
+                    categoryList.clear();
+                } else {
+                    boolean isFound = false;
+                    int j = 0;
+                    CategoryDTO cat = categoryList.get(i - 1);
+                    for (CategoryDTO u : categoryList) {
+                        if (u.getCategoryID().equalsIgnoreCase(cat.getCategoryID())) {
+
+                            Log.i(TAG, "onItemSelected: ".concat(GSON.toJson(cat)));
+                            categoryList.add(cat);
+                            category = cat;
+                            isFound = true;
+                            break;
+                        }
+                        j++;
+                    }
+                    if (isFound) {
+                        categoryList.remove(j);
+                        setCategorySpinner();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void setCategorySpinner() {
+        List<String> list = new ArrayList<String>();
+        list.add("Select Category");
+        //   Collections.sort(categoryList);
+
+        for (CategoryDTO cat : categoryList) {
+            list.add(cat.getCategoryName());
+            //    category = cat;
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+        catSpinner.setAdapter(adapter);
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (i == 0) {
+                    return;
+                }
+                if (categoryList.isEmpty()) {
+                    Log.i(TAG, "No categories");
+                    return;
+                }
+                Log.d(TAG, "onItemSelected: categories: " + categoryList.size() + " index: " + i);
+                if (categoryList.size() == 1) {
+                    categoryList.clear();
+                } else {
+                    boolean isFound = false;
+                    int j = 0;
+                    CategoryDTO c = categoryList.get(i - 1);
+                    // category = c;
+                    for (CategoryDTO ca : categoryList) {
+                        if (ca.getCategoryID().equalsIgnoreCase(c.getCategoryID())) {
+                            isFound = true;
+                            break;
+                        }
+                        j++;
+                    }
+                    if (isFound) {
+                        categoryList.remove(j);
+                        setCategorySpinner();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
@@ -510,7 +893,9 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
+    public void onUserFound(UserDTO u) {
+        user = u;
+        presenter.getCategories(user.getCompanyID());
 
     }
 
@@ -546,6 +931,21 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onFCMUserSaved(FCMResponseDTO response) {
+
+    }
+
+    @Override
+    public void onMessageSent(FCMResponseDTO response) {
+
+    }
+
+    @Override
+    public void onEmailSent(EmailResponseDTO response) {
 
     }
 
@@ -834,73 +1234,7 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
     }
 
-    @Override
-    public void onDataCached() {
-
-    }
-
-    @Override
-    public void onCacheCategories(List<CategoryDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheDailyThoughts(List<DailyThoughtDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheEbooks(List<EBookDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheNews(List<NewsDTO> list) {
-
-    }
-
-    @Override
-    public void onCachePodcasts(List<PodcastDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheVideos(List<VideoDTO> list) {
-
-    }
-
-    @Override
-    public void onCachePrices(List<PriceDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheSubscriptions(List<SubscriptionDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheUsers(List<UserDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheWeeklyMasterclasses(List<WeeklyMasterClassDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheWeeklyMessages(List<WeeklyMessageDTO> list) {
-
-    }
-
-    @Override
-    public void onCachePhotos(List<PhotoDTO> list) {
-
-    }
-
-    @Override
-    public void onCacheCalendarEvents(List<CalendarEventDTO> list) {
-
-    }
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy");
+    public static final String TAG = CreateDailyThoughtActivity.class.getSimpleName();
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 }
