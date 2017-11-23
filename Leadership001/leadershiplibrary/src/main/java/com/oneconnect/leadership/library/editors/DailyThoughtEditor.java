@@ -178,10 +178,10 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             Log.w(TAG, "daily thought status not approved");
         }
 
-        if (getOutputFile() != null) {
+        /*if (getOutputFile() != null) {
             AudioSavePathInDevice = getOutputFile().getAbsolutePath();
             sendPodcastWithDailyThought(AudioSavePathInDevice);
-        }
+        }*/
 
 
 
@@ -667,6 +667,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         timer.setVisibility(View.GONE);
         iconVideo = (ImageView) view.findViewById(R.id.iconVideo);
         iconMicrophone = (ImageView) view.findViewById(R.id.iconMicrophone);
+        iconMicrophone.setVisibility(View.GONE);
         iconMicrophone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
