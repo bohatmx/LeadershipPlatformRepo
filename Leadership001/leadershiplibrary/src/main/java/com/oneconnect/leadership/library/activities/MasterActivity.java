@@ -77,7 +77,7 @@ public class MasterActivity  extends AppCompatActivity implements MasterAdapter.
     }
 
     @Override
-    public void onThoughtClicked(int position) {
+    public void onPldpRequested(WeeklyMasterClassDTO weeklyMasterClass) {
 
     }
 

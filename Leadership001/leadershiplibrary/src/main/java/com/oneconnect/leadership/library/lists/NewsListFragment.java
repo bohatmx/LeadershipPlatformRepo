@@ -14,6 +14,7 @@ import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.CreatePldpActivity;
 import com.oneconnect.leadership.library.activities.FullArticleActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -33,6 +34,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -160,9 +162,18 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             }
 
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPldpRequested(NewsDTO news) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("newsArticle", news);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
+
 
             @Override
             public void onPhotoRequired(PhotoDTO photo) {
@@ -226,6 +237,7 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     public void getNewsArticle() {
         Log.d(LOG, "************** getNewsArticles: " );
         presenter.getAllNewsArticle();
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
        /* switch (type) {
             case Constants.INTERNAL_DATA:
                 if (user == null) {
@@ -307,14 +319,21 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
-        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company Articles");
-        presenter.getNews(user.getCompanyID());
+    public void onUserFound(UserDTO u) {
+        Log.i(LOG, "*** onUserFound ***" + u.getFullName() + "\n" + "fetching company Articles");
+        user = u;
+        presenter.getCompanyProfile(u.getCompanyID());
+     //   presenter.getNews(user.getCompanyID());
     }
+
+    String hexColor;
 
     @Override
     public void onCompanyFound(CompanyDTO company) {
-
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
     }
 
     @Override
@@ -358,6 +377,11 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     }
 
     @Override
+    public void onPldps(List<PldpDTO> list) {
+
+    }
+
+    @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
@@ -394,8 +418,16 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             }
 
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPldpRequested(NewsDTO news) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("newsArticle", news);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -527,8 +559,16 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
             }
 
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPldpRequested(NewsDTO news) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("newsArticle", news);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -850,9 +890,10 @@ public class NewsListFragment extends Fragment implements PageFragment, Subscrib
     }
 
     @Override
-    public void onThoughtClicked(int position) {
+    public void onPldpRequested(NewsDTO news) {
 
     }
+
 
     @Override
     public void onPhotoRequired(PhotoDTO photo) {

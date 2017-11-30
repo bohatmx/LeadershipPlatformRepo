@@ -22,4 +22,12 @@
 
     <include layout="@layout/content_video_selection" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fabIcon"
+        app:srcCompat="@drawable/ic_videocam"
+        app:layout_anchor="@+id/appBar"
+        app:layout_anchorGravity="center|bottom"/>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -16,7 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.adapters.ApprovalThoughtAdapter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -66,6 +68,8 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
     private int type;
     RecyclerView pendingRecyclerView;
     String hexColor;
+    FirebaseAuth firebaseAuth;
+    TextView noPendingToughtsTxt;
 
 
 
@@ -79,28 +83,24 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
         //toolbar.setLogo(R.drawable.harmony);
 
         presenter = new CrudPresenter(this);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         if (getIntent().getSerializableExtra("hexColor") != null) {
-            hexColor = String.format("#%06X", (0xFFFFFF));
+            hexColor = (String) getIntent().getSerializableExtra("hexColor");
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
         }
 
         pendingRecyclerView = (RecyclerView) findViewById(R.id.pendingRecyclerView);
         pendingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        noPendingToughtsTxt = (TextView) findViewById(R.id.noPendingToughtsTxt);
+        noPendingToughtsTxt.setVisibility(View.GONE);
 
         getCachedDailyThoughts();
-        getPendingDailyThoughts();
 
-
-        user = SharedPrefUtil.getUser(this);
-    }
-
-    public void getPendingDailyThoughts() {
-        Log.d(TAG, "************** getPendingDailyThoughts: " );
-        presenter.getPendingDailyThoughts("pending");
-
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
 
     }
+
 
     private void getCachedDailyThoughts() {
         DailyThoughtCache.getDailyThoughts(ctx, new DailyThoughtCache.ReadListener() {
@@ -224,6 +224,7 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
     @Override
     public void onDailyThoughtUpdated(DailyThoughtDTO dailyThought) {
         Log.i(TAG, "onDailyThoughtUpdated status: " + dailyThought.getStatus());
+
         presenter.getPendingDailyThoughts("pending");
 
     }
@@ -323,6 +324,10 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
     @Override
     public void onPendingDailyThoughts(List<DailyThoughtDTO> list) {
         Log.i(TAG, "onPendingDailyThoughts: " + list.size());
+        if (list.size() == 0) {
+            noPendingToughtsTxt.setVisibility(View.VISIBLE);
+        }
+
         Collections.sort(list);
         adapter = new ApprovalThoughtAdapter(ctx, list, new ApprovalThoughtAdapter.ApprovalThoughtAdapterlistener() {
             @Override
@@ -334,6 +339,9 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
             public void onThoughtSelected(DailyThoughtDTO dailyThought) {
                 Intent intent = new Intent(DailyThoughtApprovalActivity.this, UpdateEntityActivity.class);
                 intent.putExtra("dailyThought", dailyThought);
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
                 startActivity(intent);
                 finish();
             }
@@ -392,7 +400,10 @@ public class DailyThoughtApprovalActivity extends AppCompatActivity implements C
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
+    public void onUserFound(UserDTO u) {
+        Log.i(TAG, "onUserFound" + u.getFullName());
+        user = u;
+        presenter.getPendingDailyThoughts(user.getCompanyID().concat("_").concat(Constants.PENDING)/*"pending"*/);
 
     }
 

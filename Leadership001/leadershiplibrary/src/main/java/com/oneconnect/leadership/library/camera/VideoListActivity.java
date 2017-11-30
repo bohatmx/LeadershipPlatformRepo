@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.audio.PodcastListActivity;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.ebook.EbookListActivity;
 import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
@@ -320,6 +321,11 @@ public class VideoListActivity extends AppCompatActivity implements SubscriberCo
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPldps(List<PldpDTO> list) {
 
     }
 

@@ -159,7 +159,6 @@
             android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.DailyThoughtApprovalActivity"
-            android:label="@string/title_activity_daily_thought"
             android:parentActivityName=".CompanyMainActivity" />
         <activity
             android:name="com.oneconnect.leadership.library.activities.QuizQuestion"

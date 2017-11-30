@@ -32,6 +32,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -89,7 +90,8 @@ public class DataAPI {
             RATINGS = "ratings",
             COMPANIES = "companies",
             WEEKLY_MASTER_CLASSES = "weeklyMasterClasses",
-            WEEKLY_MESSAGES = "weeklyMessages";
+            WEEKLY_MESSAGES = "weeklyMessages",
+            PLDP = "personalLeadershipDevelopmentPlan";
 
     static Random random = new Random(System.currentTimeMillis());
 
@@ -554,6 +556,7 @@ public class DataAPI {
 
 
 
+
     public void updateWeeklyMessage(final WeeklyMessageDTO c, final UpdateListener listener) {
         DatabaseReference ref = db.getReference(WEEKLY_MESSAGES)
                 .child(c.getWeeklyMessageID());
@@ -677,6 +680,173 @@ public class DataAPI {
             }
         });
     }
+    public void addPldp(final PldpDTO pldp, final DataListener listener) {
+        final DatabaseReference ref = db.getReference(PLDP);
+        log("addPldp", ref);
+        ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, final DatabaseReference responseRef) {
+                if (databaseError == null) {
+                    Log.i(TAG, "------------- onComplete: pldp added: "
+                            + pldp.getPldpID());
+                    pldp.setPldpID(responseRef.getKey());
+                    responseRef.child("pldpID").setValue(responseRef.getKey());
+                    addEntityToPldp(pldp, listener);
+
+                    if (listener != null)
+                        listener.onResponse(responseRef.getKey());
+
+                } else {
+                    if (listener != null)
+                        listener.onError(databaseError.getMessage());
+                }
+            }
+        });
+    }
+
+    public void addEntityToPldp(final PldpDTO pldp, final DataListener listener) {
+        if (pldp.getDailyThoughtID() == null && pldp.getWeeklyMasterClassID() == null
+                && pldp.getWeeklyMessageID() == null && pldp.geteBookID() == null
+                && pldp.getPodcastID() == null && pldp.getVideoID() == null
+                && pldp.getNewsID() == null) {
+            listener.onResponse("No entity to add to");
+            return;
+
+        }
+        if (pldp.getDailyThoughtID() != null) {
+            DatabaseReference ref = db.getReference(PLDP)
+                    .child(pldp.getDailyThoughtID()).child(DAILY_THOUGHTS);
+            log("addDailyThoughtToPldp", ref);
+            ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: DailyThought added to pldp: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+        if (pldp.getWeeklyMasterClassID() != null) {
+            DatabaseReference ref = db.getReference(PLDP)
+                    .child(pldp.getWeeklyMasterClassID()).child(WEEKLY_MASTER_CLASSES);
+            log("addWeeklyMasterClassToPldp", ref);
+            ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: WeeklyMasterClass added to pldp: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+
+        if (pldp.getWeeklyMessageID() != null) {
+            DatabaseReference ref = db.getReference(PLDP)
+                    .child(pldp.getWeeklyMessageID()).child(WEEKLY_MESSAGES);
+            log("addWeeklyMessageToPldp", ref);
+            ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: WeeklyMessage added to pldp: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+
+        if (pldp.geteBookID() != null) {
+            DatabaseReference ref = db.getReference(PLDP)
+                    .child(pldp.geteBookID()).child(EBOOKS);
+            log("addEbookToPldp", ref);
+            ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: Ebook added to pldp: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+
+        if (pldp.getPodcastID() != null) {
+            DatabaseReference ref = db.getReference(PLDP)
+                    .child(pldp.getPodcastID()).child(PODCASTS);
+            log("addPodcastToPldp", ref);
+            ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: Podcast added to pldp: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+
+        if (pldp.getVideoID() != null) {
+            DatabaseReference ref = db.getReference(PLDP)
+                    .child(pldp.getVideoID()).child(VIDEOS);
+            log("addVideoToPldp", ref);
+            ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: Video added to pldp: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+
+        if (pldp.getNewsID() != null) {
+            DatabaseReference ref = db.getReference(PLDP)
+                    .child(pldp.getNewsID()).child(NEWS);
+            log("addNewsToPldp", ref);
+            ref.push().setValue(pldp, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        Log.i(TAG, "onComplete: News Article added to pldp: ".concat(databaseReference.getKey()));
+                        listener.onResponse(databaseReference.getKey());
+
+                    } else {
+                        listener.onError(databaseError.getMessage());
+                    }
+                }
+            });
+
+        }
+    }
+
+
 
     public void addPayment(final PaymentDTO payment, final DataListener listener) {
         final DatabaseReference ref = db.getReference(PAYMENTS);

@@ -1,5 +1,6 @@
 package com.oneconnect.leadership.library.audio;
 
+import com.oneconnect.leadership.library.api.DataAPI;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 
@@ -10,10 +11,12 @@ import com.oneconnect.leadership.library.data.PodcastDTO;
 public class PodcastUploadPresenter implements PodcastUploadContract.Presenter {
     PodcastUploadContract.View view;
     FirebaseStorageAPI api;
+    DataAPI dataAPI;
 
     public PodcastUploadPresenter(PodcastUploadContract.View view) {
         this.view = view;
         api = new FirebaseStorageAPI();
+        dataAPI = new DataAPI();
     }
 
     @Override
@@ -47,6 +50,21 @@ public class PodcastUploadPresenter implements PodcastUploadContract.Presenter {
             @Override
             public void onProgress(long transferred, long size) {
                 view.onProgress(transferred, size);
+            }
+
+            @Override
+            public void onError(String message) {
+                view.onError(message);
+            }
+        });
+    }
+
+    @Override
+    public void addPodcastToEntity(PodcastDTO podcast) {
+        dataAPI.addPodcastToEntity(podcast, new DataAPI.DataListener() {
+            @Override
+            public void onResponse(String key) {
+                view.onPodcastAddedToEntity(key);
             }
 
             @Override

@@ -74,7 +74,7 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
     public class PodcastViewHolder extends RecyclerView.ViewHolder {
         protected TextView txtFileName, initialTime, finalTime, duration;
         protected ImageView image;
-        protected Button btnUpload, btnPlay, btnRec;
+        protected Button btnUpload, btnPlay, btnRec, btnAttach;;
         protected RelativeLayout controlLayout, bottomLayout, podControlLayout;
 
         public PodcastViewHolder(View itemView) {
@@ -90,6 +90,8 @@ public class PodcastAdapter  extends RecyclerView.Adapter<PodcastAdapter.Podcast
             btnUpload = (Button) itemView.findViewById(R.id.btnUpload);
             btnPlay = (Button) itemView.findViewById(R.id.btnPlay);
             controlLayout = (RelativeLayout) itemView.findViewById(R.id.controlLayout);
+            btnAttach = (Button) itemView.findViewById(R.id.btnAttach);
+            btnAttach.setVisibility(View.GONE);
 
         }
 

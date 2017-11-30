@@ -26,10 +26,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.ProgressBottomSheet;
+import com.oneconnect.leadership.library.activities.VideoRecordActivity;
+import com.oneconnect.leadership.library.audio.AudioRecordTest;
 import com.oneconnect.leadership.library.audio.PodcastListActivity;
+import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
+import com.oneconnect.leadership.library.cache.VideoCache;
 import com.oneconnect.leadership.library.data.BaseDTO;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
@@ -42,6 +49,7 @@ import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.ebook.EbookAdapter;
 import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
+import com.oneconnect.leadership.library.services.VideoUploaderService;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
@@ -53,6 +61,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import es.dmoral.toasty.Toasty;
 
 
 public class VideoSelectionActivity extends AppCompatActivity implements VideoUploadContract.View {
@@ -75,6 +85,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     ArrayList<String> downloadedList;
     public static final int PERMISSIONS_REQUEST = 113;
     String hexColor;
+    FloatingActionButton fabIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,15 +102,14 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         noVideoTxt = (TextView) findViewById(R.id.noVideoTxt);
         noVideoTxt.setVisibility(View.GONE);
 
-        if (getIntent().getSerializableExtra("hexColor" ) != null) {
+        if (getIntent().getSerializableExtra("hexColor") != null) {
             hexColor = (String) getIntent().getSerializableExtra("hexColor");
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
         } else {
             Log.i(TAG, "Color not found");
         }
 
-       // check();
-
+        // check();
 
 
         type = getIntent().getIntExtra("type", 0);
@@ -160,7 +170,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     }
 
     private void check() {
-        Log.w(TAG, "check: PERMISSIONS_REQUEST" );
+        Log.w(TAG, "check: PERMISSIONS_REQUEST");
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -180,8 +190,15 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     private void setup() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        image2.setColorFilter(ContextCompat.getColor(VideoSelectionActivity.this,R.color.black));
-        image1.setColorFilter(ContextCompat.getColor(VideoSelectionActivity.this,R.color.green_500));
+        fabIcon = (FloatingActionButton) findViewById(R.id.fabIcon);
+        fabIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startVideo();
+            }
+        });
+        image2.setColorFilter(ContextCompat.getColor(VideoSelectionActivity.this, R.color.black));
+        image1.setColorFilter(ContextCompat.getColor(VideoSelectionActivity.this, R.color.green_500));
         image2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,6 +219,15 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
 
     }
 
+    private void startVideo() {
+        Intent intent = new Intent(VideoSelectionActivity.this, VideoRecordActivity.class);
+        intent.putExtra("type", VideoRecordActivity.VIDEO_REQUEST);
+        if (dailyThought != null) {
+            intent.putExtra("dailyThought", dailyThought);
+        }
+        startActivityForResult(intent, VideoRecordActivity.VIDEO_REQUEST);
+    }
+
     public void getVideosOnDevice() {
 
         HashSet<String> videoItemHashSet = new HashSet<>();
@@ -212,65 +238,65 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
                 MediaStore.Video.Media.DISPLAY_NAME
         };
         Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-      //  if (cursor != null) {
-            try {
-                cursor.moveToFirst();
-                do {
+        //  if (cursor != null) {
+        try {
+            cursor.moveToFirst();
+            do {
 
-                    if (cursor != null) {
-                        noVideoTxt.setVisibility(View.GONE);
-                        Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
-                        if (cursor != null && cursor.moveToFirst()) {
+                if (cursor != null) {
+                    noVideoTxt.setVisibility(View.GONE);
+                    Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
+                    if (cursor != null && cursor.moveToFirst()) {
                         String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                         long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
-                       // Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
+                        // Log.e(TAG, "getVideosOnDevice: duration: " + duration + " path: ".concat(path));
                         localVideos.add(new LocalVideo(duration, path));
                         videoItemHashSet.add(path);
-                        } else {
-                            Log.e(TAG, "**** no videos found on device and we not crashing ****");
-                            noVideoTxt.setVisibility(View.VISIBLE);
-                        }
+                    } else {
+                        Log.e(TAG, "**** no videos found on device and we not crashing ****");
+                        noVideoTxt.setVisibility(View.VISIBLE);
                     }
-
-                } while (cursor.moveToNext());
-
-                cursor.close();
-            } catch (Exception e) {
-                Log.e(TAG, "getVideosOnDevice: ", e);
-            }
-            downloadedList = new ArrayList<>(videoItemHashSet);
-            for (String id : downloadedList) {
-                Log.e(TAG, "getVideosOnDevice: ".concat(id));
-            }
-
-            VideoAdapter adapter = new VideoAdapter(downloadedList, this, new VideoAdapter.VideoAdapterListener() {
-                @Override
-                public void onPlayVideoTapped(String path) {
-                    playVideo(path);
                 }
 
-                @Override
-                public void onUploadVideoTapped(String path) {
-                    confirmUpload(path);
+            } while (cursor.moveToNext());
 
-                }
+            cursor.close();
+        } catch (Exception e) {
+            Log.e(TAG, "getVideosOnDevice: ", e);
+        }
+        downloadedList = new ArrayList<>(videoItemHashSet);
+        for (String id : downloadedList) {
+            Log.e(TAG, "getVideosOnDevice: ".concat(id));
+        }
 
-            });
-            recyclerView.setAdapter(adapter);
-       // }
+        VideoAdapter adapter = new VideoAdapter(downloadedList, this, new VideoAdapter.VideoAdapterListener() {
+            @Override
+            public void onPlayVideoTapped(String path) {
+                playVideo(path);
+            }
+
+            @Override
+            public void onUploadVideoTapped(String path) {
+                confirmUpload(path);
+
+            }
+
+        });
+        recyclerView.setAdapter(adapter);
+        // }
     }
 
     @Override
-    public boolean onCreateOptionsMenu( Menu menu) {
-        getMenuInflater().inflate( R.menu.menu_search, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        final MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        final MenuItem myActionMenuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) myActionMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.i(TAG, "Video to search: " + query);
-                if( ! searchView.isIconified()) {
+                if (!searchView.isIconified()) {
                     searchView.setIconified(true);
                 }
                 myActionMenuItem.collapseActionView();
@@ -302,16 +328,16 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         return true;
     }
 
-    private ArrayList<String> getSearchList(String word){
+    private ArrayList<String> getSearchList(String word) {
         ArrayList<String> list = new ArrayList<>();
         String path;
-        for (int i = 0; i < downloadedList.size(); i++){
+        for (int i = 0; i < downloadedList.size(); i++) {
             path = downloadedList.get(i);
-            if(Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE).matcher(path).find()){
+            if (Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE).matcher(path).find()) {
                 list.add(downloadedList.get(i));
             }
         }
-        return  list;
+        return list;
     }
 
 
@@ -324,9 +350,10 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         File f = new File(path);
         v.setUrl(Uri.fromFile(f).toString());
         bag.getVideos().add(v);
-        m.putExtra("bag",bag);
+        m.putExtra("bag", bag);
         startActivity(m);
     }
+
     private void confirmUpload(final String path) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle(Html.fromHtml("<font color='#000000'>Confirmation</font>"))
@@ -398,7 +425,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         Log.i(TAG, "onProgress: video upload, transferred: "
                 + df.format(percent)
                 + " %");
-        progressBottomSheet.onProgress(transferred,size);
+        progressBottomSheet.onProgress(transferred, size);
 //        showSnackbar("Video upload, transferred: "
 //                + df.format(percent)
 //                + " %", "OK", Constants.YELLOW);
@@ -406,10 +433,12 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     }
 
     private ProgressBottomSheet progressBottomSheet;
+
     private void openProgressSheet() {
         progressBottomSheet = ProgressBottomSheet.newInstance();
-        progressBottomSheet.show(getSupportFragmentManager(),"PROGRESS_SHEET");
+        progressBottomSheet.show(getSupportFragmentManager(), "PROGRESS_SHEET");
     }
+
     private static final DecimalFormat df = new DecimalFormat("##0.00");
 
     @Override
@@ -429,7 +458,9 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
         snackbar.show();
 
     }
+
     List<LocalVideo> localVideos = new ArrayList<>();
+
     class LocalVideo {
         long duration;
         String path;
@@ -439,4 +470,66 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
             this.path = path;
         }
     }
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "### onActivityResult requestCode: " + requestCode + " result: " + resultCode);
+        switch (requestCode) {
+            case CameraActivity.VIDEO_REQUEST:
+                confirmUpload(data);
+                break;
+        }
+    }
+
+    private void confirmUpload(final Intent data) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Upload Confirmation")
+                .setMessage("Do you want to upload the captured files?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        saveFiles(data);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toasty.warning(getApplicationContext(), "Media file(s) released",
+                                Toast.LENGTH_LONG, true).show();
+                    }
+                })
+                .show();
+    }
+
+    private void saveFiles(Intent data) {
+        switch (type) {
+            case ResponseBag.VIDEOS:
+                saveVideoFiles(data);
+                break;
+
+        }
+    }
+
+    private void saveVideoFiles(Intent data) {
+        ResponseBag bag = (ResponseBag) data.getSerializableExtra("bag");
+        if (bag == null) return;
+        Log.d(TAG, "saveVideoFiles: .......");
+        for (VideoDTO p : bag.getVideos()) {
+            //  p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            // p.setCaption(dailyThought.getTitle());
+            Log.e(TAG, "saveVideoFiles: ".concat(GSON.toJson(p)));
+            VideoCache.addVideo(p, VideoSelectionActivity.this, null);
+        }
+        // startPhotoService();
+        startVideoService();
+
+    }
+
+    private void startVideoService() {
+        Log.d(TAG, "startVideoService: @@@@@@@@@@@@@@@@@@@@@@");
+        Intent m = new Intent(VideoSelectionActivity.this, VideoUploaderService.class);
+        VideoSelectionActivity.this.startService(m);
+    }*/
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 }

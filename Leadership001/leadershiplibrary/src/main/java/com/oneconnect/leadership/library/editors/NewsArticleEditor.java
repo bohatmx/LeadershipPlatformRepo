@@ -33,6 +33,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -163,6 +164,11 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPldps(List<PldpDTO> list) {
 
     }
 
@@ -465,14 +471,14 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
 
     TimePickerFragment timePickerFragment;
 
-    /*public void setSelectedDate(Date selectedDate) {
+    public void setSelectedDate(Date selectedDate) {
         timePickerFragment = new TimePickerFragment();
         timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");
-        // timePickerFragment.show(getFragmentManager()*//*getSupportFragmentManager()*//*,"PROGRESS_SHEET");
+        // timePickerFragment.show(getFragmentManager()getSupportFragmentManager(),"PROGRESS_SHEET");
 
         // timePickerFragment.getSetTime(selectedDate);
 
-        this.selectedDate  = timePickerFragment.getSetTime(selectedDate)*//*selectedDate*//**//*Util.getDateAtMidnite(selectedDate)*//*;
+        this.selectedDate  = timePickerFragment.getSetTime(selectedDate)/*selectedDateUtil.getDateAtMidnite(selectedDate)*/;
         btnDate.setText(sdf.format(this.selectedDate));
         if (article != null) {
             article.setDateScheduled(this.selectedDate.getTime());
@@ -482,7 +488,7 @@ public class NewsArticleEditor extends BaseBottomSheet implements SheetContract.
             }
 
         }
-    }*/
+    }
 
    /* public void setSelectedDate(Date selectedDate) {
 

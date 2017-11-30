@@ -113,6 +113,21 @@ public class SubscriberPresenter implements SubscriberContract.Presenter {
     }
 
     @Override
+    public void getPldps(String userID) {
+        listAPI.getPlds(userID, new ListAPI.DataListener() {
+            @Override
+            public void onResponse(ResponseBag bag) {
+                view.onPldps(bag.getPldps());
+            }
+
+            @Override
+            public void onError(String messsage) {
+                view.onError(messsage);
+            }
+        });
+    }
+
+    @Override
     public void getCompanyApprovedDailyThoughts(String companyID_status) {
         listAPI.getCompanyApprovedDailyThoughts(companyID_status, new ListAPI.DataListener() {
             @Override

@@ -20,6 +20,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.CreatePldpActivity;
+import com.oneconnect.leadership.library.activities.PLDPActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -41,6 +43,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -100,7 +103,6 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
             presenter = new SubscriberPresenter(this);
             cachePresenter = new CachePresenter(this, ctx);
 
-            user = SharedPrefUtil.getUser(ctx);
             type = SharedPrefUtil.getFragmentType(ctx);
         }
     }
@@ -164,9 +166,18 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
 
         adapter = new DailyThoughtAdapter(ctx, dailyThoughtList, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
 
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, /*PLDPActivity*/CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -321,9 +332,10 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
     }
 
     @Override
-    public void onUserFound(final UserDTO user) {
-        Log.i(LOG, "*** onUserFound ***" + user.getFullName() + "\n" + "fetching company DailyThoughts");
-        presenter.getCompanyProfile(user.getCompanyID());
+    public void onUserFound(final UserDTO u) {
+        Log.i(LOG, "*** onUserFound ***" + u.getFullName() + "\n" + "fetching company DailyThoughts");
+        user = u;
+        presenter.getCompanyProfile(u.getCompanyID());
         /*adapter = new DailyThoughtAdapter(ctx, null, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
             @Override
             public void onThoughtClicked(int position) {
@@ -422,9 +434,18 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         Collections.sort(list);
         setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -472,6 +493,11 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onPldps(List<PldpDTO> list) {
+
+    }
+
     MiniPhotoAdapter miniPhotoAdapter;
     @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
@@ -484,9 +510,15 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         setRecyclerView(list);
    //    this.dailyThoughtList = getDailyThoughtList(list, "approved");
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, /*PLDPActivity*/CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -561,6 +593,7 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         return returnList;
 
     }
+
     @Override
     public void onAllDailyThoughts(List<DailyThoughtDTO> list) {
         Log.w(LOG, "onAllDailyThoughts: " + list.size());
@@ -571,9 +604,15 @@ public class DailyThoughtListFragment extends Fragment implements PageFragment, 
         Collections.sort(list);
         setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, /*PLDPActivity*/CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override

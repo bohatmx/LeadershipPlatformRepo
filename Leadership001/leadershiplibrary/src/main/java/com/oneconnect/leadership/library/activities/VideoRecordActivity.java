@@ -33,6 +33,8 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.photo.PhotoUploadContract;
+import com.oneconnect.leadership.library.photo.PhotoUploadPresenter;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
@@ -47,18 +49,19 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-public class VideoRecordActivity extends AppCompatActivity implements VideoUploadContract.View {
+public class VideoRecordActivity extends AppCompatActivity implements VideoUploadContract.View, PhotoUploadContract.View {
 
     public static final int CAMERA_REQUEST = 9985, VIDEO_REQUEST = 7663;
     private ImageView iconCamera, iconDelete, iconInfo, iconVideo, image;
     private double latitude, longitude;
-    private int type;
+    private int type, entityType;
     private DailyThoughtDTO dailyThought;
     private PodcastDTO podcast;
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
     private MaterialCamera materialCamera;
     VideoUploadPresenter videoUploadPresenter;
+    PhotoUploadPresenter photoUploadPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +69,27 @@ public class VideoRecordActivity extends AppCompatActivity implements VideoUploa
         setContentView(com.oneconnect.leadership.library.R.layout.activity_camera);
         setup();
 
+        if (getIntent().getSerializableExtra("dailyThought") != null) {
+            type = ResponseBag.DAILY_THOUGHTS;
+            dailyThought =  (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            Log.d(TAG, "onCreate: ".concat(GSON.toJson(dailyThought)));
+        }
+
         videoUploadPresenter = new VideoUploadPresenter(this);
+        photoUploadPresenter = new PhotoUploadPresenter(this);
         type = getIntent().getIntExtra("type", 0);
-        dailyThought = (DailyThoughtDTO)getIntent().getSerializableExtra("dailyThought");
+        if (getIntent().getSerializableExtra("dailyThought") != null) {
+            entityType = ResponseBag.DAILY_THOUGHTS;
+            dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            //  getSupportActionBar().setSubtitle(dailyThought.getTitle());
+        }
         podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
         weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
         weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
 
-        if (dailyThought != null) {
-            Log.d(TAG, "onCreate: ".concat(GSON.toJson(dailyThought)));
-        }
+        /*if (dailyThought != null) {
+
+        }*/
         switch (type) {
             case CAMERA_REQUEST:
                 startCamera();
@@ -84,6 +98,8 @@ public class VideoRecordActivity extends AppCompatActivity implements VideoUploa
                 startVideoCamera();
                 break;
         }
+
+
     }
 
     private void setup() {
@@ -176,12 +192,31 @@ public class VideoRecordActivity extends AppCompatActivity implements VideoUploa
         p.setFilePath(photoFile.getAbsolutePath());
         UserDTO u = SharedPrefUtil.getUser(this);
         p.setJournalUserName(u.getFullName());
+        p.setCaption("leadership platform");
         p.setJournalUserID(u.getUserID());
         p.setCompanyID(u.getCompanyID());
         p.setCompanyName(u.getCompanyName());
         p.setImageSize(photoFile.length());
         p.setBytes(photoFile.length());
         photos.add(p);
+        switch (entityType) {
+
+            case ResponseBag.DAILY_THOUGHTS:
+                p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+                break;
+
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                p.setWeeklyMasterClassID(weeklyMasterClass.getWeeklyMasterClassID());
+                break;
+
+            case ResponseBag.WEEKLY_MESSAGE:
+                p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
+                break;
+
+        }
+
+        photoUploadPresenter.uploadPhoto(p);
+
         Log.i(TAG, "onActivityResult: photoFile: ".concat(getSize(photoFile.length())));
         Toasty.success(this,"Photo taken OK", Toast.LENGTH_SHORT).show();
     }
@@ -197,6 +232,22 @@ public class VideoRecordActivity extends AppCompatActivity implements VideoUploa
         p.setCompanyName(u.getCompanyName());
         p.setVideoSize(videoFile.length());
         videos.add(p);
+
+        switch (entityType) {
+
+            case ResponseBag.DAILY_THOUGHTS:
+                p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+                break;
+
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                p.setWeeklyMasterClassID(weeklyMasterClass.getWeeklyMasterClassID());
+                break;
+
+            case ResponseBag.WEEKLY_MESSAGE:
+                p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
+                break;
+
+        }
 
         openProgressSheet();
         videoUploadPresenter.uploadVideo(p);
@@ -243,6 +294,17 @@ public class VideoRecordActivity extends AppCompatActivity implements VideoUploa
     public void onVideoUploaded(String key) {
         progressBottomSheet.dismiss();
         showSnackbar("Video has been uploaded", "OK", Constants.GREEN);
+    }
+
+    @Override
+    public void onPhotoUploaded(String key) {
+     //   progressBottomSheet.dismiss();
+        showSnackbar("Photo has been uploaded", "OK", Constants.GREEN);
+    }
+
+    @Override
+    public void onPhotoUserUploaded(String key) {
+
     }
 
     @Override

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -56,7 +57,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface NewsArticleListener{
         void onArticleSelected(NewsDTO newsArticle);
-        void onThoughtClicked(int position);
+        void onPldpRequested(NewsDTO news);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
@@ -106,6 +107,13 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onClick(View v) {
                 showPopupMenu(v);
+            }
+        });
+
+        dvh.iconPldp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onPldpRequested(dt);
             }
         });
 
@@ -487,15 +495,12 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         protected TextView txtEvents, txtTitle, txtDate, txtSubtitle, txtLinks, txtMicrophone,
                 txtVideo, txtCamera, captiontxt, /*videoFileName,*/ podcastfileName, urlTxt, profile, compName;
         protected ImageView iconCalendar, iconUpdate, iconDelete, iconMicrophone, iconVideo, iconCamera, photoView,
-                playIMG, pauseIMG, stopIMG, imageView, iconShare;
+                playIMG, pauseIMG, stopIMG, imageView, iconShare, iconPldp;
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
                 photoAdapterLayout, urlAdapterLayout;
         protected Button btnPlay;
-        //video
-        /*protected VideoView videoView;*/
-        //
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
 
 
@@ -585,6 +590,9 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             urlAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.urlAdapterLayout);
             urlTxt = (TextView) itemView.findViewById(R.id.urlTxt);
+
+            iconPldp = (ImageView) itemView.findViewById(R.id.iconPldp);
+
         }
     }
 

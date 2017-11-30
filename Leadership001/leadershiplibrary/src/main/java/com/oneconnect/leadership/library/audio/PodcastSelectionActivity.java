@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.api.client.googleapis.auth.clientlogin.ClientLogin;
@@ -77,6 +78,7 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
     ArrayList<String> downloadedList;
     public static final int PERMISSIONS_REQUEST = 113;
     String hexColor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -434,6 +436,12 @@ public class PodcastSelectionActivity extends AppCompatActivity implements Podca
         progressBottomSheet.dismiss();
         showSnackbar("Podcast has been uploaded", "OK", Constants.GREEN);
     }
+
+    @Override
+    public void onPodcastAddedToEntity(String key) {
+
+    }
+
     private static final DecimalFormat df = new DecimalFormat("##0.00");
 
     @Override

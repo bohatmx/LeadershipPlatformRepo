@@ -74,6 +74,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -318,6 +319,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
     }
 
     @Override
+    public void onPldps(List<PldpDTO> list) {
+
+    }
+
+    @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
@@ -538,6 +544,11 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
         progressBottomSheet.dismiss();
         showSnackbar("Podcast has been uploaded", "OK", Constants.GREEN);
         this.dismiss();
+    }
+
+    @Override
+    public void onPodcastAddedToEntity(String key) {
+
     }
 
     private Snackbar snackbar;
@@ -835,7 +846,7 @@ public class DailyThoughtEditor extends BaseBottomSheet implements SheetContract
             list.add(cat.getCategoryName());
         //    category = cat;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, list);
         catSpinner.setAdapter(adapter);
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

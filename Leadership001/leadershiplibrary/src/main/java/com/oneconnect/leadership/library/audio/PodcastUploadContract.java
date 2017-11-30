@@ -10,9 +10,11 @@ public class PodcastUploadContract {
     public interface Presenter {
         void uploadPodcast(PodcastDTO podcast);
         void uploadPodcastRecording(PodcastDTO podcast);
+        void addPodcastToEntity(PodcastDTO podcast);
     }
     public interface View {
         void onPodcastUploaded(String key);
+        void onPodcastAddedToEntity(String key);
         void onProgress(long transferred, long size);
         void onError(String message);
     }

@@ -65,7 +65,7 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int type;
 
     public interface DailyThoughtAdapterlistener{
-        void onThoughtClicked(int position);
+        void onPldpRequested(DailyThoughtDTO dailyThought);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
@@ -376,8 +376,9 @@ public class DailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         dvh.iconPldp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ctx, PLDPActivity.class);
-                ctx.startActivity(intent);
+                listener.onPldpRequested(dt);
+                /*Intent intent = new Intent(ctx, PLDPActivity.class);
+                ctx.startActivity(intent);*/
             }
         });
         dvh.ratingBar.setOnClickListener(new View.OnClickListener() {

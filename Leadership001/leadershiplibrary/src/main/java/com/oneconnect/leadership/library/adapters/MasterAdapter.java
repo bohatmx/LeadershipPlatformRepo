@@ -26,6 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.activities.FullPhotoActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
@@ -57,7 +58,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     String url;
 
     public interface MasterAdapterListener{
-        void onThoughtClicked(int position);
+        void onPldpRequested(WeeklyMasterClassDTO weeklyMasterClass);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
@@ -120,6 +121,12 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             }
         });*/
+      dvh.iconPldp.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              listener.onPldpRequested(dt);
+          }
+      });
 
         if (dt.getVideos() != null) {
             dvh.txtVideo.setText("" + dt.getVideos().size());
@@ -448,7 +455,7 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected RecyclerView imageRecyclerView, videoRecyclerView, urlRecyclerView, podcastRecyclerView;
         protected Button btnPlay;
         protected TextViewExpandableAnimation txtTitle;
-        protected ImageView ratingBar;
+        protected ImageView ratingBar, iconPldp;
         //protected TextView txtTitle;
 
         public MasterViewHolder(View itemView) {
@@ -538,6 +545,8 @@ public class MasterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             urlAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.urlAdapterLayout);
             urlTxt = (TextView) itemView.findViewById(R.id.urlTxt);
+
+            iconPldp = (ImageView) itemView.findViewById(R.id.iconPldp);
 
         }
     }

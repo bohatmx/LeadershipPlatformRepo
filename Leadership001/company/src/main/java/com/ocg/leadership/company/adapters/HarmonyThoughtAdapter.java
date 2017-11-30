@@ -38,6 +38,7 @@ import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
 
@@ -63,7 +64,7 @@ public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private int type;
 
     public interface HarmonyThoughtAdapterlistener{
-        void onThoughtClicked(int position);
+        void onPldpRequested(DailyThoughtDTO dailyThought);
         void onPhotoRequired(PhotoDTO photo);
         void onVideoRequired(VideoDTO video);
         void onPodcastRequired(PodcastDTO podcast);
@@ -114,6 +115,13 @@ public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             public void onClick(View v) {
                 showPopupMenu(v);
 
+            }
+        });
+
+        dvh.iconPldp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onPldpRequested(dt);
             }
         });
 
@@ -461,7 +469,7 @@ public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
                 photoAdapterLayout, urlAdapterLayout, updateLayout;
         protected Button btnPlay;
-        protected ImageView ratingBar;
+        protected ImageView ratingBar, iconPldp;
         protected EditText ratingCom;
         //video
         /*protected VideoView videoView;*/
@@ -565,6 +573,8 @@ public class HarmonyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             urlAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.urlAdapterLayout);
             urlTxt = (TextView) itemView.findViewById(R.id.urlTxt);
+
+            iconPldp = (ImageView) itemView.findViewById(R.id.iconPldp);
         }
     }
 

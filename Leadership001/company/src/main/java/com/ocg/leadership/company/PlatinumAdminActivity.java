@@ -90,6 +90,7 @@ import com.oneconnect.leadership.library.data.FCMData;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -535,7 +536,12 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
     }
     @Override
     public void onThoughtsSelected() {
-        startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+    //    startDailyThoughtBottomSheet(null, Constants.NEW_ENTITY);
+        Intent intent = new Intent(PlatinumAdminActivity.this, CreateDailyThoughtActivity.class);
+        if (hexColor != null) {
+            intent.putExtra("hexColor", hexColor);
+        }
+        startActivity(intent);
     }
 
     private void startDailyThoughtBottomSheet(final DailyThoughtDTO thought, int type) {
@@ -1200,6 +1206,11 @@ public class PlatinumAdminActivity extends AppCompatActivity implements  Navigat
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPldps(List<PldpDTO> list) {
 
     }
 

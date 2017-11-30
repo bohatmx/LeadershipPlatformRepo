@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ocg.backend.endpointAPI.model.Data;
@@ -109,7 +110,7 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     TextView txtLinks ,txtMicrophone, txtVideo, txtCamera;
     MyDailyThoughtAdapter adapter;
     LinearLayout iconLayout;
-    Button btn, btnDate, btnDone;
+    Button btn, btnDate, btnDone, btnNewThought;
     private RadioButton internalButton, globalButton;
     private Spinner catSpinner;
     CategoryDTO category;
@@ -121,6 +122,7 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     EndpointPresenter endpointPresenter;
     FCMessageDTO fcmMessage;
     FCMUserDTO fcmUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,11 +164,23 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
             }
         });
 
+        btnNewThought = (Button) findViewById(R.id.btnNewThought);
+        btnNewThought.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn.setVisibility(View.VISIBLE);
+                btnDone.setVisibility(View.GONE);
+                btnNewThought.setVisibility(View.GONE);
+            }
+        });
+        btnNewThought.setVisibility(GONE);
+
         iconLayout = (LinearLayout) findViewById(R.id.iconLayout);
         iconLayout.setVisibility(GONE);
         iconDelete = (ImageView) findViewById(R.id.iconDelete);
         iconDelete.setVisibility(GONE);
         iconLink = (ImageView) findViewById(R.id.iconLink);
+        txtLinks = (TextView) findViewById(R.id.txtLinks);
         iconLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,6 +233,20 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
         txtMicrophone = (TextView) findViewById(R.id.txtMicrophone);
         txtVideo = (TextView) findViewById(R.id.txtVideo);
         txtCamera = (TextView) findViewById(R.id.txtCamera);
+        if (dailyThought != null) {
+            if (dailyThought.getUrls() != null) {
+                txtLinks.setText(dailyThought.getUrls().size());
+            }
+            if (dailyThought.getPodcasts() != null) {
+                txtMicrophone.setText(dailyThought.getPodcasts().size());
+            }
+            if (dailyThought.getVideos() != null) {
+                txtVideo.setText(dailyThought.getVideos().size());
+            }
+            if (dailyThought.getPhotos() != null) {
+                txtCamera.setText(dailyThought.getPhotos().size());
+            }
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -325,16 +353,6 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
         dailyThought.setSubtitle(editSubtitle.getText().toString());
         if (category != null) {
         dailyThought.setCategory(category);
-        }
-
-        if (user.getUserType() == UserDTO.GOLD_USER) {
-            globalButton.setVisibility(GONE);
-        }
-        if (user.getUserType() == UserDTO.COMPANY_ADMIN) {
-            globalButton.setVisibility(GONE);
-        }
-        if (user.getUserType() == UserDTO.PLATINUM_ADMIN) {
-            globalButton.setVisibility(GONE);
         }
 
 
@@ -589,6 +607,14 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        editTitle.setText(" ");
+                        editSubtitle.setText(" ");
+                        editTitle.setHint("Enter Thought");
+                        editSubtitle.setHint("Enter thought author");
+                        btn.setVisibility(GONE);
+                        btnDone.setVisibility(View.VISIBLE);
+                        btnNewThought.setVisibility(View.VISIBLE);
+
                         /*Toasty.warning(getApplicationContext(), "Media file(s) released",
                                 Toast.LENGTH_LONG, true).show();*/
                     }
@@ -895,6 +921,15 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     @Override
     public void onUserFound(UserDTO u) {
         user = u;
+        if (user.getUserType() == UserDTO.GOLD_USER) {
+            globalButton.setVisibility(GONE);
+        }
+        if (user.getUserType() == UserDTO.COMPANY_ADMIN) {
+            globalButton.setVisibility(GONE);
+        }
+        if (user.getUserType() == UserDTO.PLATINUM_ADMIN) {
+            globalButton.setVisibility(GONE);
+        }
         presenter.getCategories(user.getCompanyID());
 
     }
@@ -941,7 +976,13 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
     @Override
     public void onMessageSent(FCMResponseDTO response) {
+        if (response.getStatusCode() == 0) {
+            Log.i(TAG, "onMessageSent: daily thought sent" + response.getMessage());
 
+        } else {
+            Log.e(TAG, "onMessageSent: daily thought failed");
+            FirebaseCrash.report(new Exception("daily thought failed"));
+        }
     }
 
     @Override

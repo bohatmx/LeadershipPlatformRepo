@@ -89,7 +89,7 @@ public class NewsArticleActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onThoughtClicked(int position) {
+    public void onPldpRequested(NewsDTO news) {
 
     }
 

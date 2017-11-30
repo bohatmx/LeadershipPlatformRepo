@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
@@ -778,6 +779,11 @@ public class EbookListFragment extends Fragment implements PageFragment, Subscri
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPldps(List<PldpDTO> list) {
 
     }
 

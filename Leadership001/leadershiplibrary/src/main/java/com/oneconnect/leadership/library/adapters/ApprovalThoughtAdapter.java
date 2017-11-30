@@ -531,7 +531,7 @@ public class ApprovalThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         protected RelativeLayout bottomLayout;
         protected LinearLayout iconLayout;
         protected RelativeLayout deleteLayout, linksLayout, micLayout, videosLayout, photosLayout, podcastAdapterLayout, videoAdapterLayout,
-                photoAdapterLayout, urlAdapterLayout, updateLayout;
+                photoAdapterLayout, urlAdapterLayout, updateLayout, pldpLayout, shareLayout;
         protected Button btnPlay;
         protected ImageView ratingBar;
         protected EditText ratingCom;
@@ -637,6 +637,12 @@ public class ApprovalThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             urlAdapterLayout = (RelativeLayout) itemView.findViewById(R.id.urlAdapterLayout);
             urlTxt = (TextView) itemView.findViewById(R.id.urlTxt);
+
+            pldpLayout = (RelativeLayout) itemView.findViewById(R.id.pldpLayout);
+            pldpLayout.setVisibility(View.GONE);
+
+            shareLayout = (RelativeLayout) itemView.findViewById(R.id.shareLayout);
+            shareLayout.setVisibility(View.GONE);
         }
     }
 

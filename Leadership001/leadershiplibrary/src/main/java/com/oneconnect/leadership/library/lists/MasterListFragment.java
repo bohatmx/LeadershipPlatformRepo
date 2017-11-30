@@ -14,6 +14,7 @@ import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.CreatePldpActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -34,6 +35,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -153,10 +155,17 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
 
         adapter = new MasterAdapter(ctx, masterList, new MasterAdapter.MasterAdapterListener() {
 
-
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPldpRequested(WeeklyMasterClassDTO weeklyMasterClass) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("weeklyMasterClass", weeklyMasterClass);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -619,6 +628,11 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
     }
 
     @Override
+    public void onPldps(List<PldpDTO> list) {
+
+    }
+
+    @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
@@ -731,8 +745,16 @@ public class MasterListFragment extends Fragment implements PageFragment, Subscr
         adapter = new MasterAdapter(ctx, list, new MasterAdapter.MasterAdapterListener(){
 
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPldpRequested(WeeklyMasterClassDTO weeklyMasterClass) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("weeklyMasterClass", weeklyMasterClass);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override

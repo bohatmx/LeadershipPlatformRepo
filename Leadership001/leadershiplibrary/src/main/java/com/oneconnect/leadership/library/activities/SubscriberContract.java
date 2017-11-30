@@ -10,6 +10,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -34,6 +35,7 @@ public class SubscriberContract {
         void getCompanies(String companyID);
         void getDailyThoughts(String companyID);
         void getAllCompanyDailyThoughts(String companyID);
+        void getPldps(String userID);
         void getCompanyApprovedDailyThoughts(String companyID_status);
         void getAllExternallyApprovedDailyThoughts(String dailyThoughtType_status);
         void getDailyThoughtsRating(String dailyThoughtID);
@@ -91,6 +93,7 @@ public class SubscriberContract {
         void onCategories(List<CategoryDTO> list);
         void onCompanies(List<CompanyDTO> list);
         void onDailyThoughts(List<DailyThoughtDTO> list);
+        void onPldps(List<PldpDTO> list);
         void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list);
         void onAllDailyThoughts(List<DailyThoughtDTO> list);
         void onAllSubscriptions(List<SubscriptionDTO> list);

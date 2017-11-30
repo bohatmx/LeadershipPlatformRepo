@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -31,6 +33,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -45,6 +48,7 @@ import com.oneconnect.leadership.library.ebook.EbookListActivity;
 import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;
 import com.oneconnect.leadership.library.links.LinksActivity;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.Util;
 
@@ -53,10 +57,11 @@ import java.util.List;
 
 
 
-public class PodcastListActivity extends AppCompatActivity implements SubscriberContract.View, CacheContract.View{
+public class PodcastListActivity extends AppCompatActivity implements SubscriberContract.View, CacheContract.View,
+                                        PodcastUploadContract.View{
 
     RecyclerView recyclerView;
-    private int type;
+    private int type, entityType;
     private DailyThoughtDTO dailyThought;
     private PodcastDTO podcast;
     private EBookDTO eBook;
@@ -70,6 +75,10 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     private VideoDTO video;
     ImageView image1, image2;
     String hexColor;
+    TextView contentTxt;
+    List<PodcastDTO> serverPodcasts;
+    private Snackbar snackbar;
+    PodcastUploadPresenter podcastUploadPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +87,13 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("Podcast Attachment");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*getSupportActionBar().setTitle("Podcast Attachment");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         ctx = getApplicationContext();
 
         presenter = new SubscriberPresenter(this);
+        podcastUploadPresenter = new PodcastUploadPresenter(this);
         cachePresenter = new CachePresenter(this, ctx);
 
         if (getIntent().getSerializableExtra("hexColor") != null) {
@@ -91,51 +101,66 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
         }
 
+        contentTxt = (TextView) findViewById(R.id.contentTxt);
+        if (getIntent().getSerializableExtra("dailyThought") != null) {
+            entityType = ResponseBag.DAILY_THOUGHTS;
+            dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
+            contentTxt.setText(dailyThought.getTitle());
+        } /*else {
+                contentTxt.setText("Podcast Attachment");
+            }*/
+
+
         type = getIntent().getIntExtra("type", 0);
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
-                getSupportActionBar().setSubtitle(dailyThought.getTitle());
+                contentTxt.setText(dailyThought.getTitle());
+                //getSupportActionBar().setSubtitle(dailyThought.getTitle());
                 break;
             case ResponseBag.WEEKLY_MASTERCLASS:
                 weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
-                getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+                contentTxt.setText(weeklyMasterClass.getTitle());
+               // getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
-                getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                contentTxt.setText(weeklyMessage.getTitle());
+               // getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
                 break;
             case ResponseBag.EBOOKS:
                 eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
-                getSupportActionBar().setSubtitle(eBook.getStorageName());
+                contentTxt.setText(eBook.getStorageName());
+               // getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
             case ResponseBag.VIDEOS:
                 video = (VideoDTO) getIntent().getSerializableExtra("video");
-                getSupportActionBar().setSubtitle(video.getStorageName());
+                contentTxt.setText(video.getStorageName());
+               // getSupportActionBar().setSubtitle(video.getStorageName());
                 break;
-           /* case ResponseBag.PODCASTS:
-                podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
-                getSupportActionBar().setSubtitle(podcast.getStorageName());
-                break; */
             case ResponseBag.URLS:
                 url = (UrlDTO) getIntent().getSerializableExtra("url");
-                getSupportActionBar().setSubtitle(url.getTitle());
+                contentTxt.setText(url.getTitle());
+               // getSupportActionBar().setSubtitle(url.getTitle());
                 break;
         }
         if (getIntent().getSerializableExtra("eBook") != null) {
             type = ResponseBag.EBOOKS;
             eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
-            getSupportActionBar().setSubtitle(eBook.getStorageName());
+            contentTxt.setText(eBook.getTitle());
+           // getSupportActionBar().setSubtitle(eBook.getStorageName());
         }
         if (getIntent().getSerializableExtra("video") != null) {
             type = ResponseBag.VIDEOS;
             video = (VideoDTO) getIntent().getSerializableExtra("video");
-            getSupportActionBar().setSubtitle(video.getStorageName());
+            contentTxt.setText(video.getStorageName());
+           // getSupportActionBar().setSubtitle(video.getStorageName());
         }
         if (getIntent().getSerializableExtra("url") != null) {
             type = ResponseBag.URLS;
             url = (UrlDTO) getIntent().getSerializableExtra("url");
-            getSupportActionBar().setSubtitle(url.getTitle());
+            contentTxt.setText(url.getTitle());
+           // getSupportActionBar().setSubtitle(url.getTitle());
         }
 
         image1 = (ImageView) findViewById(R.id.image1);
@@ -333,6 +358,11 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     }
 
     @Override
+    public void onPldps(List<PldpDTO> list) {
+
+    }
+
+    @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
 
     }
@@ -387,9 +417,10 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
         this.podcasts = list;
 
         adapter = new AdminPodcastAdapter(list, ctx, new AdminPodcastAdapter.PodcastAdapterListener() {
+
             @Override
             public void onPodcastRequired(PodcastDTO podcast) {
-
+                addExistingPodcast(podcast);
             }
 
             @Override
@@ -414,6 +445,44 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
         });
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private void addExistingPodcast(PodcastDTO p) {
+        showSnackbar("Uploading podcast ...", "OK", Constants.CYAN);
+        UserDTO u = SharedPrefUtil.getUser(getApplicationContext());
+        switch (entityType) {
+            case ResponseBag.DAILY_THOUGHTS:
+                p.setDailyThoughtID(dailyThought.getDailyThoughtID());
+                p.setTitle(dailyThought.getTitle());
+                // p.setDescription(dailyThought.getTitle());
+                break;
+            case ResponseBag.WEEKLY_MASTERCLASS:
+                p.setWeeklyMasterClassID(weeklyMasterClass.getWeeklyMasterClassID());
+                p.setTitle(weeklyMasterClass.getTitle());
+                //p.setDescription(weeklyMasterClass.getTitle());
+                break;
+            case ResponseBag.WEEKLY_MESSAGE:
+                p.setWeeklyMessageID(weeklyMessage.getWeeklyMessageID());
+                p.setTitle(weeklyMessage.getTitle());
+                //p.setDescription(weeklyMessage.getTitle());
+                break;
+        }
+
+        podcastUploadPresenter.addPodcastToEntity(p);
+
+
+    }
+
+    public void showSnackbar(String title, String action, String color) {
+        snackbar = Snackbar.make(toolbar, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
     }
 
     private void startEbookSelection(BaseDTO base){
@@ -514,7 +583,24 @@ public class PodcastListActivity extends AppCompatActivity implements Subscriber
     }
 
     @Override
-    public void onError(String message) {
+    public void onPodcastUploaded(String key) {
 
+    }
+
+    @Override
+    public void onPodcastAddedToEntity(String key) {
+        Log.i(LOG, "onPodcastAddedToEntity: .................. ".concat(key));
+        showSnackbar("Podcast".concat(" ADDED."), "OK", "green");
+    }
+
+    @Override
+    public void onProgress(long transferred, long size) {
+
+    }
+
+    @Override
+    public void onError(String message) {
+        Log.e(LOG, message);
+        showSnackbar(message, "DISMISS", "red");
     }
 }

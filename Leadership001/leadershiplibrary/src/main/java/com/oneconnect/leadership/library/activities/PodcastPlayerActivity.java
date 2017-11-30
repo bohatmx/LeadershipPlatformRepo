@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.Rating;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -65,7 +66,7 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
      TextView fileName,count, txtSubtitle, txtLinks, txtMicrophone, txtVideo, txtCamera, urlTxt, podcastfileName,textCurrentPosition,
              textView_maxTime, textView2;
      ImageView image, overflow, playbtn, pausebtn, stopbtn, rewindIMG, fowardIMG,podcastIMGAE, iconUpdate, iconDelete, iconMicrophone,
-             iconVideo, iconCamera, photoView, iconShare;
+             iconVideo, iconCamera, photoView, iconShare, iconPldp, ratingBar;
      Button btnPlay;
      VideoView videoView;
      SeekBar videoSeekBar;
@@ -186,6 +187,10 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
         deleteLayout = (RelativeLayout) findViewById(R.id.deleteLayout);
         deleteLayout.setVisibility(View.GONE);
 
+        ratingBar = (ImageView) findViewById(R.id.ratingBar);
+        iconPldp = (ImageView) findViewById(R.id.iconPldp);
+
+
 
         if (getIntent().getSerializableExtra("video") != null) {
            // type = ResponseBag.VIDEOS;
@@ -199,6 +204,40 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
 
             playPodcast();
         }
+
+        iconPldp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PodcastPlayerActivity.this, CreatePldpActivity.class);
+                if (video != null) {
+                    intent.putExtra("video", video);
+                }
+                if (podcast != null) {
+                    intent.putExtra("podcast", podcast);
+                }
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivity(intent);
+            }
+        });
+
+        ratingBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PodcastPlayerActivity.this, RatingActivity.class);
+                if (video != null) {
+                    intent.putExtra("video", video);
+                }
+                if (podcast != null) {
+                    intent.putExtra("podcast", podcast);
+                }
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivity(intent);
+            }
+        });
 
     }
 

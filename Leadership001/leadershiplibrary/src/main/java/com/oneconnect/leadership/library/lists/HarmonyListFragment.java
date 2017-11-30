@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.CreatePldpActivity;
 import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.RatingActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -37,6 +38,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -149,10 +151,14 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
 
         adapter = new DailyThoughtAdapter(ctx, dailyThoughtList, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
 
-
             @Override
-            public void onThoughtClicked(int position) {
-
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, /*PLDPActivity*/CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -354,9 +360,15 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
         Collections.sort(list);
         setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, /*PLDPActivity*/CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -409,6 +421,11 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void onPldps(List<PldpDTO> list) {
+
+    }
+
     MiniPhotoAdapter miniPhotoAdapter;
     @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
@@ -418,9 +435,15 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
         Collections.sort(list);
         setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+            @Override
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, /*PLDPActivity*/CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override
@@ -485,9 +508,16 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
         Collections.sort(list);
         setRecyclerView(list);
         adapter = new DailyThoughtAdapter(ctx, list, new DailyThoughtAdapter.DailyThoughtAdapterlistener() {
-            @Override
-            public void onThoughtClicked(int position) {
 
+
+            @Override
+            public void onPldpRequested(DailyThoughtDTO dailyThought) {
+                Intent intent = new Intent(ctx, /*PLDPActivity*/CreatePldpActivity.class);
+                intent.putExtra("dailyThought", dailyThought);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                ctx.startActivity(intent);
             }
 
             @Override

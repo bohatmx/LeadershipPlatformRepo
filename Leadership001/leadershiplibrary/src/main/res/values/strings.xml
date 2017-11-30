@@ -32,6 +32,7 @@
     <string name="action_photo">Photo</string>
     <string name="title_activity_le_exo_player">LeExo Player</string>
     <string name="video">LEADERSHIP VIDEOS</string>
+    <string name="pldp">LEADERSHIP PLDP</string>
     <string name="audio">Audio</string>
     <string name="company_profile">COMPANY PROFILE</string>
     <string name="daily_thought">LEADERSHIP DAILY THOUGHTS</string>
@@ -208,5 +209,6 @@
     <string name="title_activity_profile">ProfileActivity</string>
 
     <string name="title_activity_record">Record Audio</string>
+    <string name="title_activity_create_pldp">CreatePldpActivity</string>
 
 </resources>

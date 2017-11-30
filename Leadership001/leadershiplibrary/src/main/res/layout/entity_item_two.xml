@@ -421,6 +421,24 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/pldpLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iconPldp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/pldp"
+                        android:tint="@color/red_700" />
+
+
+                </RelativeLayout>
+
 
             </LinearLayout>
 

@@ -13,6 +13,7 @@ import com.ocg.leadership.company.R;
 import com.ocg.leadership.company.adapters.HarmonyThoughtAdapter;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.cache.CachePresenter;
+import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.ResponseBag;
@@ -63,8 +64,10 @@ public class HarmonyThoughtsActivity extends AppCompatActivity implements Harmon
         ft.commit();
     }
 
+
+
     @Override
-    public void onThoughtClicked(int position) {
+    public void onPldpRequested(DailyThoughtDTO dailyThought) {
 
     }
 

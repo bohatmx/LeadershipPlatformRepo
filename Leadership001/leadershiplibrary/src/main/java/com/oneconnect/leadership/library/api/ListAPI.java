@@ -21,6 +21,7 @@ import com.oneconnect.leadership.library.data.EBookDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -126,7 +127,7 @@ public class ListAPI {
     }
     public void getPendingDailyThoughts(String status, final DataListener listener) {
         DatabaseReference ref = db.getReference(DataAPI.DAILY_THOUGHTS);
-        Query q = ref.orderByChild("status").equalTo(status).limitToLast(15);
+        Query q = ref.orderByChild("companyID_status"/*"status"*/).equalTo(status).limitToLast(15);
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -584,6 +585,33 @@ public class ListAPI {
                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
                         DailyThoughtDTO dt = shot.getValue(DailyThoughtDTO.class);
                         bag.getDailyThoughts().add(dt);
+                    }
+                }
+                listener.onResponse(bag);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public void getPlds(String userID, final DataListener listener) {
+        DatabaseReference ref = db.getReference(DataAPI.PLDP);
+        Query q = ref.orderByChild("journalUserID").equalTo(userID)/*.limitToLast(15)*/;
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    Log.d(LOG, dataSnapshot.getValue().toString());
+                }
+                ResponseBag bag = new ResponseBag();
+                bag.setPldps(new ArrayList<PldpDTO>());
+                if (dataSnapshot.getChildrenCount() > 0) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        PldpDTO p = shot.getValue(PldpDTO.class);
+                        bag.getPldps().add(p);
                     }
                 }
                 listener.onResponse(bag);

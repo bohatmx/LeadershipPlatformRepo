@@ -524,6 +524,11 @@ public class AudioRecordTest extends AppCompatActivity implements  PodcastUpload
     }
 
     @Override
+    public void onPodcastAddedToEntity(String key) {
+
+    }
+
+    @Override
     public void onProgress(long transferred, long size) {
         float percent = (float) transferred * 100 / size;
 

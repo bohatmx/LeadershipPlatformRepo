@@ -123,6 +123,18 @@
                 android:layout_marginTop="@dimen/mon_padding"
                 android:text="Done"
                 android:textColor="@color/indigo_500" />
+            <Button
+                android:id="@+id/btnNewThought"
+                android:layout_toRightOf="@+id/btnDone"
+                style="?attr/borderlessButtonStyle"
+                android:layout_below="@+id/t0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/mon_padding"
+                android:text="Add Another Thought"
+                android:textColor="@color/indigo_500" />
+
 
             <LinearLayout
                 android:layout_below="@+id/btnDone"

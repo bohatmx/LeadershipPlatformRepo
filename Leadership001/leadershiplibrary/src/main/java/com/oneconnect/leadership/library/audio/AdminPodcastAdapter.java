@@ -54,7 +54,7 @@ public class AdminPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final PodcastDTO v = mList.get(position);
         final PodcastsViewHolder pvh = (PodcastsViewHolder) holder;
         int i = v.getStorageName().lastIndexOf("/");
@@ -87,6 +87,13 @@ public class AdminPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 });
+            }
+        });
+
+        pvh.btnAttach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPodcastRequired(v);
             }
         });
 
@@ -210,11 +217,11 @@ public class AdminPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public class PodcastsViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName, txtLinks, txtMicrophone,
-                txtVideo, txtCamera;
+                txtVideo, txtCamera, duration;
         protected ImageView image, playIMG, pauseIMG, stopIMG, headerpic, iconCamera, iconVideo, iconMicrophone, iconLink,
                 iconShare, ratingBar;
-        protected Button btnPlay, btnUpload;
-        protected RelativeLayout uploadLayout, bottomLayout;
+        protected Button btnPlay, btnUpload, btnAttach;
+        protected RelativeLayout uploadLayout, bottomLayout, podControlLayout;
 
         public PodcastsViewHolder(View itemView) {
             super(itemView);
@@ -225,6 +232,8 @@ public class AdminPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             fileName = (TextView) itemView.findViewById(R.id.fileName);
             txtLinks = (TextView) itemView.findViewById(R.id.txtLinks);
             txtMicrophone = (TextView) itemView.findViewById(R.id.txtMicrophone);
+            duration = (TextView) itemView.findViewById(R.id.duration);
+            duration.setVisibility(View.GONE);
             txtCamera = (TextView) itemView.findViewById(R.id.txtCamera);
             txtVideo = (TextView) itemView.findViewById(R.id.txtVideo);
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
@@ -250,7 +259,9 @@ public class AdminPodcastAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             stopIMG.setVisibility(View.GONE);
 
             uploadLayout = (RelativeLayout) itemView.findViewById(R.id.uploadLayout);
-            uploadLayout.setVisibility(View.GONE);
+            btnAttach = (Button) itemView.findViewById(R.id.btnAttach);
+            podControlLayout = (RelativeLayout) itemView.findViewById(R.id.podControlLayout);
+            podControlLayout.setVisibility(View.GONE);
         }
     }
 

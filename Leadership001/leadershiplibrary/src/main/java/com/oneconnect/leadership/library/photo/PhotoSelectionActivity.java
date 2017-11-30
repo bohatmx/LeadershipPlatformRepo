@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +34,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
+import com.oneconnect.leadership.library.activities.VideoRecordActivity;
 import com.oneconnect.leadership.library.api.FirebaseStorageAPI;
 import com.oneconnect.leadership.library.api.ListAPI;
 import com.oneconnect.leadership.library.audio.PodcastAdapter;
 import com.oneconnect.leadership.library.audio.PodcastListActivity;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
+import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.crud.CrudContract;
 import com.oneconnect.leadership.library.crud.CrudPresenter;
 import com.oneconnect.leadership.library.data.BaseDTO;
@@ -46,6 +50,7 @@ import com.oneconnect.leadership.library.data.CompanyDTO;
 import com.oneconnect.leadership.library.data.DeviceDTO;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -103,7 +108,7 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     private ListAPI listAPI;
     public List<String> serverList;
     ImageView galleryImage, serverImage;
-    TextView noPhotoTxt;
+    TextView noPhotoTxt, contentTxt;
     ArrayList<String> searchResult;
     PhotoAdapter adapter;
     FirebaseStorageAPI fbs;
@@ -111,6 +116,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
     boolean isServerList;
     private Context ctx;
     String hexColor;
+    FloatingActionButton fabIcon;
+    Button btnAttach;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +125,8 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         setContentView(R.layout.activity_photo_selection);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Photo Selection & Upload");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*getSupportActionBar().setTitle("Photo Selection & Upload");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
         presenter = new PhotoUploadPresenter(this);
         presenterPhotoDownload = new PhotoDownloadPresenter(this);
         fbs = new FirebaseStorageAPI();
@@ -137,79 +144,107 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
         type = getIntent().getIntExtra("type", 0/*type*/);
 
+        contentTxt = (TextView) findViewById(R.id.contentTxt);
+
         switch (type) {
             case ResponseBag.DAILY_THOUGHTS:
                 dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
-                getSupportActionBar().setSubtitle(dailyThought.getTitle());
+                contentTxt.setText(dailyThought.getTitle());
+               // getSupportActionBar().setSubtitle(dailyThought.getTitle());
                 break;
             case ResponseBag.WEEKLY_MASTERCLASS:
                 weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
-                getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
+                contentTxt.setText(weeklyMasterClass.getTitle());
+              //  getSupportActionBar().setSubtitle(weeklyMasterClass.getTitle());
                 break;
             case ResponseBag.WEEKLY_MESSAGE:
                 weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
-                getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
+                contentTxt.setText(weeklyMessage.getTitle());
+                //getSupportActionBar().setSubtitle(weeklyMessage.getTitle());
                 break;
             //testing
             case ResponseBag.EBOOKS:
                 eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
-                getSupportActionBar().setSubtitle(eBook.getStorageName());
+                contentTxt.setText(eBook.getStorageName());
+               // getSupportActionBar().setSubtitle(eBook.getStorageName());
                 break;
             case ResponseBag.NEWS:
                 news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
-                getSupportActionBar().setSubtitle(news.getTitle());
+                contentTxt.setText(news.getTitle());
+               // getSupportActionBar().setSubtitle(news.getTitle());
                 break;
             case ResponseBag.USERS:
                 user = (UserDTO) getIntent().getSerializableExtra("user");
-                getSupportActionBar().setSubtitle(user.getFirstName());
+                contentTxt.setText(user.getFullName());
+               // getSupportActionBar().setSubtitle(user.getFirstName());
                 break;
             case ResponseBag.COMPANIES:
                 company = (CompanyDTO) getIntent().getSerializableExtra("company");
-                getSupportActionBar().setSubtitle(company.getCompanyLogoUrl());
+                contentTxt.setText(company.getCompanyName());
+                //getSupportActionBar().setSubtitle(company.getCompanyLogoUrl());
                 break;
         }
         if (getIntent().getSerializableExtra("eBook") != null) {
             type = 3;
             eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
-            getSupportActionBar().setSubtitle(eBook.getStorageName());
+            contentTxt.setText(eBook.getStorageName());
+           // getSupportActionBar().setSubtitle(eBook.getStorageName());
         }
         if (getIntent().getSerializableExtra("podcast") != null) {
             type = ResponseBag.PODCASTS;
             podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
-            getSupportActionBar().setSubtitle(podcast.getStorageName());
+            contentTxt.setText(podcast.getStorageName());
+          //  getSupportActionBar().setSubtitle(podcast.getStorageName());
         }
         if (getIntent().getSerializableExtra("video") != null) {
             type = ResponseBag.VIDEOS;
             video = (VideoDTO) getIntent().getSerializableExtra("video");
-            getSupportActionBar().setSubtitle(video.getStorageName());
+            contentTxt.setText(video.getStorageName());
+          //  getSupportActionBar().setSubtitle(video.getStorageName());
         }
         if (getIntent().getSerializableExtra("url") != null) {
             type = ResponseBag.URLS;
             url = (UrlDTO) getIntent().getSerializableExtra("url");
-            getSupportActionBar().setSubtitle(url.getTitle());
+            contentTxt.setText(url.getTitle());
+           // getSupportActionBar().setSubtitle(url.getTitle());
         }
         if (getIntent().getSerializableExtra("newsArticle") != null) {
             type = ResponseBag.NEWS;
             news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
-            getSupportActionBar().setSubtitle(news.getTitle());
+            contentTxt.setText(news.getTitle());
+           // getSupportActionBar().setSubtitle(news.getTitle());
         }
         if (getIntent().getSerializableExtra("user") != null) {
             type = ResponseBag.USERS;
             user = (UserDTO) getIntent().getSerializableExtra("user");
-            getSupportActionBar().setSubtitle(user.getFirstName());
+            contentTxt.setText(user.getFullName());
+          //  getSupportActionBar().setSubtitle(user.getFirstName());
         }
         if (getIntent().getSerializableExtra("company") != null) {
             type = ResponseBag.COMPANIES;
             company = (CompanyDTO) getIntent().getSerializableExtra("company");
-            getSupportActionBar().setSubtitle(company.getCompanyName());
+            contentTxt.setText(company.getCompanyName());
+           // getSupportActionBar().setSubtitle(company.getCompanyName());
         }
         if (getIntent().getSerializableExtra("dailyThought") != null) {
             type = ResponseBag.DAILY_THOUGHTS;
             dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
-            getSupportActionBar().setSubtitle(dailyThought.getTitle());
+            contentTxt.setText(dailyThought.getTitle());
+           // getSupportActionBar().setSubtitle(dailyThought.getTitle());
         }
         firebaseAuth = FirebaseAuth.getInstance();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        fabIcon = (FloatingActionButton) findViewById(R.id.fabIcon);
+        if (dailyThought != null) {
+            fabIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startCamera();
+
+                }
+            });
+        }
+
         noPhotoTxt = (TextView) findViewById(R.id.noPhotoTxt);
         noPhotoTxt.setVisibility(View.GONE);
         LinearLayoutManager lm = new LinearLayoutManager(this);
@@ -242,6 +277,15 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
         //getFilePaths();
         getAllPhotos();
     }
+    private void startCamera() {
+        Intent intent = new Intent(PhotoSelectionActivity.this, VideoRecordActivity.class);
+        intent.putExtra("type", VideoRecordActivity.CAMERA_REQUEST);
+        if (dailyThought != null) {
+            intent.putExtra("dailyThought", dailyThought);
+        }
+        startActivityForResult(intent, VideoRecordActivity.CAMERA_REQUEST);
+    }
+
 
     private void setUp() {
 
@@ -872,6 +916,11 @@ public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUp
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPldps(List<PldpDTO> list) {
 
     }
 

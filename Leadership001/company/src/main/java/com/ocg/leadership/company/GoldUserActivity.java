@@ -83,6 +83,7 @@ import com.oneconnect.leadership.library.data.FCMData;
 import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PaymentDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
+import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
 import com.oneconnect.leadership.library.data.PriceDTO;
 import com.oneconnect.leadership.library.data.RatingDTO;
@@ -104,6 +105,7 @@ import com.oneconnect.leadership.library.lists.MyDailyThoughtList;
 import com.oneconnect.leadership.library.lists.NewsListFragment;
 import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
+import com.oneconnect.leadership.library.lists.PldpListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
 import com.oneconnect.leadership.library.lists.TopLeaderListFragment;
 import com.oneconnect.leadership.library.lists.UserListFragment;
@@ -135,7 +137,9 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         SubscriberContract.View, CrudContract.View, CacheContract.View, MasterListFragment.WeeklyMasterClassListener,
         WeeklyMessageListFragment.WeeklyMessageListener, PodcastListFragment.PodcastListener, VideoListFragment.VideoListener,
         PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
-        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener, MyDailyThoughtList.MyDailyThoughtListener, HarmonyListFragment.HarmonyThoughtAdapterlistener, TopLeaderListFragment.TopLeaderAdapterlistener {
+        NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener,
+        MyDailyThoughtList.MyDailyThoughtListener, HarmonyListFragment.HarmonyThoughtAdapterlistener,
+        TopLeaderListFragment.TopLeaderAdapterlistener, PldpListFragment.PldpListFragmentListener {
 
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -152,6 +156,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
     CalendarEventListFragment calendarEventListFragment;
     UserListFragment userListFragment;
     NewsListFragment newsListFragment;
+    PldpListFragment pldpListFragment;
     private VideoListFragment videoListFragment;
     private CompanyMainFragment companyMainFragment;
     private DrawerLayout drawer;
@@ -349,6 +354,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
         videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
         eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
+        pldpListFragment = PldpListFragment.newInstance();
 
         newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
         harmonyListFragment.setPageTitle(ctx.getString(R.string.hormony_list));
@@ -359,6 +365,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
         videoListFragment.setPageTitle(ctx.getString(R.string.video));
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
+        pldpListFragment.setPageTitle(ctx.getString(R.string.pldp));
 
         dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         harmonyListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
@@ -379,6 +386,7 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
         pageFragmentList.add(podcastListFragment);
         pageFragmentList.add(videoListFragment);
         pageFragmentList.add(eBookListFragment);
+        pageFragmentList.add(pldpListFragment);
 
 
         try {
@@ -436,6 +444,9 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                 }
                 if (page.equalsIgnoreCase("Leadership eBooks")) {
                     mPager.setCurrentItem(8);
+                }
+                if (page.equalsIgnoreCase("Leadership PLDP")) {
+                    mPager.setCurrentItem(9);
                 }
 
             }
@@ -700,6 +711,10 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
                 }
                 if (item.getItemId() == R.id.nav_eBooks) {
                     mPager.setCurrentItem(8, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_pldp) {
+                    mPager.setCurrentItem(9, true);
                     return true;
                 }
 
@@ -1147,6 +1162,11 @@ public class GoldUserActivity extends AppCompatActivity implements  NavigationVi
 
     @Override
     public void onDailyThoughts(List<DailyThoughtDTO> list) {
+
+    }
+
+    @Override
+    public void onPldps(List<PldpDTO> list) {
 
     }
 

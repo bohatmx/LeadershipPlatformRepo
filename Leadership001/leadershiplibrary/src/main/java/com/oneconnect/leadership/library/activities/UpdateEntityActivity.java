@@ -1,6 +1,8 @@
 package com.oneconnect.leadership.library.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,13 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
+import com.google.firebase.crash.FirebaseCrash;
+import com.ocg.backend.endpointAPI.model.Data;
+import com.ocg.backend.endpointAPI.model.EmailResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMResponseDTO;
+import com.ocg.backend.endpointAPI.model.FCMUserDTO;
+import com.ocg.backend.endpointAPI.model.FCMessageDTO;
+import com.ocg.backend.endpointAPI.model.PayLoad;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.cache.CachePresenter;
@@ -34,14 +43,18 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
+import com.oneconnect.leadership.library.fcm.EndpointContract;
+import com.oneconnect.leadership.library.fcm.EndpointPresenter;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.Util;
 
 import java.util.Date;
 import java.util.List;
 
+import static com.oneconnect.leadership.library.fcm.EndpointUtil.DAILY_THOUGHT;
 
-public class UpdateEntityActivity extends AppCompatActivity implements CrudContract.View{
+
+public class UpdateEntityActivity extends AppCompatActivity implements CrudContract.View, EndpointContract.View{
 
     private DailyThoughtDTO dailyThought;
     private WeeklyMasterClassDTO masterClass;
@@ -60,17 +73,29 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     private CrudPresenter crudPresenter;
     private Spinner spinner;
     private RadioButton approvedButton, declinedButton;
+    Data data;
+    PayLoad payLoad;
+    EndpointPresenter endpointPresenter;
+    FCMessageDTO fcmMessage;
+    FCMUserDTO fcmUser;
+    UserDTO user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_entity);
         crudPresenter = new CrudPresenter(this);
+        endpointPresenter = new EndpointPresenter(this);
 
         btn = (Button) findViewById(R.id.btn);
         editTitle = (TextInputEditText) findViewById(R.id.editTitle);
         editSubtitle = (TextInputEditText) findViewById(R.id.editSubtitle);
         approvedButton = (RadioButton) findViewById(R.id.approvedButton);
         declinedButton = (RadioButton) findViewById(R.id.declinedButton);
+
+        if (getIntent().getSerializableExtra("user") != null) {
+            user = (UserDTO) getIntent().getSerializableExtra("user");
+        }
 
         if (getIntent().getSerializableExtra("dailyThought") != null){
             dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
@@ -139,20 +164,53 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
             editSubtitle.setError("Enter subtitle");
             return;
         }
+        String number_1 = "1";
+        String number_2 = "2";
 
         if (dailyThought != null) {
+            if (dailyThought.getDailyThoughtType() == DailyThoughtDTO.INTERNAL_DAILY_THOUGHT) {
+                if (approvedButton.isChecked()) {
+                    dailyThought.setStatus(Constants.APPROVED);
+                    dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.APPROVED));
+                    dailyThought.setDailyThoughtType_status(number_1.concat("_").concat(Constants.APPROVED));
+                }
+                if (declinedButton.isChecked()) {
+                    dailyThought.setStatus(Constants.DECLINED);
+                    dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.DECLINED));
+                    dailyThought.setDailyThoughtType_status(number_1.concat("_").concat(Constants.DECLINED));
+                }
+
+            } else if (dailyThought.getDailyThoughtType() == DailyThoughtDTO.GLOBAL_DAILY_THOUGHT) {
+                if (approvedButton.isChecked()) {
+                    dailyThought.setStatus(Constants.APPROVED);
+                    dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.APPROVED));
+                    dailyThought.setDailyThoughtType_status(number_2.concat("_").concat(Constants.APPROVED));
+                }
+                if (declinedButton.isChecked()) {
+                    dailyThought.setStatus(Constants.DECLINED);
+                    dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.DECLINED));
+                    dailyThought.setDailyThoughtType_status(number_2.concat("_").concat(Constants.DECLINED));
+                }
+
+            }
+
             dailyThought.setTitle(editTitle.getText().toString());
             dailyThought.setSubtitle(editSubtitle.getText().toString());
-            if (approvedButton.isChecked()) {
+
+            /*if (approvedButton.isChecked()) {
                 dailyThought.setStatus(Constants.APPROVED);
+                dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.APPROVED));
+                dailyThought.setDailyThoughtType_status(dailyThought.getDailyThoughtType());
             }
             if (declinedButton.isChecked()) {
                 dailyThought.setStatus(Constants.DECLINED);
-            }
+                dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.DECLINED));
+            }*/
+
             crudPresenter.updateDailyThought(dailyThought);
             //Intent intent = new Intent(this, UpdateEntityActivity.class);
             //startActivity(intent);
-            finish();
+         //   finish();
             return;
         }
         if (masterClass != null) {
@@ -218,9 +276,42 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     static final String TAG = UpdateEntityActivity.class.getSimpleName();
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(UpdateEntityActivity.this, DailyThoughtApprovalActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
     public void onDailyThoughtUpdated(DailyThoughtDTO dailyThought) {
         Log.i(TAG, "onDailyThoughtUpdated status: " + dailyThought.getStatus());
-        crudPresenter.getPendingDailyThoughts("pending");
+        if (dailyThought.getStatus().equalsIgnoreCase(Constants.APPROVED)) {
+            data = new Data();
+            fcmUser = new FCMUserDTO();
+            payLoad = new PayLoad();
+            fcmMessage = new FCMessageDTO();
+            data.setUserID(user.getUserID());
+            data.setTitle("Leadership Platform"/*dailyThought.getSubtitle()*/);
+            data.setFromUser(user.getFullName());
+            data.setMessageType(DAILY_THOUGHT);
+            data.setMessage(dailyThought.getSubtitle()/*dailyThought.getTitle()*/ /*+ " - " + dailyThought.getSubtitle()*/);
+            data.setDate(new Date().getTime());
+            payLoad.setData(data);
+            fcmMessage.setCompanyID(user.getCompanyID());
+            fcmMessage.setDailyThoughtID(dailyThought.getDailyThoughtID());
+            fcmMessage.setTitle("Leadership Platform"/*dailyThought.getSubtitle()*/);
+            fcmMessage.setData(data);
+            if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_INTERNAL_DAILY_THOUGHT)) {
+                endpointPresenter.sendDailyThought(dailyThought.getCompanyID(), payLoad);
+            }
+            if (dailyThought.getDailyThoughtDescription().equalsIgnoreCase(DailyThoughtDTO.DESC_GLOBAL_DAILY_THOUGHT)) {
+                endpointPresenter.sendDailyThought(/*user*/dailyThought.getCompanyID(), payLoad);
+                //    endpointPresenter.sendMessage(fcmMessage);
+            }
+        }
+
+        showSnackBar("Thought Status: " + dailyThought.getStatus(), "Dismiss", "green");
+       // crudPresenter.getPendingDailyThoughts("pending");
     }
 
     @Override
@@ -384,8 +475,29 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     }
 
     @Override
-    public void onError(String message) {
+    public void onFCMUserSaved(FCMResponseDTO response) {
 
+    }
+
+    @Override
+    public void onMessageSent(FCMResponseDTO response) {
+        if (response.getStatusCode() == 0) {
+            Log.i(TAG, "onMessageSent: daily thought sent" + response.getMessage());
+
+        } else {
+            Log.e(TAG, "onMessageSent: daily thought failed");
+            FirebaseCrash.report(new Exception("daily thought failed"));
+        }
+    }
+
+    @Override
+    public void onEmailSent(EmailResponseDTO response) {
+
+    }
+
+    @Override
+    public void onError(String message) {
+        showSnackBar(message, "Dismiss", "red");
     }
 
     @Override
@@ -397,4 +509,23 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
     public void onLinksRequired(BaseDTO entity) {
 
     }
+
+    Snackbar snackbar;
+
+    public void showSnackBar(String title, String action, String color) {
+        snackbar = Snackbar.make(btn, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // snackbar.dismiss();
+                Intent intent = new Intent(UpdateEntityActivity.this, DailyThoughtApprovalActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        snackbar.show();
+    }
+
+
 }
