@@ -56,6 +56,15 @@
                 android:textSize="12dp" />
 
             <ImageView
+                android:layout_toLeftOf="@+id/overflow"
+                android:layout_below="@+id/fileName"
+                android:id="@+id/iconPldp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/pldp"
+                android:tint="@color/red_700" />
+
+            <ImageView
                 android:id="@+id/overflow"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -66,7 +75,7 @@
                 android:src="@drawable/ic_dots" />
 
             <RelativeLayout
-                android:layout_below="@+id/fileName"
+                android:layout_below="@+id/iconPldp"
                 android:id="@+id/bottomLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -106,6 +106,7 @@ import com.oneconnect.leadership.library.lists.MyDailyThoughtList;
 import com.oneconnect.leadership.library.lists.NewsListFragment;
 import com.oneconnect.leadership.library.lists.PageFragment;
 import com.oneconnect.leadership.library.lists.PhotoListFragment;
+import com.oneconnect.leadership.library.lists.PldpListFragment;
 import com.oneconnect.leadership.library.lists.PodcastListFragment;
 import com.oneconnect.leadership.library.lists.TopLeaderListFragment;
 import com.oneconnect.leadership.library.lists.UserListFragment;
@@ -140,7 +141,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         PhotoListFragment.PhotoListener, EBookListFragment.EBookListener, DailyThoughtListFragment.DailyThoughtListener,
         NewsListFragment.NewsArticleListener, CompanyMainFragment.CompanyFragmentListener, UserListFragment.UserListListener,
         MyDailyThoughtList.MyDailyThoughtListener, HarmonyListFragment.HarmonyThoughtAdapterlistener,
-        TopLeaderListFragment.TopLeaderAdapterlistener {
+        TopLeaderListFragment.TopLeaderAdapterlistener, PldpListFragment.PldpListFragmentListener {
 
     private WeeklyMessageDTO weeklyMessage;
     private WeeklyMasterClassDTO weeklyMasterClass;
@@ -152,6 +153,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
     private TopLeaderListFragment topLeaderListFragment;
     MasterListFragment masterListFragment;
     WeeklyMessageListFragment weeklyMessageListFragment;
+    PldpListFragment pldpListFragment;
     MyDailyThoughtList myDailyThoughtList;
     PhotoListFragment photoListFragment;
     CalendarEventListFragment calendarEventListFragment;
@@ -360,6 +362,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         podcastListFragment = PodcastListFragment.newInstance(new HashMap<String, PodcastDTO>());
         videoListFragment = VideoListFragment.newInstance(new HashMap<String, VideoDTO>());
         eBookListFragment = EBookListFragment.newInstance(new HashMap<String, EBookDTO>());
+        pldpListFragment = PldpListFragment.newInstance();
 
         newsListFragment.setPageTitle(ctx.getString(R.string.news_article));
         harmonyListFragment.setPageTitle(ctx.getString(R.string.hormony_list));
@@ -370,6 +373,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         podcastListFragment.setPageTitle(ctx.getString(R.string.podcast));
         videoListFragment.setPageTitle(ctx.getString(R.string.video));
         eBookListFragment.setPageTitle(ctx.getString(R.string.ebooks));
+        pldpListFragment.setPageTitle(ctx.getString(R.string.pldp));
 
         dailyThoughtListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
         harmonyListFragment.setThemeColors(themePrimaryColor, themeDarkColor);
@@ -390,6 +394,7 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
         pageFragmentList.add(podcastListFragment);
         pageFragmentList.add(videoListFragment);
         pageFragmentList.add(eBookListFragment);
+        pageFragmentList.add(pldpListFragment);
 
 
         try {
@@ -448,6 +453,9 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
                 }
                 if (page.equalsIgnoreCase("Leadership eBooks")) {
                     mPager.setCurrentItem(8);
+                }
+                if (page.equalsIgnoreCase("Leadership PLDP")) {
+                    mPager.setCurrentItem(9);
                 }
 
             }
@@ -749,6 +757,10 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
                 }
                 if (item.getItemId() == R.id.nav_eBooks) {
                     mPager.setCurrentItem(8, true);
+                    return true;
+                }
+                if (item.getItemId() == R.id.nav_pldp) {
+                    mPager.setCurrentItem(9, true);
                     return true;
                 }
 

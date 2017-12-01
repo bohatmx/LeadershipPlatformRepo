@@ -109,14 +109,18 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
             entityType = ResponseBag.PODCASTS;
             podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
             sessionTxt.setVisibility(View.GONE);
-            entityText.setText(podcast.getStorageName());
+            int i = podcast.getStorageName().lastIndexOf("/");
+            entityText.setText(podcast.getStorageName().substring(i + 1));
+           // entityText.setText(podcast.getStorageName());
         }
 
         if (getIntent().getSerializableExtra("video") != null) {
             entityType = ResponseBag.VIDEOS;
             video = (VideoDTO) getIntent().getSerializableExtra("video");
             sessionTxt.setVisibility(View.GONE);
-            entityText.setText(video.getStorageName());
+            int i = video.getStorageName().lastIndexOf("/");
+            entityText.setText(video.getStorageName().substring(i + 1));
+           // entityText.setText(video.getStorageName());
         }
         if (getIntent().getSerializableExtra("newsArticle") != null) {
             entityType = ResponseBag.NEWS;

@@ -73,6 +73,14 @@
                 android:title="Leadership eBooks" />
         </menu>
     </item>
+    <item android:title="Development Plan">
+        <menu>
+            <item
+                android:id="@+id/nav_pldp"
+                android:icon="@drawable/ic_action_info"
+                android:title="Leadership PLDP" />
+        </menu>
+    </item>
     <item android:title="Sign out">
         <menu>
             <item

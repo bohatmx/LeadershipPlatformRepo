@@ -3,6 +3,7 @@ package com.oneconnect.leadership.library.adapters;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.data.DailyThoughtDTO;
 import com.oneconnect.leadership.library.data.EBookDTO;
+import com.oneconnect.leadership.library.data.NewsDTO;
 import com.oneconnect.leadership.library.data.PhotoDTO;
 import com.oneconnect.leadership.library.data.PldpDTO;
 import com.oneconnect.leadership.library.data.PodcastDTO;
@@ -61,6 +63,7 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onPodcastSelected(PodcastDTO podcast);
         void onVideoSelected(VideoDTO video);
         void onEbookSelected(EBookDTO ebook);
+        void onArticleSelected(NewsDTO news);
     }
 
     public PldpAdapter(Context ctx, List<PldpDTO> mList, PldpAdapterListener listener) {
@@ -81,9 +84,28 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final PldpDTO pldp = mList.get(position);
         final PldpViewHolder pvh = (PldpViewHolder) holder;
 
+        pvh.pldpCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pldp.getNews() != null) {
+                    listener.onArticleSelected(pldp.getNews());
+                } else if (pldp.getPodcast() != null) {
+                    listener.onPodcastSelected(pldp.getPodcast());
+                } else if (pldp.getVideo() != null) {
+                    listener.onVideoSelected(pldp.getVideo());
+                } else if (pldp.getWeeklyMasterClass() != null) {
+                    listener.onWeeklyMasterClassSelected(pldp.getWeeklyMasterClass());
+                } else if (pldp.getDailyThought() != null) {
+                    listener.onDailyThoughtSelected(pldp.getDailyThought());
+                } else if (pldp.geteBook() != null) {
+                    listener.onEbookSelected(pldp.geteBook());
+                }
+            }
+        });
+
         if (pldp.getNews() != null) {
             String s1 = pldp.getActionName();
-            String action = s1.replaceAll("," , "\n");
+            String action = s1.replaceAll("," , " * \n ");
             if (pldp.getNews().getPhotos() != null){
                 List<PhotoDTO> urlList = new ArrayList<>();
 
@@ -106,10 +128,12 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             pvh.titleText.setText(pldp.getNews().getTitle()/*.concat(" - ").concat(pldp.getNews().getSubtitle())*/);
             pvh.actionsText.setText(action/*pldp.getActionName()*/);
             pvh.videoView.setVisibility(View.GONE);
+            pvh.audioLayout.setVisibility(View.GONE);
+            pvh.audioText.setVisibility(View.GONE);
         }
         if (pldp.getDailyThought() != null) {
             String s1 = pldp.getActionName();
-            String action = s1.replaceAll("," , "\n");
+            String action = s1.replaceAll("," , " * \n ");
             if (pldp.getDailyThought().getPhotos() != null){
                 List<PhotoDTO> urlList = new ArrayList<>();
 
@@ -132,11 +156,13 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             pvh.titleText.setText(pldp.getDailyThought().getTitle().concat(" - ").concat(pldp.getDailyThought().getSubtitle()));
             pvh.actionsText.setText(action);
             pvh.videoView.setVisibility(View.GONE);
+            pvh.audioLayout.setVisibility(View.GONE);
+            pvh.audioText.setVisibility(View.GONE);
         }
 
         if (pldp.getWeeklyMasterClass() != null) {
             String s1 = pldp.getActionName();
-            String action = s1.replaceAll("," , "\n");
+            String action = s1.replaceAll("," , " * \n ");
             if (pldp.getWeeklyMasterClass().getPhotos() != null){
                 List<PhotoDTO> urlList = new ArrayList<>();
 
@@ -159,6 +185,8 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             pvh.titleText.setText(pldp.getWeeklyMasterClass().getTitle().concat(" - ").concat(pldp.getWeeklyMasterClass().getSubtitle()));
             pvh.actionsText.setText(action/*pldp.getActionName()*/);
             pvh.videoView.setVisibility(View.GONE);
+            pvh.audioLayout.setVisibility(View.GONE);
+            pvh.audioText.setVisibility(View.GONE);
         }
         if (pldp.getPodcast() != null) {
             String s1 = pldp.getActionName();
@@ -180,13 +208,21 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             .into(pvh.image);
                 }
             }
-            pvh.titleText.setText(pldp.getPodcast().getStorageName());
+            int i = pldp.getPodcast().getStorageName().lastIndexOf("/");
+            pvh.titleText.setText(pldp.getPodcast().getStorageName().substring(i + 1));
+            pvh.titleText.setVisibility(View.GONE);
+            pvh.fileName.setText(pldp.getPodcast().getStorageName().substring(i + 1));
+
+           // pvh.titleText.setText(pldp.getPodcast().getStorageName());
             pvh.actionsText.setText(action/*pldp.getActionName()*/);
+            pvh.actionsText.setVisibility(View.GONE);
             pvh.videoView.setVisibility(View.GONE);
             pvh.image.setVisibility(View.GONE);
+            pvh.audioText.setText(action);
         }
 
         if (pldp.getVideo() != null) {
+            int i = pldp.getVideo().getStorageName().lastIndexOf("/");
             try {
                 Uri video = Uri.parse(pldp.getVideo().getUrl());
                 pvh.videoView.setVideoURI(video);
@@ -211,9 +247,11 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     listener.onVideoSelected(pldp.getVideo());
                 }
             });
-            pvh.titleText.setText(pldp.getNews().getTitle().concat(" - ").concat(pldp.getNews().getSubtitle()));
+          //  pvh.titleText.setText(pldp.getVideo().getTitle().concat(" - ").concat(pldp.getNews().getSubtitle()));
             pvh.actionsText.setText(pldp.getActionName().replaceAll(",", "\n"));
             pvh.image.setVisibility(View.GONE);
+            pvh.audioLayout.setVisibility(View.GONE);
+            pvh.audioText.setVisibility(View.GONE);
         }
     }
 
@@ -223,9 +261,11 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public class PldpViewHolder extends RecyclerView.ViewHolder {
-        protected TextView titleText, actionsText;
+        protected TextView titleText, actionsText, duration, fileName, audioText;
         protected VideoView videoView;
         protected ImageView image;
+        protected RelativeLayout podControlLayout, audioLayout;
+        protected CardView pldpCard;
 
         public PldpViewHolder(View itemView) {
             super(itemView);
@@ -233,6 +273,18 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             actionsText = (TextView) itemView.findViewById(R.id.actionsText);
             videoView =  (VideoView) itemView.findViewById(R.id.videoView);
             image = (ImageView) itemView.findViewById(R.id.image);
+
+            // audio
+            duration = (TextView) itemView.findViewById(R.id.duration);
+            duration.setVisibility(View.GONE);
+            podControlLayout = (RelativeLayout) itemView.findViewById(R.id.podControlLayout);
+            podControlLayout.setVisibility(View.GONE);
+            audioLayout = (RelativeLayout) itemView.findViewById(R.id.audioLayout);
+            fileName = (TextView) itemView.findViewById(R.id.fileName);
+            audioText = (TextView) itemView.findViewById(R.id.audioText);
+
+            //
+            pldpCard = (CardView) itemView.findViewById(R.id.pldpCard);
         }
     }
 

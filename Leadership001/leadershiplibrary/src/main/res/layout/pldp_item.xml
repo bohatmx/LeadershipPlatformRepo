@@ -2,22 +2,37 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/mon_padding">
+    android:layout_margin="@dimen/mon_padding"
+    android:id="@+id/pldpCard">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/mon_padding">
-
-        <ImageView
-            android:id="@+id/image"
+        <RelativeLayout
+            android:id="@+id/mediaLayout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@drawable/business"
-            android:scaleType="fitXY"/>
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/business"
+                android:scaleType="fitXY"/>
+
+            <RelativeLayout
+                android:id="@+id/audioLayout"
+                android:layout_below="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include layout="@layout/playing_podcast"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+
 
         <TextView
-            android:layout_below="@+id/image"
+            android:layout_below="@+id/mediaLayout"
             android:id="@+id/titleText"
             android:text="This could be the text content from a daily thought, masterclass and/ Article"
             android:layout_width="match_parent"
@@ -26,7 +41,30 @@
 
         <TextView
             android:layout_below="@+id/titleText"
+            android:text="My Actions: "
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:id="@+id/actionsLabelTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!--<TextView
+            android:layout_below="@+id/titleText"
+            android:text="My Actions: "
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:id="@+id/audioActionsLabelTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />-->
+
+        <TextView
+            android:layout_below="@+id/actionsLabelTxt"
             android:id="@+id/actionsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Users selected actions will go in this space."
+            style="@style/TextAppearance.AppCompat.Body1"/>
+        <TextView
+            android:layout_below="@+id/actionsLabelTxt"
+            android:id="@+id/audioText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Users selected actions will go in this space."

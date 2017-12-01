@@ -1,6 +1,8 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,8 @@ import android.view.WindowManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.FullArticleActivity;
+import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.PldpAdapter;
@@ -376,18 +380,45 @@ public class PldpListFragment extends Fragment implements PageFragment, Subscrib
 
             @Override
             public void onPodcastSelected(PodcastDTO podcast) {
-
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                    Log.d(LOG, "color found: " + hexColor);
+                }
+                intent.putExtra("podcast", podcast);
+                startActivity(intent);
             }
 
             @Override
             public void onVideoSelected(VideoDTO video) {
-
+                Intent intent = new Intent(ctx, PodcastPlayerActivity.class);
+                intent.putExtra("video", video);
+                startActivity(intent);
+               // ctx.startActivity(intent);
 
             }
 
             @Override
             public void onEbookSelected(EBookDTO ebook) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(ebook.getUrl()), "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent newIntent = Intent.createChooser(intent, "Open File");
+                try {
+                    ctx.startActivity(newIntent);
+                } catch(ActivityNotFoundException e) {
+                    Log.e(LOG, "Failed to open pdf");
+                }
+            }
 
+            @Override
+            public void onArticleSelected(NewsDTO news) {
+                if (news.getBody() != null) {
+                    Intent intent = new Intent(ctx, FullArticleActivity.class);
+                    intent.putExtra("newsArticle", news);
+                    startActivity(intent);
+                  //  ctx.startActivity(intent);
+                }
             }
         });
         recyclerView.setAdapter(pldpAdapter);

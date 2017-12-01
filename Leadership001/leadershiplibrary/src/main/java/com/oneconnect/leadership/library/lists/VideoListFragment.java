@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.oneconnect.leadership.library.activities.CreatePldpActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.activities.VideoActivity;
@@ -244,6 +245,20 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             @Override
             public void onVideoRequired(VideoDTO video) {
 
+            }
+
+            @Override
+            public void onPldpRequested(VideoDTO video) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("video", video);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                startActivity(intent);
+              //  ctx.startActivity(intent);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -723,6 +738,20 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             public void onVideoRequired(VideoDTO video) {
 
             }
+
+            @Override
+            public void onPldpRequested(VideoDTO video) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("video", video);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                startActivity(intent);
+               // ctx.startActivity(intent);
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -806,6 +835,20 @@ public class VideoListFragment extends Fragment implements VideoAdapter.VideoAda
             @Override
             public void onVideoRequired(VideoDTO video) {
 
+            }
+
+            @Override
+            public void onPldpRequested(VideoDTO video) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("video", video);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                startActivity(intent);
+               // ctx.startActivity(intent);
             }
         });
         recyclerView.setAdapter(adapter);

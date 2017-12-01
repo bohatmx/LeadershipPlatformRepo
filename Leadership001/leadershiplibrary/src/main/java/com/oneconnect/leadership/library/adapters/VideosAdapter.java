@@ -45,6 +45,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public interface VideosAdapterListener {
         void onPlayClicked(String path);
         void onVideoRequired(VideoDTO video);
+        void onPldpRequested(VideoDTO video);
     }
 
     public VideosAdapter(List<VideoDTO> mList, Context ctx, VideosAdapterListener listener) {
@@ -173,6 +174,13 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
 
+        vvh.iconPldp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onPldpRequested(v);
+            }
+        });
+
         vvh.card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -246,12 +254,13 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     SeekBar videoSeekBar;*/
     public class VideosViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName,count;
-        protected ImageView image, overflow;
+        protected ImageView image, overflow, iconPldp;
         protected Button btnPlay;
          protected VideoView videoView;
          protected SeekBar videoSeekBar;
          protected RelativeLayout bottomLayout;
          protected CardView card_view;
+
 
 
         public VideosViewHolder(View itemView) {
@@ -268,6 +277,7 @@ public class VideosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             count = (TextView) itemView.findViewById(R.id.fileName);
             videoSeekBar = (SeekBar) itemView.findViewById(R.id.videoSeekBar);
             videoSeekBar.setVisibility(View.GONE);
+            iconPldp = (ImageView) itemView.findViewById(R.id.iconPldp);
         }
     }
     static final String LOG = VideosAdapter.class.getSimpleName();
