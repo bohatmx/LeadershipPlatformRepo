@@ -248,7 +248,8 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
           //  pvh.titleText.setText(pldp.getVideo().getTitle().concat(" - ").concat(pldp.getNews().getSubtitle()));
-            pvh.actionsText.setText(pldp.getActionName().replaceAll(",", "\n"));
+            pvh.titleText.setText(pldp.getVideo().getStorageName().substring(i + 1));
+            pvh.actionsText.setText(pldp.getActionName().replaceAll(",", " * \n "));
             pvh.image.setVisibility(View.GONE);
             pvh.audioLayout.setVisibility(View.GONE);
             pvh.audioText.setVisibility(View.GONE);
