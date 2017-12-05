@@ -11,10 +11,10 @@ import java.util.HashMap;
 
 public class PldpDTO extends BaseDTO implements Serializable, Comparable<PldpDTO>{
 
-    private String pldpID, actionName, sessionName;
+    private String pldpID, actionName, sessionName, note;
     private String weeklyMasterClassID, weeklyMessageID, dailyThoughtID,
             eBookID, podcastID, videoID, newsID, podcastUrl, videoUrl;
-    private long dateUpdated;
+    private long dateUpdated, reminderDate;
     private EBookDTO eBook;
     private VideoDTO video;
     private UrlDTO urlDTO;
@@ -47,30 +47,6 @@ public class PldpDTO extends BaseDTO implements Serializable, Comparable<PldpDTO
             REMEMBER_YOUR_SUCCESS = 7,
             DONT_FEAR_FAILURE = 8,
             CUT_DOWN_ON_TV = 9;
-
-    /*public HashMap<String, VideoDTO> getVideos() {
-        return videos;
-    }
-
-    public void setVideos(HashMap<String, VideoDTO> videos) {
-        this.videos = videos;
-    }
-
-    public HashMap<String, PodcastDTO> getPodcasts() {
-        return podcasts;
-    }
-
-    public void setPodcasts(HashMap<String, PodcastDTO> podcasts) {
-        this.podcasts = podcasts;
-    }
-
-    public HashMap<String, DailyThoughtDTO> getDailyThoughts() {
-        return dailyThoughts;
-    }
-
-    public void setDailyThoughts(HashMap<String, DailyThoughtDTO> dailyThoughts) {
-        this.dailyThoughts = dailyThoughts;
-    }*/
 
     public String getPldpID() {
         return pldpID;
@@ -297,5 +273,21 @@ public class PldpDTO extends BaseDTO implements Serializable, Comparable<PldpDTO
 
     public void setNews(NewsDTO news) {
         this.news = news;
+    }
+
+    public long getReminderDate() {
+        return reminderDate;
+    }
+
+    public void setReminderDate(long reminderDate) {
+        this.reminderDate = reminderDate;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

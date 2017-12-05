@@ -42,6 +42,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public interface EbookAdapterListener {
         void onReadClicked(String path);
+        void onPldpRequired(EBookDTO ebook);
     }
 
     public EbookAdapter(List<EBookDTO> mList, Context ctx, EbookAdapterListener listener) {
@@ -75,6 +76,13 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 int i = displayName.lastIndexOf("/");
                 fbs.downloadEbook(bookUrl, displayName.substring(i + 1), path,  ctx);*/
 
+            }
+        });
+
+        vvh.iconPldp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onPldpRequired(eBook);
             }
         });
 
@@ -129,7 +137,7 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public class EbookViewHolder extends RecyclerView.ViewHolder {
         protected TextView fileName;
-        protected ImageView image, bookIcon, iconshar, uploadIcon, readIcon, imageUploadIcon, eBookMenu, iconDelete;
+        protected ImageView image, bookIcon, iconshar, uploadIcon, readIcon, imageUploadIcon, eBookMenu, iconDelete, iconPldp;
         protected Button btnPlay, btnUpload;
         protected RelativeLayout bottomLayout;
         protected CheckBox checkBox;
@@ -156,7 +164,9 @@ public class EbookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             bottomLayout = (RelativeLayout) itemView.findViewById(R.id.bottomLayout);
             bottomLayout.setVisibility(View.GONE);
             eBookMenu = (ImageView) itemView.findViewById(R.id.ebook_menu);
-            eBookMenu.setVisibility(View.VISIBLE);
+            eBookMenu.setVisibility(View.GONE);
+            iconPldp = (ImageView) itemView.findViewById(R.id.iconPldp);
+
         }
     }
 }

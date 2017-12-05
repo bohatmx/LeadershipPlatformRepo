@@ -315,6 +315,22 @@ public abstract class BaseLoginActivity extends AppCompatActivity
                     d.setTitle(getString(R.string.platform_welcome));
                     break;
 
+                case UserDTO.COMPANY_ADMIN:
+                    d.setMessage(getString(R.string.staff_welcome));
+                    d.setTitle(u.getCompanyName());
+                    break;
+
+                case UserDTO.PLATINUM_ADMIN:
+                    d.setMessage(getString(R.string.staff_welcome));
+                    d.setTitle(u.getCompanyName());
+                    break;
+
+                case UserDTO.STANDARD_USER:
+                    d.setMessage(getString(R.string.welcome_platform));
+                    d.setTitle(getString(R.string.platform_welcome));
+                    break;
+
+
 
             }
             Log.d(TAG, "onFCMUserSaved: about to send welcome message");

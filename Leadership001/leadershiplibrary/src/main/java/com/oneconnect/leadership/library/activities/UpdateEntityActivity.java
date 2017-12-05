@@ -16,6 +16,8 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ocg.backend.endpointAPI.model.Data;
 import com.ocg.backend.endpointAPI.model.EmailResponseDTO;
 import com.ocg.backend.endpointAPI.model.FCMResponseDTO;
@@ -164,32 +166,30 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
             editSubtitle.setError("Enter subtitle");
             return;
         }
-        String number_1 = "1";
-        String number_2 = "2";
 
         if (dailyThought != null) {
             if (dailyThought.getDailyThoughtType() == DailyThoughtDTO.INTERNAL_DAILY_THOUGHT) {
                 if (approvedButton.isChecked()) {
                     dailyThought.setStatus(Constants.APPROVED);
                     dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.APPROVED));
-                    dailyThought.setDailyThoughtType_status(number_1.concat("_").concat(Constants.APPROVED));
+                    dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
                 }
                 if (declinedButton.isChecked()) {
                     dailyThought.setStatus(Constants.DECLINED);
                     dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.DECLINED));
-                    dailyThought.setDailyThoughtType_status(number_1.concat("_").concat(Constants.DECLINED));
+                    dailyThought.setDailyThoughtType_status(Constants.INTERNAL_DAILY_THOUGHT.concat("_").concat(Constants.DECLINED));
                 }
 
             } else if (dailyThought.getDailyThoughtType() == DailyThoughtDTO.GLOBAL_DAILY_THOUGHT) {
                 if (approvedButton.isChecked()) {
                     dailyThought.setStatus(Constants.APPROVED);
                     dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.APPROVED));
-                    dailyThought.setDailyThoughtType_status(number_2.concat("_").concat(Constants.APPROVED));
+                    dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.APPROVED));
                 }
                 if (declinedButton.isChecked()) {
                     dailyThought.setStatus(Constants.DECLINED);
                     dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.DECLINED));
-                    dailyThought.setDailyThoughtType_status(number_2.concat("_").concat(Constants.DECLINED));
+                    dailyThought.setDailyThoughtType_status(Constants.GLOBAL_DAILY_THOUGHT.concat("_").concat(Constants.DECLINED));
                 }
 
             }
@@ -207,6 +207,7 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
                 dailyThought.setCompanyID_status(dailyThought.getCompanyID().concat("_").concat(Constants.DECLINED));
             }*/
 
+            Log.w(TAG, "...sending to Firebase: ".concat(GSON.toJson(dailyThought)));
             crudPresenter.updateDailyThought(dailyThought);
             //Intent intent = new Intent(this, UpdateEntityActivity.class);
             //startActivity(intent);
@@ -242,6 +243,8 @@ public class UpdateEntityActivity extends AppCompatActivity implements CrudContr
             return;
         }
     }
+
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Override
     public void onEntityAdded(String key) {

@@ -97,7 +97,6 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
             presenter = new SubscriberPresenter(this);
             cachePresenter = new CachePresenter(this, ctx);
 
-            user = SharedPrefUtil.getUser(ctx);
             type = SharedPrefUtil.getFragmentType(ctx);
         }
     }
@@ -298,8 +297,9 @@ public class HarmonyListFragment extends Fragment implements PageFragment, Subsc
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
-        Log.i(LOG, "** onUserFound **" + user.getFullName());
+    public void onUserFound(UserDTO u) {
+        Log.i(LOG, "** onUserFound **" + u.getFullName());
+        user = u;
         String companyID_status = user.getCompanyID().concat("_").concat(Constants.APPROVED);
         presenter.getCompanyApprovedDailyThoughts(companyID_status);
         presenter.getCompanyProfile(user.getCompanyID());

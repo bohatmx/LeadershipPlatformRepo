@@ -65,7 +65,7 @@ dependencies {
     }
     // compile files('libs/kryo-3.0.0.jar')
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'me.everything:providers-stetho:1.0.1'
+    /*compile 'me.everything:providers-stetho:1.0.1'*/
     compile 'com.android.support:appcompat-v7:26.0.1'
     compile 'com.android.support:design:26.0.1'
     compile 'com.android.support:recyclerview-v7:26.0.1'

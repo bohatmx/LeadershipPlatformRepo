@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
 import com.google.android.youtube.player.internal.e;
 import com.google.firebase.crash.FirebaseCrash;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.oneconnect.leadership.library.activities.CreatePldpActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
 import com.oneconnect.leadership.library.adapters.DailyThoughtAdapter;
@@ -84,6 +86,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     private UserDTO user;
     private RecyclerView.LayoutManager mLayoutManager;
     public SearchView search;
+    FirebaseAuth firebaseAuth;
 
     public EBookListFragment() {
 
@@ -123,7 +126,6 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
             cachePresenter = new CachePresenter(this, ctx);
 
 
-            user = SharedPrefUtil.getUser(ctx);
             type = SharedPrefUtil.getFragmentType(ctx);
         }
     }
@@ -133,6 +135,8 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: #################");
         view =  inflater.inflate(R.layout.fragment_ebook_list, container, false);
+
+        firebaseAuth = FirebaseAuth.getInstance();
         presenter = new SubscriberPresenter(this);
         search = view.findViewById(R.id.search);
         ctx = getActivity();
@@ -175,7 +179,18 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
             }
 
-
+            @Override
+            public void onPldpRequired(EBookDTO ebook) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("eBook", ebook);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
+            }
 
         });
         recyclerView.setAdapter(adapter);
@@ -275,6 +290,19 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                 recyclerView.setAdapter(ebookAdapter);
             }
 
+            @Override
+            public void onPldpRequired(EBookDTO ebook) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("eBook", ebook);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
+            }
+
 
         });
     }
@@ -322,6 +350,7 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
     private void getEBooks() {
         Log.d(LOG, "************** getEBooks: " );
+        presenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
             presenter.getAllEBooks();
     }
 
@@ -639,13 +668,18 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
     }
 
     @Override
-    public void onUserFound(UserDTO user) {
-
+    public void onUserFound(UserDTO u) {
+        user = u;
+        presenter.getCompanyProfile(user.getCompanyID());
     }
 
+    String hexColor;
     @Override
     public void onCompanyFound(CompanyDTO company) {
-
+        if (company.getPrimaryColor() != 0) {
+            Log.i(LOG, "*** converting primary color to a hex color ***");
+            hexColor = String.format("#%06X", (0xFFFFFF & company.getPrimaryColor()));
+        }
     }
 
     @Override
@@ -752,6 +786,18 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
 
             }
 
+            @Override
+            public void onPldpRequired(EBookDTO ebook) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("eBook", ebook);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                startActivity(intent);
+            }
 
 
         });
@@ -810,6 +856,19 @@ public class EBookListFragment extends Fragment implements PageFragment, Subscri
                     Log.e(LOG, "Failed to open pdf");
                 }
                 //readEbook(path);
+            }
+
+            @Override
+            public void onPldpRequired(EBookDTO ebook) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                intent.putExtra("eBook", ebook);
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                ctx.startActivity(intent);
             }
 
 

@@ -62,7 +62,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".calendar.CalendarActivity"
+            android:name="com.oneconnect.leadership.library.calendar.CalendarActivity"
             android:label="@string/title_activity_calendar"
             android:parentActivityName=".crud.CrudActivity"
             android:screenOrientation="portrait"

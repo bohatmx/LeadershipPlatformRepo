@@ -49,7 +49,7 @@ import com.oneconnect.leadership.library.editors.NewsArticleEditor;
 import com.oneconnect.leadership.library.photo.PhotoSelectionActivity;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.audio.PodcastSelectionActivity;
-import com.oneconnect.leadership.admin.calendar.CalendarActivity;
+import com.oneconnect.leadership.library.calendar.CalendarActivity;
 import com.oneconnect.leadership.library.camera.CameraActivity;
 import com.oneconnect.leadership.library.camera.VideoSelectionActivity;
 import com.oneconnect.leadership.library.ebook.EbookSelectionActivity;

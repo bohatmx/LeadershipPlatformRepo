@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.calendar;
+package com.oneconnect.leadership.library.calendar;
 
 import com.oneconnect.leadership.library.api.DataAPI;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;

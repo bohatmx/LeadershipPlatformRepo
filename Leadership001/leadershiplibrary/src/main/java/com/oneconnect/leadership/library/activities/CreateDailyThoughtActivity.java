@@ -107,12 +107,12 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     RecyclerView recyclerView;
     EditText editTitle, editSubtitle;
     ImageView iconDelete, iconLink, iconMicrophone, iconVideo, iconCamera;
-    TextView txtLinks ,txtMicrophone, txtVideo, txtCamera;
+    TextView txtLinks ,txtMicrophone, txtVideo, txtCamera, countTxt, selectTxt;
     MyDailyThoughtAdapter adapter;
     LinearLayout iconLayout;
     Button btn, btnDate, btnDone, btnNewThought;
     private RadioButton internalButton, globalButton;
-    private Spinner catSpinner;
+    private Spinner catSpinner, selectedCatSpinner;
     CategoryDTO category;
     String hexColor;
     FirebaseAuth firebaseAuth;
@@ -146,6 +146,13 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
         btn = (Button) findViewById(R.id.btn);
         btnDone = (Button) findViewById(R.id.btnDone);
+        btnDate = (Button) findViewById(R.id.btnDate);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDate();
+            }
+        });
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,13 +267,19 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
         globalButton = (RadioButton) findViewById(R.id.globalButton);
 
         catSpinner = (Spinner) findViewById(R.id.Catspinner);
+        selectedCatSpinner = (Spinner) findViewById(R.id.selectedCatSpinner);
+        selectedCatSpinner.setVisibility(GONE);
+        countTxt = (TextView) findViewById(R.id.countTxt);
+        countTxt.setVisibility(GONE);
+
+        selectTxt = (TextView) findViewById(R.id.selectTxt);
+        selectTxt.setVisibility(GONE);
 
         btnDate = (Button) findViewById(R.id.btnDate);
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getDate();
-             //   bottomSheetListener.onDateRequired();
             }
         });
 
@@ -407,6 +420,8 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
             dailyThought.setStatus(Constants.APPROVED);
             dailyThought.setCompanyID_status(user.getCompanyID().concat("_").concat(Constants.APPROVED));
         }
+
+        dailyThought.setTags(getActionsString());
 
         presenter.addEntity(dailyThought);
     }
@@ -731,17 +746,18 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
     }
 
     private int i = 0;
-    List<CategoryDTO> categoryList= new ArrayList<>();
+    List<CategoryDTO> categoryList = new ArrayList<>();
+    List<String> selectedCategory = new ArrayList<>();
 
     @Override
     public void onCategories(List<CategoryDTO> list) {
+        Log.i(TAG, "onCategores: " + list.size());
         this.categoryList = list;
         List<String> lis = new ArrayList<String>();
         lis.add("Select Category");
         //  Collections.sort(list);
         for (CategoryDTO cat : categoryList) {
             lis.add(cat.getCategoryName());
-            /*category = cat;*/
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lis);
@@ -749,17 +765,22 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (i == 0) {
+                if (/*i*/position == 0) {
                     return;
                 }
-                if (categoryList.isEmpty()) {
+               /* if (categoryList.isEmpty()) {
                     Log.i(TAG, "category list is null");
                     return;
-                }
-                Log.d(TAG, "onItemSelected: category: " + categoryList.size() + " index: " + i);
+                }*/
+                Log.d(TAG, "onItemSelected: category: " + categoryList.size() + " index: " + position);
                 Log.i(TAG, "selectedItem: " + "\n" + "category: " + catSpinner.getSelectedItem().toString());
 
-                if (categoryList.size() == 1) {
+                //CategoryDTO name = categoryList.get(i/*- 1*/);
+                Log.d(TAG, "onItemSelected: selectedCategory: ".concat(GSON.toJson(catSpinner.getSelectedItem().toString()/*name*/)));
+                selectedCategory.add(catSpinner.getSelectedItem().toString()/*name*/);
+                setAttendeeSpinner();
+
+                /*if (categoryList.size() == 1) {
                     categoryList.clear();
                 } else {
                     boolean isFound = false;
@@ -780,7 +801,7 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
                         categoryList.remove(j);
                         setCategorySpinner();
                     }
-                }
+                }*/
 
             }
 
@@ -789,6 +810,77 @@ public class CreateDailyThoughtActivity extends AppCompatActivity implements Cru
 
             }
         });
+    }
+
+    public void setAttendeeSpinner() {
+        selectedCatSpinner.setVisibility(View.VISIBLE);
+        countTxt.setVisibility(View.VISIBLE);
+        selectTxt.setVisibility(View.VISIBLE);
+        List<String> list = new ArrayList<>();
+        if (!selectedCategory.isEmpty()) {
+            list.add("Tap to remove category");
+        }
+        for (String c : selectedCategory) {
+            list.add(c);
+        }
+        countTxt.setText(String.valueOf(selectedCategory.size()));
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                R.layout.custom_spinner_item, list);
+        selectedCatSpinner.setAdapter(adapter);
+        selectedCatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0) {
+                    return;
+                }
+                if (selectedCategory.isEmpty()) {
+                    return;
+                }
+                Log.d(TAG, "onItemSelected: category: " + selectedCategory.size() + " index: " + i);
+                if (selectedCategory.size() == 1) {
+                    selectedCategory.clear();
+                } else {
+                    boolean isFound = false;
+                    int j = 0;
+                    String f = selectedCategory.get(i - 1);
+                    for (String u : selectedCategory) {
+                        if (u.equalsIgnoreCase(f)) {
+                            isFound = true;
+                            break;
+                        }
+                        j++;
+                    }
+                    if (isFound) {
+                        selectedCategory.remove(j);
+                        setAttendeeSpinner();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private String getActionsString() {
+        StringBuilder sb = new StringBuilder();
+        if (!selectedCategory.isEmpty()) {
+            // sb.append(", ");
+        }
+
+        int index = 0;
+        for (String u : selectedCategory) {
+            sb.append(u);
+            if (index < selectedCategory.size()) {
+                sb.append(", ");
+            }
+            index++;
+        }
+        Log.d(TAG, "getCategoriesString: ".concat(sb.toString()));
+
+        return sb.toString();
     }
 
     private void setCategorySpinner() {

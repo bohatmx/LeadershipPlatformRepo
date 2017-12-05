@@ -80,7 +80,7 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
     Toolbar toolbar;
     String hexColor;
 
-    RelativeLayout urlAdapterLayout, videoAdapterLayout, deleteLayout, podcastAdapterLayout;
+    RelativeLayout urlAdapterLayout, videoAdapterLayout, deleteLayout, podcastAdapterLayout, controlsLay;
     LinearLayout podcastPlayerLayout;
     private Handler threadHandler = new Handler();
 
@@ -179,6 +179,7 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
 
         bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
         bottomLayout.setVisibility(View.GONE);
+        controlsLay = (RelativeLayout) findViewById(R.id.controlsLay);
 
         podcastPlayerLayout = (LinearLayout) findViewById(R.id.podcastPlayerLayout);
 
@@ -288,6 +289,9 @@ public class PodcastPlayerActivity extends AppCompatActivity implements SeekBar.
         videoSeekBar.setVisibility(View.GONE);
         textCurrentPosition.setVisibility(View.GONE);
         textView_maxTime.setVisibility(View.GONE);
+        ratingBar.setVisibility(View.GONE);
+        iconPldp.setVisibility(View.GONE);
+        controlsLay.setVisibility(View.GONE);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 

@@ -482,8 +482,8 @@
 
                     <ImageView
                         android:id="@+id/iconPldp"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/pldp"
                         android:tint="@color/red_700" />

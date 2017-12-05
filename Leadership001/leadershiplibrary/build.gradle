@@ -125,6 +125,7 @@ dependencies {
     compile 'com.github.QuadFlask:colorpicker:0.0.13'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.github.jd-alexander:LikeButton:0.2.3'
+    compile 'me.everything:providers-stetho:1.0.1'
     testCompile 'junit:junit:4.12'
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {

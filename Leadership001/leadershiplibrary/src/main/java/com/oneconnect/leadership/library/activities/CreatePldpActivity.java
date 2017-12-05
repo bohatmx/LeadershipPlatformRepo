@@ -1,5 +1,7 @@
 package com.oneconnect.leadership.library.activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -35,14 +38,16 @@ import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.pldp.PldpContract;
 import com.oneconnect.leadership.library.pldp.PldpPresenter;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
+import com.oneconnect.leadership.library.util.TimePickerFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class CreatePldpActivity extends AppCompatActivity implements PldpContract.View {
 
-    EditText sessionTxt;
+    EditText sessionTxt, notesTxt;
     Spinner actionSpinner, selectedActions;
     String hexColor;
     PldpPresenter pldpPresenter;
@@ -50,7 +55,7 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
     Context ctx;
     TextView entityText, attendeeCount;
     private UserDTO user;
-    Button submitBtn;
+    Button submitBtn, btnDate;
     int entityType;
     private WeeklyMessageDTO weeklyMessage;
     private EBookDTO eBook;
@@ -76,11 +81,15 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
 
         sessionTxt = (EditText) findViewById(R.id.sessionTxt);
         entityText = (TextView) findViewById(R.id.entityText);
+        entityText.setVisibility(View.GONE);
+        notesTxt = (EditText) findViewById(R.id.notesTxt);
+
 
         if (getIntent().getSerializableExtra("dailyThought") != null) {
             entityType = ResponseBag.DAILY_THOUGHTS;
             dailyThought = (DailyThoughtDTO) getIntent().getSerializableExtra("dailyThought");
             sessionTxt.setVisibility(View.GONE);
+            entityText.setVisibility(View.VISIBLE);
             entityText.setText(dailyThought.getTitle().concat(" - " + dailyThought.getSubtitle()));
         }
 
@@ -88,6 +97,7 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
             entityType = ResponseBag.WEEKLY_MASTERCLASS;
             weeklyMasterClass = (WeeklyMasterClassDTO) getIntent().getSerializableExtra("weeklyMasterClass");
             sessionTxt.setVisibility(View.GONE);
+            entityText.setVisibility(View.VISIBLE);
             entityText.setText(weeklyMasterClass.getTitle().concat(" - " + weeklyMasterClass.getSubtitle()));
         }
 
@@ -95,6 +105,7 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
             entityType = ResponseBag.WEEKLY_MESSAGE;
             weeklyMessage = (WeeklyMessageDTO) getIntent().getSerializableExtra("weeklyMessage");
             sessionTxt.setVisibility(View.GONE);
+            entityText.setVisibility(View.VISIBLE);
             entityText.setText(weeklyMessage.getTitle().concat(" - " + weeklyMessage.getSubtitle()));
         }
 
@@ -102,6 +113,7 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
             entityType = ResponseBag.EBOOKS;
             eBook = (EBookDTO) getIntent().getSerializableExtra("eBook");
             sessionTxt.setVisibility(View.GONE);
+            entityText.setVisibility(View.VISIBLE);
             entityText.setText(eBook.getStorageName());
         }
 
@@ -109,23 +121,24 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
             entityType = ResponseBag.PODCASTS;
             podcast = (PodcastDTO) getIntent().getSerializableExtra("podcast");
             sessionTxt.setVisibility(View.GONE);
+            entityText.setVisibility(View.VISIBLE);
             int i = podcast.getStorageName().lastIndexOf("/");
             entityText.setText(podcast.getStorageName().substring(i + 1));
-           // entityText.setText(podcast.getStorageName());
         }
 
         if (getIntent().getSerializableExtra("video") != null) {
             entityType = ResponseBag.VIDEOS;
             video = (VideoDTO) getIntent().getSerializableExtra("video");
             sessionTxt.setVisibility(View.GONE);
+            entityText.setVisibility(View.VISIBLE);
             int i = video.getStorageName().lastIndexOf("/");
             entityText.setText(video.getStorageName().substring(i + 1));
-           // entityText.setText(video.getStorageName());
         }
         if (getIntent().getSerializableExtra("newsArticle") != null) {
             entityType = ResponseBag.NEWS;
             news = (NewsDTO) getIntent().getSerializableExtra("newsArticle");
             sessionTxt.setVisibility(View.GONE);
+            entityText.setVisibility(View.VISIBLE);
             entityText.setText(news.getTitle().concat(" - ").concat(news.getSubtitle()));
         }
 
@@ -135,10 +148,13 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
             pldpPresenter.getCurrentUser(firebaseAuth.getCurrentUser().getEmail());
         }
 
+        submitBtn = (Button) findViewById(R.id.submitBtn);
+
 
         if (getIntent().getSerializableExtra("hexColor") != null) {
             hexColor = (String) getIntent().getSerializableExtra("hexColor");
             toolbar.setBackgroundColor(Color.parseColor(hexColor));
+            submitBtn.setBackgroundColor(Color.parseColor(hexColor));
         }
 
 
@@ -147,8 +163,15 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
         actionSpinner = (Spinner) findViewById(R.id.actionSpinner);
         attendeeCount = (TextView)findViewById(R.id.attendeeCount);
         selectedActions = (Spinner) findViewById(R.id.selectedActions);
+        btnDate = (Button) findViewById(R.id.btnDate);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDate();
+            }
+        });
 
-        submitBtn = (Button) findViewById(R.id.submitBtn);
+
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,38 +213,7 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
                 Log.d(TAG, "onItemSelected: action: ".concat(GSON.toJson(name)));
                 actions.add(name);
                 setAttendeeSpinner();
-                /*switch (i) {
-                    case 0:
-                        actionType = 0;
-                        break;
-                    case 1:
-                        actionType = PldpDTO.LISTEN;
-                        break;
-                    case 2:
-                        actionType = PldpDTO.REMEMBER_STAFF_BIRTHDAYS;
-                        break;
-                    case 3:
-                        actionType = PldpDTO.ASSERTIVE;
-                        break;
-                    case 4:
-                        actionType = PldpDTO.COMPASSION;
-                        break;
-                    case 5:
-                        actionType = PldpDTO.START_SLOW;
-                        break;
-                    case 6:
-                        actionType = PldpDTO.DONT_COMPARE_YOURSELF;
-                        break;
-                    case 7:
-                        actionType = PldpDTO.REMEMBER_YOUR_SUCCESS;
-                        break;
-                    case 8:
-                        actionType = PldpDTO.DONT_FEAR_FAILURE;
-                        break;
-                    case 9:
-                        actionType = PldpDTO.CUT_DOWN_ON_TV;
-                        break;
-                }*/
+
             }
 
             @Override
@@ -237,8 +229,8 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
         if (!actions.isEmpty()) {
             list.add("Tap to remove action");
         }
-        for (/*UserDTO*/String c : actions) {
-            list.add(c/*.getFullName()*/);
+        for (String c : actions) {
+            list.add(c);
         }
         attendeeCount.setText(String.valueOf(actions.size()));
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -287,6 +279,8 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
 
     int actionType;
 
+
+
     private String getActionsString() {
         StringBuilder sb = new StringBuilder();
         /*sb.append(SharedPrefUtil.getUser(this).getEmail());*/
@@ -307,6 +301,34 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
         return sb.toString();
     }
 
+    TimePickerFragment timePickerFragment;
+    TimePickerDialog timePickerDialog;
+    int hours, minute;
+    private DatePickerDialog datePickerDialog;
+
+    private Date selectedDate;
+    Date d;
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy");
+
+    private void getDate() {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(year, month, day);
+                d = cal.getTime();
+                timePickerFragment = new TimePickerFragment();
+                timePickerFragment.show(getFragmentManager(), "DIALOG_TIME");
+                d = timePickerFragment.getSetTime(d);
+                btnDate.setText(sdf.format(d));
+            }
+        }, cal.get(java.util.Calendar.YEAR),
+                cal.get(java.util.Calendar.MONTH),
+                cal.get(java.util.Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();
+    }
+
 
     private void send() {
         Log.i(TAG, "Sending pldp.... ");
@@ -319,6 +341,23 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
             pldp.setJournalUserName(user.getFullName());
         }
         pldp.setDateUpdated(new Date().getTime());
+        if (dailyThought != null || weeklyMasterClass != null || podcast != null || video != null || eBook != null || news != null) {
+            Log.i(TAG, "entity is not null");
+        } else {
+            if (!sessionTxt.getText().toString().isEmpty()) {
+                pldp.setSessionName(sessionTxt.getText().toString());
+            } else {
+                showEmptyTextSnackBar("Please enter a session name", "Dismiss", "red");
+                return;
+            }
+        }
+        if (d != null) {
+            pldp.setReminderDate(d.getTime());
+        }
+
+        if (!notesTxt.getText().toString().isEmpty()) {
+            pldp.setNote(notesTxt.getText().toString());
+        }
 
         switch (entityType) {
             case ResponseBag.DAILY_THOUGHTS:
@@ -371,6 +410,19 @@ public class CreatePldpActivity extends AppCompatActivity implements PldpContrac
     }
 
     Snackbar snackbar;
+
+    public void showEmptyTextSnackBar(String title, String action, String color) {
+        snackbar = Snackbar.make(actionSpinner, title, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.parseColor(color));
+        snackbar.setAction(action, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 snackbar.dismiss();
+               // finish();
+            }
+        });
+        snackbar.show();
+    }
 
     public void showSnackBar(String title, String action, String color) {
         snackbar = Snackbar.make(actionSpinner, title, Snackbar.LENGTH_INDEFINITE);

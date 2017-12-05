@@ -1,5 +1,7 @@
 package com.oneconnect.leadership.library.adapters;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -13,11 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -33,8 +37,11 @@ import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
 import com.oneconnect.leadership.library.data.WeeklyMasterClassDTO;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
+import com.oneconnect.leadership.library.util.TimePickerFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +71,7 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onVideoSelected(VideoDTO video);
         void onEbookSelected(EBookDTO ebook);
         void onArticleSelected(NewsDTO news);
+        void onReminderRequired(PldpDTO pldp);
     }
 
     public PldpAdapter(Context ctx, List<PldpDTO> mList, PldpAdapterListener listener) {
@@ -84,6 +92,9 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final PldpDTO pldp = mList.get(position);
         final PldpViewHolder pvh = (PldpViewHolder) holder;
 
+
+
+
         pvh.pldpCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +113,32 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         });
+
+        /*pvh.reminderTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onReminderRequired(pldp);
+
+
+            }
+        });*/
+
+        if (pldp.getSessionName() != null) {
+            String s1 = pldp.getActionName();
+            String action = s1.replaceAll("," , " *\n");
+            pvh.titleText.setText(pldp.getSessionName());
+            pvh.actionsText.setText(action);
+            pvh.videoView.setVisibility(View.GONE);
+            pvh.audioLayout.setVisibility(View.GONE);
+            pvh.audioText.setVisibility(View.GONE);
+            pvh.image.setVisibility(View.GONE);
+            if (pldp.getReminderDate() > 0) {
+                pvh.reminderTxt.setText(sdf.format(pldp.getReminderDate()));
+            } else {
+                pvh.reminderTxt.setVisibility(View.GONE);
+            }
+
+        }
 
         if (pldp.getNews() != null) {
             String s1 = pldp.getActionName();
@@ -125,12 +162,35 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else {
                 pvh.image.setVisibility(View.GONE);
             }
-            pvh.titleText.setText(pldp.getNews().getTitle()/*.concat(" - ").concat(pldp.getNews().getSubtitle())*/);
-            pvh.actionsText.setText(action/*pldp.getActionName()*/);
+
+            if (pldp.getReminderDate() > 0) {
+                pvh.reminderTxt.setText(sdf.format(pldp.getReminderDate()));
+            } else {
+                pvh.reminderTxt.setVisibility(View.GONE);
+            }
+            pvh.titleText.setText(pldp.getNews().getTitle());
+            pvh.actionsText.setText(action);
             pvh.videoView.setVisibility(View.GONE);
             pvh.audioLayout.setVisibility(View.GONE);
             pvh.audioText.setVisibility(View.GONE);
         }
+
+        if (pldp.geteBook() != null) {
+            String s1 = pldp.getActionName();
+            String action = s1.replaceAll("," , " * \n ");
+            if (pldp.geteBook().getCoverUrl() != null) {
+                Glide.with(ctx)
+                        .load(pldp.geteBook().getCoverUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(pvh.image);
+            }
+            pvh.titleText.setVisibility(View.GONE);
+            pvh.videoView.setVisibility(View.GONE);
+            pvh.audioLayout.setVisibility(View.GONE);
+            pvh.audioText.setVisibility(View.GONE);
+            pvh.actionsText.setText(action);
+        }
+
         if (pldp.getDailyThought() != null) {
             String s1 = pldp.getActionName();
             String action = s1.replaceAll("," , " * \n ");
@@ -249,11 +309,40 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
           //  pvh.titleText.setText(pldp.getVideo().getTitle().concat(" - ").concat(pldp.getNews().getSubtitle()));
             pvh.titleText.setText(pldp.getVideo().getStorageName().substring(i + 1));
-            pvh.actionsText.setText(pldp.getActionName().replaceAll(",", " * \n "));
+            pvh.actionsText.setText(pldp.getActionName().replaceAll(",", " *\n "));
             pvh.image.setVisibility(View.GONE);
             pvh.audioLayout.setVisibility(View.GONE);
             pvh.audioText.setVisibility(View.GONE);
         }
+    }
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMMM yyyy");
+    TimePickerFragment timePickerFragment;
+    TimePickerDialog timePickerDialog;
+    int hours, minute;
+    private DatePickerDialog datePickerDialog;
+
+
+    private Date selectedDate;
+    Date d;
+
+    private void getDate() {
+
+        /*final java.util.Calendar cal = java.util.Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                cal.set(year, month, day);
+               *//* Date *//*d = cal.getTime();
+                timePickerFragment = new TimePickerFragment();
+                timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");
+                d = timePickerFragment.getSetTime(d);
+                btnDate.setText(sdf.format(d));
+            }
+        }, cal.get(java.util.Calendar.YEAR),
+                cal.get(java.util.Calendar.MONTH),
+                cal.get(java.util.Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.show();*/
     }
 
     @Override
@@ -262,7 +351,7 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public class PldpViewHolder extends RecyclerView.ViewHolder {
-        protected TextView titleText, actionsText, duration, fileName, audioText;
+        protected TextView titleText, actionsText, duration, fileName, audioText, reminderTxt;
         protected VideoView videoView;
         protected ImageView image;
         protected RelativeLayout podControlLayout, audioLayout;
@@ -274,6 +363,7 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             actionsText = (TextView) itemView.findViewById(R.id.actionsText);
             videoView =  (VideoView) itemView.findViewById(R.id.videoView);
             image = (ImageView) itemView.findViewById(R.id.image);
+            reminderTxt = (TextView) itemView.findViewById(R.id.reminderTxt);
 
             // audio
             duration = (TextView) itemView.findViewById(R.id.duration);
@@ -286,6 +376,7 @@ public class PldpAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             //
             pldpCard = (CardView) itemView.findViewById(R.id.pldpCard);
+
         }
     }
 

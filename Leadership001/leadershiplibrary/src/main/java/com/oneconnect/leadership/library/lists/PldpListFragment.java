@@ -1,10 +1,14 @@
 package com.oneconnect.leadership.library.lists;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.DatePicker;
 
+import com.firebase.ui.auth.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.oneconnect.leadership.library.R;
+import com.oneconnect.leadership.library.activities.CreatePldpActivity;
 import com.oneconnect.leadership.library.activities.FullArticleActivity;
 import com.oneconnect.leadership.library.activities.PodcastPlayerActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
@@ -46,10 +53,15 @@ import com.oneconnect.leadership.library.data.WeeklyMessageDTO;
 import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SharedPrefUtil;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
+import com.oneconnect.leadership.library.util.TimePickerFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +71,7 @@ import java.util.List;
  * Use the {@link PldpListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PldpListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View {
+public class PldpListFragment extends Fragment implements PageFragment, SubscriberContract.View, CacheContract.View, com.oneconnect.leadership.library.calendar.CalendarContract.View{
 
     private PldpListFragmentListener mListener;
     SubscriberPresenter presenter;
@@ -71,6 +83,7 @@ public class PldpListFragment extends Fragment implements PageFragment, Subscrib
     View view;
     FirebaseAuth firebaseAuth;
     PldpAdapter pldpAdapter;
+    FloatingActionButton fabIcon;
 
     public PldpListFragment() {
         // Required empty public constructor
@@ -119,6 +132,22 @@ public class PldpListFragment extends Fragment implements PageFragment, Subscrib
         recyclerView.setLayoutManager(llm);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         recyclerView.setHasFixedSize(true);
+
+        fabIcon = (FloatingActionButton) view.findViewById(R.id.fabIcon);
+        fabIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, CreatePldpActivity.class);
+                if (user != null) {
+                    intent.putExtra("user", user);
+                }
+                if (hexColor != null) {
+                    intent.putExtra("hexColor", hexColor);
+                }
+                startActivity(intent);
+
+            }
+        });
 
         //getCachedDailyThoughts();
         getPldp();
@@ -420,9 +449,51 @@ public class PldpListFragment extends Fragment implements PageFragment, Subscrib
                   //  ctx.startActivity(intent);
                 }
             }
+
+            @Override
+            public void onReminderRequired(PldpDTO pldp) {
+
+               // getDate();
+                /*timePickerFragment = new TimePickerFragment();
+                timePickerFragment.show(getActivity().getFragmentManager(), "DIALOG_TIME");*/
+
+              //  pldp.setReminderDate(timePickerFragment.getSetTime());
+            }
         });
         recyclerView.setAdapter(pldpAdapter);
     }
+
+
+    /*public class AnnoyingBeep {
+        Toolkit toolkit;
+        Timer timer;
+
+        public AnnoyingBeep() {
+            toolkit = Toolkit.getDefaultToolkit();
+            timer = new Timer();
+            timer.schedule(new RemindTask(),
+                    0,        //initial delay
+                    1*1000);  //subsequent rate
+        }
+
+        class RemindTask extends TimerTask {
+            int numWarningBeeps = 3;
+            public void run() {
+                if (numWarningBeeps > 0) {
+                    toolkit.beep();
+                    System.out.println("Beep!");
+                    numWarningBeeps--;
+                } else {
+                    toolkit.beep();
+                    System.out.println("Time's up!");
+                    //timer.cancel(); // Not necessary because
+                    // we call System.exit
+                    System.exit(0);   // Stops the AWT thread
+                    // (and everything else)
+                }
+            }
+        }
+    }*/
 
     @Override
     public void onAllCompanyDailyThoughts(List<DailyThoughtDTO> list) {
@@ -536,6 +607,11 @@ public class PldpListFragment extends Fragment implements PageFragment, Subscrib
 
     @Override
     public void onDevices(List<DeviceDTO> companyID) {
+
+    }
+
+    @Override
+    public void onCalendarEventAdded(String key) {
 
     }
 

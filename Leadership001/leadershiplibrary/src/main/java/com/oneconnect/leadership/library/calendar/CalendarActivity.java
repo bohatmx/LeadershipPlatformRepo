@@ -1,4 +1,4 @@
-package com.oneconnect.leadership.admin.calendar;
+package com.oneconnect.leadership.library.calendar;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -25,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -33,7 +32,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oneconnect.leadership.admin.R;
+import com.oneconnect.leadership.library.R;
 import com.oneconnect.leadership.library.cache.UserCacheContract;
 import com.oneconnect.leadership.library.cache.UserCachePresenter;
 import com.oneconnect.leadership.library.data.CalendarEventDTO;
@@ -55,7 +54,7 @@ import me.everything.providers.android.calendar.Calendar;
 import me.everything.providers.android.calendar.CalendarProvider;
 import me.everything.providers.core.Data;
 
-public class CalendarActivity extends AppCompatActivity implements UserCacheContract.View, com.oneconnect.leadership.admin.calendar.CalendarContract.View {
+public class CalendarActivity extends AppCompatActivity implements UserCacheContract.View, com.oneconnect.leadership.library.calendar.CalendarContract.View {
 
     private Spinner userSpinner, attendeeSpinner;
     private List<Calendar> calendars;

@@ -91,7 +91,6 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_selection);
-        check();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Video Selection & Upload");
@@ -109,7 +108,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
             Log.i(TAG, "Color not found");
         }
 
-        // check();
+         check();
 
 
         type = getIntent().getIntExtra("type", 0);
@@ -245,7 +244,7 @@ public class VideoSelectionActivity extends AppCompatActivity implements VideoUp
 
                 if (cursor != null) {
                     noVideoTxt.setVisibility(View.GONE);
-                    Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
+                 //   Log.d(TAG, "getVideosOnDevice: ".concat(cursor.getColumnNames().toString()));
                     if (cursor != null && cursor.moveToFirst()) {
                         String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
                         long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));

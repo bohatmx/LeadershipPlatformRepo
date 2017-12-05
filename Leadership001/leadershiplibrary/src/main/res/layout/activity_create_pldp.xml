@@ -6,10 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.oneconnect.leadership.library.activities.CreatePldpActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -17,10 +21,20 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </android.support.design.widget.AppBarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+        <RelativeLayout
+            android:layout_below="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/content_create_pldp" />
+        </RelativeLayout>
+    </RelativeLayout>
 
-    <include layout="@layout/content_create_pldp" />
+
+
+
+
 
 
 </android.support.design.widget.CoordinatorLayout>

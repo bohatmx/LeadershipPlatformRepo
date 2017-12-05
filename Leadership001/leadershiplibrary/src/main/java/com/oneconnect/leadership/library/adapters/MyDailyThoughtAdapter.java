@@ -40,6 +40,7 @@ import com.oneconnect.leadership.library.data.RatingDTO;
 import com.oneconnect.leadership.library.data.UrlDTO;
 import com.oneconnect.leadership.library.data.UserDTO;
 import com.oneconnect.leadership.library.data.VideoDTO;
+import com.oneconnect.leadership.library.util.Constants;
 import com.oneconnect.leadership.library.util.SimpleDividerItemDecoration;
 import com.oneconnect.leadership.library.util.Util;
 
@@ -119,7 +120,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         dvh.iconCalendar.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.pending));
 
         if (dt.getStatus() != null) {
-            if (dt.getStatus().equalsIgnoreCase("pending")) {
+            if (dt.getStatus().equalsIgnoreCase(Constants.PENDING)) {
                 dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -127,7 +128,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 });
 
-            } else if (dt.getStatus().equalsIgnoreCase("approved")) {
+            } else if (dt.getStatus().equalsIgnoreCase(Constants.APPROVED)) {
                 dvh.iconCalendar.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.approved));
                 dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -136,7 +137,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 });
 
-            } else if (dt.getStatus().equalsIgnoreCase("declined")) {
+            } else if (dt.getStatus().equalsIgnoreCase(Constants.DECLINED)) {
                 dvh.iconCalendar.setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.declined));
                 dvh.iconCalendar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -148,12 +149,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         }
 
-        dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onVideoRequired(dt);
-            }
-        });
+
 
 
 
@@ -222,12 +218,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         });*/
 
-        dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onPhotoRequired(dt);
-            }
-        });
+
         if (dt.getUser() != null) {
             userDTO = dt.getUser();
             if (userDTO.getPhotos() != null){
@@ -319,12 +310,33 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             });*/
         }
 
-        dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onPodcastRequired(dt);
-            }
-        });
+        if (dt.getStatus() == Constants.PENDING){
+            dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPodcastRequired(dt);
+                }
+            });
+            dvh.iconCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onPhotoRequired(dt);
+                }
+            });
+            dvh.iconVideo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onVideoRequired(dt);
+                }
+            });
+            dvh.iconLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onLinkRequired(dt);
+                }
+            });
+        }
+
         if (dt.getPodcasts() != null) {
             dvh.txtMicrophone.setText("" + dt.getPodcasts().size());
             /*dvh.iconMicrophone.setOnClickListener(new View.OnClickListener() {
@@ -468,12 +480,7 @@ public class MyDailyThoughtAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
         });*/
 
-        dvh.iconLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onLinkRequired(dt);
-            }
-        });
+
 
         if (dt.getUrls() != null) {
             dvh.txtLinks.setText("" + dt.getUrls().size());

@@ -81,7 +81,8 @@ import java.util.regex.Pattern;
 
 import es.dmoral.toasty.Toasty;
 
-public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View, PhotoDownloadContract.View, CrudContract.View,SubscriberContract.View{
+public class PhotoSelectionActivity extends AppCompatActivity implements PhotoUploadContract.View, EbookUploadContract.View,
+                                                        PhotoDownloadContract.View, CrudContract.View,SubscriberContract.View{
 
 
     private RecyclerView recyclerView;
