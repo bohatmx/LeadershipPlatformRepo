@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class NewsDTO  extends BaseDTO implements  Serializable, Comparable<NewsDTO> {
     private String body, newsID,
-            stringArticleDate, html;
+            stringArticleDate, html, tag;
     private long  articleDate;
     private HashMap<String, UrlDTO> urls;
     private HashMap<String, PhotoDTO> photos;
@@ -194,4 +194,11 @@ public class NewsDTO  extends BaseDTO implements  Serializable, Comparable<NewsD
         this.companyName = companyName;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }

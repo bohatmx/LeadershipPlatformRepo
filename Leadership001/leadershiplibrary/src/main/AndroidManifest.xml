@@ -101,6 +101,10 @@
         <activity
             android:name=".activities.CreatePldpActivity"
             android:label="@string/title_activity_create_pldp"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.CreateNewsArticleActivity"
+            android:label="@string/title_activity_create_news_article"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

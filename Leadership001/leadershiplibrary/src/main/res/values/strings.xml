@@ -210,5 +210,6 @@
 
     <string name="title_activity_record">Record Audio</string>
     <string name="title_activity_create_pldp">CreatePldpActivity</string>
+    <string name="title_activity_create_news_article">CreateNewsArticleActivity</string>
 
 </resources>

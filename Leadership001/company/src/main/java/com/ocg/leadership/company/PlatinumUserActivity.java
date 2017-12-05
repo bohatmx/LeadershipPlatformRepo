@@ -59,6 +59,7 @@ import com.google.gson.GsonBuilder;
 import com.ocg.leadership.company.services.CompanyMessagingService;
 import com.oneconnect.leadership.library.activities.BaseBottomSheet;
 import com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity;
+import com.oneconnect.leadership.library.activities.CreateNewsArticleActivity;
 import com.oneconnect.leadership.library.activities.PodcastActivity;
 import com.oneconnect.leadership.library.activities.SubscriberContract;
 import com.oneconnect.leadership.library.activities.SubscriberPresenter;
@@ -824,8 +825,16 @@ public class PlatinumUserActivity extends AppCompatActivity implements  Navigati
             return true;*/
         }
         if (id == R.id.action_article) {
-            startNewsArticleBottomSheet(null, Constants.NEW_ENTITY);
-            return true;
+            Intent intent = new Intent(PlatinumUserActivity.this, CreateNewsArticleActivity.class);
+            if(hexColor != null) {
+                intent.putExtra("hexColor", hexColor);
+            }
+            if (user != null) {
+                intent.putExtra("user", user);
+            }
+            startActivity(intent);
+            /*startNewsArticleBottomSheet(null, Constants.NEW_ENTITY);
+            return true;*/
         }
        /* if (id == R.id.action_internal) {
             type = Constants.INTERNAL_DATA;

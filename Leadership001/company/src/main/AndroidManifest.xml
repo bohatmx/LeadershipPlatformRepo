@@ -188,6 +188,8 @@
             android:theme="@style/CommuterTheme"></activity>
 
         <activity android:name="com.oneconnect.leadership.library.activities.CreateDailyThoughtActivity"/>
+
+        <activity android:name="com.oneconnect.leadership.library.activities.CreateNewsArticleActivity" />
     </application>
 
 </manifest>
